@@ -14,7 +14,7 @@
 
 13981
 
-**Informe del Trabajo Final**
+**Informe del Avance 1**
 
 **Docente**
 
@@ -58,7 +58,7 @@ Septiembre, 2026
 ## REGISTRO DE VERSIONES DEL INFORME
 | Versión | Fecha | Autor | Descripción de modificación |
 | :---: | :---: | :---: | :---: |
-| 0.1.0 | 04/04/2026 | Angel Villarreal | Commit inicial; estructura base del repositorio y esquemas de todos los capítulos (`main`) |
+| 0.1.0 | 02/09/2026 | Angel Villarreal | Commit inicial; estructura base del repositorio y esquemas de todos los capítulos (`main`) |
 
 <div style="page-break-after: always"></div>
 
