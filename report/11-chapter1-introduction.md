@@ -4,6 +4,11 @@
 
 ### 1.1.1. Descripción del Startup
 
+NutriSync es una startup tecnológica que busca resolver una falta de información concreta dentro del proceso de tratamiento nutricional: lo que sucede entre una consulta y la siguiente. El nutricionista ya cuenta con un lugar donde almacenar la evaluación, el diagnóstico y el plan de alimentación de su paciente. Sin embargo, no tiene una forma confiable de conocer qué comió realmente durante las semanas en que no hay contacto directo. Actualmente, esa información depende principalmente de lo que el paciente recuerda y decide contar en la siguiente cita, un registro que puede verse afectado por dos problemas: la omisión de ciertos alimentos que el paciente puede preferir no reportar y la estimación imprecisa de las porciones consumidas. 
+<br>NutriSync nace para cerrar esa brecha sin sustituir el criterio profesional, y lo hace a través de su producto Healthify. 
+<br>Nuestra misión es dar al nutricionista visibilidad real sobre cómo su paciente sigue el plan nutricional durante el periodo entre consultas, y darle al paciente una forma simple y práctica de registrar su alimentación diaria, manteniendo las decisiones clínicas exclusivamente en manos del profesional. 
+<br>Nuestra visión es convertirnos en la startup de referencia para el seguimiento nutricional continuo en Latinoamérica, reconocida por ofrecer, a través de Healthify, información confiable sobre el seguimiento del plan nutricional al profesional de la salud y al paciente una experiencia de registro diario que no juzga y no exige detalles innecesarios.
+
 ### 1.1.2. Perfiles de integrantes del equipo
 
 | Integrantes | Descripción |
