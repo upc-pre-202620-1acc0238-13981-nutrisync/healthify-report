@@ -50,6 +50,76 @@ De acuerdo con el curso, se elabora un único Problem Statement para todo el pro
 
 #### 1.2.2.2. Lean UX Assumptions
 
+***Business Assumptions:***
+
+a) Creemos que existe una oportunidad de negocio en ofrecer a nutricionistas una herramienta digital enfocada en mejorar la continuidad del seguimiento nutricional durante el periodo entre consultas, facilitando la organización de la información registrada por el paciente y su posterior consulta por el profesional.
+
+b) Creemos que Healthify puede diferenciarse de otras soluciones de gestión y seguimiento nutricional al centrarse en la información generada durante el periodo entre consultas y ponerla a disposición del nutricionista sin sustituir su criterio profesional.
+
+c) Creemos que los nutricionistas pueden encontrar valor en incorporar Healthify como una herramienta de apoyo para realizar el seguimiento de sus pacientes durante el periodo entre consultas.
+
+d) Creemos que Healthify puede contar con un modelo de monetización que combine el acceso gratuito con una única modalidad de pago, sin necesidad de ofrecer múltiples planes con diferentes niveles de funcionalidades. La forma específica de monetización y el usuario que asumiría el pago deberán ser validados.
+
+e) Creemos que como equipo contamos con las capacidades técnicas y organizativas necesarias para desarrollar y validar una primera versión funcional de Healthify dentro de los alcances y recursos disponibles para el proyecto.
+
+---
+
+***Business Outcome Assumptions:***
+
+a) Creemos que Healthify estará teniendo éxito si logra mantener una tasa sostenida de retención de pacientes a lo largo de varios periodos entre consultas.
+
+b) Creemos que Healthify estará teniendo éxito si una proporción creciente de nutricionistas incorpora la plataforma de manera recurrente en el seguimiento de sus pacientes.
+
+c) Creemos que Healthify estará aportando valor si los nutricionistas utilizan de manera recurrente la información registrada en la plataforma como apoyo para el seguimiento y los ajustes del tratamiento.
+
+d) Creemos que Healthify estará mostrando potencial de crecimiento si aumenta progresivamente la cantidad de pacientes y nutricionistas activos en la plataforma.
+
+---
+
+***User Assumptions:***
+
+a) Creemos que uno de nuestros principales segmentos de usuario está conformado por pacientes adultos que se encuentran en tratamiento nutricional activo para bajar de peso y siguen un plan de alimentación indicado por un nutricionista.
+
+b) Creemos que nuestro segundo segmento de usuario está conformado por nutricionistas que realizan seguimiento a pacientes en tratamiento nutricional para bajar de peso.
+
+c) Creemos que el paciente utilizará Healthify principalmente durante el periodo entre consultas, como parte de su vida cotidiana, para registrar información relacionada con su alimentación y peso.
+
+d) Creemos que el nutricionista utilizará Healthify durante el periodo entre consultas como parte del seguimiento de sus pacientes.
+
+e) Creemos que paciente y nutricionista interactuarán en Healthify dentro de un mismo proceso de tratamiento nutricional, manteniendo funciones diferenciadas y conservando el nutricionista la responsabilidad sobre las decisiones clínicas y los ajustes realizados al plan.
+
+---
+
+***User Outcome and Benefit Assumptions:***
+
+a) Creemos que el paciente busca registrar su alimentación durante el periodo entre consultas de una manera sencilla y práctica, que requiera poco tiempo y esfuerzo.
+
+b) Creemos que el paciente obtiene valor al disponer de un registro organizado de su alimentación que le permita revisar lo que ha consumido durante el tratamiento.
+
+c) Creemos que el paciente busca conocer cómo evoluciona su peso a lo largo del tratamiento para tener una referencia de su progreso.
+
+d) Creemos que el nutricionista busca disponer de información continua y organizada sobre la alimentación y la evolución del peso de sus pacientes durante el periodo entre consultas.
+
+e) Creemos que el nutricionista obtiene valor al poder revisar con mayor facilidad lo ocurrido durante ese periodo y utilizar dicha información como apoyo para evaluar el progreso del paciente.
+
+f) Creemos que el nutricionista obtiene valor de una herramienta que apoye el seguimiento sin sustituir su criterio profesional ni realizar decisiones clínicas de manera automática.
+
+---
+
+***Feature Assumptions:***
+
+a) Creemos que permitir al paciente registrar sus comidas mediante fotografías o de forma manual facilitará el registro frecuente de su alimentación durante el periodo entre consultas.
+
+b) Creemos que permitir al paciente registrar su peso y visualizar su evolución a lo largo del tiempo facilitará el seguimiento de su progreso durante el tratamiento.
+
+c) Creemos que presentar al nutricionista de manera organizada los registros de alimentación y peso de sus pacientes facilitará la revisión de lo ocurrido durante el periodo entre consultas.
+
+d) Creemos que proporcionar al nutricionista indicadores derivados de la información registrada sobre la alimentación y la evolución del peso puede facilitar la identificación de situaciones que requieran una revisión más detallada, sin realizar ajustes automáticos al tratamiento.
+
+e) Creemos que permitir al nutricionista registrar y consultar el plan de alimentación y sus ajustes dentro de Healthify facilitará la relación entre la información obtenida durante el seguimiento y el tratamiento indicado al paciente.
+
+f) Creemos que establecer un vínculo digital entre paciente y nutricionista permitirá asociar los registros del paciente con el profesional responsable de su seguimiento y mantener claramente diferenciadas las funciones de ambos usuarios.
+
 #### 1.2.2.3. Lean UX Hypothesis Statements
 
 #### 1.2.2.4. Lean UX Canvas
