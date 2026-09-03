@@ -84,6 +84,25 @@ El Diagrama de Contexto (Nivel 1 del modelo C4) representa a Healthify como un s
 
 #### 2.5.3.2. Software Architecture Container Level Diagrams
 
+El Diagrama de Contenedores (Nivel 2 del modelo C4) desglosa el sistema Healthify en sus principales unidades lógicas de ejecución. En este nivel se especifican las responsabilidades de cada contenedor, las tecnologías elegidas para su implementación y los protocolos de comunicación que permiten la interacción entre ellos y con los sistemas externos.
+
+**Elementos:**
+
+- **Landing Page:** Sitio web estático que presenta la propuesta de valor de Healthify y dirige a los usuarios hacia la descarga de la aplicación.
+   - **Tecnología:** `HTML5 + CSS3 + JavaScript`.
+- **Mobile Application:** Frontend donde Patient y Practitioner interactúan con la plataforma. Aplicación Flutter única con dos navigation shells seleccionados según el claim de rol, que agrupa internamente los seis Bounded Contexts del cliente.
+   - **Tecnología:** `Flutter`.
+- **API Application:** Backend que maneja la lógica de negocio de los seis Bounded Contexts, expuesta vía una API RESTful.
+   - **Tecnología:** `ASP.NET Core (C#)`.
+- **Database:** Almacena usuarios, vínculos de cuidado, evaluaciones, diagnósticos, planes, entradas del diario y ventanas de monitoreo.
+   - **Tecnología:** `PostgreSQL`.
+- **External Systems:** APIs de terceros que se integran con el backend y con el cliente para extender las capacidades del sistema.
+   - **Tecnología:** `JSON/HTTPS (REST)` para el backend; llamada on-device sin red para ML Kit.
+
+![Container Diagram](../assets/img/artifacts/healthify-ContainerDiagram.png)
+
+![Container Diagram Summarized](../assets/img/artifacts/healthify-ContainerDiagram1.png)
+
 #### 2.5.3.3. Software Architecture Deployment Diagrams
 
 ## 2.6. Tactical-Level Domain-Driven Design
