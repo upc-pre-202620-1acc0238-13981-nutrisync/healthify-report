@@ -122,6 +122,32 @@ f) Creemos que establecer un vínculo digital entre paciente y nutricionista per
 
 #### 1.2.2.3. Lean UX Hypothesis Statements
 
+Se elabora un Hypothesis Statement por cada Feature Assumption, siguiendo la plantilla: *We believe we will achieve [business outcome] if [these personas] attain [benefit/user outcome] with [feature or solution].*
+
+**Hypothesis Statement 1**
+
+Creemos que el uso recurrente de Healthify por parte de los pacientes durante el periodo entre consultas se logrará si los pacientes en tratamiento nutricional activo para bajar de peso logran registrar su alimentación de manera sencilla y práctica, con una función que permita registrar las comidas mediante fotografías o de forma manual.
+
+**Hypothesis Statement 2**
+
+Creemos que la continuidad de uso de Healthify por parte de los pacientes a lo largo del tratamiento se logrará si los pacientes en tratamiento nutricional activo para bajar de peso logran conocer cómo evoluciona su peso y contar con una referencia de su progreso, con una función que permita registrar el peso y visualizar su evolución a lo largo del tiempo.
+
+**Hypothesis Statement 3**
+
+Creemos que la incorporación recurrente de Healthify en el seguimiento nutricional se logrará si los nutricionistas logran disponer de información continua y organizada sobre la alimentación y la evolución del peso de sus pacientes durante el periodo entre consultas, con una función que presente de manera organizada los registros realizados por cada paciente.
+
+**Hypothesis Statement 4**
+
+Creemos que el uso recurrente de la información de Healthify como apoyo para el seguimiento y los ajustes del tratamiento se logrará si los nutricionistas logran revisar con mayor facilidad lo ocurrido durante el periodo entre consultas e identificar situaciones que requieran mayor atención, con una función que proporcione indicadores derivados de la información registrada sobre la alimentación y la evolución del peso, sin realizar ajustes automáticos al tratamiento.
+
+**Hypothesis Statement 5**
+
+Creemos que el uso de la información registrada en Healthify para apoyar el seguimiento y los ajustes del tratamiento se logrará si los nutricionistas logran relacionar con mayor facilidad lo ocurrido durante el periodo entre consultas con el plan de alimentación indicado al paciente, con una función que permita registrar, consultar y mantener organizados el plan de alimentación y sus ajustes.
+
+**Hypothesis Statement 6**
+
+Creemos que la adopción y el uso continuo de Healthify por parte de pacientes y nutricionistas se logrará si ambos usuarios logran interactuar dentro de un mismo proceso de tratamiento nutricional manteniendo claramente diferenciadas sus funciones, con una función de vínculo digital que permita asociar al paciente con el nutricionista responsable de su seguimiento.
+
 #### 1.2.2.4. Lean UX Canvas
 
 ![Lean UX Canvas]()
