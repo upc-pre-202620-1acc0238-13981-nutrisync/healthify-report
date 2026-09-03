@@ -10,7 +10,69 @@
 
 ### 2.2.1. Diseño de entrevistas
 
+Las entrevistas fueron diseñadas con preguntas diferenciadas según cada segmento objetivo, organizadas en bloques temáticos que permiten recopilar información sobre el perfil del usuario, sus hábitos actuales y la validación de las funcionalidades propuestas.
+
+##### Segmento 1 — Nutricionista ( - años)
+
+##### Segmento 2 — Paciente en tratamiento nutricional activo ( - años)
+
 ### 2.2.2. Registro de entrevistas
+
+| Segmento: Nutricionista | Entrevista #1 |
+| --- | --- |
+| Nombres y Apellidos | |
+| Edad | |
+| Distrito | |
+| Ocupación | |
+| Timming inicio |0:00 - 0:00|
+| Duración |0:00 minutos|
+| URL | [Video entrevista]()|
+| Screenshot |![Entrevista 1 Seg1](../assets/img/interviews/Entrevista1-seg1.png)|
+| Resumen | ...|
+
+<div style="page-break-after: always"></div>
+
+| Segmento: Nutricionista | Entrevista #2 |
+| --- | --- |
+| Nombres y Apellidos | |
+| Edad | |
+| Distrito | |
+| Ocupación | |
+| Timming inicio |0:00 - 0:00|
+| Duración |0:00 minutos|
+| URL | [Video entrevista]()|
+| Screenshot |![Entrevista 2 Seg1](../assets/img/interviews/Entrevista2-seg1.png)|
+| Resumen | ...|
+
+<div style="page-break-after: always"></div>
+
+| Segmento: Paciente en tratamiento nutricional activo | Entrevista #1 |
+| --- | --- |
+| Nombres y Apellidos |Evelyn Diaz|
+| Edad |54|
+| Distrito |Loreto - Iquitos|
+| Ocupación |Docente universitaria de idiomas|
+| Timming inicio |0:00 - 0:00|
+| Duración |0:00 minutos|
+| URL | [Video entrevista]()|
+| Screenshot |![Entrevista 1 Seg2](../assets/img/interviews/Entrevista1-seg2.png)|
+| Resumen |Evelyn describe .|
+
+<div style="page-break-after: always"></div>
+
+| Segmento: Paciente en tratamiento nutricional activo | Entrevista #2 |
+| --- | --- |
+| Nombres y Apellidos | |
+| Edad | |
+| Distrito | |
+| Ocupación | |
+| Timming inicio |0:00 - 0:00|
+| Duración |0:00 minutos|
+| URL | [Video entrevista]()|
+| Screenshot |![Entrevista 2 Seg2](../assets/img/interviews/Entrevista2-seg2.png)|
+| Resumen | ...|
+
+<div style="page-break-after: always"></div>
 
 ### 2.2.3. Análisis de entrevistas
 
