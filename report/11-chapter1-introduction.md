@@ -58,7 +58,7 @@ b) Creemos que Healthify puede diferenciarse de otras soluciones de gestión y s
 
 c) Creemos que los nutricionistas pueden encontrar valor en incorporar Healthify como una herramienta de apoyo para realizar el seguimiento de sus pacientes durante el periodo entre consultas.
 
-d) Creemos que Healthify puede contar con un modelo de monetización que combine el acceso gratuito con una única modalidad de pago, sin necesidad de ofrecer múltiples planes con diferentes niveles de funcionalidades. La forma específica de monetización y el usuario que asumiría el pago deberán ser validados.
+d) Creemos que ofrecer Healthify de manera gratuita permitirá reducir las barreras de acceso y facilitar su adopción por parte de pacientes y nutricionistas, favoreciendo que ambos puedan incorporar la plataforma dentro del seguimiento nutricional sin que el costo represente una limitación para su uso.
 
 e) Creemos que como equipo contamos con las capacidades técnicas y organizativas necesarias para desarrollar y validar una primera versión funcional de Healthify dentro de los alcances y recursos disponibles para el proyecto.
 
