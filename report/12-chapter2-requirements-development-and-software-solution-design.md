@@ -113,7 +113,7 @@ Las entrevistas fueron diseñadas con preguntas diferenciadas según cada segmen
 | Segmento: Paciente en tratamiento nutricional activo | Entrevista #1 |
 | --- | --- |
 | Nombres y Apellidos |Evelyn Diaz|
-| Edad |54|
+| Edad |52|
 | Distrito |Loreto - Iquitos|
 | Ocupación |Docente universitaria de idiomas|
 | Timming inicio |0:00 - 0:00|
