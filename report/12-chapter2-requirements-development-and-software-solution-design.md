@@ -319,6 +319,8 @@ Componente transversal utilizado por todos los Bounded Contexts del backend. Es 
 
      ![Food Catalog REST Diagram](../assets/img/artifacts/healthify-FoodCatalogRestDiagram.png)
 
+#### 2.5.3.4. Software Architecture Deployment Diagram
+
 ## 2.6. Tactical-Level Domain-Driven Design
 
 ### 2.6.1. Bounded Context: 
