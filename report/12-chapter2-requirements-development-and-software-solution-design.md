@@ -321,6 +321,26 @@ Componente transversal utilizado por todos los Bounded Contexts del backend. Es 
 
 #### 2.5.3.4. Software Architecture Deployment Diagram
 
+El Deployment Diagram (diagrama suplementario del modelo C4, elaborado en notación UML) muestra la distribución física de Healthify sobre la infraestructura de hardware y los entornos de ejecución. Este diagrama visualiza los dispositivos, servidores y contenedores que alojan cada artefacto de software, así como los protocolos de comunicación entre ellos.
+
+**Elementos:**
+
+- **Patient's / Practitioner's Mobile Device:** Dispositivo físico (`<<device>>`) del usuario final, donde se instala y ejecuta el artefacto `Mobile Application (Flutter)` distribuido vía Firebase App Distribution.
+- **GitHub Pages:** Entorno de ejecución (`<<execution environment>>`) que aloja el artefacto estático `Landing Page (HTML5 + CSS3 + JS)`.
+- **Oracle Cloud Infrastructure:** Nodo de nube (`<<cloud>>`) que agrupa toda la infraestructura del backend.
+   - **Compute Instance:** Máquina virtual que hospeda el `Docker Engine`.
+   - **Docker Engine:** Entorno de ejecución de contenedores, dentro del cual corren dos contenedores aislados entre sí:
+      - **API Container:** Contenedor que aloja el artefacto `API Application (ASP.NET Core)`.
+      - **Database Container:** Contenedor que aloja la base de datos `PostgreSQL`.
+
+**Relaciones:**
+
+- `Mobile Device → Oracle Cloud Infrastructure` (`JSON/HTTPS`): la aplicación móvil consume la API RESTful del backend.
+- `Mobile Device → GitHub Pages` (`HTTPS`): el dispositivo accede al Landing Page como contenido estático.
+- `API Application → Database` (`SQL/TCP`): la API se conecta a PostgreSQL a través de la red interna de Docker, pese a correr en contenedores independientes.
+
+![Deployment Diagram](../assets/img/artifacts/healthify-DeploymentDiagram.png)
+
 ## 2.6. Tactical-Level Domain-Driven Design
 
 ### 2.6.1. Bounded Context: 
