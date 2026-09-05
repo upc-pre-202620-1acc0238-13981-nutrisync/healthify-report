@@ -164,3 +164,51 @@ Creemos que la adopción y el uso continuo de Healthify por parte de pacientes y
 | **8** | **¿Cuál es la menor cantidad de trabajo que necesitamos hacer para resolver los supuestos?** | Diseñar un prototipo del flujo de registro de comidas mediante fotografía y registro manual. Probarlo con pacientes del segmento objetivo mediante tareas de uso y un piloto corto de varios días, evaluando la facilidad de uso, el tiempo requerido para completar cada registro y la disposición de los pacientes a mantener este registro de forma cotidiana durante el periodo entre consultas. También recopilar retroalimentación cualitativa sobre qué tendría que cambiar para que confíen en la función de forma constante. |
 
 ## 1.3. Segmentos Objetivo
+
+### Segmento Objetivo 1: Paciente en tratamiento nutricional para bajar de peso
+
+Nuestro primer segmento objetivo está conformado por personas adultas que se encuentran en tratamiento nutricional profesional con el objetivo de bajar de peso. Estos pacientes cuentan con un nutricionista, siguen un plan de alimentación y asisten a consultas periódicas, pero durante el periodo entre consultas deben aplicar dicho plan en su vida cotidiana. En este contexto, pueden presentar dificultades para registrar de manera constante y organizada lo que consumen y comunicar posteriormente esta información al profesional encargado de su seguimiento.
+
+***Aspectos demográficos:***
+
+- Sexo: Masculino y femenino
+- Edades: 18 a 59 años
+- Nivel socioeconómico: B y C (medio-alto y medio)
+
+***Aspectos geográficos:***
+
+- Nacionalidad: Peruana
+- Zona geográfica: Urbana
+- Departamentos: Lima
+
+***Aspectos psicográficos:***
+
+- Valores: interés por mejorar su salud, compromiso con el tratamiento indicado y disposición a seguir las recomendaciones de un profesional.
+- Estilos de vida: rutinas variables, actividades laborales o académicas y consumo de alimentos tanto dentro como fuera del hogar.
+- Intereses: conocer su progreso, mantener un registro de su alimentación y seguir de manera adecuada el plan indicado por su nutricionista.
+- Comportamiento: utilizan habitualmente dispositivos móviles y pueden recurrir a distintos medios para registrar o comunicar información relacionada con su alimentación.
+- Frustraciones: olvidar lo consumido durante días anteriores, tener registros incompletos o desorganizados y dedicar demasiado tiempo o esfuerzo a registrar su alimentación.
+
+### Segmento Objetivo 2: Nutricionista
+
+Nuestro segundo segmento objetivo está conformado por profesionales de la nutrición que realizan seguimiento a pacientes en tratamiento nutricional activo para bajar de peso. Su necesidad principal es disponer de información continua, organizada y confiable sobre la alimentación y evolución del paciente durante el periodo entre consultas, de manera que puedan revisar lo ocurrido y utilizar dicha información como apoyo para evaluar el progreso y realizar los ajustes que consideren necesarios, manteniendo siempre el control sobre las decisiones clínicas.
+
+***Aspectos demográficos:***
+
+- Sexo: Masculino y femenino
+- Edades: 28 – 55 años
+- Nivel socioeconómico: A, B y C (alto, medio-alto y medio)
+
+***Aspectos geográficos:***
+
+- Nacionalidad: Peruana
+- Zona geográfica: Urbana
+- Departamentos: Lima
+
+***Aspectos psicográficos:***
+
+- Valores: ética profesional, rigor en el seguimiento, organización de la información y respeto por el criterio clínico.
+- Estilos de vida: gestionan simultáneamente el seguimiento de varios pacientes y combinan las consultas con actividades de revisión y organización de información.
+- Intereses: disponer de información clara sobre lo ocurrido entre consultas, reducir el tiempo necesario para revisar registros y contar con herramientas que apoyen el seguimiento del paciente.
+- Personalidad: metódicos, organizados y orientados al análisis de información para sustentar sus decisiones profesionales.
+- Frustraciones: recibir información incompleta o imprecisa por parte del paciente, tener que reconstruir lo ocurrido durante varios días o semanas y encontrar la información distribuida entre diferentes medios de registro y comunicación.
