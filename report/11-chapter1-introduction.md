@@ -9,6 +9,8 @@ NutriSync es una startup tecnológica que busca resolver una falta de informaci�
 <br>Nuestra misión es dar al nutricionista visibilidad real sobre cómo su paciente sigue el plan nutricional durante el periodo entre consultas, y darle al paciente una forma simple y práctica de registrar su alimentación diaria, manteniendo las decisiones clínicas exclusivamente en manos del profesional. 
 <br>Nuestra visión es convertirnos en la startup de referencia para el seguimiento nutricional continuo en Latinoamérica, reconocida por ofrecer, a través de Healthify, información confiable sobre el seguimiento del plan nutricional al profesional de la salud y al paciente una experiencia de registro diario que no juzga y no exige detalles innecesarios.
 
+<div style="page-break-after: always"></div>
+
 ### 1.1.2. Perfiles de integrantes del equipo
 
 | Integrantes | Descripción |
@@ -18,6 +20,8 @@ NutriSync es una startup tecnológica que busca resolver una falta de informaci�
 | ![Joel](../assets/img/chapter1/mora.jpeg) | **Nombres y Apellidos:** Joel Fernando Mora Rivera<br> **Código:** U20241B227<br> **Carrera:** Ingeniería de Software<br> Soy una persona responsable, organizada y comprometida, con una actitud competitiva positiva que me impulsa a superar retos con constancia. Cuento con formación en C++, Python, Java y gestión de bases de datos relacionales y no relacionales, enfocándome en la innovación y optimización de procesos tecnológicos. Me apasiona el aprendizaje continuo y resolver desafíos técnicos que pongan a prueba mis habilidades. Además, priorizo el trabajo en equipo y la comunicación efectiva como motores fundamentales para alcanzar el éxito en cualquier proyecto. |
 | ![Rose](../assets/img/chapter1/vergaray.png) | **Nombres y Apellidos:** Rose Almendra Vergaray Calderon<br> **Código:** U20241D159<br> **Carrera:** Ingeniería de Software<br> Soy una persona responsable, creativa y detallista, cualidades que me impulsan a dar lo mejor de mí en cada proyecto. Cuento con conocimientos en Python, HTML, Java y un nivel intermedio en C++, además de experiencia en el diseño y programación de páginas web y en el manejo de bases de datos relacionales y no relacionales. Me motiva el aprendizaje constante, la exploración de nuevas herramientas y el desarrollo de soluciones innovadoras. Además, considero que el trabajo en equipo y la comunicación son esenciales para alcanzar metas y crecer tanto en lo personal como en lo profesional. |
 | ![Angel](../assets/img/chapter1/villarreal.png) |**Nombres y Apellidos:** Angel Martin Villarreal Bazan<br> **Código:** U202417857<br> **Carrera:** Ingeniería de Software<br>Soy una persona proactiva y dedicada, enfocada en la mejora continua y el cumplimiento de objetivos. Cuento con sólidos conocimientos en C++ y Java, además de una fuerte base en lógica de programación para resolver problemas complejos. Me motiva el aprendizaje constante de nuevas tecnologías y el desafío de proyectos innovadores. Gracias a mi capacidad de organización y liderazgo, logro optimizar procesos y fomentar un entorno de trabajo colaborativo y eficiente.|
+
+<div style="page-break-after: always"></div>
 
 ## 1.2. Solution Profile
 
@@ -148,9 +152,13 @@ Creemos que el uso de la información registrada en Healthify para apoyar el seg
 
 Creemos que la adopción y el uso continuo de Healthify por parte de pacientes y nutricionistas se logrará si ambos usuarios logran interactuar dentro de un mismo proceso de tratamiento nutricional manteniendo claramente diferenciadas sus funciones, con una función de vínculo digital que permita asociar al paciente con el nutricionista responsable de su seguimiento.
 
+<div style="page-break-after: always"></div>
+
 #### 1.2.2.4. Lean UX Canvas
 
 ![Lean UX Canvas](../assets/img/chapter1/LeanUXCanvas.png)
+
+<div style="page-break-after: always"></div>
 
 | #     | Sección | Contenido |
 | ----- | ------- | --------- |
@@ -162,6 +170,8 @@ Creemos que la adopción y el uso continuo de Healthify por parte de pacientes y
 | **6** | **Hipótesis** | **H1.** Creemos que el uso recurrente de Healthify por parte de los pacientes durante el periodo entre consultas se logrará si los pacientes en tratamiento nutricional activo para bajar de peso logran registrar su alimentación de manera sencilla y práctica, con una función que permita registrar las comidas mediante fotografías o de forma manual.<br><br>**H2.** Creemos que la continuidad de uso de Healthify por parte de los pacientes a lo largo del tratamiento se logrará si los pacientes en tratamiento nutricional activo para bajar de peso logran conocer cómo evoluciona su peso y contar con una referencia de su progreso, con una función que permita registrar el peso y visualizar su evolución a lo largo del tiempo.<br><br>**H3.** Creemos que la incorporación recurrente de Healthify en el seguimiento nutricional se logrará si los nutricionistas logran disponer de información continua y organizada sobre la alimentación y la evolución del peso de sus pacientes durante el periodo entre consultas, con una función que presente de manera organizada los registros realizados por cada paciente.<br><br>**H4.** Creemos que el uso recurrente de la información de Healthify como apoyo para el seguimiento y los ajustes del tratamiento se logrará si los nutricionistas logran revisar con mayor facilidad lo ocurrido durante el periodo entre consultas e identificar situaciones que requieran mayor atención, con una función que proporcione indicadores derivados de la información registrada sobre la alimentación y la evolución del peso, sin realizar ajustes automáticos al tratamiento.<br><br>**H5.** Creemos que el uso de la información registrada en Healthify para apoyar el seguimiento y los ajustes del tratamiento se logrará si los nutricionistas logran relacionar con mayor facilidad lo ocurrido durante el periodo entre consultas con el plan de alimentación indicado al paciente, con una función que permita registrar, consultar y mantener organizados el plan de alimentación y sus ajustes.<br><br>**H6.** Creemos que la adopción y el uso continuo de Healthify por parte de pacientes y nutricionistas se logrará si ambos usuarios logran interactuar dentro de un mismo proceso de tratamiento nutricional manteniendo claramente diferenciadas sus funciones, con una función de vínculo digital que permita asociar al paciente con el nutricionista responsable de su seguimiento. |
 | **7** | **¿Qué es lo más importante que necesitamos evaluar primero?** | La hipótesis más riesgosa es que los pacientes estén dispuestos a registrar su alimentación de manera frecuente durante el periodo entre consultas, incluso si el proceso requiere poco tiempo y esfuerzo. Necesitamos evaluar primero si un mecanismo de registro sencillo, como fotografías o registro manual, reduce suficientemente el esfuerzo necesario para mantener ese hábito. Si esto no ocurre, la propuesta de valor de Healthify se debilita porque el nutricionista no contará con información suficiente para el seguimiento. |
 | **8** | **¿Cuál es la menor cantidad de trabajo que necesitamos hacer para resolver los supuestos?** | Diseñar un prototipo del flujo de registro de comidas mediante fotografía y registro manual. Probarlo con pacientes del segmento objetivo mediante tareas de uso y un piloto corto de varios días, evaluando la facilidad de uso, el tiempo requerido para completar cada registro y la disposición de los pacientes a mantener este registro de forma cotidiana durante el periodo entre consultas. También recopilar retroalimentación cualitativa sobre qué tendría que cambiar para que confíen en la función de forma constante. |
+
+<div style="page-break-after: always"></div>
 
 ## 1.3. Segmentos Objetivo
 
