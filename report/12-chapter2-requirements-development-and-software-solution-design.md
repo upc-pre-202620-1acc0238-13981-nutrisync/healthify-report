@@ -140,6 +140,24 @@ Las entrevistas fueron diseñadas con preguntas diferenciadas según cada segmen
 
 ### 2.2.3. Análisis de entrevistas
 
+#### Segmento 2: Paciente en tratamiento nutricional activo
+
+**Características objetivas**
+
+Las dos entrevistadas de este segmento son mujeres residentes en Perú, aunque en ciudades distintas: Evelyn (52 años, Iquitos - Loreto) y Larisa (20 años, San Miguel - Lima), lo que evidencia que el segmento agrupa perfiles heterogéneos en edad y ubicación dentro del país. En cuanto a ocupación, una es docente universitaria (Evelyn) y la otra es estudiante universitaria de Administración y Marketing (Larisa). Respecto al motivo de inicio del tratamiento, Evelyn llegó al nutricionista por derivación externa, a raíz de un examen ocupacional que reveló valores elevados de triglicéridos y azúcar, mientras que Larisa acudió por decisión propia, buscando mejorar su alimentación y su relación con su cuerpo tras intentos fallidos de hacerlo por su cuenta.
+
+Ambas entrevistadas reciben y almacenan su plan nutricional principalmente a través de WhatsApp, ya sea como cronograma semanal (Evelyn) o como mensajes y capturas de pantalla puntuales (Larisa). En cuanto al registro de comidas, se observa un contraste: Evelyn mantiene una disciplina estricta de envío fotográfico diario de las tres comidas, sin excepción, directamente a su nutricionista, mientras que Larisa no lleva ningún registro formal y se guía únicamente comparando mentalmente lo que consume con las indicaciones recibidas. En ambos casos existe dispersión en el manejo de los datos de análisis y medidas antropométricas, sin un sistema centralizado: la información queda repartida entre el celular de la paciente, el WhatsApp compartido y lo que conserva el propio nutricionista. Finalmente, Larisa ha probado una aplicación de registro nutricional dedicada (Fitia), pero la abandonó por la fricción de ingresar datos manualmente, mientras que Evelyn solo ha usado aplicaciones de delivery con información nutricional, sin experiencia previa en apps de registro.
+
+**Características subjetivas**
+
+Respecto al manejo de las desviaciones del plan, se observa un contraste marcado: Evelyn reporta absolutamente todas sus comidas fuera del plan, incluso en contextos sociales o laborales, manteniendo una comunicación constante y transparente con su nutricionista, mientras que Larisa omite reportar desviaciones que considera menores o "autorizadas" dentro de un margen de flexibilidad acordado, como comer pizza un fin de semana. Esto sugiere que el nivel de transparencia hacia el nutricionista no depende únicamente de la relación profesional, sino también de cómo cada paciente interpreta las reglas de su propio plan.
+
+En cuanto a la frecuencia de pesaje, Evelyn la decidió por cuenta propia en función de cómo percibe su propia estabilidad, mientras que Larisa sigue una frecuencia establecida directamente por su nutricionista para comparar avances entre consultas. A pesar de estas diferencias, ambas entrevistadas se mostraron muy receptivas ante las hipótesis de producto planteadas: las dos afirmaron que usarían a diario una función de registro por foto con confirmación automática del sistema, condicionando su uso continuo a que la herramienta sea eficiente y no requiera ingreso manual excesivo de datos. Asimismo, ambas valoraron positivamente un botón de "comí fuera del plan" que no exija justificación detallada, destacando que les ahorraría tiempo (Evelyn) y les evitaría la sensación de tener que justificarse (Larisa), permitiendo igualmente que el nutricionista lo tenga en cuenta en la siguiente consulta. Finalmente, ambas identificaron espontáneamente la centralización de su información como el cambio más deseado: Evelyn busca agilizar el envío de evidencia mediante mensajes predefinidos, mientras que Larisa quiere reunir en un solo lugar su plan, sus medidas y su registro de alimentación, que hoy están dispersos entre WhatsApp, un bloc de notas y su memoria.
+
+**Conclusión**
+
+En conclusión, este grupo no necesita una herramienta que las obligue a registrar manualmente cada dato, sino una solución que reduzca la fricción de comunicación con su nutricionista y centralice información hoy dispersa entre WhatsApp, notas y memoria. Ambas pacientes valoran especialmente la automatización del registro mediante fotos y la posibilidad de reportar desviaciones sin tener que justificarse extensamente, lo que indica una alta disposición a adoptar una app que se integre naturalmente en su comunicación cotidiana con el especialista, sin añadir carga adicional a su rutina.
+
 ## 2.3. Needfinding
 
 ### 2.3.1. User Personas
