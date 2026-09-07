@@ -1,0 +1,256 @@
+@startuml Healthify - Nutritional Care - Interfaces
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.NutritionalCare.Interfaces" {
+
+  package "Acl" {
+    ' Never exposes a diagnosis, a clinical rationale or a calculation basis:
+    ' the same rule that keeps them out of the published event.
+    interface INutritionalCareContextFacade {
+      +GetActiveTargetsByPatientId(patientId: int, ct): Task<ActiveTargetsItem?>
+      +GetOpenReviewItemCount(practitionerId: int, ct): Task<int>
+    }
+    class ActiveTargetsItem <<record>> {
+      -PatientId: int
+      -PlanVersion: int
+      -ValidFrom: DateTimeOffset
+      -EnergyKcal: decimal
+      -ProteinG: decimal
+      -CarbG: decimal
+      -FatG: decimal
+      -Guidelines: IReadOnlyList<string>
+      -Restrictions: IReadOnlyList<string>
+    }
+  }
+
+  package "REST" {
+    ' Every controller of this context is [Authorize(Roles = "Practitioner")]:
+    ' the patient never measures, diagnoses, prescribes or resolves.
+    class NutritionalAssessmentsController {
+      +RecordAssessment(resource: RecordAssessmentResource): Task<IActionResult>
+      +TakeClinicalMeasurement(assessmentId: int, resource: TakeClinicalMeasurementResource): Task<IActionResult>
+      +CloseAssessment(assessmentId: int): Task<IActionResult>
+      +GetAssessmentById(assessmentId: int): Task<IActionResult>
+    }
+    class NutritionalDiagnosesController {
+      +IssueDiagnosis(resource: IssueDiagnosisResource): Task<IActionResult>
+    }
+    class NutritionPlansController {
+      +ProposeTargets(resource: ProposeTargetsResource): Task<IActionResult>
+      +PrescribeTargets(planId: int, resource: PrescribeTargetsResource): Task<IActionResult>
+      +PublishNutritionPlan(planId: int, resource: PublishNutritionPlanResource): Task<IActionResult>
+      +AdjustNutritionPlan(planId: int, resource: AdjustNutritionPlanResource): Task<IActionResult>
+    }
+    class PatientClinicalRecordController {
+      +GetAssessments(patientId: int): Task<IActionResult>
+      +GetActiveDiagnosis(patientId: int): Task<IActionResult>
+      +GetPlans(patientId: int): Task<IActionResult>
+      +GetActivePlan(patientId: int): Task<IActionResult>
+    }
+    class ReviewItemsController {
+      +GetOpenReviewItems(): Task<IActionResult>
+      +ResolveReviewItem(reviewItemId: int, resource: ResolveReviewItemResource): Task<IActionResult>
+    }
+  }
+
+  package "REST.Resources" {
+    class RecordAssessmentResource <<record>>
+    class TakeClinicalMeasurementResource <<record>>
+    class IssueDiagnosisResource <<record>>
+    class ProposeTargetsResource <<record>>
+    class PrescribeTargetsResource <<record>>
+    class PublishNutritionPlanResource <<record>>
+    class AdjustNutritionPlanResource <<record>>
+    class ResolveReviewItemResource <<record>>
+    class ClinicalMeasurementResource <<record>>
+    class NutritionalAssessmentResource <<record>>
+    class NutritionalDiagnosisResource <<record>>
+    class CalculationBasisResource <<record>>
+    class TargetsResource <<record>>
+    class NutritionPlanResource <<record>>
+    class ReviewItemResource <<record>>
+  }
+
+  package "REST.Transform" {
+    class RecordAssessmentCommandAssembler <<static>>
+    class TakeClinicalMeasurementCommandAssembler <<static>>
+    class CloseAssessmentCommandAssembler <<static>>
+    class IssueDiagnosisCommandAssembler <<static>>
+    class ProposeTargetsCommandAssembler <<static>>
+    class PrescribeTargetsCommandAssembler <<static>>
+    class PublishNutritionPlanCommandAssembler <<static>>
+    class AdjustNutritionPlanCommandAssembler <<static>>
+    class ResolveReviewItemCommandAssembler <<static>>
+    class NutritionalAssessmentResourceAssembler <<static>>
+    class NutritionalDiagnosisResourceAssembler <<static>>
+    class NutritionPlanResourceAssembler <<static>>
+    class ReviewItemResourceAssembler <<static>>
+    ' The single place where a NutritionalCareError becomes an HTTP status.
+    class NutritionalCareActionResultAssembler <<static>>
+  }
+}
+
+package "NutritionalCare.Application" <<external>> {
+  interface INutritionalAssessmentCommandService
+  interface INutritionalAssessmentQueryService
+  interface INutritionalDiagnosisCommandService
+  interface INutritionalDiagnosisQueryService
+  interface INutritionPlanCommandService
+  interface INutritionPlanQueryService
+  interface IReviewItemCommandService
+  interface IReviewItemQueryService
+}
+
+package "NutritionalCare.Domain" <<external>> {
+  class NutritionalAssessment
+  class ClinicalMeasurement
+  class NutritionalDiagnosis
+  class NutritionPlan
+  class ReviewItem
+  class RecordAssessmentCommand
+  class TakeClinicalMeasurementCommand
+  class CloseAssessmentCommand
+  class IssueDiagnosisCommand
+  class ProposeTargetsCommand
+  class PrescribeTargetsCommand
+  class PublishNutritionPlanCommand
+  class AdjustNutritionPlanCommand
+  class ResolveReviewItemCommand
+  class GetAssessmentByIdQuery
+  class GetAssessmentsByPatientIdQuery
+  class GetActiveDiagnosisByPatientIdQuery
+  class GetActivePlanByPatientIdQuery
+  class GetPlansByPatientIdQuery
+  class GetOpenReviewItemsByPractitionerIdQuery
+  enum NutritionalCareError
+}
+
+package "Shared / ASP.NET" <<external>> {
+  class ControllerBase
+  class "Result<TValue, TError>" as Result
+  class ProblemDetailsFactory
+  class ControllerBaseExtensions <<static>>
+  interface "IStringLocalizer<T>" as IStringLocalizerGeneric
+}
+
+package "NutritionalCare.Resources" {
+  class NutritionalCareMessages
+}
+
+' Resolved generic: the controllers depend on IStringLocalizer<NutritionalCareMessages>.
+interface "IStringLocalizer<NutritionalCareMessages>" as IStringLocalizer
+IStringLocalizer ..|> IStringLocalizerGeneric
+IStringLocalizer ..> NutritionalCareMessages : parameterized by
+
+' --- Controllers ---
+NutritionalAssessmentsController --|> ControllerBase
+NutritionalDiagnosesController --|> ControllerBase
+NutritionPlansController --|> ControllerBase
+PatientClinicalRecordController --|> ControllerBase
+ReviewItemsController --|> ControllerBase
+NutritionalAssessmentsController --> INutritionalAssessmentCommandService : uses
+NutritionalAssessmentsController --> INutritionalAssessmentQueryService : uses
+NutritionalAssessmentsController --> IStringLocalizer : uses
+NutritionalDiagnosesController --> INutritionalDiagnosisCommandService : uses
+NutritionalDiagnosesController --> IStringLocalizer : uses
+NutritionPlansController --> INutritionPlanCommandService : uses
+NutritionPlansController --> IStringLocalizer : uses
+PatientClinicalRecordController --> INutritionalAssessmentQueryService : uses
+PatientClinicalRecordController --> INutritionalDiagnosisQueryService : uses
+PatientClinicalRecordController --> INutritionPlanQueryService : uses
+PatientClinicalRecordController --> IStringLocalizer : uses
+ReviewItemsController --> IReviewItemCommandService : uses
+ReviewItemsController --> IReviewItemQueryService : uses
+ReviewItemsController --> IStringLocalizer : uses
+
+' --- The practitioner identifier always comes from the session token ---
+NutritionalAssessmentsController ..> ControllerBaseExtensions : reads practitioner id
+NutritionalDiagnosesController ..> ControllerBaseExtensions : reads practitioner id
+NutritionPlansController ..> ControllerBaseExtensions : reads practitioner id
+PatientClinicalRecordController ..> ControllerBaseExtensions : reads practitioner id
+ReviewItemsController ..> ControllerBaseExtensions : reads practitioner id
+
+' --- Controllers to assemblers and queries ---
+NutritionalAssessmentsController ..> RecordAssessmentCommandAssembler : uses
+NutritionalAssessmentsController ..> TakeClinicalMeasurementCommandAssembler : uses
+NutritionalAssessmentsController ..> CloseAssessmentCommandAssembler : uses
+NutritionalAssessmentsController ..> NutritionalAssessmentResourceAssembler : uses
+NutritionalAssessmentsController ..> NutritionalCareActionResultAssembler : uses
+NutritionalAssessmentsController ..> GetAssessmentByIdQuery : builds
+NutritionalDiagnosesController ..> IssueDiagnosisCommandAssembler : uses
+NutritionalDiagnosesController ..> NutritionalCareActionResultAssembler : uses
+NutritionPlansController ..> ProposeTargetsCommandAssembler : uses
+NutritionPlansController ..> PrescribeTargetsCommandAssembler : uses
+NutritionPlansController ..> PublishNutritionPlanCommandAssembler : uses
+NutritionPlansController ..> AdjustNutritionPlanCommandAssembler : uses
+NutritionPlansController ..> NutritionalCareActionResultAssembler : uses
+PatientClinicalRecordController ..> NutritionalAssessmentResourceAssembler : uses
+PatientClinicalRecordController ..> NutritionalDiagnosisResourceAssembler : uses
+PatientClinicalRecordController ..> NutritionPlanResourceAssembler : uses
+PatientClinicalRecordController ..> NutritionalCareActionResultAssembler : uses
+PatientClinicalRecordController ..> GetAssessmentsByPatientIdQuery : builds
+PatientClinicalRecordController ..> GetActiveDiagnosisByPatientIdQuery : builds
+PatientClinicalRecordController ..> GetPlansByPatientIdQuery : builds
+PatientClinicalRecordController ..> GetActivePlanByPatientIdQuery : builds
+ReviewItemsController ..> ResolveReviewItemCommandAssembler : uses
+ReviewItemsController ..> ReviewItemResourceAssembler : uses
+ReviewItemsController ..> NutritionalCareActionResultAssembler : uses
+ReviewItemsController ..> GetOpenReviewItemsByPractitionerIdQuery : builds
+
+' --- Request resource to command assemblers ---
+RecordAssessmentCommandAssembler ..> RecordAssessmentResource : from
+RecordAssessmentCommandAssembler ..> RecordAssessmentCommand : to
+TakeClinicalMeasurementCommandAssembler ..> TakeClinicalMeasurementResource : from
+TakeClinicalMeasurementCommandAssembler ..> TakeClinicalMeasurementCommand : to
+' Both identifiers come from the route and the token: there is no payload.
+CloseAssessmentCommandAssembler ..> CloseAssessmentCommand : to
+IssueDiagnosisCommandAssembler ..> IssueDiagnosisResource : from
+IssueDiagnosisCommandAssembler ..> IssueDiagnosisCommand : to
+ProposeTargetsCommandAssembler ..> ProposeTargetsResource : from
+ProposeTargetsCommandAssembler ..> ProposeTargetsCommand : to
+PrescribeTargetsCommandAssembler ..> PrescribeTargetsResource : from
+PrescribeTargetsCommandAssembler ..> PrescribeTargetsCommand : to
+PublishNutritionPlanCommandAssembler ..> PublishNutritionPlanResource : from
+PublishNutritionPlanCommandAssembler ..> PublishNutritionPlanCommand : to
+AdjustNutritionPlanCommandAssembler ..> AdjustNutritionPlanResource : from
+AdjustNutritionPlanCommandAssembler ..> AdjustNutritionPlanCommand : to
+ResolveReviewItemCommandAssembler ..> ResolveReviewItemResource : from
+ResolveReviewItemCommandAssembler ..> ResolveReviewItemCommand : to
+
+' --- Entity to response resource assemblers ---
+NutritionalAssessmentResourceAssembler ..> NutritionalAssessment : from
+NutritionalAssessmentResourceAssembler ..> NutritionalAssessmentResource : to
+NutritionalAssessmentResourceAssembler ..> ClinicalMeasurement : from
+NutritionalAssessmentResourceAssembler ..> ClinicalMeasurementResource : to
+NutritionalDiagnosisResourceAssembler ..> NutritionalDiagnosis : from
+NutritionalDiagnosisResourceAssembler ..> NutritionalDiagnosisResource : to
+NutritionPlanResourceAssembler ..> NutritionPlan : from
+NutritionPlanResourceAssembler ..> NutritionPlanResource : to
+ReviewItemResourceAssembler ..> ReviewItem : from
+ReviewItemResourceAssembler ..> ReviewItemResource : to
+
+' --- Read resource composition ---
+NutritionalAssessmentResource o--> "0..*" ClinicalMeasurementResource : Anthropometry
+' The basis is on the plan resource, which is why it is practitioner only.
+NutritionPlanResource *--> "1" CalculationBasisResource : contains
+NutritionPlanResource *--> "1" TargetsResource : Proposal
+NutritionPlanResource *--> "0..1" TargetsResource : Prescribed
+
+' --- Result to IActionResult assembler ---
+NutritionalCareActionResultAssembler ..> Result : maps
+NutritionalCareActionResultAssembler ..> NutritionalCareError : maps
+NutritionalCareActionResultAssembler ..> NutritionalAssessmentResourceAssembler : uses
+NutritionalCareActionResultAssembler ..> NutritionalDiagnosisResourceAssembler : uses
+NutritionalCareActionResultAssembler ..> NutritionPlanResourceAssembler : uses
+NutritionalCareActionResultAssembler ..> ReviewItemResourceAssembler : uses
+NutritionalCareActionResultAssembler ..> ProblemDetailsFactory : builds problem details with
+NutritionalCareActionResultAssembler ..> IStringLocalizer : localizes with
+
+' --- ACL facade contract & its DTO ---
+INutritionalCareContextFacade ..> ActiveTargetsItem : returns
+
+@enduml

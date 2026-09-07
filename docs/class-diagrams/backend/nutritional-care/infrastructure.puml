@@ -1,0 +1,176 @@
+@startuml Healthify - Nutritional Care - Infrastructure
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.NutritionalCare.Infrastructure" {
+
+  package "Calculators" {
+    ' The four published equations. Every constant comes from the literature
+    ' and every result is reproducible with a pocket calculator: no black box,
+    ' no external service, no model.
+    class BmrCalculator {
+      +ComputeBmr(equation: Equation, inputs: BmrInputs): decimal
+      -{static} MifflinStJeor(i: BmrInputs): decimal
+      -{static} HarrisBenedict(i: BmrInputs): decimal
+      -{static} FaoWhoUnu(i: BmrInputs): decimal
+      -{static} KatchMcArdle(i: BmrInputs): decimal
+    }
+  }
+
+  package "Persistence.EFC.Configuration" {
+    class NutritionalAssessmentEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<NutritionalAssessment>): void
+    }
+    class ClinicalMeasurementEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<ClinicalMeasurement>): void
+    }
+    class NutritionalDiagnosisEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<NutritionalDiagnosis>): void
+    }
+    class NutritionPlanEntityTypeConfiguration {
+      -{static} StringListComparer: ValueComparer<List<string>>
+      +Configure(builder: EntityTypeBuilder<NutritionPlan>): void
+    }
+    class ReviewItemEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<ReviewItem>): void
+    }
+  }
+
+  package "Persistence.EFC.Repositories" {
+    class NutritionalAssessmentRepository {
+      -WithRelations(): IQueryable<NutritionalAssessment>
+      +FindByIdAsync(id: int, ct): Task<NutritionalAssessment?>
+      +ListByPatientIdAsync(patientId: int, ct): Task<IEnumerable<NutritionalAssessment>>
+    }
+    class NutritionalDiagnosisRepository {
+      +FindByIdAsync(id: int, ct): Task<NutritionalDiagnosis?>
+      +FindActiveByPatientIdAsync(patientId: int, ct): Task<NutritionalDiagnosis?>
+    }
+    class NutritionPlanRepository {
+      +FindByIdAsync(id: int, ct): Task<NutritionPlan?>
+      +FindActiveByPatientIdAsync(patientId: int, ct): Task<NutritionPlan?>
+      +ListByPatientIdAsync(patientId: int, ct): Task<IEnumerable<NutritionPlan>>
+      +GetLatestVersionAsync(patientId: int, ct): Task<int>
+    }
+    class ReviewItemRepository {
+      -{static} OpenState: ReviewItemState
+      +FindByIdAsync(id: int, ct): Task<ReviewItem?>
+      +ExistsOpenForPatientAndSignalTypeAsync(patientId: int, signalType: SignalType, ct): Task<bool>
+      +ListOpenByPractitionerIdAsync(practitionerId: int, ct): Task<IEnumerable<ReviewItem>>
+      +CountOpenByPractitionerIdAsync(practitionerId: int, ct): Task<int>
+      -OpenFor(practitionerId: int): IQueryable<ReviewItem>
+    }
+  }
+}
+
+package "NutritionalCare.Domain" <<external>> {
+  class NutritionalAssessment
+  class ClinicalMeasurement
+  class NutritionalDiagnosis
+  class NutritionPlan
+  class ReviewItem
+  class AssessmentId
+  class DiagnosisId
+  class PlanId
+  class ReviewItemId
+  class BiologicalSex
+  class MeasurementProtocol
+  class ClinicalRationale
+  class Equation
+  class ChangeReason
+  class SignalType
+  class ReviewItemState
+  class BmrInputs
+  interface IBmrCalculator
+  interface INutritionalAssessmentRepository
+  interface INutritionalDiagnosisRepository
+  interface INutritionPlanRepository
+  interface IReviewItemRepository
+}
+
+package "Shared.Infrastructure / EF Core" <<external>> {
+  class AppDbContext
+  class "BaseRepository<T>" as BaseRepository
+  interface "IBaseRepository<T>" as IBaseRepository
+  interface "IEntityTypeConfiguration<T>" as IEntityTypeConfiguration
+  class "ValueConverter<TModel, TProvider>" as ValueConverter
+  class "ValueComparer<T>" as ValueComparer
+  class AuditableEntityInterceptor
+  class JsonSerializer
+}
+
+' --- Domain service implementation (port to adapter) ---
+BmrCalculator ..|> IBmrCalculator
+BmrCalculator ..> Equation : selects the formula by
+BmrCalculator ..> BmrInputs : reads
+BmrCalculator ..> BiologicalSex : stratifies by
+
+' --- EF Core entity configurations ---
+NutritionalAssessmentEntityTypeConfiguration ..|> IEntityTypeConfiguration
+ClinicalMeasurementEntityTypeConfiguration ..|> IEntityTypeConfiguration
+NutritionalDiagnosisEntityTypeConfiguration ..|> IEntityTypeConfiguration
+NutritionPlanEntityTypeConfiguration ..|> IEntityTypeConfiguration
+ReviewItemEntityTypeConfiguration ..|> IEntityTypeConfiguration
+NutritionalAssessmentEntityTypeConfiguration ..> NutritionalAssessment : maps to nutritional_assessments
+ClinicalMeasurementEntityTypeConfiguration ..> ClinicalMeasurement : maps to clinical_measurements
+NutritionalDiagnosisEntityTypeConfiguration ..> NutritionalDiagnosis : maps to nutritional_diagnoses
+NutritionPlanEntityTypeConfiguration ..> NutritionPlan : maps to nutrition_plans
+ReviewItemEntityTypeConfiguration ..> ReviewItem : maps to review_items
+NutritionalAssessmentEntityTypeConfiguration ..> AssessmentId : converts
+NutritionalAssessmentEntityTypeConfiguration ..> BiologicalSex : converts
+' The only EF navigation of this context: inside the aggregate, cascade delete.
+NutritionalAssessmentEntityTypeConfiguration ..> ClinicalMeasurementEntityTypeConfiguration : owns via HasMany
+ClinicalMeasurementEntityTypeConfiguration ..> MeasurementProtocol : converts
+ClinicalMeasurementEntityTypeConfiguration ..> AssessmentId : converts the FK
+NutritionalDiagnosisEntityTypeConfiguration ..> DiagnosisId : converts
+NutritionalDiagnosisEntityTypeConfiguration ..> ClinicalRationale : converts
+NutritionPlanEntityTypeConfiguration ..> PlanId : converts
+NutritionPlanEntityTypeConfiguration ..> Equation : converts
+NutritionPlanEntityTypeConfiguration ..> ChangeReason : converts (nullable VO)
+NutritionPlanEntityTypeConfiguration --> ValueConverter : uses for nullable VO
+' Without the comparer EF never notices a list change and updates are lost.
+NutritionPlanEntityTypeConfiguration --> ValueComparer : compares the JSON lists with
+NutritionPlanEntityTypeConfiguration --> JsonSerializer : stores guidelines / restrictions as JSON
+ReviewItemEntityTypeConfiguration ..> ReviewItemId : converts
+ReviewItemEntityTypeConfiguration ..> SignalType : converts
+ReviewItemEntityTypeConfiguration ..> ReviewItemState : converts
+AppDbContext ..> NutritionalAssessmentEntityTypeConfiguration : applies
+AppDbContext ..> ClinicalMeasurementEntityTypeConfiguration : applies
+AppDbContext ..> NutritionalDiagnosisEntityTypeConfiguration : applies
+AppDbContext ..> NutritionPlanEntityTypeConfiguration : applies
+AppDbContext ..> ReviewItemEntityTypeConfiguration : applies
+AppDbContext --> AuditableEntityInterceptor : stamps created_at / updated_at
+
+' --- Repositories ---
+NutritionalAssessmentRepository --|> BaseRepository
+NutritionalDiagnosisRepository --|> BaseRepository
+NutritionPlanRepository --|> BaseRepository
+ReviewItemRepository --|> BaseRepository
+BaseRepository ..|> IBaseRepository
+NutritionalAssessmentRepository ..|> INutritionalAssessmentRepository
+NutritionalDiagnosisRepository ..|> INutritionalDiagnosisRepository
+NutritionPlanRepository ..|> INutritionPlanRepository
+ReviewItemRepository ..|> IReviewItemRepository
+NutritionalAssessmentRepository --> AppDbContext : queries
+NutritionalDiagnosisRepository --> AppDbContext : queries
+NutritionPlanRepository --> AppDbContext : queries
+ReviewItemRepository --> AppDbContext : queries
+' Loads the anthropometry with the assessment: the calculation reads it.
+NutritionalAssessmentRepository ..> NutritionalAssessment : persists
+NutritionalAssessmentRepository ..> ClinicalMeasurement : includes
+NutritionalAssessmentRepository ..> AssessmentId : rebuilds typed id
+NutritionalDiagnosisRepository ..> NutritionalDiagnosis : persists
+NutritionalDiagnosisRepository ..> DiagnosisId : rebuilds typed id
+NutritionPlanRepository ..> NutritionPlan : persists
+NutritionPlanRepository ..> PlanId : rebuilds typed id
+ReviewItemRepository ..> ReviewItem : persists
+ReviewItemRepository ..> ReviewItemId : rebuilds typed id
+' Compared through the value converter: EF cannot translate a member of a
+' converted type, so the state is compared as a whole value object.
+ReviewItemRepository ..> ReviewItemState : filters by
+ReviewItemRepository ..> SignalType : filters by
+
+@enduml
