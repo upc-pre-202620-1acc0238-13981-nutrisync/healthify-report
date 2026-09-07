@@ -1,0 +1,87 @@
+@startuml FoodCatalog_Component_Diagram
+' =============================================================================
+'  Healthify Platform - Bounded Context: Food Catalog
+'  C4 Model - Level 3: Component Diagram
+'  Container decomposed: Healthify Platform API (ASP.NET Core 10 Web API)
+' =============================================================================
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_TOP_DOWN()
+LAYOUT_WITH_LEGEND()
+
+title Component Diagram - Bounded Context "Food Catalog" (Container: Healthify Platform API)
+
+Person(patient, "Patient", "Searches a food while logging a meal")
+Person(practitioner, "Practitioner", "Creates a local override when the reference record does not match the food actually eaten")
+
+Container(mobile, "Mobile Application", "Flutter / MAUI", "Search box of the diary; renders the local catalog of the patient")
+
+Container_Boundary(api, "Healthify Platform API") {
+
+    ' ------------------------------------------------------------- Interfaces
+    Component(referenceFoodsController, "ReferenceFoodsController", "ASP.NET Core REST Controller", "api/v1/reference-foods. Search and read")
+    Component(localCatalogController, "LocalFoodCatalogController", "ASP.NET Core REST Controller", "api/v1/patients. Local catalog and overrides")
+    Component(fcAssemblers, "Food Catalog Transform Assemblers", "C# static assemblers", "Maps resources, commands and responses")
+
+    ' ------------------------------------------------------------- Application
+    Component(foodCmdService, "ReferenceFoodCommandService", "C# Application Service (CQRS command side)", "Searches, caches, overrides and imports")
+    Component(foodQryService, "ReferenceFoodQueryService", "C# Application Service (CQRS query side)", "Local-first search of the catalog")
+    Component(onTranslated, "OnReferenceFoodTranslatedHandler", "Cortex.Mediator IEventHandler of ReferenceFoodTranslated", "Policy 6.2: the only writer on import")
+    Component(fcFacade, "FoodCatalogContextFacade", "C# ACL - Open Host Service", "Publishes food resolution and search")
+
+    ' ------------------------------------------------------------- Domain
+    Component(foodAggregate, "ReferenceFood", "C# Aggregate Root", "A food with nutrients and provenance")
+    Component(fcValueObjects, "Value Objects and Errors", "C# records and enums", "LocalName, NutrientsPer100g, SourceHash, errors")
+    Component(providerPort, "IExternalFoodCatalogProvider", "C# Domain Service interface (port)", "External catalog port of the domain")
+
+    ' ------------------------------------------------------------- Infrastructure
+    Component(usdaProvider, "UsdaFoodDataProvider", "C# ACL adapter, HttpClient, 10 s timeout", "Translates USDA records into the port")
+    Component(offProvider, "OpenFoodFactsProvider", "C# ACL adapter, HttpClient, 10 s timeout", "Translates Open Food Facts records")
+    Component(fcRepo, "ReferenceFoodRepository", "C# Repository over EF Core 10", "Persists the reference foods")
+    Component(fcEfcConfig, "ReferenceFood EntityTypeConfiguration", "EF Core 10 Fluent API", "Maps table, search index and hash")
+    Component(fcSeeder, "ReferenceFoodSeeder", "C# EF Core seeder", "Seeds the baseline catalog at startup")
+    Component(importHostedService, "CatalogImportHostedService", "ASP.NET Core BackgroundService", "Imports catalog snapshots periodically")
+}
+
+ContainerDb(db, "Healthify Database", "MySQL 8.4", "Owns the reference_foods table and its audit table")
+
+System_Ext(usda, "USDA FoodData Central", "Public nutritional database of the U.S. Department of Agriculture. Requires an API key")
+System_Ext(off, "Open Food Facts", "Open collaborative database of packaged food products")
+
+Container_Ext(intakeCtx, "Intake and Body Response", "Sibling bounded context", "Resolves the food of a diary entry against the local catalog through the Open Host Service")
+
+' ------------------------------------------------------------------ Relations
+Rel(patient, mobile, "Searches a food", "Touch")
+Rel(practitioner, mobile, "Creates a local override", "Touch")
+Rel(mobile, referenceFoodsController, "Searches and reads reference foods", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, localCatalogController, "Reads the local catalog and creates overrides", "JSON/HTTPS, Bearer JWT")
+
+Rel(referenceFoodsController, fcAssemblers, "Maps resources and commands through", "in-process")
+Rel(localCatalogController, fcAssemblers, "Maps resources and commands through", "in-process")
+Rel(referenceFoodsController, foodCmdService, "Sends SearchFoodCommand and CacheFoodLocallyCommand", "in-process")
+Rel(referenceFoodsController, foodQryService, "Sends catalog queries", "in-process")
+Rel(localCatalogController, foodCmdService, "Sends CreateLocalOverrideCommand", "in-process")
+Rel(localCatalogController, foodQryService, "Reads the local catalog", "in-process")
+
+Rel(foodCmdService, foodAggregate, "Creates, caches and overrides", "in-process")
+Rel(foodAggregate, fcValueObjects, "Is built from", "in-process")
+Rel(foodCmdService, providerPort, "Requests an external snapshot through", "in-process")
+Rel(providerPort, usdaProvider, "Is implemented by", "DI")
+Rel(providerPort, offProvider, "Is implemented by", "DI")
+Rel(usdaProvider, usda, "Fetches food records from", "JSON/HTTPS, API key, 10 s timeout")
+Rel(offProvider, off, "Fetches product records from", "JSON/HTTPS, 10 s timeout")
+
+Rel(importHostedService, foodCmdService, "Issues ImportCatalogSnapshotCommand", "in-process, scoped")
+Rel(foodCmdService, onTranslated, "Publishes ReferenceFoodTranslated to", "Cortex.Mediator, own DI scope")
+Rel(onTranslated, foodCmdService, "Sends CacheFoodLocallyCommand: the only write path of an import", "in-process")
+
+Rel(foodCmdService, fcRepo, "Reads and writes through", "in-process")
+Rel(foodQryService, fcRepo, "Reads through", "in-process")
+Rel(fcFacade, fcRepo, "Resolves food questions through", "in-process")
+Rel(fcSeeder, fcRepo, "Seeds the baseline catalog through", "startup, in-process")
+Rel(fcRepo, fcEfcConfig, "Is mapped by", "EF Core model")
+Rel(fcRepo, db, "Reads from and writes to", "EF Core 10 / MySQL, TCP 3306")
+
+Rel(intakeCtx, fcFacade, "Resolves the food of a diary entry", "in-process ACL call")
+
+@enduml
