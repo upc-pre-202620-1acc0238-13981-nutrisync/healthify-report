@@ -492,3 +492,62 @@ Nótese la **asimetría de roles**: el paciente ve su indicador diario y su tarj
 
 **Localización** — `MonitoringAdherence/Resources/MonitoringMessages.cs`. Aquí vive el tono del recordatorio y del prompt al paciente, que es **el único lugar donde un tono puede vivir**.
 
+#### 2.6.2.3. Application Layer
+
+La Application Layer de este contexto orquesta once subflujos (5.1 a 5.11) y aloja **el mayor número de event handlers de la plataforma**: trece políticas, de las cuales nueve reaccionan a eventos de otros bounded contexts. Es aquí donde se evidencian los capabilities del contexto: evaluar días, detectar y sostener desviaciones, calcular el índice de consistencia, preguntar al paciente, escalar al profesional, detectar huecos de registro y gestionar derivaciones y citas.
+
+**Command Services**
+
+**`EvaluationWindowCommandService`** — Depende de `IEvaluationWindowRepository`, **`IIntakeContextFacade`**, `IUnitOfWork`, `IConfiguration`, `ILogger<...>` e `IMediator`. **Es la única clase de la plataforma que pone lo prescrito al lado de lo registrado**: lee el lado registrado a través del contrato publicado del contexto que lo posee y el lado prescrito desde los snapshots que la ventana tomó en su momento. Ningún lado se escribe desde aquí.
+
+| Método | Subflujo | Comportamiento |
+|---|---|---|
+| `Handle(OpenEvaluationWindowCommand)` | 5.1 | *Minimum Seven Day Window* y *One Open Window Per Patient*. Publica `EvaluationWindowOpened`. |
+| `Handle(SnapshotActiveTargetsCommand)` | 5.2 | Construye el `TargetsSnapshot` y lo anexa dejando la serie diaria en paz. Publica `TargetsSnapshotTaken`. |
+| `Handle(AppendAnthropometryPointCommand)` | 5.3 | Añade el punto clínico. Publica `AnthropometryPointAppended`. |
+| `Handle(EvaluateDayCommand)` | 5.4 | Delega en `EvaluateSingleDay(..., isReEvaluation: false, ...)`. |
+| `Handle(ReEvaluateWindowCommand)` | 5.5 | Delega en `EvaluateSingleDay(..., isReEvaluation: true, ...)`. |
+| `Handle(FlagLoggingGapCommand)` | 5.9 | Umbral `Monitoring:LoggingGapThresholdDays` (3 por defecto). Publica `LoggingGapDetected`. **Nada aquí alcanza el agregado `Deviation` ni el índice de consistencia.** |
+| `Handle(RemindPatientCommand)` | 5.9 | Publica `PatientReminded`. |
+| `Handle(CloseEvaluationWindowCommand)` | 5.11 | Publica `EvaluationWindowClosed`. |
+
+Su método privado clave, `EvaluateSingleDay(int, DateOnly, bool, CT)`, resuelve la ventana abierta, toma **los objetivos que estaban en vigor el día evaluado** (no los de ahora), consulta el resumen de ingesta por el ACL, construye el `DailyCompliance` usando `HasAnyEntry` y nunca los totales, rellena los días no registrados **sólo fuera de la ruta de re-evaluación**, y publica los eventos correspondientes.
+
+**`DeviationCommandService`** — Depende de `IDeviationRepository`, `IEvaluationWindowRepository`, `IUnitOfWork`, `IConfiguration`, `ILogger<...>` e `IMediator`. `Handle(DetectDeviationCommand)` exige `HasMinimumSpan` (invariante 1), toma el horizonte rodante, delega en `Deviation.DetectFrom(...)` y, si ya existe una desviación en esa ventana y dirección, la **re-enuncia** en vez de duplicarla. `Handle(FlagSustainedDeviationCommand)` aplica el ratio configurable `Monitoring:SustainedDeviationRatio` (0.5 por defecto) y publica `SustainedDeviationDetected` sólo en la transición.
+
+**`ConsistencyIndexCommandService`** — Depende de `IConsistencyIndexRepository`, `IEvaluationWindowRepository`, `IIntakeContextFacade`, `ICareRelationshipContextFacade`, `IUnitOfWork`, `IConfiguration`, `ILogger<...>` e `IMediator`; constante `TrendDays = 90`. **Invariante 3: esta clase no importa, no inyecta y no alcanza nada relacionado con planes.**
+
+| Método | Subflujo | Comportamiento |
+|---|---|---|
+| `Handle(RecomputeConsistencyIndexCommand)` | 5.7 | Toma la tendencia suavizada de 90 días vía ACL y la serie diaria de la ventana; publica `ConsistencyIndexRecomputed` siempre y `ConsistencyAlertRaised` sólo al entrar en `Alert`. |
+| `Handle(PromptPatientCommand)` | 5.7 | *Patient First Always*, *Prompt Date Recorded*. Publica `PatientPromptedAboutConsistency`. |
+| `Handle(EscalateToPractitionerCommand)` | 5.8 | Guardas en orden: umbral configurado, paciente ya informado, tres semanas en alerta y `CareLink` activo. Publica `AlertEscalatedToPractitioner`. |
+
+La guarda del paciente informado se comprueba aquí para dar una respuesta con nombre **y se aplica otra vez dentro del agregado** para que ningún otro llamador pueda saltársela.
+
+**`ReferralCommandService`** y **`ScheduledFollowUpCommandService`** — Ambos dependen del ACL de Care Relationship y exigen vínculo activo. El primero registra derivaciones (*Specialty And Reason Required*); el segundo programa visitas (*One Active Scheduled Visit Per Patient*) y marca las perdidas desde la política temporal.
+
+**Query Services** — `EvaluationWindowQueryService`, `DeviationQueryService`, `ConsistencyIndexQueryService`, `ReferralQueryService` y `ScheduledFollowUpQueryService`.
+
+**Event Handlers (políticas)** — Trece clases, todas con scope de DI aislado:
+
+| Handler | Escucha | Origen | Emite |
+|---|---|---|---|
+| `OnCareLinkEstablishedHandler` | `CareLinkEstablished` | Care Relationship | `OpenEvaluationWindowCommand` |
+| `OnActiveTargetsUpdatedMonitoringHandler` | `ActiveTargetsUpdated` | Nutritional Care | `SnapshotActiveTargetsCommand` |
+| `OnClinicalMeasurementTakenHandler` | `ClinicalMeasurementTaken` | Nutritional Care | `AppendAnthropometryPointCommand` |
+| `OnMealLoggedHandler` | `MealLogged` | Intake & Body Response | `EvaluateDayCommand` |
+| `OnEstimateConfirmedByPatientHandler` | `EstimateConfirmedByPatient` | Intake & Body Response | `EvaluateDayCommand` |
+| `OnOffPlanEntryLoggedHandler` | `OffPlanEntryLogged` | Intake & Body Response | `EvaluateDayCommand` |
+| `OnEntrySynchronizedHandler` | `EntrySynchronized` | Intake & Body Response | `ReEvaluateWindowCommand` (una sola fecha) |
+| `OnWeightTrendRecalculatedHandler` | `WeightTrendRecalculated` | Intake & Body Response | `RecomputeConsistencyIndexCommand` |
+| `OnCareLinkRevokedHandler` | `CareLinkRevoked` | Care Relationship | `CloseEvaluationWindowCommand` |
+| `OnDayEvaluatedHandler` | `DayEvaluated` | Interno | `DetectDeviationCommand` |
+| `OnDeviationDetectedHandler` | `DeviationDetected` | Interno | `FlagSustainedDeviationCommand` |
+| `OnConsistencyAlertRaisedHandler` | `ConsistencyAlertRaised` | Interno | `PromptPatientCommand` — **el único suscriptor, y le pregunta al paciente** |
+| `OnLoggingGapDetectedHandler` | `LoggingGapDetected` | Interno | `RemindPatientCommand` — **el único suscriptor** |
+
+Los tres handlers de entradas de diario comparten un método auxiliar que emite `EvaluateDayCommand(patientId, date)`, donde `date` es **el día de calendario que el paciente estaba viviendo**, tomado del timestamp local declarado en el evento y nunca del reloj del servidor.
+
+**ACL Facade** — `MonitoringContextFacade` implementa `IMonitoringContextFacade` apoyándose exclusivamente en los query services propios, con degradación elegante: `null` o lista vacía, nunca una excepción propagada.
+
