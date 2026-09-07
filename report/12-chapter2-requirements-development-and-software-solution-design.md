@@ -1442,3 +1442,30 @@ La importación responde **202 Accepted** porque una importación se *acepta*, n
 
 **Localización** — `FoodCatalog/Resources/FoodCatalogMessages.cs`.
 
+#### 2.6.6.3. Application Layer
+
+La Application Layer de Food Catalog orquesta los cuatro subflujos del contexto (6.1 importar snapshot, 6.2 cachear alimento, 6.3 buscar y 6.4 crear override local). Su decisión estructural más importante es que **la importación no escribe**: la única puerta al catálogo es la política de caching, de modo que toda fila almacenada demostrablemente pasó por la traducción.
+
+**Command Service**
+
+**`ReferenceFoodCommandService`** (implementa `IReferenceFoodCommandService`) — Depende de `IReferenceFoodRepository`, `IUnitOfWork`, **`IEnumerable<IExternalFoodCatalogProvider>`** (todas las implementaciones registradas), `ILogger<...>` e `IMediator`; declara la constante privada `MaxRecordsPerProvider = 100`.
+
+| Método | Subflujo | Comportamiento |
+|---|---|---|
+| `Handle(ImportCatalogSnapshotCommand)` | 6.1 | Rechaza el término vacío; si no hay proveedores registrados responde `ExternalCatalogUnavailable`. Por cada proveedor pide el snapshot y publica un `TranslationFailed` por cada fallo y un `ReferenceFoodTranslated` por cada traducción, cerrando con `ExternalCatalogSnapshotImported`. Si **todos** los proveedores respondieron sólo con fallos devuelve `ExternalCatalogUnavailable`, porque el catálogo es inalcanzable —no está vacío— y el llamador merece saber la diferencia. **No escribe nada en la base de datos.** |
+| `Handle(CacheFoodLocallyCommand)` | 6.2 | **La única puerta al catálogo.** Rechaza candidatos que parezcan identificadores externos, valida el nombre local y los nutrientes, exige la huella de origen y aplica **idempotencia** buscando por `SourceHash`: si existe y es override no toca nada; si existe y no lo es lo refresca desde upstream; si no existe lo crea y publica `ReferenceFoodCached`. |
+| `Handle(SearchFoodCommand)` | 6.3 | Busca primero en el catálogo local y, sólo si el término tiene al menos tres caracteres y hay menos resultados de los pedidos, completa desde los proveedores externos y **relee** el catálogo local. Publica `FoodSearchPerformed`. |
+| `Handle(CreateLocalOverrideCommand)` | 6.4 | Exige un profesional, valida ambos value objects y rechaza un override duplicado por nombre. Publica `LocalFoodOverrideCreated`. |
+
+Sus métodos privados son `TopUpFromExternalProvidersAsync(string, int, CT) : Task<bool>` —que envuelve **cada proveedor en su propio `try/catch`**, porque un proveedor inalcanzable es el caso ordinario para el que existe la regla de fallback y no un error que el llamador deba ver—, `ToTranslatedEvent(ExternalFoodRecord)` y `LooksLikeAnExternalIdentifier(string?) : bool`, que devuelve `true` cuando el candidato **no contiene ninguna letra**: un nombre que son sólo dígitos es un código de barras o una clave de proveedor que sobrevivió a una mala traducción, y no debe convertirse en el nombre de un alimento que alguien registre como comida.
+
+**Query Service** — `ReferenceFoodQueryService(IReferenceFoodRepository)` resuelve las tres queries del dominio: por identificador, por búsqueda y para el catálogo local completo.
+
+**Event Handler (política)**
+
+**`OnReferenceFoodTranslatedHandler`** implementa la política *When Reference Food Translated* del subflujo 6.2. Escucha `ReferenceFoodTranslated` mediante `IEventHandler<T>`, crea un scope de DI aislado y emite un `CacheFoodLocallyCommand` con el payload del evento. **Es el único escritor del catálogo que reacciona a una importación**: mantener la escritura aquí, y no dentro del comando de importación, es lo que garantiza que toda fila almacenada pasó por la traducción, porque no hay otra vía de entrada.
+
+**DTO de aplicación** — `CatalogImportSummary(string Term, int ProvidersConsulted, int TranslatedCount, int FailedCount)`, que resume el resultado de una importación y respalda la respuesta 202 Accepted del endpoint.
+
+**ACL Facade** — `FoodCatalogContextFacade` implementa `IFoodCatalogContextFacade` apoyándose en `IReferenceFoodQueryService`, con el método privado estático `ToItem(ReferenceFood) : ReferenceFoodItem` y degradación elegante hacia `null` o lista vacía. Es el contrato que Intake & Body Response consulta de forma síncrona para resolver el alimento que el paciente está registrando.
+
