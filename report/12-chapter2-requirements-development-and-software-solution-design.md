@@ -1304,3 +1304,11 @@ La Infrastructure Layer de IAM implementa la persistencia de cuentas y sesiones 
 
 **Servicios externos** — Ninguno. El *auth provider* que aparece en el event storming está implementado dentro del contenedor: no hay proveedor de identidad externo.
 
+#### 2.6.5.5. Bounded Context Software Architecture Component Level Diagrams
+
+**IAM**
+
+Component:
+
+![IAM Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/iam.puml)
+
