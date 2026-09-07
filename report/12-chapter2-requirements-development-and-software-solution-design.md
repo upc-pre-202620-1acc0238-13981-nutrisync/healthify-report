@@ -1075,3 +1075,11 @@ La razón por la que los tres value objects compuestos del plan se aplanan en co
 
 **Servicios externos** — Ninguno. El `BmrCalculator` es aritmética local, no una API de terceros, y ninguna decisión clínica de este contexto sale de la aplicación.
 
+#### 2.6.4.5. Bounded Context Software Architecture Component Level Diagrams
+
+**Nutritional Care**
+
+Component:
+
+![Nutritional Care Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/nutritional-care.puml)
+
