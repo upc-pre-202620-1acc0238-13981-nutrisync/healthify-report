@@ -1,0 +1,89 @@
+@startuml Iam_Component_Diagram
+' =============================================================================
+'  Healthify Platform - Bounded Context: IAM (Identity and Access Management)
+'  C4 Model - Level 3: Component Diagram
+'  Container decomposed: Healthify Platform API (ASP.NET Core 10 Web API)
+' =============================================================================
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_TOP_DOWN()
+LAYOUT_WITH_LEGEND()
+
+title Component Diagram - Bounded Context "IAM" (Container: Healthify Platform API)
+
+Person(patient, "Patient", "Registers, signs in and keeps a session on the mobile navigation shell")
+Person(practitioner, "Practitioner", "Registers, signs in and keeps a session on the clinical navigation shell")
+
+Container(mobile, "Mobile Application", "Flutter / MAUI", "Two navigation shells selected by the role claim carried in the issued token")
+
+Container_Boundary(api, "Healthify Platform API") {
+
+    ' ------------------------------------------------------------- Interfaces
+    Component(authController, "AuthenticationController", "ASP.NET Core REST Controller", "api/v1/authentication. Register and sign in")
+    Component(sessionsController, "SessionsController", "ASP.NET Core REST Controller", "api/v1/sessions. Sign out and shell")
+    Component(usersController, "UsersController", "ASP.NET Core REST Controller", "api/v1/users. Reads a user identity")
+    Component(iamAssemblers, "IAM Transform Assemblers", "C# static assemblers", "Maps resources, commands and responses")
+
+    ' ------------------------------------------------------------- Application
+    Component(userCmdService, "UserCommandService", "C# Application Service (CQRS command side)", "Registers accounts and hashes passwords")
+    Component(sessionCmdService, "UserSessionCommandService", "C# Application Service (CQRS command side)", "Opens, terminates and shells sessions")
+    Component(userQryService, "UserQueryService", "C# Application Service (CQRS query side)", "Reads users by id or e-mail")
+    Component(sessionQryService, "UserSessionQueryService", "C# Application Service (CQRS query side)", "Reads sessions of a user")
+    Component(roleClaimHandler, "OnRoleClaimIssuedHandler", "Cortex.Mediator IEventHandler of RoleClaimIssued", "Policy 1.2: mounts the navigation shell")
+    Component(iamFacade, "IamContextFacade", "C# ACL - Open Host Service", "Publishes identity and role questions")
+
+    ' ------------------------------------------------------------- Domain
+    Component(userAggregate, "User / UserSession", "C# Aggregate Roots", "Guard identity and session invariants")
+    Component(valueObjects, "Value Objects and Errors", "C# records and enums", "Email, Password, Role, NavigationShell, IamError")
+    Component(domainServices, "IHashingService / ITokenService", "C# Domain Service interfaces (ports)", "Hashing and token ports of the domain")
+
+    ' ------------------------------------------------------------- Infrastructure
+    Component(bcrypt, "BCryptHashingService", "C# adapter, BCrypt.Net-Next 4.0.3", "Hashes and verifies passwords")
+    Component(jwt, "JwtTokenService", "C# adapter, JwtBearer 10", "Issues and validates the bearer token")
+    Component(userRepos, "UserRepository / UserSessionRepository", "C# Repositories over EF Core 10", "Persist users and sessions")
+    Component(efcConfig, "User / UserSession EntityTypeConfiguration", "EF Core 10 Fluent API", "Maps tables, columns and unique indexes")
+}
+
+ContainerDb(db, "Healthify Database", "MySQL 8.4", "Single schema, one migration per bounded context. IAM owns users and user_sessions")
+
+Container_Ext(otherContexts, "Care Relationship / Nutritional Care", "Sibling bounded contexts in the same container", "The only consumers of the IAM Open Host Service")
+
+' ------------------------------------------------------------------ Relations
+Rel(patient, mobile, "Registers, signs in and signs out", "Touch")
+Rel(practitioner, mobile, "Registers, signs in and signs out", "Touch")
+Rel(mobile, authController, "Registers an account and signs in", "JSON/HTTPS")
+Rel(mobile, sessionsController, "Signs out and reads the navigation shell", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, usersController, "Reads the identity of the signed-in user", "JSON/HTTPS, Bearer JWT")
+
+Rel(authController, iamAssemblers, "Maps resource to command and aggregate to resource", "in-process")
+Rel(sessionsController, iamAssemblers, "Maps resource to command and aggregate to resource", "in-process")
+Rel(usersController, iamAssemblers, "Maps aggregate to resource", "in-process")
+
+Rel(authController, userCmdService, "Sends RegisterAccountCommand", "in-process")
+Rel(authController, sessionCmdService, "Sends SignInCommand", "in-process")
+Rel(sessionsController, sessionCmdService, "Sends SignOutCommand", "in-process")
+Rel(sessionsController, sessionQryService, "Sends session queries", "in-process")
+Rel(usersController, userQryService, "Sends user queries", "in-process")
+
+Rel(userCmdService, userAggregate, "Creates and validates", "in-process")
+Rel(sessionCmdService, userAggregate, "Opens and terminates sessions on", "in-process")
+Rel(userAggregate, valueObjects, "Is built from", "in-process")
+Rel(userCmdService, domainServices, "Hashes the password through", "in-process")
+Rel(sessionCmdService, domainServices, "Verifies the password and issues the token through", "in-process")
+Rel(domainServices, bcrypt, "Is implemented by", "DI")
+Rel(domainServices, jwt, "Is implemented by", "DI")
+
+Rel(sessionCmdService, roleClaimHandler, "Publishes RoleClaimIssued to", "Cortex.Mediator, own DI scope")
+Rel(roleClaimHandler, sessionCmdService, "Sends SelectNavigationShellCommand", "in-process")
+
+Rel(userCmdService, userRepos, "Reads and writes through", "in-process")
+Rel(sessionCmdService, userRepos, "Reads and writes through", "in-process")
+Rel(userQryService, userRepos, "Reads through", "in-process")
+Rel(sessionQryService, userRepos, "Reads through", "in-process")
+Rel(iamFacade, userRepos, "Resolves identity questions through", "in-process")
+Rel(userRepos, efcConfig, "Is mapped by", "EF Core model")
+Rel(userRepos, db, "Reads from and writes to", "EF Core 10 / MySQL, TCP 3306")
+
+Rel(otherContexts, iamFacade, "Asks whether a user exists and which role it holds", "in-process ACL call")
+
+@enduml
