@@ -850,3 +850,87 @@ Database:
 
 ![Care Relationship Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/care-relationship.puml)
 
+### 2.6.4. Bounded Context: Nutritional Care
+
+#### 2.6.4.1. Domain Layer
+
+**Nutritional Care** (`Healthify.Platform.NutritionalCare`) modela el acto clínico completo en tres fases —valoración, diagnóstico y plan nutricional— más la bandeja de entrada donde mueren las señales de Monitoring. Dos ideas rigen su Domain Layer: **cero caja negra** (todo objetivo es auditable y recalculable a mano desde la base de cálculo almacenada) y **aquí termina la automatización** (una señal notifica y nunca modifica).
+
+**Aggregates (Aggregate Roots)**
+
+**`NutritionalAssessment`** — Fase clínica 1: hábitos, historia, actividad física, antropometría y bioquímica, registrados dentro de la consulta. Una vez cerrada es inmutable; una corrección no la edita, crea una nueva valoración que la referencia.
+
+| Atributo | Tipo | Scope | Descripción |
+|---|---|---|---|
+| `Id` | `AssessmentId` | `public get / private set` | Identidad tipada. |
+| `PatientId` / `PractitionerId` | `int` | `public get / private set` | Referencias cross-context. |
+| `Habits`, `MedicalHistory`, `PhysicalActivity` | `string` | `public get / private set` | Obligatorios. |
+| `Biochemistry` | `string?` | `public get / private set` | Opcional. |
+| `AgeYears` | `int` | `public get / private set` | 1–120; tres de las cuatro ecuaciones lo requieren. |
+| `BiologicalSex` | `BiologicalSex` | `public get / private set` | Estratifica las ecuaciones. |
+| `SupersedesAssessmentId` | `int?` | `public get / private set` | *Correction Creates A New Assessment*. |
+| `ClosedAt` / `IsClosed` | `DateTimeOffset?` / `bool` | `public` | Cierre del agregado. |
+| `Measurements` | `IReadOnlyCollection<ClinicalMeasurement>` | `public` | Colección de la entidad hija. |
+| `LatestMeasurement` | `ClinicalMeasurement?` | `public` (computada) | La antropometría más reciente; sobre ella corre el cálculo. |
+
+Métodos: `NutritionalAssessment(RecordAssessmentCommand)` (*Habits History And Activity Required*), `TakeClinicalMeasurement(TakeClinicalMeasurementCommand) : ClinicalMeasurement` (*No Measurement On Closed Assessment*, *Measurement Protocol Recorded*) y `Close()` (*Closed Assessment Is Immutable*).
+
+**`NutritionalDiagnosis`** — Fase clínica 2: la afirmación que fundamenta todo plan, y el razonamiento detrás. Atributos: `Id : DiagnosisId`, `PatientId`, `PractitionerId`, `AssessmentId`, `Statement`, `Rationale : ClinicalRationale`, `IssuedAt`, `SupersededAt?` y la computada `IsActive` (*One Active Diagnosis Per Patient*). Métodos: el constructor, que exige statement y razonamiento clínico, y `Supersede()`, que retira el diagnóstico para que otro ocupe su lugar **conservando la fila**.
+
+**`NutritionPlan`** — Fase clínica 3 y raíz del versionado. Un plan atraviesa tres estados dentro de una consulta: los objetivos son **propuestos** por aritmética, **prescritos** por una persona y sólo entonces **publicados**. Sus tres value objects compuestos se almacenan como columnas planas y se reconstruyen mediante propiedades calculadas.
+
+| Grupo de atributos | Miembros | Scope |
+|---|---|---|
+| Identidad y referencias | `Id : PlanId`, `PatientId`, `PractitionerId`, `DiagnosisId`, `Version` | `public get / private set` |
+| Proyección de `CalculationBasis` | `BasisEquation`, `BasisReferenceWeightKind`, `BasisReferenceWeightKg`, `BasisActivityFactor`, `BasisDeficitKind`, `BasisDeficitValue`, `BasisComputedBmr`, `BasisComputedTdee` | `public get / private set` |
+| Proyección de `TargetProposal` | `ProposalEnergyKcal`, `ProposalProteinG`, `ProposalCarbG`, `ProposalFatG` | `public get / private set` |
+| Proyección de `PrescribedTargets` | Los cuatro objetivos nullable, `PrescribedOutcome`, `PrescribedOverrideReason` | `public get / private set` |
+| Estado | `ChangeReason?`, `PublishedAt?`, `SupersededAt?`, `IsActive` | `public get / private set` |
+| Listas y computadas | `Guidelines`, `Restrictions`, `CalculationBasis`, `TargetProposal`, `PrescribedTargets?`, `IsPrescribed`, `IsPublished`, `IsSuperseded` | `public` |
+
+| Método | Scope | Reglas que aplica |
+|---|---|---|
+| `NutritionPlan(int, int, int, int, CalculationBasis, TargetProposal)` | `public` | *No Plan Without Diagnosis* (la referencia es obligatoria en el constructor) y *Calculation Basis Always Recorded*. El plan **nunca nace vacío**: viene con su propuesta. |
+| `StoreCalculationBasis(...)` / `StoreProposal(...)` | `private` | Aplanan los value objects en columnas. |
+| `PrescribeTargets(PrescribedTargets)` | `public` | *Previous Proposal Required*, *Override Requires Reason*. |
+| `Publish(IEnumerable<string>, IEnumerable<string>)` | `public` | Requiere prescripción previa; normaliza las listas y marca el plan activo. |
+| `Supersede()` | `public` | *Previous Version Superseded Never Deleted*. |
+| `CreateAdjustedVersion(AdjustNutritionPlanCommand, ChangeReason) : NutritionPlan` | `public` | **Factory Method** que produce la siguiente versión arrastrando la base de cálculo anterior. |
+
+**`ReviewItem`** — Una señal recibida de Monitoring esperando una decisión humana. Atributos: `Id : ReviewItemId`, `PatientId`, `PractitionerId` (resuelto desde el `CareLink` al abrir el ítem, porque la bandeja se lee por profesional), `SignalType`, `Evidence` (**evidencia, no veredicto**), `State : ReviewItemState`, `ResolvedWithAdjustment?`, `ResolvedAt?`, `ResolutionNote?` y la computada `IsOpen`. Métodos: el constructor y `Resolve(bool, string?)`, que aplica *Resolution States Whether The Plan Was Adjusted*.
+
+**Entity (no raíz)**
+
+**`ClinicalMeasurement`** — Una lectura antropométrica tomada por el profesional, con el protocolo seguido; vive dentro del agregado `NutritionalAssessment`. Atributos: `Id : int` (PK simple), `AssessmentId : AssessmentId` (tipada igual que la clave principal porque EF Core exige que ambos extremos compartan el tipo CLR), `WeightKg` (20–400), `HeightCm` (80–250), `Protocol : MeasurementProtocol`, `BodyFatPercentage?` (1–70), `WaistCircumferenceCm?` (30–250) y `TakenAt`. Su constructor es `internal`: **sólo el agregado puede crearla**. Un `ClinicalMeasurement` y un `SelfWeighIn` son cosas **diferentes** —éste lo toma un profesional bajo protocolo registrado y tiene autoridad clínica—, y **las dos series nunca se fusionan**.
+
+**Value Objects (16)**
+
+| Clase | Propósito | Reglas y miembros |
+|---|---|---|
+| `Equation` | Ecuación publicada de metabolismo basal elegida por el profesional. | `MifflinStJeor`, `HarrisBenedict`, `FaoWhoUnu`, `KatchMcArdle`; `RequiresBodyFatPercentage`. |
+| `ReferenceWeight` | Sobre qué peso corre el cálculo. | Kinds `Actual`, `Ideal`, `Adjusted`; `ValueKg` 20–400. |
+| `DeficitStrategy` | Cuánta energía se resta del gasto total. | `FixedKcal` (0–1500) o `PercentOfTdee` (0–40); método `DeficitKcalFor(decimal)`. |
+| `CalculationBasis` | **Todo aquello sobre lo que corrió el cálculo, guardado con el plan para siempre.** Es lo que hace auditable un objetivo. | Ocho componentes planos; valida factor de actividad 1.0–2.5 y BMR/TDEE positivos; factory `From(...)`. |
+| `TargetProposal` | Lo que produjo la aritmética antes de que nadie firme. | `EnergyKcal > 0`, macros ≥ 0. |
+| `PrescriptionOutcome` | Si el profesional firmó la propuesta o la reemplazó. | `AcceptedAsProposed`, `Overridden`. |
+| `PrescribedTargets` | **Lo que el profesional efectivamente firmó**; todo objetivo es trazable a una persona por este VO. | Exige `OverrideReason` cuando el resultado es un reemplazo. |
+| `OverrideReason`, `ChangeReason`, `ClinicalRationale`, `MeasurementProtocol` | Justificaciones obligatorias en cada punto de decisión. | 500, 500, 2000 y 300 caracteres respectivamente. |
+| `BiologicalSex` | Sexo biológico por el que se estratifican las ecuaciones. | `Female`, `Male`. |
+| `SignalType` | Qué clase de señal de Monitoring abrió un ítem. | `SustainedDeviation`, `ConsistencyEscalation`. **Sólo existen dos, y ninguna puede cambiar un plan.** |
+| `ReviewItemState` | Dónde está un ítem en la bandeja. | `Open`, `Resolved`. |
+| `AssessmentId`, `DiagnosisId`, `PlanId`, `ReviewItemId` | Identidades tipadas. | `Value : int > 0`, `internal static FromRaw(int)`. |
+
+**Commands (11)** — Desde `RecordAssessmentCommand` hasta `ResolveReviewItemCommand`. Sólo `PublishActiveTargetsCommand` y `OpenReviewItemCommand` carecen de endpoint: los emiten políticas. Nótese que en `ProposeTargetsCommand` **el profesional actúa antes del cálculo**: la ecuación, el peso de referencia, el factor de actividad, el déficit y el objetivo proteico llegan como parámetros y el agregado no elige ninguno.
+
+**Queries (7)** — `GetAssessmentByIdQuery`, `GetAssessmentsByPatientIdQuery`, `GetActiveDiagnosisByPatientIdQuery`, `GetPlanByIdQuery`, `GetActivePlanByPatientIdQuery`, `GetPlansByPatientIdQuery` y las dos de la bandeja (`GetOpenReviewItemsByPractitionerIdQuery`, `GetReviewItemByIdQuery`).
+
+**Domain Events (12 + 1 record auxiliar)** — Cruzan frontera `ClinicalMeasurementTaken` (hacia Monitoring) y **`ActiveTargetsUpdated`** (hacia Intake, Monitoring y Care Relationship simultáneamente). Este último es el **Published Language** del contexto: lleva paciente, versión, vigencia, objetivos diarios, pautas y restricciones —y **ni diagnóstico, ni razonamiento, ni ecuación, ni peso de referencia, ni factor de actividad, ni déficit**—, cumpliendo *Diagnosis And Basis Never Leave The Context*. Se apoya en el record auxiliar `DailyTargets(decimal, decimal, decimal, decimal)`. Los demás eventos son internos, incluidos `NutritionalDiagnosisIssued` (el paciente no lee su diagnóstico en la app) y `ReviewItemCreated`, que **muere en la bandeja**.
+
+**Errors** — `enum NutritionalCareError` con 30 valores, uno por cada regla que el contexto hace cumplir.
+
+**Repositories (abstracciones)** — `INutritionalAssessmentRepository`, `INutritionalDiagnosisRepository` (con `FindActiveByPatientIdAsync`), `INutritionPlanRepository` (con `FindActiveByPatientIdAsync`, `ListByPatientIdAsync` y `GetLatestVersionAsync`) e `IReviewItemRepository` (con `ExistsOpenForPatientAndSignalTypeAsync`, `ListOpenByPractitionerIdAsync` y `CountOpenByPractitionerIdAsync`).
+
+**Domain Services** — `IBmrCalculator`, con el record de entrada `BmrInputs` y el método `ComputeBmr(Equation, BmrInputs) : decimal`. **No es un servicio externo y no es un modelo**: es aritmética determinista con ecuaciones publicadas; está detrás de una interfaz sólo para que las cuatro ecuaciones se puedan probar y cambiar independientemente del agregado.
+
+**Relaciones entre clases:** `NutritionalAssessment` **compone** 0..* `ClinicalMeasurement` (única relación de composición entre entidades del contexto, con cascada) y compone `AssessmentId` y `BiologicalSex`. `NutritionalDiagnosis` referencia la valoración por identificador y compone `ClinicalRationale`. `NutritionPlan` referencia el diagnóstico por identificador, agrega de forma reconstruida `CalculationBasis`, `TargetProposal` y 0..1 `PrescribedTargets`, y depende de `ChangeReason`; entre versiones existe una asociación reflexiva `supersedes` (1 → 0..1) resuelta por `Version` y `SupersededAt`. `ReviewItem` compone `SignalType` y `ReviewItemState`, y **no tiene relación alguna con `NutritionPlan`**: esa ausencia es la regla.
+
