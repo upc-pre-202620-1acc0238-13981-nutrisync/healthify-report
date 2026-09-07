@@ -934,3 +934,61 @@ Métodos: `NutritionalAssessment(RecordAssessmentCommand)` (*Habits History And 
 
 **Relaciones entre clases:** `NutritionalAssessment` **compone** 0..* `ClinicalMeasurement` (única relación de composición entre entidades del contexto, con cascada) y compone `AssessmentId` y `BiologicalSex`. `NutritionalDiagnosis` referencia la valoración por identificador y compone `ClinicalRationale`. `NutritionPlan` referencia el diagnóstico por identificador, agrega de forma reconstruida `CalculationBasis`, `TargetProposal` y 0..1 `PrescribedTargets`, y depende de `ChangeReason`; entre versiones existe una asociación reflexiva `supersedes` (1 → 0..1) resuelta por `Version` y `SupersededAt`. `ReviewItem` compone `SignalType` y `ReviewItemState`, y **no tiene relación alguna con `NutritionPlan`**: esa ausencia es la regla.
 
+#### 2.6.4.2. Interface Layer
+
+La Interface Layer de Nutritional Care expone cinco controllers y **todos están anotados con `[Authorize(Roles = "Practitioner")]`**: no hay ni una ruta orientada al paciente. Lo que el paciente recibe es el contrato publicado, y eso viaja como evento hacia Intake & Body Response, no como endpoint.
+
+**Controllers**
+
+**`NutritionalAssessmentsController`** — `[Route("api/v1/nutritional-assessments")] [Tags("Nutritional Assessments")]`.
+
+| Verbo / Ruta | Acción | Respuestas |
+|---|---|---|
+| `POST /` | `RecordAssessment(RecordAssessmentResource)` | 201 · 400 · 401 · 403 · 500 |
+| `POST /{assessmentId:int}/clinical-measurements` | `TakeClinicalMeasurement(int, TakeClinicalMeasurementResource)` | 201 · 400 · 401 · 403 · 404 · 409 |
+| `POST /{assessmentId:int}/closure` | `CloseAssessment(int)` | 200 · 401 · 403 · 404 · 409 |
+| `GET /{assessmentId:int}` | `GetAssessmentById(int)` | 200 · 401 · 403 · 404 |
+
+**`NutritionalDiagnosesController`** — `[Route("api/v1/nutritional-diagnoses")]`. Un único `POST /` (`IssueDiagnosis(IssueDiagnosisResource)`, respuestas 201 · 400 · 401 · 403 · 404 · 409 · 422).
+
+**`NutritionPlansController`** — `[Route("api/v1/nutrition-plans")]`. Recorre las cuatro transiciones del plan.
+
+| Verbo / Ruta | Acción | Respuestas |
+|---|---|---|
+| `POST /target-proposals` | `ProposeTargets(ProposeTargetsResource)` | 201 · 400 · 401 · 403 · 422 |
+| `POST /{planId:int}/prescribed-targets` | `PrescribeTargets(int, PrescribeTargetsResource)` | 200 · 400 · 401 · 403 · 404 · 409 |
+| `POST /{planId:int}/publication` | `PublishNutritionPlan(int, PublishNutritionPlanResource)` | 200 · 401 · 403 · 404 · 409 · 422 |
+| `POST /{planId:int}/adjustments` | `AdjustNutritionPlan(int, AdjustNutritionPlanResource)` | 201 · 400 · 401 · 403 · 404 · 409 |
+
+**`Publish Active Targets` no tiene endpoint a propósito**: es una política que dispara al publicar o ajustar, y es lo único de un plan que cruza hacia el paciente.
+
+**`PatientClinicalRecordController`** — `[Route("api/v1/patients")] [Tags("Nutritional Care")]`. Depende adicionalmente de `ICareRelationshipContextFacade` y usa el método privado `IsLinkedToAsync(int)`, que consulta el Open Host Service y **degrada a `false`**, denegando el acceso ante cualquier fallo.
+
+| Verbo / Ruta | Acción | Read Model |
+|---|---|---|
+| `GET /{patientId:int}/nutritional-assessments` | `GetAssessments(int)` | Assessment Timeline |
+| `GET /{patientId:int}/nutritional-diagnoses/active` | `GetActiveDiagnosis(int)` | Active Diagnosis |
+| `GET /{patientId:int}/nutrition-plans` | `GetPlans(int)` | Plan Version History |
+| `GET /{patientId:int}/nutrition-plans/active` | `GetActivePlan(int)` | Active Plan, con base de cálculo |
+
+**`ReviewItemsController`** — `[Route("api/v1/review-items")] [Tags("Review Inbox")]`. Expone `GET /` (`GetOpenReviewItems()`, read model Practitioner Review Inbox) y `POST /{reviewItemId:int}/resolution` (`ResolveReviewItem(int, ResolveReviewItemResource)`). **`Open Review Item` no tiene endpoint**: los ítems llegan por las políticas que reaccionan a señales de Monitoring, y aquí es donde la automatización se detiene.
+
+**Resources** — Las de entrada viven en `NutritionalCareResources.cs` (`RecordAssessmentResource`, `TakeClinicalMeasurementResource`, `IssueDiagnosisResource`, `ProposeTargetsResource`, `PrescribeTargetsResource`, `PublishNutritionPlanResource`, `AdjustNutritionPlanResource`, `ResolveReviewItemResource`) y las de salida en `NutritionalCareReadResources.cs` (`ClinicalMeasurementResource`, `NutritionalAssessmentResource`, `NutritionalDiagnosisResource`, `CalculationBasisResource`, `TargetsResource`, `NutritionPlanResource`, `ReviewItemResource`). `CalculationBasisResource` existe precisamente porque el profesional debe poder auditar el número: expone ecuación, peso de referencia, factor de actividad, déficit, BMR y TDEE calculados.
+
+**Transform / Assemblers** — Nueve command assemblers (`RecordAssessmentCommandAssembler`, `TakeClinicalMeasurementCommandAssembler`, `CloseAssessmentCommandAssembler`, `IssueDiagnosisCommandAssembler`, `ProposeTargetsCommandAssembler`, `PrescribeTargetsCommandAssembler`, `PublishNutritionPlanCommandAssembler`, `AdjustNutritionPlanCommandAssembler`, `ResolveReviewItemCommandAssembler`) y cuatro resource assemblers (`NutritionalAssessmentResourceAssembler`, `NutritionalDiagnosisResourceAssembler`, `NutritionPlanResourceAssembler`, `ReviewItemResourceAssembler`).
+
+`NutritionalCareActionResultAssembler` expone cuatro métodos con estado de éxito parametrizable (`ToAssessmentResult`, `ToDiagnosisResult`, `ToPlanResult`, `ToReviewItemResult`), más `ToNotFoundResult` y el privado `FailureResult`:
+
+| Errores | Status |
+|---|---|
+| `AssessmentNotFound`, `DiagnosisNotFound`, `PlanNotFound`, `ReviewItemNotFound` | **404** |
+| `PractitionerOnly`, `ActiveCareLinkRequired` | **403** |
+| `AssessmentAlreadyClosed`, `PatientAlreadyHasActiveDiagnosis`, `PatientAlreadyHasActivePlanVersion`, `PlanVersionAlreadySuperseded`, `ReviewItemAlreadyOpenForSignalType`, `PlanNotInExpectedState` | **409** |
+| `HabitsHistoryAndActivityRequired`, `MeasurementProtocolRequired`, `ClinicalRationaleRequired`, `OverrideReasonRequired`, `ChangeReasonRequired`, `ResolutionOutcomeRequired`, `UnsupportedEquation`, `InvalidActivityFactor`, `InvalidDeficitStrategy`, `InvalidReferenceWeight`, `IncompleteCalculationBasis` | **400** |
+| `ClosedAssessmentRequired`, `ActiveDiagnosisRequired`, `PreviousProposalRequired`, `PlanRequiresDiagnosis`, `CalculationBasisRequired`, `ClinicalMeasurementRequired` | **422** |
+| `UnexpectedError` (por defecto) | **500** |
+
+**ACL Contract** — `INutritionalCareContextFacade` declara el DTO `ActiveTargetsItem` y dos operaciones: `GetActiveTargetsByPatientId(int)` y `GetOpenReviewItemCount(int)`. **Nunca expone un diagnóstico, un razonamiento clínico ni una base de cálculo**: espeja exactamente el contrato publicado.
+
+**Localización** — `NutritionalCare/Resources/NutritionalCareMessages.cs`.
+
