@@ -1,0 +1,178 @@
+@startuml Healthify - Food Catalog - Application
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.FoodCatalog.Application" {
+
+  package "CommandServices" {
+    interface IReferenceFoodCommandService {
+      +Handle(command: ImportCatalogSnapshotCommand, ct): Task<Result<CatalogImportSummary, FoodCatalogError>>
+      +Handle(command: CacheFoodLocallyCommand, ct): Task<Result<ReferenceFood, FoodCatalogError>>
+      +Handle(command: SearchFoodCommand, ct): Task<Result<IReadOnlyList<ReferenceFood>, FoodCatalogError>>
+      +Handle(command: CreateLocalOverrideCommand, ct): Task<Result<ReferenceFood, FoodCatalogError>>
+    }
+  }
+
+  package "QueryServices" {
+    ' Read models Food Results List and Local Food Catalog.
+    interface IReferenceFoodQueryService {
+      +Handle(query: GetReferenceFoodByIdQuery, ct): Task<ReferenceFood?>
+      +Handle(query: SearchReferenceFoodsQuery, ct): Task<IEnumerable<ReferenceFood>>
+      +Handle(query: GetLocalFoodCatalogQuery, ct): Task<IEnumerable<ReferenceFood>>
+    }
+  }
+
+  package "Internal" {
+    ' An import is accepted rather than completed: records are translated and
+    ' announced here, and the policy of Subflow 6.2 is what writes them. That is
+    ' why the endpoint answers 202.
+    class CatalogImportSummary <<record>> {
+      -Term: string
+      -ProvidersConsulted: int
+      -TranslatedCount: int
+      -FailedCount: int
+    }
+
+    package "Internal.CommandServices" {
+      ' Import translates and announces but writes nothing, so the only path
+      ' into the catalog is the caching policy. Search reads local first and
+      ' treats the external providers as a top-up that is allowed to fail.
+      class ReferenceFoodCommandService {
+        -{static} MaxRecordsPerProvider: int = 100
+        +Handle(command: ImportCatalogSnapshotCommand, ct): Task<Result<...>>
+        +Handle(command: CacheFoodLocallyCommand, ct): Task<Result<...>>
+        +Handle(command: SearchFoodCommand, ct): Task<Result<...>>
+        +Handle(command: CreateLocalOverrideCommand, ct): Task<Result<...>>
+        -TopUpFromExternalProvidersAsync(term: string, missing: int, ct): Task<bool>
+        -{static} ToTranslatedEvent(food: ExternalFoodRecord): ReferenceFoodTranslated
+        -{static} LooksLikeAnExternalIdentifier(candidate: string?): bool
+        -{static} Success(referenceFood: ReferenceFood): Result<ReferenceFood, FoodCatalogError>
+        -{static} Failure(error: FoodCatalogError): Result<ReferenceFood, FoodCatalogError>
+      }
+    }
+
+    package "Internal.QueryServices" {
+      class ReferenceFoodQueryService
+    }
+
+    package "Internal.EventHandlers" {
+      ' The only writer of the catalog that reacts to an import. Keeping the
+      ' write here is what guarantees every stored row went through the
+      ' translation: there is no other way in.
+      class OnReferenceFoodTranslatedHandler {
+        +Handle(notification: ReferenceFoodTranslated, ct): Task
+      }
+    }
+  }
+
+  package "Acl" {
+    class FoodCatalogContextFacade {
+      +GetReferenceFoodById(referenceFoodId: int, ct): Task<ReferenceFoodItem?>
+      +SearchReferenceFoods(term: string, max: int, ct): Task<IReadOnlyList<ReferenceFoodItem>>
+      -{static} ToItem(referenceFood: ReferenceFood): ReferenceFoodItem
+    }
+  }
+}
+
+package "FoodCatalog.Domain" <<external>> {
+  class ReferenceFood
+  class LocalName
+  class NutrientsPer100g
+  class SourceHash
+  class ExternalFoodRecord
+  class ExternalCatalogSnapshot
+  interface IExternalFoodCatalogProvider
+  interface IReferenceFoodRepository
+  class ImportCatalogSnapshotCommand
+  class CacheFoodLocallyCommand
+  class SearchFoodCommand
+  class CreateLocalOverrideCommand
+  class GetReferenceFoodByIdQuery
+  class SearchReferenceFoodsQuery
+  class GetLocalFoodCatalogQuery
+  class ExternalCatalogSnapshotImported
+  class ReferenceFoodTranslated
+  class TranslationFailed
+  class ReferenceFoodCached
+  class FoodSearchPerformed
+  class LocalFoodOverrideCreated
+  enum FoodCatalogError
+}
+
+package "FoodCatalog.Interfaces.Acl" <<external>> {
+  interface IFoodCatalogContextFacade
+  class ReferenceFoodItem <<record>>
+}
+
+package "Shared / Cortex" <<external>> {
+  class "Result<TValue, TError>" as Result
+  interface IUnitOfWork
+  interface IMediator
+  interface "IEventHandler<T>" as IEventHandler
+  interface IServiceScopeFactory
+  interface "ILogger<T>" as ILogger
+}
+
+' --- Service interface realizations ---
+ReferenceFoodCommandService ..|> IReferenceFoodCommandService
+ReferenceFoodQueryService ..|> IReferenceFoodQueryService
+FoodCatalogContextFacade ..|> IFoodCatalogContextFacade
+OnReferenceFoodTranslatedHandler ..|> IEventHandler
+
+' --- ReferenceFoodCommandService (Subflows 6.1 to 6.4) ---
+ReferenceFoodCommandService --> IReferenceFoodRepository : uses
+ReferenceFoodCommandService --> IUnitOfWork : commits with
+' Injected as IEnumerable: every registered adapter is consulted in turn.
+ReferenceFoodCommandService --> "0..*" IExternalFoodCatalogProvider : consults
+ReferenceFoodCommandService --> IMediator : publishes via
+ReferenceFoodCommandService --> ILogger : logs to
+ReferenceFoodCommandService ..> ImportCatalogSnapshotCommand : handles
+ReferenceFoodCommandService ..> CacheFoodLocallyCommand : handles
+ReferenceFoodCommandService ..> SearchFoodCommand : handles
+ReferenceFoodCommandService ..> CreateLocalOverrideCommand : handles
+ReferenceFoodCommandService ..> ExternalCatalogSnapshot : reads
+ReferenceFoodCommandService ..> ExternalFoodRecord : announces
+ReferenceFoodCommandService ..> LocalName : validates
+ReferenceFoodCommandService ..> NutrientsPer100g : validates
+ReferenceFoodCommandService ..> SourceHash : validates / deduplicates by
+ReferenceFoodCommandService ..> ReferenceFood : creates / refreshes
+ReferenceFoodCommandService ..> CatalogImportSummary : produces
+ReferenceFoodCommandService ..> ExternalCatalogSnapshotImported : publishes
+ReferenceFoodCommandService ..> ReferenceFoodTranslated : publishes
+ReferenceFoodCommandService ..> TranslationFailed : publishes
+ReferenceFoodCommandService ..> ReferenceFoodCached : publishes
+ReferenceFoodCommandService ..> FoodSearchPerformed : publishes
+ReferenceFoodCommandService ..> LocalFoodOverrideCreated : publishes
+ReferenceFoodCommandService ..> FoodCatalogError : returns
+
+' --- The caching policy: the single door into the catalog ---
+OnReferenceFoodTranslatedHandler ..> ReferenceFoodTranslated : subscribes to
+OnReferenceFoodTranslatedHandler --> IServiceScopeFactory : opens scope with
+OnReferenceFoodTranslatedHandler --> ILogger : logs to
+OnReferenceFoodTranslatedHandler --> IReferenceFoodCommandService : delegates to
+OnReferenceFoodTranslatedHandler ..> CacheFoodLocallyCommand : issues
+
+' --- Query service ---
+ReferenceFoodQueryService --> IReferenceFoodRepository : uses
+ReferenceFoodQueryService ..> GetReferenceFoodByIdQuery : handles
+ReferenceFoodQueryService ..> SearchReferenceFoodsQuery : handles
+ReferenceFoodQueryService ..> GetLocalFoodCatalogQuery : handles
+ReferenceFoodQueryService ..> ReferenceFood : returns
+
+' --- ACL facade: a query contract, because Intake needs the food right now ---
+FoodCatalogContextFacade --> IReferenceFoodQueryService : uses
+FoodCatalogContextFacade ..> GetReferenceFoodByIdQuery : issues
+FoodCatalogContextFacade ..> SearchReferenceFoodsQuery : issues
+FoodCatalogContextFacade ..> ReferenceFood : maps from
+' No source hash on the DTO: the fingerprint is of no use outside this context.
+FoodCatalogContextFacade ..> ReferenceFoodItem : returns
+
+' --- Result wrapper ---
+IReferenceFoodCommandService ..> Result
+IReferenceFoodCommandService ..> CatalogImportSummary : returns
+IReferenceFoodCommandService ..> FoodCatalogError : returns
+
+@enduml

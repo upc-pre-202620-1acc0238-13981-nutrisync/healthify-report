@@ -1,0 +1,181 @@
+@startuml Healthify - Food Catalog - Infrastructure
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.FoodCatalog.Infrastructure" {
+
+  package "External.OpenFoodFacts" {
+    ' One of the two places in the platform where upstream vocabulary is
+    ' allowed to appear. It never throws: an unreachable provider is the
+    ' ordinary case the fallback rule exists for, so failure is returned as data.
+    class OpenFoodFactsProvider {
+      +ProviderName: string = "Open Food Facts"
+      +FetchSnapshotAsync(term: string, max: int, ct): Task<ExternalCatalogSnapshot>
+      -Translate(document: JsonDocument): ExternalCatalogSnapshot
+      -Unavailable(reason: string): ExternalCatalogSnapshot
+      -{static} ReadString(element: JsonElement, property: string): string?
+      -{static} ReadDecimal(element: JsonElement, property: string): decimal?
+    }
+  }
+
+  package "External.Usda" {
+    ' The second such place. USDA reports nutrients keyed by nutrient number,
+    ' so the translation here is a lookup rather than a rename.
+    class UsdaFoodDataProvider {
+      -{static} EnergyKcalNutrientNumber: string = "208"
+      -{static} ProteinNutrientNumber: string = "203"
+      -{static} CarbohydrateNutrientNumber: string = "205"
+      -{static} FatNutrientNumber: string = "204"
+      +ProviderName: string = "USDA FoodData Central"
+      +FetchSnapshotAsync(term: string, max: int, ct): Task<ExternalCatalogSnapshot>
+      -Translate(document: JsonDocument): ExternalCatalogSnapshot
+      -{static} ReadNutrients(food: JsonElement): NutrientsPer100g?
+      -Unavailable(reason: string): ExternalCatalogSnapshot
+      -{static} ReadIdentifier(element: JsonElement, property: string): string?
+      -{static} ReadString(element: JsonElement, property: string): string?
+      -{static} ReadDecimal(element: JsonElement, property: string): decimal?
+    }
+  }
+
+  package "Persistence.EFC.Configuration" {
+    class ReferenceFoodEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<ReferenceFood>): void
+    }
+  }
+
+  package "Persistence.EFC.Repositories" {
+    class ReferenceFoodRepository {
+      +FindByIdAsync(id: int, ct): Task<ReferenceFood?>
+      +FindBySourceHashAsync(sourceHash: SourceHash, ct): Task<ReferenceFood?>
+      +SearchByLocalNameAsync(term: string, max: int, ct): Task<IEnumerable<ReferenceFood>>
+      +ListLocalCatalogAsync(max: int, ct): Task<IEnumerable<ReferenceFood>>
+      +ExistsLocalOverrideWithNameAsync(localName: string, ct): Task<bool>
+      +CountAsync(ct): Task<int>
+    }
+  }
+
+  package "Persistence.EFC.Seeders" {
+    ' Writes through Cache Food Locally rather than through the repository, so
+    ' seeded rows enter by the same single door as imported ones. Idempotent by
+    ' construction: each entry carries a stable digest.
+    class ReferenceFoodSeeder {
+      -{static} SeedProvenance: string = "healthify-seed-peru"
+      -{static} StartingCatalog: (string, decimal, decimal, decimal, decimal)[]
+      +SeedAsync(ct): Task
+    }
+  }
+
+  package "Scheduling" {
+    ' Background worker for the policy "When Scheduled Import Due" (6.1).
+    ' Nobody triggers it: only the passage of time.
+    class CatalogImportHostedService {
+      -{static} RecordsPerProvider: int = 50
+      #ExecuteAsync(stoppingToken: CancellationToken): Task
+      -RunCycleAsync(stoppingToken: CancellationToken): Task
+      -{static} SafeWaitAsync(timer: PeriodicTimer, stoppingToken): Task<bool>
+    }
+  }
+}
+
+package "FoodCatalog.Domain" <<external>> {
+  class ReferenceFood
+  class ReferenceFoodId
+  class LocalName
+  class NutrientsPer100g
+  class SourceHash
+  class ExternalFoodRecord
+  class ExternalCatalogSnapshot
+  interface IExternalFoodCatalogProvider
+  interface IReferenceFoodRepository
+  class ImportCatalogSnapshotCommand
+  class CacheFoodLocallyCommand
+}
+
+package "FoodCatalog.Application" <<external>> {
+  interface IReferenceFoodCommandService
+  class CatalogImportSummary
+}
+
+package "Shared.Infrastructure / EF Core" <<external>> {
+  class AppDbContext
+  class "BaseRepository<T>" as BaseRepository
+  interface "IBaseRepository<T>" as IBaseRepository
+  interface "IEntityTypeConfiguration<T>" as IEntityTypeConfiguration
+  class AuditableEntityInterceptor
+}
+
+package "ASP.NET hosting / BCL" <<external>> {
+  abstract BackgroundService
+  interface IServiceScopeFactory
+  interface IConfiguration
+  interface "ILogger<T>" as ILogger
+  class PeriodicTimer
+  class HttpClient
+  class JsonDocument
+}
+
+' --- Anti-corruption adapters (ports to adapters) ---
+OpenFoodFactsProvider ..|> IExternalFoodCatalogProvider
+UsdaFoodDataProvider ..|> IExternalFoodCatalogProvider
+OpenFoodFactsProvider --> HttpClient : calls
+OpenFoodFactsProvider --> IConfiguration : reads the country filter from
+OpenFoodFactsProvider --> ILogger : logs to
+OpenFoodFactsProvider --> JsonDocument : parses
+UsdaFoodDataProvider --> HttpClient : calls
+UsdaFoodDataProvider --> IConfiguration : reads the API key from
+UsdaFoodDataProvider --> ILogger : logs to
+UsdaFoodDataProvider --> JsonDocument : parses
+' The upstream key is read, folded into the digest, and never named again.
+OpenFoodFactsProvider ..> ExternalCatalogSnapshot : returns
+OpenFoodFactsProvider ..> ExternalFoodRecord : translates into
+OpenFoodFactsProvider ..> LocalName : builds
+OpenFoodFactsProvider ..> NutrientsPer100g : builds
+OpenFoodFactsProvider ..> SourceHash : digests the upstream key into
+UsdaFoodDataProvider ..> ExternalCatalogSnapshot : returns
+UsdaFoodDataProvider ..> ExternalFoodRecord : translates into
+UsdaFoodDataProvider ..> LocalName : builds
+UsdaFoodDataProvider ..> NutrientsPer100g : builds
+UsdaFoodDataProvider ..> SourceHash : digests the upstream key into
+
+' --- EF Core entity configuration ---
+ReferenceFoodEntityTypeConfiguration ..|> IEntityTypeConfiguration
+ReferenceFoodEntityTypeConfiguration ..> ReferenceFood : maps to table reference_foods
+ReferenceFoodEntityTypeConfiguration ..> ReferenceFoodId : converts
+ReferenceFoodEntityTypeConfiguration ..> SourceHash : converts (unique index)
+ReferenceFoodEntityTypeConfiguration ..> LocalName : MaxLength drives the column
+AppDbContext ..> ReferenceFoodEntityTypeConfiguration : applies
+AppDbContext --> AuditableEntityInterceptor : stamps created_at / updated_at
+
+' --- Repository ---
+ReferenceFoodRepository --|> BaseRepository
+BaseRepository ..|> IBaseRepository
+ReferenceFoodRepository ..|> IReferenceFoodRepository
+ReferenceFoodRepository --> AppDbContext : queries
+ReferenceFoodRepository ..> ReferenceFood : persists
+ReferenceFoodRepository ..> ReferenceFoodId : rebuilds typed id
+' Compared against a value object instance: EF cannot translate a member of a
+' converted type. Local overrides are always ordered first.
+ReferenceFoodRepository ..> SourceHash : looks up by
+
+' --- Seeder: enters the catalog by the same single door ---
+ReferenceFoodSeeder --> IReferenceFoodRepository : counts with
+ReferenceFoodSeeder --> IReferenceFoodCommandService : writes through
+ReferenceFoodSeeder --> IConfiguration : reads Seeder settings from
+ReferenceFoodSeeder --> ILogger : logs to
+ReferenceFoodSeeder ..> CacheFoodLocallyCommand : issues
+ReferenceFoodSeeder ..> SourceHash : builds a stable digest per entry
+
+' --- Time-driven policy ---
+CatalogImportHostedService --|> BackgroundService
+CatalogImportHostedService --> IServiceScopeFactory : opens its own scope with
+CatalogImportHostedService --> IConfiguration : reads the interval and the term from
+CatalogImportHostedService --> ILogger : logs to
+CatalogImportHostedService --> PeriodicTimer : paces cycles with
+CatalogImportHostedService --> IReferenceFoodCommandService : issues the command through
+CatalogImportHostedService ..> ImportCatalogSnapshotCommand : issues
+CatalogImportHostedService ..> CatalogImportSummary : reports
+
+@enduml
