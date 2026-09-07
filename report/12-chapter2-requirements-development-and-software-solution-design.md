@@ -577,3 +577,11 @@ La Infrastructure Layer de Monitoring & Adherence contiene la persistencia sobre
 
 **Servicios externos** — Ninguno. Todo el cálculo de este contexto es aritmética local sobre datos que ya posee o que lee por los ACL de Intake & Body Response y Care Relationship.
 
+#### 2.6.2.5. Bounded Context Software Architecture Component Level Diagrams
+
+**Monitoring & Adherence**
+
+Component:
+
+![Monitoring & Adherence Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/monitoring-adherence.puml)
+
