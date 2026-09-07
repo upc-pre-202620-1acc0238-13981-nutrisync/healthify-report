@@ -1278,3 +1278,29 @@ Es la **única política del bounded context y no cruza frontera**: productor y 
 
 **ACL Facade** — `IamContextFacade` implementa `IIamContextFacade` delegando en `IUserQueryService` y **nunca en un repositorio**, para no puentear la capa de aplicación. Sus tres métodos degradan con elegancia mediante `try/catch` hacia `null` o `false`, y **nunca propagan excepciones**, de modo que un fallo de identidad se traduce en denegación de acceso en el contexto que pregunta.
 
+#### 2.6.5.4. Infrastructure Layer
+
+La Infrastructure Layer de IAM implementa la persistencia de cuentas y sesiones y las dos interfaces de domain service declaradas en el dominio. **Este bounded context no registra ningún `IHostedService`** y no consume proveedores de identidad de terceros.
+
+**Configuraciones de EF Core**
+
+| Clase | Tabla | Decisiones de mapeo |
+|---|---|---|
+| `UserEntityTypeConfiguration` | `users` | PK `id` con conversión `UserId.FromRaw` y `ValueGeneratedOnAdd()`. `email` con converter, 255 caracteres, requerido y con **índice único `ix_users_email`**, segunda línea de defensa de *Unique Email Required*. `password_hash` (255), `role` (20, con converter), `failed_sign_in_attempts` y `locked_out_at`. `Ignore(u => u.IsLockedOut)`, por ser propiedad calculada. |
+| `UserSessionEntityTypeConfiguration` | `user_sessions` | PK con converter `SessionId.FromRaw`. `user_id` como `int` plano **sin navegación EF**, con índice `ix_user_sessions_user_id`. `role_claim` (20) con converter. `navigation_shell` (30, opcional) con un **`ValueConverter<NavigationShell?, string?>` explícito**, en lugar de un `OwnsOne` nullable frágil. `started_at` requerido y `terminated_at` opcional. `Ignore` sobre `IsActive` y `ActiveRoleClaim`. |
+
+**Repositorios (implementaciones)**
+
+| Clase | Base | Detalles de implementación |
+|---|---|---|
+| `UserRepository(AppDbContext)` | `BaseRepository<User>`, `IUserRepository` | Sobrescribe `FindByIdAsync` validando el identificador y comparando por `UserId`; implementa `FindByEmailAsync` y `ExistsByEmailAsync` con `AnyAsync`. **Reimplementa explícitamente `IBaseRepository<User>.FindByIdAsync`** para que las llamadas por interfaz alcancen la versión especializada. |
+| `UserSessionRepository(AppDbContext)` | `BaseRepository<UserSession>`, `IUserSessionRepository` | Sobrescribe `FindByIdAsync` y ofrece `ListByUserIdAsync`, que filtra por usuario y ordena por inicio de sesión descendente. Misma reimplementación explícita. |
+
+**Hashing — `BCryptHashingService`** — Implementa `IHashingService` con la biblioteca BCrypt.Net. `Hash(Password)` delega en el algoritmo de la biblioteca sobre el valor en claro, que existe sólo el tiempo necesario para ser hasheado. `Verify(plain, hash)` devuelve `false` ante entradas vacías y envuelve la verificación en `try/catch`, de modo que un hash almacenado malformado se lea como **verificación fallida** y nunca como una excepción que filtre el estado de la cuenta.
+
+**Tokens — `JwtTokenService`** — Implementa `ITokenService` y depende de `IConfiguration`, leyendo la sección `TokenSettings` (`Secret`, `Issuer` con valor por defecto `healthify-platform`, `Audience` con valor por defecto `healthify-clients` y `ExpiresInMinutes` con 1440 por defecto). Firma con **HMAC-SHA256** sobre una `SymmetricSecurityKey` y emite los claims `sub`, `NameIdentifier`, `email` (bajo el nombre registrado y bajo la clave simple), `Role` con el valor del role claim de la sesión, `sessionId` y `jti`. Sus parámetros reflejan exactamente lo que el *bearer handler* del composition root valida.
+
+**Configuración del pipeline** — Además de sus propios registros de repositorios, servicios de dominio, command/query services y fachada ACL, IAM configura la autenticación **JWT Bearer** de toda la aplicación: validación de issuer, audience, firma y lifetime con una tolerancia de reloj de dos minutos, y una personalización de `OnChallenge` que devuelve un `ProblemDetails` localizado en lugar del 401 vacío por defecto. El role claim que emite este servicio es lo que los demás bounded contexts leen para autorizar por rol.
+
+**Servicios externos** — Ninguno. El *auth provider* que aparece en el event storming está implementado dentro del contenedor: no hay proveedor de identidad externo.
+
