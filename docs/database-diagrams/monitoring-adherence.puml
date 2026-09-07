@@ -1,0 +1,112 @@
+@startuml Healthify - Monitoring and Adherence Database Diagram
+
+skinparam linetype ortho
+hide circle
+hide methods
+
+!define TABLE(name,desc) entity name as "desc" << (T, #AADDFF) >>
+!define EXT(name,desc) entity name as "desc" << (E, #DDDDDD) >>
+!define PK(x) <u>x</u>
+!define FK(x) <i>x</i>
+
+TABLE(evaluation_windows, "evaluation_windows") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(patient_id) : INT NOT NULL
+  FK(care_link_id) : INT NOT NULL
+  window_days : INT NOT NULL
+  from_date : DATETIME(6) NOT NULL
+  to_date : DATETIME(6) NOT NULL
+  state : VARCHAR(20) NOT NULL
+  closed_at : DATETIME
+  last_logging_gap_flagged_on : DATETIME(6)
+  last_patient_reminded_at : DATETIME
+  targets_snapshots : JSON NOT NULL
+  daily_compliance_series : JSON NOT NULL
+  anthropometry_series : JSON NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(deviations, "deviations") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(window_id) : INT NOT NULL
+  FK(patient_id) : INT NOT NULL
+  magnitude_relative_value : DECIMAL(10,4) NOT NULL
+  magnitude_energy_kcal : DECIMAL(10,2) NOT NULL
+  direction : VARCHAR(10) NOT NULL
+  detected_at : DATETIME NOT NULL
+  is_sustained : TINYINT(1) NOT NULL
+  sustained_at : DATETIME
+  logged_days_considered : INT NOT NULL
+  deviating_days_considered : INT NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(consistency_indices, "consistency_indices") {
+  PK(patient_id) : INT NOT NULL
+  --
+  value : DECIMAL(12,4) NOT NULL
+  state : VARCHAR(10) NOT NULL
+  first_flagged_at : DATETIME
+  shown_to_patient_at : DATETIME
+  escalated_at : DATETIME
+  alert_since_at : DATETIME
+  last_recomputed_at : DATETIME NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(referrals, "referrals") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(patient_id) : INT NOT NULL
+  specialty : VARCHAR(120) NOT NULL
+  reason : VARCHAR(1000) NOT NULL
+  FK(issued_by) : INT NOT NULL
+  issued_at : DATETIME NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(scheduled_follow_ups, "scheduled_follow_ups") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(patient_id) : INT NOT NULL
+  FK(practitioner_id) : INT NOT NULL
+  scheduled_for : DATETIME NOT NULL
+  state : VARCHAR(20) NOT NULL
+  missed_at : DATETIME
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+EXT(care_links, "care_links  (Care Relationship)") {
+  PK(id) : INT
+  --
+  FK(patient_id) : INT
+  FK(practitioner_id) : INT
+}
+
+EXT(users, "users  (IAM)") {
+  PK(id) : INT
+  --
+  role : VARCHAR(20)
+}
+
+evaluation_windows ||..o{ deviations : "window_id"
+evaluation_windows ||..o| consistency_indices : "supplies intake series"
+
+evaluation_windows ||..o{ referrals : "same care relationship"
+scheduled_follow_ups }o..o{ referrals : "discussed at visit"
+
+care_links ||..o| evaluation_windows : "care_link_id"
+users ||..o{ evaluation_windows : "patient_id"
+users ||..o{ deviations : "patient_id"
+users ||..o| consistency_indices : "patient_id"
+users ||..o{ referrals : "patient_id / issued_by"
+users ||..o{ scheduled_follow_ups : "patient_id / practitioner_id"
+
+@enduml
