@@ -812,3 +812,11 @@ La Infrastructure Layer de Care Relationship comprende la persistencia sobre MyS
 
 **Servicios externos** — Ninguno. El generador criptográfico del token de invitación es la biblioteca estándar de .NET, no un proveedor externo.
 
+#### 2.6.3.5. Bounded Context Software Architecture Component Level Diagrams
+
+**Care Relationship**
+
+Component:
+
+![Care Relationship Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/care-relationship.puml)
+
