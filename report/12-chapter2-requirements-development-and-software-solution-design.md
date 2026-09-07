@@ -1113,3 +1113,73 @@ Database:
 
 ![Nutritional Care Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/nutritional-care.puml)
 
+### 2.6.5. Bounded Context: IAM
+
+#### 2.6.5.1. Domain Layer
+
+**IAM** (`Healthify.Platform.Iam`) responde una sola pregunta: *quién eres*. Gestiona cuentas, autenticación, el *role claim* inmutable por sesión y la selección del *navigation shell* del cliente. Su Domain Layer declara dos aggregate roots, seis value objects y dos interfaces de domain service. Una nota de diseño la atraviesa: **registrarse no otorga acceso a nada**; un paciente sin `CareLink` no ve objetivos, no tiene diario y no puede registrar comidas.
+
+**Aggregates (Aggregate Roots)**
+
+**`User`** — Una cuenta en la plataforma. Es la raíz que responde "quién eres" y nada más: la relación con un profesional es responsabilidad de Care Relationship. Está implementada como `partial class` dividida en `User.cs` (dominio) y `UserAudit.cs` (implementación de `IAuditableEntity`), para que el modelo de dominio no quede contaminado por preocupaciones de persistencia.
+
+| Atributo | Tipo | Scope | Descripción |
+|---|---|---|---|
+| `MaxFailedSignInAttempts` | `const int = 5` | `private` | Umbral de la regla *Lockout After Five Failed Attempts*. |
+| `Id` | `UserId` | `public get / private set` | Identidad tipada del agregado. |
+| `Email` | `Email` | `public get / private set` | Dirección de correo normalizada a minúsculas. |
+| `PasswordHash` | `string` | `public get / private set` | Hash BCrypt; **la contraseña en claro nunca se persiste**. |
+| `Role` | `Role` | `public get / private set` | Rol declarado en el registro; **nunca se muta**. |
+| `FailedSignInAttempts` | `int` | `public get / private set` | Intentos fallidos consecutivos. |
+| `LockedOutAt` | `DateTimeOffset?` | `public get / private set` | Momento del bloqueo. |
+| `IsLockedOut` | `bool` | `public` (computada) | Derivada de `LockedOutAt`; no es columna. |
+
+| Método | Scope | Descripción |
+|---|---|---|
+| `User(RegisterAccountCommand, string passwordHash)` | `public` | Valida *Role Declared At Registration* y la presencia del hash; construye los VO `Email` y `Role`. |
+| `RegisterFailedSignInAttempt()` | `public` | Incrementa el contador y bloquea al alcanzar el umbral. |
+| `RegisterSuccessfulSignIn()` | `public` | Resetea el contador y desbloquea. |
+| `StartSession() : UserSession` | `public` | **Factory Method**: abre una sesión copiando el role claim. Es el **único camino de creación** de `UserSession`. |
+
+**`UserSession`** — Una sesión autenticada. Transporta el role claim que el resto de la plataforma lee del token y el navigation shell que el cliente monta a raíz de ese rol. Es un **aggregate root independiente dentro del mismo bounded context**: referencia a `User` con un `int` plano, sin navegación EF, respetando la regla de no navegar entre agregados.
+
+| Atributo | Tipo | Scope | Descripción |
+|---|---|---|---|
+| `Id` | `SessionId` | `public get / private set` | Identidad tipada. |
+| `UserId` | `int` | `public get / private set` | Referencia por identificador, no por navegación. |
+| `RoleClaim` | `Role` | `public get / private set` | Rol congelado al inicio de sesión. **No hay mutador.** |
+| `NavigationShell` | `NavigationShell?` | `public get / private set` | Shell seleccionado, `null` hasta que la política lo asigna. |
+| `StartedAt` / `TerminatedAt` | `DateTimeOffset` / `DateTimeOffset?` | `public get / private set` | Ciclo de vida de la sesión. |
+| `IsActive` | `bool` | `public` (computada) | La sesión no ha terminado. |
+| `ActiveRoleClaim` | `Role?` | `public` (computada) | El rol que la sesión **todavía** otorga: `null` si está terminada. |
+
+| Método | Scope | Descripción |
+|---|---|---|
+| `UserSession(int, Role)` | `internal` | **Deliberadamente `internal`**: sólo `User.StartSession()` puede crearla. |
+| `SelectNavigationShell(NavigationShell)` | `public` | Aplica *Role Claim Discarded On Sign Out*, *One Shell Per Session* y *Role Change Requires Re Authentication*. |
+| `Terminate()` | `public` | Cierra la sesión; lanza si ya estaba terminada. |
+
+**Value Objects**
+
+| Clase | Propósito | Reglas y miembros |
+|---|---|---|
+| `Email` | Dirección de correo de la cuenta. | Valida no vacío, 255 caracteres máximo y expresión regular generada; **normaliza a minúsculas** para que la unicidad sea *case insensitive*. |
+| `Password` | Contraseña en claro que ya pasó la política de fortaleza. Existe sólo el tiempo necesario para ser hasheada; **nunca se persiste ni se loguea**. | Longitud 8–128; exige mayúscula, minúscula, dígito y carácter especial. Implementa *Strong Password Required*. |
+| `Role` | Rol de la persona en la plataforma. | Constantes `Patient` y `Practitioner`; conjunto permitido case-insensitive; propiedades `IsPatient` e `IsPractitioner`. Se asume una cuenta igual a un rol, inmutable. |
+| `NavigationShell` | Shell que la app cliente monta para una sesión. | Constantes `PatientShell` y `PractitionerShell`; factory `ForRole(Role)`; método `MatchesRole(Role)`. |
+| `UserId`, `SessionId` | Identidades tipadas. | `Value : int > 0`, `internal static FromRaw(int)` reservada a los value converters de EF, y operadores de conversión. |
+
+**Commands (4)** — `RegisterAccountCommand`, `SignInCommand`, `SelectNavigationShellCommand` (**sin endpoint REST**, emitido sólo por la política) y `SignOutCommand`.
+
+**Queries (4)** — `GetUserByIdQuery` (read model Welcome Screen), `GetUserByEmailQuery` (resolución de cuenta previa a la verificación de credenciales), `GetUserSessionByIdQuery` (App Shell) y `GetUserSessionsByUserIdQuery` (Session Context).
+
+**Domain Events (5)** — `AccountCreated`, `SessionStarted`, `RoleClaimIssued`, `NavigationShellSelected` y `SessionTerminated`. **Ninguno cruza frontera de bounded context**, y ningún otro contexto puede declarar un handler para ellos: la infraestructura de cuentas y sesiones no tiene significado de dominio fuera de IAM. El role claim viaja hacia los demás contextos dentro del token JWT, que es infraestructura, no un evento de dominio.
+
+**Errors** — `enum IamError` con 14 valores, uno por regla que el contexto hace cumplir: `EmailAlreadyTaken`, `InvalidEmail`, `WeakPassword`, `RoleNotDeclared`, `InvalidRole`, `UserNotFound`, `InvalidCredentials`, `AccountLocked`, `SessionNotFound`, `SessionAlreadyTerminated`, `ShellAlreadySelectedForSession`, `RoleChangeRequiresReAuthentication`, `RoleImmutablePerSession` y `UnexpectedError`.
+
+**Repositories (abstracciones)** — `IUserRepository`, con `FindByEmailAsync(Email)` y `ExistsByEmailAsync(Email)` que respalda *Unique Email Required*, e `IUserSessionRepository`, con `ListByUserIdAsync(int)`. Ambas derivan de `IBaseRepository<TEntity>`, que declara `AddAsync`, `FindByIdAsync`, `Update`, `Remove` y `ListAsync` y **nunca expone `IQueryable`**.
+
+**Domain Services (interfaces)** — `IHashingService`, con `Hash(Password) : string` y `Verify(string, string) : bool`, e `ITokenService`, con `GenerateToken(User, UserSession) : string`, que emite el token firmado con el subject, el email, el role claim inmutable y el identificador de sesión. El *auth provider* que dibuja el event storming está implementado **dentro** de la plataforma: no hay proveedor de identidad de terceros.
+
+**Relaciones entre clases:** `User` compone `UserId`, `Email` y `Role`, y **depende** de `UserSession` como creador a través de `StartSession()` (1 → 0..*), sin navegación de EF. `UserSession` compone `SessionId` y `Role` (como role claim congelado) y 0..1 `NavigationShell`, que a su vez **depende** de `Role` mediante `ForRole` y `MatchesRole`. `IHashingService` depende de `Password`; `ITokenService` depende de `User` y `UserSession`. Ambos agregados realizan `IAuditableEntity`, y los cinco eventos generalizan `DomainEventBase`.
+
