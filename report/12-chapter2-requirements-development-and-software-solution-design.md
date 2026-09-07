@@ -1493,3 +1493,11 @@ Estos dos archivos son **los únicos dos lugares de la plataforma donde el vocab
 
 **Servicios externos** — Open Food Facts (`https://world.openfoodfacts.org`) y USDA FoodData Central (`https://api.nal.usda.gov/fdc/v1`), ambos con `HttpClient` tipado, timeout de 10 segundos y `User-Agent` propio. Ambas implementaciones se registran contra el **mismo contrato** a propósito: la importación consulta cada proveedor que se le entrega, así que añadir un tercero es un registro y nada más. Cada registro lleva un **nombre explícito**, sin el cual ambos proveedores compartirían un único cliente configurado y la segunda dirección base ganaría silenciosamente para los dos.
 
+#### 2.6.6.5. Bounded Context Software Architecture Component Level Diagrams
+
+**Food Catalog**
+
+Component:
+
+![Food Catalog Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/food-catalog.puml)
+
