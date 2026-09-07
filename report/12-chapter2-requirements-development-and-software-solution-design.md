@@ -1248,3 +1248,33 @@ El mapeo de errores a HTTP ocurre en un **único lugar**, para que una misma reg
 
 **Localización** — `Iam/Resources/IamMessages.cs`, clase marcador de los archivos `.resx` en inglés y español.
 
+#### 2.6.5.3. Application Layer
+
+La Application Layer de IAM maneja los tres subflujos del contexto (1.1 registro, 1.2 autenticación y selección de shell, 1.3 cierre de sesión). Sigue la estructura estándar del proyecto: interfaces públicas en `Application/CommandServices` y `Application/QueryServices`, implementaciones en `Application/Internal/...`, handlers de eventos en `Application/Internal/EventHandlers` y fachada ACL en `Application/Acl`.
+
+**Command Services**
+
+**`UserCommandService`** (implementa `IUserCommandService`) — Depende de `IUserRepository`, `IUnitOfWork`, `IHashingService`, `ILogger<UserCommandService>` e `IMediator`.
+
+Su método `Handle(RegisterAccountCommand, CancellationToken) : Task<Result<User, IamError>>` implementa el subflujo 1.1 con las guardas en un orden deliberado: valida el value object `Email` (`InvalidEmail`), comprueba que el rol venga declarado (`RoleNotDeclared`) y sea válido (`InvalidRole`), construye el `Password` aplicando la política de fortaleza (`WeakPassword`), verifica la unicidad del correo (`EmailAlreadyTaken`), construye el agregado con el hash producido por el servicio de hashing, persiste y hace commit, y **publica `AccountCreated` siempre después del commit**. Como red de seguridad, loguea el correo pero **nunca la contraseña**.
+
+**`UserSessionCommandService`** (implementa `IUserSessionCommandService`) — Depende de `IUserRepository`, `IUserSessionRepository`, `IUnitOfWork`, `IHashingService`, `ITokenService`, `ILogger<...>` e `IMediator`.
+
+| Método | Subflujo | Comportamiento |
+|---|---|---|
+| `Handle(SignInCommand)` | 1.2 | Un correo malformado se reporta como `InvalidCredentials`, **no como correo inválido**, para no revelar qué direcciones existen. Comprueba el bloqueo de la cuenta; ante credenciales incorrectas registra el intento fallido y hace commit; ante credenciales válidas resetea el contador, abre la sesión con `user.StartSession()`, persiste, genera el token y publica `SessionStarted` y `RoleClaimIssued` tras el commit. Devuelve `SignInOutcome`. |
+| `Handle(SelectNavigationShellCommand)` | 1.2 | **Invocado sólo por la política, nunca por un endpoint.** Distingue `SessionAlreadyTerminated`, `ShellAlreadySelectedForSession` y `RoleChangeRequiresReAuthentication`. Publica `NavigationShellSelected`. |
+| `Handle(SignOutCommand)` | 1.3 | Una sesión ajena se reporta como **inexistente**, no como prohibida. Termina la sesión, hace commit y publica `SessionTerminated`. |
+
+**Query Services** — `UserQueryService(IUserRepository)` resuelve `GetUserByIdQuery` y `GetUserByEmailQuery`, donde un correo malformado devuelve `null` porque **las queries reportan ausencia, no fallo**. `UserSessionQueryService(IUserSessionRepository)` resuelve `GetUserSessionByIdQuery` y `GetUserSessionsByUserIdQuery`.
+
+**Event Handlers (políticas)**
+
+**`OnRoleClaimIssuedHandler`** implementa la política *When Role Claim Issued* del subflujo 1.2. Escucha `RoleClaimIssued` a través de `IEventHandler<T>` —alias tipado sobre el `INotificationHandler<T>` de Cortex.Mediator— y depende de `IServiceScopeFactory` y `ILogger<...>`. Crea un **scope de DI aislado con su propio `DbContext`**, porque las notificaciones se manejan en paralelo y compartir el contexto del request produciría un error de concurrencia; deriva el shell con `NavigationShell.ForRole(...)` y emite `SelectNavigationShellCommand`. Si falla, sólo registra una advertencia: el usuario ya está autenticado y el shell puede resolverse después.
+
+Es la **única política del bounded context y no cruza frontera**: productor y suscriptor son ambos IAM.
+
+**DTO de aplicación** — `SignInOutcome(User User, UserSession Session, string Token)`, que respalda el read model *Session Context*. No es un tipo de dominio ni un recurso HTTP: existe para que el controller pueda componer la respuesta de sign-in sin que la capa de aplicación conozca la forma del payload.
+
+**ACL Facade** — `IamContextFacade` implementa `IIamContextFacade` delegando en `IUserQueryService` y **nunca en un repositorio**, para no puentear la capa de aplicación. Sus tres métodos degradan con elegancia mediante `try/catch` hacia `null` o `false`, y **nunca propagan excepciones**, de modo que un fallo de identidad se traduce en denegación de acceso en el contexto que pregunta.
+
