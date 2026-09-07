@@ -1,0 +1,359 @@
+@startuml Healthify - Intake and Body Response - Application
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.IntakeBodyResponse.Application" {
+
+  package "CommandServices" {
+    ' Driven by a policy; there is no endpoint that writes the cache.
+    interface IActiveTargetsCacheCommandService {
+      +Handle(command: RefreshActiveTargetsCacheCommand, ct): Task<Result<ActiveTargetsCache, IntakeError>>
+    }
+    ' Every one of these is written by the patient and by nobody else.
+    interface IDiaryEntryCommandService {
+      +Handle(command: LogMealByPhotoCommand, ct): Task<Result<DiaryEntry, IntakeError>>
+      +Handle(command: EstimatePortionCommand, ct): Task<Result<DiaryEntry, IntakeError>>
+      +Handle(command: ConfirmEstimateCommand, ct): Task<Result<DiaryEntry, IntakeError>>
+      +Handle(command: AdjustEstimateCommand, ct): Task<Result<DiaryEntry, IntakeError>>
+      +Handle(command: LogMealManuallyCommand, ct): Task<Result<DiaryEntry, IntakeError>>
+      +Handle(command: LogOffPlanMealCommand, ct): Task<Result<DiaryEntry, IntakeError>>
+      +Handle(command: SyncPendingEntriesCommand, ct): Task<Result<SyncOutcome, IntakeError>>
+    }
+    interface ISelfWeighInCommandService {
+      +Handle(command: RecordSelfWeighInCommand, ct): Task<Result<SelfWeighIn, IntakeError>>
+    }
+    ' Driven by a policy; there is no endpoint.
+    interface IWeightTrendCommandService {
+      +Handle(command: RecalculateWeightTrendCommand, ct): Task<Result<WeightTrend, IntakeError>>
+    }
+  }
+
+  package "QueryServices" {
+    interface IActiveTargetsCacheQueryService {
+      +Handle(query: GetActiveTargetsByPatientIdQuery, ct): Task<ActiveTargetsCache?>
+    }
+    interface IDiaryEntryQueryService {
+      +Handle(query: GetDiaryEntryByIdQuery, ct): Task<DiaryEntry?>
+      +Handle(query: GetDiaryEntriesByPatientIdQuery, ct): Task<IEnumerable<DiaryEntry>>
+      +Handle(query: GetPendingSyncQueueByPatientIdQuery, ct): Task<IEnumerable<DiaryEntry>>
+    }
+    interface ISelfWeighInQueryService {
+      +Handle(query: GetSelfWeighInsByPatientIdQuery, ct): Task<IEnumerable<SelfWeighIn>>
+    }
+    interface IWeightTrendQueryService {
+      +Handle(query: GetWeightTrendByPatientIdQuery, ct): Task<WeightTrend?>
+    }
+  }
+
+  package "Internal" {
+    class SyncedEntryOutcome <<record>> {
+      +{static} Created: string
+      +{static} AlreadyPresent: string
+      +{static} ConflictResolved: string
+      +{static} Rejected: string
+      -ClientEntryId: Guid
+      -DiaryEntryId: int?
+      -Outcome: string
+      -Reason: string?
+    }
+    ' Every item is reported individually and the batch never fails as a whole.
+    class SyncOutcome <<record>> {
+      -PatientId: int
+      -Created: int
+      -AlreadyPresent: int
+      -ConflictsResolved: int
+      -Rejected: int
+      -Entries: IReadOnlyList<SyncedEntryOutcome>
+    }
+
+    package "Internal.CommandServices" {
+      ' This service never talks to Nutritional Care: it only ever sees what
+      ' the published event chose to carry.
+      class ActiveTargetsCacheCommandService {
+        +Handle(command: RefreshActiveTargetsCacheCommand, ct): Task<Result<...>>
+        -{static} Failure(error: IntakeError): Result<ActiveTargetsCache, IntakeError>
+      }
+      ' Nothing in this class removes an entry and nothing in it qualifies one:
+      ' no compliance flag, no comparison against a target.
+      class DiaryEntryCommandService {
+        -{static} DefaultRetroactiveLoggingWindowHours: int = 48
+        +Handle(command: LogMealByPhotoCommand, ct): Task<Result<...>>
+        +Handle(command: EstimatePortionCommand, ct): Task<Result<...>>
+        +Handle(command: ConfirmEstimateCommand, ct): Task<Result<...>>
+        +Handle(command: AdjustEstimateCommand, ct): Task<Result<...>>
+        +Handle(command: LogMealManuallyCommand, ct): Task<Result<...>>
+        +Handle(command: LogOffPlanMealCommand, ct): Task<Result<...>>
+        +Handle(command: SyncPendingEntriesCommand, ct): Task<Result<SyncOutcome, IntakeError>>
+        -ReconcileAsync(patientId: int, pending: PendingDiaryEntry, ct): Task<SyncedEntryOutcome>
+        -MarkSynchronizedAsync(entry: DiaryEntry, ct): Task
+        -BuildLocalTimestamp(declared: DateTimeOffset, out error: IntakeError): LocalTimestamp?
+        -{static} Rejected(pending: PendingDiaryEntry, error: IntakeError): SyncedEntryOutcome
+      }
+      class SelfWeighInCommandService {
+        +Handle(command: RecordSelfWeighInCommand, ct): Task<Result<...>>
+      }
+      ' The filtering lives inside the aggregate, which receives every reading
+      ' and returns the ones it excluded, so this service does not decide.
+      class WeightTrendCommandService {
+        +Handle(command: RecalculateWeightTrendCommand, ct): Task<Result<...>>
+      }
+    }
+
+    package "Internal.QueryServices" {
+      class ActiveTargetsCacheQueryService
+      class DiaryEntryQueryService
+      class SelfWeighInQueryService
+      class WeightTrendQueryService
+    }
+
+    package "Internal.EventHandlers" {
+      ' Integration event 4 of 13. The only place where anything from
+      ' Nutritional Care enters this context, and it enters as an event.
+      class OnActiveTargetsUpdatedIntakeHandler {
+        +Handle(notification: ActiveTargetsUpdated, ct): Task
+      }
+      ' Portion estimation runs on-device (ML Kit): this handler makes no
+      ' network call, runs no model and reaches no AI service.
+      class OnMealLoggedPhotoEstimationHandler {
+        +Handle(notification: MealLogged, ct): Task
+      }
+      ' Runs for every reading, including the ones outside the protocol.
+      class OnSelfWeighInRecordedHandler {
+        +Handle(notification: SelfWeighInRecorded, ct): Task
+      }
+    }
+  }
+
+  package "Acl" {
+    ' The nutrient totals are computed here rather than stored: a stored total
+    ' would be a second source of truth that drifts when a catalog entry is
+    ' corrected. Only confirmed estimates are counted.
+    class IntakeContextFacade {
+      -{static} NutrientBasisGrams: decimal = 100
+      +GetDailyIntakeSummary(patientId: int, date: DateOnly, ct): Task<DailyIntakeSummaryItem?>
+      +GetWeightTrendPoints(patientId: int, days: int, ct): Task<IReadOnlyList<WeightTrendPointItem>>
+      +GetDiaryEntries(patientId: int, date: DateOnly, ct): Task<IReadOnlyList<DiaryEntryItem>>
+      -ResolveName(referenceFoodId: int?, ct): Task<string?>
+      -{static} Tail(trend: WeightTrend, days: int): List<WeightTrendPointItem>
+    }
+  }
+}
+
+package "IntakeBodyResponse.Domain" <<external>> {
+  class ActiveTargetsCache
+  class DiaryEntry
+  class SelfWeighIn
+  class WeightTrend
+  class LocalTimestamp
+  class Confidence
+  class WeightKg
+  class Provenance
+  class SyncState
+  class ProposedEstimate
+  class ConfirmedEstimate
+  class ProtocolCompliance
+  class RefreshActiveTargetsCacheCommand
+  class LogMealByPhotoCommand
+  class EstimatePortionCommand
+  class ConfirmEstimateCommand
+  class AdjustEstimateCommand
+  class LogMealManuallyCommand
+  class LogOffPlanMealCommand
+  class RecordSelfWeighInCommand
+  class RecalculateWeightTrendCommand
+  class SyncPendingEntriesCommand
+  class PendingDiaryEntry
+  class GetActiveTargetsByPatientIdQuery
+  class GetDiaryEntryByIdQuery
+  class GetDiaryEntriesByPatientIdQuery
+  class GetPendingSyncQueueByPatientIdQuery
+  class GetSelfWeighInsByPatientIdQuery
+  class GetWeightTrendByPatientIdQuery
+  class ActiveTargetsCacheRefreshed
+  class MealLogged
+  class EstimateProposed
+  class EstimateConfirmedByPatient
+  class EstimateAdjustedByPatient
+  class OffPlanEntryLogged
+  class SelfWeighInRecorded
+  class WeightTrendRecalculated
+  class SelfWeighInExcludedFromTrend
+  class EntryQueuedOffline
+  class EntrySynchronized
+  class SyncConflictResolved
+  interface IActiveTargetsCacheRepository
+  interface IDiaryEntryRepository
+  interface ISelfWeighInRepository
+  interface IWeightTrendRepository
+  enum IntakeError
+}
+
+package "IntakeBodyResponse.Interfaces.Acl" <<external>> {
+  interface IIntakeContextFacade
+  class DailyIntakeSummaryItem <<record>>
+  class WeightTrendPointItem <<record>>
+  class DiaryEntryItem <<record>>
+}
+
+package "NutritionalCare.Domain.Model.Events" <<external>> {
+  class ActiveTargetsUpdated
+}
+
+package "Other contexts' ACL" <<external>> {
+  interface ICareRelationshipContextFacade
+  interface IFoodCatalogContextFacade
+}
+
+package "Shared / Cortex" <<external>> {
+  class "Result<TValue, TError>" as Result
+  interface IUnitOfWork
+  interface IMediator
+  interface "IEventHandler<T>" as IEventHandler
+  interface IServiceScopeFactory
+  interface IConfiguration
+  interface "ILogger<T>" as ILogger
+}
+
+' --- Service interface realizations ---
+ActiveTargetsCacheCommandService ..|> IActiveTargetsCacheCommandService
+DiaryEntryCommandService ..|> IDiaryEntryCommandService
+SelfWeighInCommandService ..|> ISelfWeighInCommandService
+WeightTrendCommandService ..|> IWeightTrendCommandService
+ActiveTargetsCacheQueryService ..|> IActiveTargetsCacheQueryService
+DiaryEntryQueryService ..|> IDiaryEntryQueryService
+SelfWeighInQueryService ..|> ISelfWeighInQueryService
+WeightTrendQueryService ..|> IWeightTrendQueryService
+IntakeContextFacade ..|> IIntakeContextFacade
+OnActiveTargetsUpdatedIntakeHandler ..|> IEventHandler
+OnMealLoggedPhotoEstimationHandler ..|> IEventHandler
+OnSelfWeighInRecordedHandler ..|> IEventHandler
+
+' --- ActiveTargetsCacheCommandService (Subflow 4.1) ---
+ActiveTargetsCacheCommandService --> IActiveTargetsCacheRepository : uses
+ActiveTargetsCacheCommandService --> IUnitOfWork : commits with
+ActiveTargetsCacheCommandService --> ICareRelationshipContextFacade : requires a live link
+ActiveTargetsCacheCommandService --> IMediator : publishes via
+ActiveTargetsCacheCommandService --> ILogger : logs to
+ActiveTargetsCacheCommandService ..> RefreshActiveTargetsCacheCommand : handles
+ActiveTargetsCacheCommandService ..> ActiveTargetsCache : creates / refreshes
+ActiveTargetsCacheCommandService ..> ActiveTargetsCacheRefreshed : publishes
+ActiveTargetsCacheCommandService ..> IntakeError : returns
+
+' --- DiaryEntryCommandService (Subflows 4.2, 4.3, 4.4 and 4.6) ---
+DiaryEntryCommandService --> IDiaryEntryRepository : uses
+DiaryEntryCommandService --> IUnitOfWork : commits per item
+DiaryEntryCommandService --> IFoodCatalogContextFacade : resolves the food with
+DiaryEntryCommandService --> IConfiguration : reads the retroactive window from
+DiaryEntryCommandService --> IMediator : publishes via
+DiaryEntryCommandService --> ILogger : logs to
+DiaryEntryCommandService ..> LogMealByPhotoCommand : handles
+DiaryEntryCommandService ..> EstimatePortionCommand : handles
+DiaryEntryCommandService ..> ConfirmEstimateCommand : handles
+DiaryEntryCommandService ..> AdjustEstimateCommand : handles
+DiaryEntryCommandService ..> LogMealManuallyCommand : handles
+DiaryEntryCommandService ..> LogOffPlanMealCommand : handles
+DiaryEntryCommandService ..> SyncPendingEntriesCommand : handles
+DiaryEntryCommandService ..> PendingDiaryEntry : reconciles
+DiaryEntryCommandService ..> DiaryEntry : creates / mutates
+DiaryEntryCommandService ..> Provenance : validates
+DiaryEntryCommandService ..> SyncState : moves through
+DiaryEntryCommandService ..> LocalTimestamp : validates against the window
+DiaryEntryCommandService ..> Confidence : validates
+DiaryEntryCommandService ..> ProposedEstimate : stores
+DiaryEntryCommandService ..> ConfirmedEstimate : stores
+DiaryEntryCommandService ..> SyncOutcome : produces
+DiaryEntryCommandService ..> MealLogged : publishes
+DiaryEntryCommandService ..> EstimateProposed : publishes
+DiaryEntryCommandService ..> EstimateConfirmedByPatient : publishes
+DiaryEntryCommandService ..> EstimateAdjustedByPatient : publishes
+DiaryEntryCommandService ..> OffPlanEntryLogged : publishes
+DiaryEntryCommandService ..> EntryQueuedOffline : publishes
+DiaryEntryCommandService ..> EntrySynchronized : publishes
+DiaryEntryCommandService ..> SyncConflictResolved : publishes
+DiaryEntryCommandService ..> IntakeError : returns
+
+' --- SelfWeighInCommandService and WeightTrendCommandService (Subflow 4.5) ---
+SelfWeighInCommandService --> ISelfWeighInRepository : uses
+SelfWeighInCommandService --> IUnitOfWork : commits with
+SelfWeighInCommandService --> IMediator : publishes via
+SelfWeighInCommandService --> ILogger : logs to
+SelfWeighInCommandService ..> RecordSelfWeighInCommand : handles
+SelfWeighInCommandService ..> WeightKg : validates
+SelfWeighInCommandService ..> LocalTimestamp : validates
+SelfWeighInCommandService ..> ProtocolCompliance : builds
+SelfWeighInCommandService ..> SelfWeighIn : creates
+SelfWeighInCommandService ..> SelfWeighInRecorded : publishes
+SelfWeighInCommandService ..> IntakeError : returns
+WeightTrendCommandService --> IWeightTrendRepository : uses
+WeightTrendCommandService --> ISelfWeighInRepository : feeds every reading in
+WeightTrendCommandService --> IUnitOfWork : commits with
+WeightTrendCommandService --> IMediator : publishes via
+WeightTrendCommandService --> ILogger : logs to
+WeightTrendCommandService ..> RecalculateWeightTrendCommand : handles
+WeightTrendCommandService ..> WeightTrend : creates / recalculates
+WeightTrendCommandService ..> WeightTrendRecalculated : publishes
+WeightTrendCommandService ..> SelfWeighInExcludedFromTrend : publishes per exclusion
+WeightTrendCommandService ..> IntakeError : returns
+
+' --- Policies. Each opens its own DI scope ---
+OnActiveTargetsUpdatedIntakeHandler ..> ActiveTargetsUpdated : subscribes to
+OnActiveTargetsUpdatedIntakeHandler --> IServiceScopeFactory : opens scope with
+OnActiveTargetsUpdatedIntakeHandler --> ILogger : logs to
+OnActiveTargetsUpdatedIntakeHandler --> IActiveTargetsCacheCommandService : delegates to
+OnActiveTargetsUpdatedIntakeHandler ..> RefreshActiveTargetsCacheCommand : issues
+OnMealLoggedPhotoEstimationHandler ..> MealLogged : subscribes to
+OnMealLoggedPhotoEstimationHandler --> IServiceScopeFactory : opens scope with
+OnMealLoggedPhotoEstimationHandler --> ILogger : logs to
+OnMealLoggedPhotoEstimationHandler --> IDiaryEntryCommandService : delegates to
+OnMealLoggedPhotoEstimationHandler ..> Provenance : guards on Photo
+OnMealLoggedPhotoEstimationHandler ..> EstimatePortionCommand : issues
+OnSelfWeighInRecordedHandler ..> SelfWeighInRecorded : subscribes to
+OnSelfWeighInRecordedHandler --> IServiceScopeFactory : opens scope with
+OnSelfWeighInRecordedHandler --> ILogger : logs to
+OnSelfWeighInRecordedHandler --> IWeightTrendCommandService : delegates to
+OnSelfWeighInRecordedHandler ..> RecalculateWeightTrendCommand : issues
+
+' --- Query services ---
+ActiveTargetsCacheQueryService --> IActiveTargetsCacheRepository : uses
+ActiveTargetsCacheQueryService ..> GetActiveTargetsByPatientIdQuery : handles
+ActiveTargetsCacheQueryService ..> ActiveTargetsCache : returns
+DiaryEntryQueryService --> IDiaryEntryRepository : uses
+DiaryEntryQueryService ..> GetDiaryEntryByIdQuery : handles
+DiaryEntryQueryService ..> GetDiaryEntriesByPatientIdQuery : handles
+DiaryEntryQueryService ..> GetPendingSyncQueueByPatientIdQuery : handles
+DiaryEntryQueryService ..> DiaryEntry : returns
+SelfWeighInQueryService --> ISelfWeighInRepository : uses
+SelfWeighInQueryService ..> GetSelfWeighInsByPatientIdQuery : handles
+SelfWeighInQueryService ..> SelfWeighIn : returns
+WeightTrendQueryService --> IWeightTrendRepository : uses
+WeightTrendQueryService ..> GetWeightTrendByPatientIdQuery : handles
+WeightTrendQueryService ..> WeightTrend : returns
+
+' --- ACL facade: read only, without exception ---
+IntakeContextFacade --> IDiaryEntryQueryService : uses
+IntakeContextFacade --> IWeightTrendQueryService : uses
+IntakeContextFacade --> IFoodCatalogContextFacade : resolves food names with
+IntakeContextFacade ..> GetDiaryEntriesByPatientIdQuery : issues
+IntakeContextFacade ..> GetWeightTrendByPatientIdQuery : issues
+IntakeContextFacade ..> DailyIntakeSummaryItem : returns
+IntakeContextFacade ..> WeightTrendPointItem : returns
+IntakeContextFacade ..> DiaryEntryItem : returns
+
+' --- Application DTO composition ---
+SyncOutcome o--> "0..*" SyncedEntryOutcome : one per item
+
+' --- Result wrapper across command services ---
+IActiveTargetsCacheCommandService ..> Result
+IDiaryEntryCommandService ..> Result
+ISelfWeighInCommandService ..> Result
+IWeightTrendCommandService ..> Result
+IDiaryEntryCommandService ..> SyncOutcome : returns
+IActiveTargetsCacheCommandService ..> IntakeError : returns
+IDiaryEntryCommandService ..> IntakeError : returns
+ISelfWeighInCommandService ..> IntakeError : returns
+IWeightTrendCommandService ..> IntakeError : returns
+
+@enduml

@@ -1,0 +1,240 @@
+@startuml Healthify - Intake and Body Response - Interfaces
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.IntakeBodyResponse.Interfaces" {
+
+  package "Acl" {
+    ' Read only, without exception. This context is written by the patient and
+    ' by nobody else, so there is no method here another context could use to
+    ' write into it - and the absence is the enforcement.
+    interface IIntakeContextFacade {
+      +GetDailyIntakeSummary(patientId: int, date: DateOnly, ct): Task<DailyIntakeSummaryItem?>
+      +GetWeightTrendPoints(patientId: int, days: int, ct): Task<IReadOnlyList<WeightTrendPointItem>>
+      +GetDiaryEntries(patientId: int, date: DateOnly, ct): Task<IReadOnlyList<DiaryEntryItem>>
+    }
+    ' No compliance, no deviation, no verdict: totals and counts only.
+    class DailyIntakeSummaryItem <<record>> {
+      -PatientId: int
+      -Date: DateOnly
+      -EnergyKcal: decimal
+      -ProteinG: decimal
+      -CarbG: decimal
+      -FatG: decimal
+      -EntryCount: int
+      -OffPlanEntryCount: int
+      -HasAnyEntry: bool
+    }
+    class WeightTrendPointItem <<record>> {
+      -Date: DateOnly
+      -SmoothedValueKg: decimal
+    }
+    ' Confidence and provenance are not optional decoration, and the proposed
+    ' and confirmed halves travel side by side rather than collapsed into one.
+    class DiaryEntryItem <<record>> {
+      -DiaryEntryId: int
+      -LocalTimestamp: DateTimeOffset
+      -Provenance: string
+      -SyncState: string
+      -ProposedReferenceFoodId: int?
+      -ProposedFoodName: string?
+      -ProposedPortionGrams: decimal?
+      -ProposedConfidence: decimal?
+      -ConfirmedReferenceFoodId: int?
+      -ConfirmedFoodName: string?
+      -ConfirmedPortionGrams: decimal?
+      -ConfirmedAt: DateTimeOffset?
+    }
+  }
+
+  package "REST" {
+    ' Patient only, without exception, and that is a design decision rather
+    ' than a permission setting. There is no DELETE here, and Estimate Portion
+    ' has no endpoint: it is reached only from the photo estimation policy.
+    class DiaryEntriesController {
+      +LogMealByPhoto(resource: LogMealByPhotoResource): Task<IActionResult>
+      +LogMealManually(resource: LogMealManuallyResource): Task<IActionResult>
+      +LogOffPlanMeal(resource: LogOffPlanMealResource): Task<IActionResult>
+      +ConfirmEstimate(diaryEntryId: int): Task<IActionResult>
+      +AdjustEstimate(diaryEntryId: int, resource: AdjustEstimateResource): Task<IActionResult>
+      +SyncPendingEntries(resource: SyncPendingEntriesResource): Task<IActionResult>
+    }
+    class SelfWeighInsController {
+      +RecordSelfWeighIn(resource: RecordSelfWeighInResource): Task<IActionResult>
+    }
+    class PatientIntakeController {
+      +GetActiveTargets(patientId: int): Task<IActionResult>
+      +GetDiaryEntries(patientId: int, date: DateOnly?): Task<IActionResult>
+      +GetWeightTrend(patientId: int): Task<IActionResult>
+      +GetPendingSyncQueue(patientId: int): Task<IActionResult>
+    }
+  }
+
+  package "REST.Resources" {
+    class LogMealByPhotoResource <<record>>
+    class LogMealManuallyResource <<record>>
+    class LogOffPlanMealResource <<record>>
+    class AdjustEstimateResource <<record>>
+    class RecordSelfWeighInResource <<record>>
+    class PendingDiaryEntryResource <<record>>
+    class SyncPendingEntriesResource <<record>>
+    class ActiveTargetsResource <<record>>
+    class DiaryEntryResource <<record>>
+    class SelfWeighInResource <<record>>
+    class WeightTrendPointResource <<record>>
+    class WeightTrendResource <<record>>
+    class SyncedEntryOutcomeResource <<record>>
+    class SyncOutcomeResource <<record>>
+  }
+
+  package "REST.Transform" {
+    class LogMealByPhotoCommandAssembler <<static>>
+    class LogMealManuallyCommandAssembler <<static>>
+    class LogOffPlanMealCommandAssembler <<static>>
+    class ConfirmEstimateCommandAssembler <<static>>
+    class AdjustEstimateCommandAssembler <<static>>
+    class RecordSelfWeighInCommandAssembler <<static>>
+    class SyncPendingEntriesCommandAssembler <<static>>
+    class ActiveTargetsResourceAssembler <<static>>
+    class DiaryEntryResourceAssembler <<static>>
+    class SelfWeighInResourceAssembler <<static>>
+    class WeightTrendResourceAssembler <<static>>
+    class SyncOutcomeResourceAssembler <<static>>
+    ' The single place where an IntakeError becomes an HTTP status.
+    class IntakeActionResultAssembler <<static>>
+  }
+}
+
+package "IntakeBodyResponse.Application" <<external>> {
+  interface IDiaryEntryCommandService
+  interface IDiaryEntryQueryService
+  interface ISelfWeighInCommandService
+  interface IActiveTargetsCacheQueryService
+  interface IWeightTrendQueryService
+  class SyncOutcome
+}
+
+package "IntakeBodyResponse.Domain" <<external>> {
+  class ActiveTargetsCache
+  class DiaryEntry
+  class SelfWeighIn
+  class WeightTrend
+  class LogMealByPhotoCommand
+  class LogMealManuallyCommand
+  class LogOffPlanMealCommand
+  class ConfirmEstimateCommand
+  class AdjustEstimateCommand
+  class RecordSelfWeighInCommand
+  class SyncPendingEntriesCommand
+  class GetActiveTargetsByPatientIdQuery
+  class GetDiaryEntriesByPatientIdQuery
+  class GetPendingSyncQueueByPatientIdQuery
+  class GetWeightTrendByPatientIdQuery
+  enum IntakeError
+}
+
+package "Shared / ASP.NET" <<external>> {
+  class ControllerBase
+  class "Result<TValue, TError>" as Result
+  class ProblemDetailsFactory
+  class ControllerBaseExtensions <<static>>
+  interface "IStringLocalizer<T>" as IStringLocalizerGeneric
+}
+
+package "IntakeBodyResponse.Resources" {
+  class IntakeMessages
+}
+
+' Resolved generic: the controllers depend on IStringLocalizer<IntakeMessages>.
+interface "IStringLocalizer<IntakeMessages>" as IStringLocalizer
+IStringLocalizer ..|> IStringLocalizerGeneric
+IStringLocalizer ..> IntakeMessages : parameterized by
+
+' --- Controllers ---
+DiaryEntriesController --|> ControllerBase
+SelfWeighInsController --|> ControllerBase
+PatientIntakeController --|> ControllerBase
+DiaryEntriesController --> IDiaryEntryCommandService : uses
+DiaryEntriesController --> IStringLocalizer : uses
+SelfWeighInsController --> ISelfWeighInCommandService : uses
+SelfWeighInsController --> IStringLocalizer : uses
+PatientIntakeController --> IActiveTargetsCacheQueryService : uses
+PatientIntakeController --> IDiaryEntryQueryService : uses
+PatientIntakeController --> IWeightTrendQueryService : uses
+PatientIntakeController --> IStringLocalizer : uses
+
+' --- The patient in the payload must match the one in the token ---
+DiaryEntriesController ..> ControllerBaseExtensions : reads patient id
+SelfWeighInsController ..> ControllerBaseExtensions : reads patient id
+PatientIntakeController ..> ControllerBaseExtensions : authorizes the owner
+
+' --- Controllers to assemblers and queries ---
+DiaryEntriesController ..> LogMealByPhotoCommandAssembler : uses
+DiaryEntriesController ..> LogMealManuallyCommandAssembler : uses
+DiaryEntriesController ..> LogOffPlanMealCommandAssembler : uses
+DiaryEntriesController ..> ConfirmEstimateCommandAssembler : uses
+DiaryEntriesController ..> AdjustEstimateCommandAssembler : uses
+DiaryEntriesController ..> SyncPendingEntriesCommandAssembler : uses
+DiaryEntriesController ..> IntakeActionResultAssembler : uses
+SelfWeighInsController ..> RecordSelfWeighInCommandAssembler : uses
+SelfWeighInsController ..> IntakeActionResultAssembler : uses
+PatientIntakeController ..> ActiveTargetsResourceAssembler : uses
+PatientIntakeController ..> DiaryEntryResourceAssembler : uses
+PatientIntakeController ..> WeightTrendResourceAssembler : uses
+PatientIntakeController ..> IntakeActionResultAssembler : uses
+PatientIntakeController ..> GetActiveTargetsByPatientIdQuery : builds
+PatientIntakeController ..> GetDiaryEntriesByPatientIdQuery : builds
+PatientIntakeController ..> GetPendingSyncQueueByPatientIdQuery : builds
+PatientIntakeController ..> GetWeightTrendByPatientIdQuery : builds
+
+' --- Request resource to command assemblers ---
+LogMealByPhotoCommandAssembler ..> LogMealByPhotoResource : from
+LogMealByPhotoCommandAssembler ..> LogMealByPhotoCommand : to
+LogMealManuallyCommandAssembler ..> LogMealManuallyResource : from
+LogMealManuallyCommandAssembler ..> LogMealManuallyCommand : to
+LogOffPlanMealCommandAssembler ..> LogOffPlanMealResource : from
+LogOffPlanMealCommandAssembler ..> LogOffPlanMealCommand : to
+' Both identifiers come from the route and the token: there is no payload.
+ConfirmEstimateCommandAssembler ..> ConfirmEstimateCommand : to
+AdjustEstimateCommandAssembler ..> AdjustEstimateResource : from
+AdjustEstimateCommandAssembler ..> AdjustEstimateCommand : to
+RecordSelfWeighInCommandAssembler ..> RecordSelfWeighInResource : from
+RecordSelfWeighInCommandAssembler ..> RecordSelfWeighInCommand : to
+SyncPendingEntriesCommandAssembler ..> SyncPendingEntriesResource : from
+SyncPendingEntriesCommandAssembler ..> SyncPendingEntriesCommand : to
+
+' --- Entity to response resource assemblers ---
+ActiveTargetsResourceAssembler ..> ActiveTargetsCache : from
+ActiveTargetsResourceAssembler ..> ActiveTargetsResource : to
+DiaryEntryResourceAssembler ..> DiaryEntry : from
+DiaryEntryResourceAssembler ..> DiaryEntryResource : to
+SelfWeighInResourceAssembler ..> SelfWeighIn : from
+SelfWeighInResourceAssembler ..> SelfWeighInResource : to
+WeightTrendResourceAssembler ..> WeightTrend : from
+WeightTrendResourceAssembler ..> WeightTrendResource : to
+SyncOutcomeResourceAssembler ..> SyncOutcome : from
+SyncOutcomeResourceAssembler ..> SyncOutcomeResource : to
+
+' --- Read resource composition ---
+SyncPendingEntriesResource o--> "0..*" PendingDiaryEntryResource : batch of
+WeightTrendResource o--> "0..*" WeightTrendPointResource : series
+SyncOutcomeResource o--> "0..*" SyncedEntryOutcomeResource : one per item
+
+' --- Result to IActionResult assembler ---
+IntakeActionResultAssembler ..> Result : maps
+IntakeActionResultAssembler ..> IntakeError : maps
+IntakeActionResultAssembler ..> DiaryEntryResourceAssembler : uses
+IntakeActionResultAssembler ..> SelfWeighInResourceAssembler : uses
+IntakeActionResultAssembler ..> SyncOutcomeResourceAssembler : uses
+IntakeActionResultAssembler ..> ProblemDetailsFactory : builds problem details with
+IntakeActionResultAssembler ..> IStringLocalizer : localizes with
+
+' --- ACL facade contract & its DTOs ---
+IIntakeContextFacade ..> DailyIntakeSummaryItem : returns
+IIntakeContextFacade ..> WeightTrendPointItem : returns
+IIntakeContextFacade ..> DiaryEntryItem : returns
+
+@enduml
