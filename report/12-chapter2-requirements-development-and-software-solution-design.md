@@ -1183,3 +1183,68 @@ Database:
 
 **Relaciones entre clases:** `User` compone `UserId`, `Email` y `Role`, y **depende** de `UserSession` como creador a través de `StartSession()` (1 → 0..*), sin navegación de EF. `UserSession` compone `SessionId` y `Role` (como role claim congelado) y 0..1 `NavigationShell`, que a su vez **depende** de `Role` mediante `ForRole` y `MatchesRole`. `IHashingService` depende de `Password`; `ITokenService` depende de `User` y `UserSession`. Ambos agregados realizan `IAuditableEntity`, y los cinco eventos generalizan `DomainEventBase`.
 
+#### 2.6.5.2. Interface Layer
+
+La Interface Layer de IAM expone tres controllers y el contrato ACL por el que los demás bounded contexts resuelven identidades puntuales. Todas las respuestas de error se construyen con `ProblemDetailsFactory.Create(...)` (RFC 7807) y con textos localizados a través de `IStringLocalizer<IamMessages>`.
+
+**Controllers**
+
+**`AuthenticationController`** — `[ApiController] [Route("api/v1/authentication")] [Authorize] [Tags("Authentication")]`, con `[Produces]` y `[Consumes]` en `application/json`. Depende de `IUserCommandService`, `IUserSessionCommandService` e `IStringLocalizer<IamMessages>`.
+
+| Verbo / Ruta | Acción | Autorización | Respuestas |
+|---|---|---|---|
+| `POST /api/v1/authentication/sign-up` | `SignUp(SignUpResource)` | `[AllowAnonymous]` | 201 `UserResource` · 400 · 409 · 500 |
+| `POST /api/v1/authentication/sign-in` | `SignIn(SignInResource)` | `[AllowAnonymous]` | 200 `SignInResponseResource` · 401 · 500 |
+| `POST /api/v1/authentication/sign-out` | `SignOutSession()` | Bearer | 204 · 401 · 404 · 409 |
+
+`sign-out` **no recibe body**: toma el identificador de sesión y el de usuario **del token**, lo que elimina una comprobación de propiedad falsificable.
+
+**`UsersController`** — `[Route("api/v1/users")] [Authorize] [Tags("Users")]`.
+
+| Verbo / Ruta | Acción | Read Model | Respuestas |
+|---|---|---|---|
+| `GET /api/v1/users/{userId:int}` | `GetUserById(int)` | Welcome Screen | 200 · 401 · 403 · 404 |
+| `GET /api/v1/users/{userId:int}/sessions` | `GetSessionsByUserId(int)` | Session Context | 200 · 401 · 403 |
+
+Ambos comparan el identificador de la ruta contra el del token autenticado y devuelven `Forbid()` si no coinciden.
+
+**`SessionsController`** — `[Route("api/v1/sessions")] [Authorize] [Tags("Sessions")]`. Expone `GET /{sessionId:int}/navigation-shell` (`GetNavigationShell(int)`), que sirve el read model **App Shell** con respuestas 200 · 401 · 403 · 404.
+
+**Resources**
+
+| Resource | Campos | Uso |
+|---|---|---|
+| `SignUpResource` | `Email`, `Password`, `Role` | Request de registro. |
+| `SignInResource` | `Email`, `Password` | Request de autenticación. |
+| `SignInResponseResource` | `UserId`, `Email`, `Role`, `SessionId`, `Token`, `StartedAt` | Response de sign-in (Session Context). |
+| `UserResource` | `UserId`, `Email`, `Role`, `CreatedAt` | Welcome Screen. **El hash y el contador de bloqueo nunca salen del contexto.** |
+| `UserSessionResource` | `SessionId`, `UserId`, `RoleClaim`, `NavigationShell?`, `StartedAt`, `TerminatedAt?`, `IsActive` | Session Context. |
+| `NavigationShellResource` | `SessionId`, `RoleClaim?`, `NavigationShell?`, `IsActive` | App Shell. |
+
+**Transform / Assemblers**
+
+| Assembler | Dirección | Método |
+|---|---|---|
+| `RegisterAccountCommandAssembler` | Resource → Command | `ToCommand(SignUpResource)` |
+| `SignInCommandAssembler` | Resource → Command | `ToCommand(SignInResource)` |
+| `SignOutCommandAssembler` | Claims → Command | `ToCommand(int sessionId, int userId)` |
+| `UserResourceAssembler`, `UserSessionResourceAssembler` | Aggregate → Resource | `ToResource(...)` |
+| `SignInResponseResourceAssembler` | DTO → Resource | `ToResource(SignInOutcome)` |
+| `NavigationShellResourceAssembler` | Aggregate → Resource | Usa `ActiveRoleClaim` para que **una sesión terminada no reporte rol**. |
+| `IamActionResultAssembler` | `Result<T, IamError>` → `IActionResult` | `ToRegisterAccountResult`, `ToSignInResult`, `ToSignOutResult`, `ToNotFoundResult` y el privado `FailureResult` |
+
+El mapeo de errores a HTTP ocurre en un **único lugar**, para que una misma regla no reporte dos códigos distintos:
+
+| Errores | Status |
+|---|---|
+| `UserNotFound`, `SessionNotFound` | **404** |
+| `InvalidCredentials`, `AccountLocked` | **401** |
+| `EmailAlreadyTaken`, `SessionAlreadyTerminated`, `ShellAlreadySelectedForSession` | **409** |
+| `InvalidEmail`, `WeakPassword`, `RoleNotDeclared`, `InvalidRole` | **400** |
+| `RoleChangeRequiresReAuthentication`, `RoleImmutablePerSession` | **422** |
+| `UnexpectedError` (por defecto) | **500** |
+
+**ACL Contract** — `IIamContextFacade` declara el DTO `UserIdentityItem(int UserId, string Email, string Role)` y tres operaciones: `GetUserById(int)`, `IsPractitioner(int)` e `IsPatient(int)`. Todo parámetro y retorno es un primitivo o un DTO sólo-de-primitivos declarado aquí; **nunca un command, un aggregate o una entity**.
+
+**Localización** — `Iam/Resources/IamMessages.cs`, clase marcador de los archivos `.resx` en inglés y español.
+
