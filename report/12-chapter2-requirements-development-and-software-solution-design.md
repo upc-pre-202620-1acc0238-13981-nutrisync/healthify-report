@@ -308,6 +308,12 @@ Los cuatro heredan de `BaseRepository<T>` y reimplementan explícitamente `IBase
 
 #### 2.6.1.5. Bounded Context Software Architecture Component Level Diagrams
 
+**Intake & Body Response**
+
+Component:
+
+![Intake & Body Response Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/intake-body-response.puml)
+
 #### 2.6.1.6. Bounded Context Software Architecture Code Level Diagrams
 
 #### 2.6.1.6.1. Bounded Context Domain Layer Class Diagrams
