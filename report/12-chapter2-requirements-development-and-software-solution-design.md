@@ -344,3 +344,111 @@ Database:
 
 ![Intake & Body Response Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/intake-body-response.puml)
 
+### 2.6.2. Bounded Context: Monitoring & Adherence
+
+#### 2.6.2.1. Domain Layer
+
+**Monitoring & Adherence** (`Healthify.Platform.MonitoringAdherence`) es el único bounded context que pone lo prescrito al lado de lo registrado: interpreta. Su Domain Layer aloja cinco aggregate roots y concentra **toda** la lógica de interpretación dentro de ellos, sin domain services. Tres invariantes gobiernan la capa: ninguna desviación se evalúa sobre una ventana de menos de siete días; al paciente se le pregunta antes de que al profesional se le diga; y una señal escalada nunca modifica un plan.
+
+**Aggregates (Aggregate Roots)**
+
+**`EvaluationWindow`** — El periodo sobre el que se compara lo prescrito contra lo registrado. Una ventana por relación de cuidado: abre cuando se establece el vínculo y cierra cuando se revoca. Sostiene tres series que deliberadamente nunca se mezclan entre sí.
+
+| Atributo | Tipo | Scope | Descripción |
+|---|---|---|---|
+| `MinimumDays` | `const int = 7` | `public` | **Invariante 1.** El largo configurado puede ser mayor, nunca menor. |
+| `Id` | `WindowId` | `public get / private set` | Identidad tipada. |
+| `PatientId` / `CareLinkId` | `int` | `public get / private set` | Referencias cross-context. |
+| `WindowDays` | `int` | `public get / private set` | Largo configurado con el que abrió, guardado en la fila para que un cambio de configuración no reinterprete una ventana en curso. |
+| `FromDate` / `ToDate` | `DateTime` | `public get / private set` | Extremos de la ventana, almacenados a medianoche. |
+| `State` | `WindowState` | `public get / private set` | `Open` o `Closed`. |
+| `LastLoggingGapFlaggedOn`, `LastPatientRemindedAt` | nullable | `public get / private set` | Para que la política del hueco de registro lo diga una vez y no cada doce horas. |
+| `TargetsSnapshots` | `IReadOnlyList<TargetsSnapshot>` | `public` (computada) | Todo snapshot recibido, del más antiguo al más nuevo. **Nada se elimina.** |
+| `DailyComplianceSeries` | `IReadOnlyList<DailyCompliance>` | `public` (computada) | El resultado día a día. |
+| `AnthropometrySeries` | `IReadOnlyList<AnthropometryPoint>` | `public` (computada) | **Las lecturas caseras del paciente no están aquí y nunca lo estarán.** |
+| `IntakeSummary` | `IntakeSummary` | `public` (computada) | Calculado, nunca almacenado, así que no puede discrepar con la serie que resume. |
+
+| Método | Scope | Reglas que aplica |
+|---|---|---|
+| `EvaluationWindow(OpenEvaluationWindowCommand, int, DateOnly)` | `public` | *Minimum Seven Day Window*. |
+| `TakeSnapshot(TargetsSnapshot) : bool` | `public` | *Later Adjustment Never Rewrites Evaluated Days*: **anexa y no toca la serie diaria**. Devuelve `false` si esa versión ya es el snapshot vigente. |
+| `SnapshotInForceOn(DateOnly) : TargetsSnapshot?` | `public` | *Each Day Evaluated Against That Day Snapshot*. |
+| `AppendAnthropometryPoint(AnthropometryPoint) : bool` | `public` | *Clinical Measurement Outranks Self Weigh In*, *Two Series Never Merged*; el tipo del parámetro **es** la aplicación de la regla. |
+| `RecordDayEvaluation(DailyCompliance) : bool` | `public` | *Late Entry Re Evaluates Its Own Day Only*: un día entra y un día sale. |
+| `MarkUnloggedDaysBefore(DateOnly) : IReadOnlyList<DailyCompliance>` | `public` | *Day Without Entries Marked Unlogged Not Non Compliant*: rellena el silencio para que la serie muestre los huecos en vez de ocultarlos. |
+| `CountingThrough(DateOnly) : DateOnly`, `SpanDays(DateOnly) : int`, `HasMinimumSpan(DateOnly) : bool` | `public` | *Closed Window Stops Counting Days* e **invariante 1**, satisfecho por paso del tiempo y no por aritmética. |
+| `HorizonDays(DateOnly) : IReadOnlyList<DailyCompliance>` | `public` | Horizonte rodante sobre el que se juzga una desviación. |
+| `FlagLoggingGap(DateOnly) : bool` | `public` | *Gap Is Not A Deviation*, *Gap Never Escalates*: **las tres reglas se mantienen por lo que este método no hace**, que es escribir una fecha y nada más. |
+| `RemindPatient() : bool` | `public` | *Reminder Is Local And Non Accusatory*. |
+| `Close(DateTimeOffset)` | `public` | *Evaluated Data Is Preserved*: nada se borra y nada se recalcula. |
+
+**`Deviation`** — Una distancia entre lo prescrito y lo registrado, suficientemente grande y suficientemente repetida como para merecer un nombre.
+
+| Atributo | Tipo | Scope | Descripción |
+|---|---|---|---|
+| `Id` | `DeviationId` | `public get / private set` | Identidad tipada. |
+| `WindowRef` | `WindowId` | `public get / private set` | La ventana de la que se leyó. |
+| `PatientId` | `int` | `public get / private set` | Copiado de la ventana para responder el read model. |
+| `MagnitudeRelativeValue`, `MagnitudeEnergyKcal` | `decimal` | `public get / private set` | Proyección de `DeviationMagnitude`. |
+| `Direction` | `DeviationDirection` | `public get / private set` | `Above` o `Below`. |
+| `IsSustained` / `SustainedAt` | `bool` / `DateTimeOffset?` | `public get / private set` | *Sustained If Persists Across Majority Of Window*. |
+| `LoggedDaysConsidered`, `DeviatingDaysConsidered` | `int` | `public get / private set` | Los dos conteos con los que se decidió la mayoría, guardados para que la evidencia enviada al inbox no se recalcule desde una ventana que ya se movió. |
+
+| Método | Scope | Descripción |
+|---|---|---|
+| `Deviation(WindowId, int, DeviationMagnitude, DeviationDirection, int, int)` | `public` | *Only Logged Days Count*. |
+| `DetectFrom(WindowId, int, IReadOnlyList<DailyCompliance>) : Deviation?` | `public static` | **Factory con las reglas dentro**: descarta días no registrados, separa desviaciones por encima y por debajo y **devuelve `null` si están empatadas**, porque reportar la mayor de dos tendencias opuestas sería leer un patrón en el ruido. |
+| `Restate(DeviationMagnitude, int, int) : bool` | `public` | Re-enuncia la misma desviación sobre un horizonte que se movió; devuelve `false` si nada cambió. |
+| `MarkSustained(decimal) : bool` | `public` | Devuelve `true` **sólo en la transición**, así la señal cruza la frontera exactamente una vez. |
+| `Evidence() : string` | `public` | Una frase para el inbox clínico: **evidencia, no veredicto**. |
+
+**`ConsistencyIndex`** — Cuán bien concuerdan entre sí la serie de peso y la serie de ingesta registrada. El paciente es la raíz.
+
+| Atributo | Tipo | Scope | Descripción |
+|---|---|---|---|
+| `EnergyKcalPerKg` | `const decimal = 7700m` | `public` | Regla de dedo, igual para todos; por eso sirve como chequeo de consistencia y no como predicción. |
+| `PatientId` | `int` | `public get / private set` | **Clave primaria.** |
+| `Value` | `decimal` | `public get / private set` | Movimiento de peso inexplicado, en kg por semana. |
+| `State` | `ConsistencyState` | `public get / private set` | `Normal`, `Watch` o `Alert`. |
+| `FirstFlaggedAt`, `ShownToPatientAt`, `EscalatedAt`, `AlertSinceAt` | `DateTimeOffset?` | `public get / private set` | La cronología del episodio; `ShownToPatientAt` es **precondición de la escalación**. |
+
+| Método | Scope | Descripción |
+|---|---|---|
+| `Recompute(weightSeries, intakeSeries, decimal) : bool` | `public` | Calcula el cambio observado frente al implicado por la ingesta registrada **sobre el periodo compartido por ambas series**; devuelve `true` sólo cuando el índice acaba de entrar en `Alert`. |
+| `CanCompute(weightSeries, intakeSeries) : bool` | `public static` | *Both Series Required*. |
+| `PromptPatient() : bool` | `public` | *Patient First Always*, *Prompt Date Recorded*. |
+| `ThreeWeeksInAlertElapsed(int, DateTimeOffset) : bool` | `public` | Las reglas de la escalación, preguntadas como una sola. |
+| `Escalate() : bool` | `public` | **Lanza si `ShownToPatientAt` es `null`.** Está en el agregado y no en un servicio, de modo que ningún llamador puede saltárselo. |
+| `NextState(decimal) : string` / `MoveTo(string) : bool` | `private` | Un umbral no configurado se lee siempre como `Normal`; al volver a `Normal` se limpian las tres fechas para que un episodio posterior se mida desde su propio inicio **y se le pregunte al paciente otra vez**. |
+
+**`Referral`** — El profesional enviando al paciente a otra persona. Atributos: `Id : ReferralId`, `PatientId`, `Specialty`, `Reason`, `IssuedBy`, `IssuedAt`. **No tiene estado ni método que lo cambie**: una derivación es el registro de que algo se decidió en una fecha, no un flujo de trabajo que esta plataforma gestione.
+
+**`ScheduledFollowUp`** — La próxima visita en el calendario. Atributos: `Id : FollowUpId`, `PatientId`, `PractitionerId`, `ScheduledFor`, `State : FollowUpState`, `MissedAt`. Su constructor exige fecha futura y su único método de transición, `MarkMissed(DateTimeOffset) : bool`, **escribe un estado y una fecha en esta fila y no alcanza nada más**: alguien que no pudo ir el martes sigue siendo paciente de alguien el miércoles.
+
+**Value Objects**
+
+| Clase | Propósito | Reglas y miembros |
+|---|---|---|
+| `TargetsSnapshot` | Los números diarios prescritos tal como estaban en un momento, congelados. | `PlanVersion > 0`, `EnergyKcal > 0`, macros, `TakenAt`, `EffectiveFrom`. Lo que **no** está aquí es el punto: ni diagnóstico, ni razonamiento, ni base de cálculo. |
+| `DailyCompliance` | Cómo se vio un día al poner la ingesta registrada al lado de los objetivos en vigor ese día. | Constantes `Met`, `Exceeded`, `Short`, `Unlogged`; `ToleranceRatio = 0.10m`; factory `Evaluate(...)` que **usa si el diario tiene algo en absoluto, nunca los totales**; `SaysTheSameAs(...)` para idempotencia. |
+| `AnthropometryPoint` | Un punto de la serie de peso **clínica**. | `Source` con exactamente un valor legal, `ClinicalMeasurement`, y factory `FromClinicalMeasurement(...)`: ésa es la aplicación de *Two Series Never Merged*. |
+| `IntakeSummary` | Lo que la ventana ha visto hasta ahora, sumado. | Días registrados y no registrados **se cuentan por separado y nunca se suman**. |
+| `DeviationDirection` | Hacia dónde va una desviación. | `Above`, `Below`; ninguno es un veredicto: describen una dirección en una recta numérica. |
+| `DeviationMagnitude` | Qué tan grande es, en fracción del objetivo y en kcal. | `RelativeValue ≥ 0`, `AbsoluteEnergyKcal ≥ 0`. Ninguna es una nota. |
+| `ConsistencyState` | Dónde está el índice. | `Normal`, `Watch`, `Alert`: una afirmación sobre datos, no sobre carácter. |
+| `WindowState`, `FollowUpState` | Estados de ventana y de visita. | `Open`/`Closed`; `Scheduled`/`Completed`/`Missed`. |
+| `Specialty`, `ReferralReason` | Destino y motivo de una derivación. | Texto libre (120 y 1000 caracteres): una lista cerrada sería una taxonomía clínica que esta plataforma no tiene por qué poseer. |
+| `WindowId`, `DeviationId`, `ReferralId`, `FollowUpId` | Identidades tipadas. | `Value : int > 0`, `internal static FromRaw(int)`. |
+
+**Commands (16)** — Desde `OpenEvaluationWindowCommand` y `SnapshotActiveTargetsCommand` hasta `CloseEvaluationWindowCommand`. **Sólo dos tienen endpoint** (`RecordReferralCommand` y `ScheduleFollowUpCommand`): este contexto es casi enteramente reactivo, lo mueven eventos y el paso del tiempo. `ReEvaluateWindowCommand` lleva **una** fecha, y no hay forma de pedir un rango.
+
+**Queries (10)** — Siete alimentan read models (Patient Monitoring Panel, Daily Compliance Indicator, Consistency Card, Practitioner Agenda, entre otros) y tres son entrada de las políticas temporales: `GetOpenEvaluationWindowsQuery`, `GetEscalatableConsistencyIndicesQuery` y `GetOverdueScheduledFollowUpsQuery`.
+
+**Domain Events (17)** — Sólo dos cruzan frontera, ambos hacia Nutritional Care: `SustainedDeviationDetected` y `AlertEscalatedToPractitioner`, y ninguno lleva objetivo, ajuste ni instrucción en el payload, porque lo que espera al otro extremo es una persona decidiendo. `LoggingGapDetected` y `FollowUpMissed` son internos y **ningún otro contexto se suscribe a ellos**: así se mantienen las reglas de que un hueco nunca escala y una visita perdida no cierra el vínculo.
+
+**Errors** — `enum MonitoringError` con 19 valores. Léase por lo que falta: no hay valor para un paciente que "lo hizo mal". Este contexto reporta que no pudo interpretar algo; nunca reporta a una persona.
+
+**Repositories (abstracciones)** — `IEvaluationWindowRepository`, `IDeviationRepository`, `IConsistencyIndexRepository`, `IReferralRepository` e `IScheduledFollowUpRepository`. Destaca `FindLatestByWindowAndDirectionAsync`, sin el cual la misma tendencia produciría una fila nueva en cada comida. **Nada en este contexto llama al `Remove` heredado.**
+
+**Relaciones entre clases:** `EvaluationWindow` compone `WindowId` y `WindowState`, y agrega 0..* `TargetsSnapshot`, 0..* `DailyCompliance` y 0..* `AnthropometryPoint` (tres series independientes serializadas como JSON). `Deviation` referencia la ventana por `WindowRef : WindowId` —asociación por identificador, sin navegación— y compone `DeviationMagnitude` y `DeviationDirection`. `ConsistencyIndex` compone `ConsistencyState` y **depende** de `DailyCompliance` y de los puntos de tendencia sólo como parámetros de `Recompute`. `Referral` compone `Specialty` y `ReferralReason`; `ScheduledFollowUp` compone `FollowUpState`.
+
