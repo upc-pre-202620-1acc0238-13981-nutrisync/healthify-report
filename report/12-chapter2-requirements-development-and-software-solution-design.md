@@ -1394,3 +1394,51 @@ La razón de usar un digest y no un identificador es concreta: un identificador 
 
 **Relaciones entre clases:** `ReferenceFood` compone `ReferenceFoodId` y `SourceHash`, y agrega de forma reconstruida `LocalName` y `NutrientsPer100g`, derivados respectivamente de `LocalNameText` y de las cuatro columnas de nutrientes. `ExternalFoodRecord` compone los mismos tres value objects, y `ExternalCatalogSnapshot` agrega 0..* `ExternalFoodRecord`. `IExternalFoodCatalogProvider` **depende** de `ExternalCatalogSnapshot` (`fetches`) e `IReferenceFoodRepository` depende de `SourceHash` (`findsBy`). No hay ninguna relación entre agregados dentro del contexto, porque sólo existe uno.
 
+#### 2.6.6.2. Interface Layer
+
+La Interface Layer de Food Catalog expone dos controllers con una asimetría deliberada de autorización: **buscar es abierto, escribir no lo es**.
+
+**Controllers**
+
+**`ReferenceFoodsController`** — `[Route("api/v1/reference-foods")] [Tags("Food Catalog")]`, **sin `[Authorize]` a nivel de clase** porque la lectura del catálogo es pública.
+
+| Verbo / Ruta | Acción | Autorización | Respuestas |
+|---|---|---|---|
+| `GET /api/v1/reference-foods?query=&max=25` | `SearchReferenceFoods(string?, int)` | `[AllowAnonymous]` | 200 `IEnumerable<ReferenceFoodResource>` · 500 |
+| `GET /api/v1/reference-foods/{referenceFoodId:int}` | `GetReferenceFoodById(int)` | `[AllowAnonymous]` | 200 · 404 |
+| `POST /api/v1/reference-foods/local-overrides` | `CreateLocalOverride(CreateLocalOverrideResource)` | `[Authorize(Roles = "Practitioner")]` | 201 · 400 · 401 · 403 · 409 |
+| `POST /api/v1/reference-foods/catalog-imports` | `ImportCatalogSnapshot(ImportCatalogSnapshotResource)` | `[Authorize(Roles = "Practitioner")]` | **202** · 401 · 403 · 422 · **503** |
+
+Un alimento y sus nutrientes por 100 g son datos de referencia públicos: no dicen nada de ningún paciente, y exigir una sesión sólo haría más difícil construir el cliente. **`Cache Food Locally` no tiene endpoint**: las entradas llegan exclusivamente por la política de caching.
+
+**`LocalFoodCatalogController`** — `[Route("api/v1/patients")] [Authorize(Roles = "Patient")] [Tags("Food Catalog")]`, con la constante privada `MaxEntries = 500`. Expone `GET /{patientId:int}/local-food-catalog` (`GetLocalFoodCatalog(int)`), read model **Local Food Catalog**, con respuestas 200 · 401 · 403. El dispositivo del paciente mantiene su propia copia de esta lista para poder registrar una comida **sin conectividad**, y este endpoint es cómo se llena esa copia; la ruta lleva el `patientId` por la forma del read model, pero la identidad que se confía es la del token.
+
+**Resources**
+
+| Resource | Tipo | Campos |
+|---|---|---|
+| `CreateLocalOverrideResource` | request | `LocalName`, `EnergyKcalPer100g`, `ProteinGPer100g`, `CarbGPer100g`, `FatGPer100g` |
+| `ImportCatalogSnapshotResource` | request | `Term`, `Max` |
+| `ReferenceFoodResource` | response | `ReferenceFoodId`, `LocalName`, los cuatro nutrientes e `IsLocalOverride` |
+| `CatalogImportSummaryResource` | response | `Term`, `ProvidersConsulted`, `TranslatedCount`, `FailedCount` |
+
+**`ReferenceFoodResource` no lleva `SourceHash` y nunca lo llevará**: exponerlo lo convertiría de vuelta en el identificador externo que fue diseñado para reemplazar.
+
+**Transform / Assemblers** — `FoodCatalogAssemblers.cs` reúne `CreateLocalOverrideCommandAssembler`, `ImportCatalogSnapshotCommandAssembler`, `ReferenceFoodResourceAssembler` y `CatalogImportSummaryResourceAssembler`. `FoodCatalogActionResultAssembler.cs` expone `ToReferenceFoodResult` (con estado parametrizable), `ToReferenceFoodListResult`, `ToCatalogImportResult` (**202 Accepted por defecto**), `ToNotFoundResult` y el privado `FailureResult`:
+
+| Error | Status | Razonamiento |
+|---|---|---|
+| `ReferenceFoodNotFound` | **404** | — |
+| `PractitionerOnly` | **403** | — |
+| `DuplicatedLocalOverride` | **409** | — |
+| `LocalNameAndNutrientsRequired`, `SourceHashRequired`, `ExternalIdNotAllowed` | **400** | — |
+| `TaxonomyTranslationFailed` | **422** | La petición está bien formada; el registro upstream simplemente no pudo expresarse en este vocabulario: es un resultado de traducción, no un error del cliente. |
+| `ExternalCatalogUnavailable` | **503** | Nada está mal en la petición ni en este servicio: el catálogo externo no responde y el llamador puede reintentar más tarde. |
+| `UnexpectedError` (por defecto) | **500** | — |
+
+La importación responde **202 Accepted** porque una importación se *acepta*, no se *completa*: el trabajo real ocurre después, en la política de caching.
+
+**ACL Contract** — `IFoodCatalogContextFacade` declara el DTO `ReferenceFoodItem(int, string, decimal, decimal, decimal, decimal, bool)` y dos operaciones: `GetReferenceFoodById(int)` y `SearchReferenceFoods(string, int)`. **Sin `SourceHash`.** Es un contrato de **consulta**, no de publicación: Intake & Body Response resuelve un alimento mientras el paciente registra una comida, así que necesita la respuesta en ese momento, y por eso ningún evento de este contexto cruza frontera.
+
+**Localización** — `FoodCatalog/Resources/FoodCatalogMessages.cs`.
+
