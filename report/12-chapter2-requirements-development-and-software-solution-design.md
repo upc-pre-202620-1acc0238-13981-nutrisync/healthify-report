@@ -992,3 +992,48 @@ La Interface Layer de Nutritional Care expone cinco controllers y **todos están
 
 **Localización** — `NutritionalCare/Resources/NutritionalCareMessages.cs`.
 
+#### 2.6.4.3. Application Layer
+
+La Application Layer de Nutritional Care orquesta los siete subflujos del acto clínico (3.1 a 3.7). Sus capabilities son registrar y cerrar valoraciones, emitir diagnósticos, proponer, prescribir, publicar y ajustar objetivos, y gestionar la bandeja de revisión.
+
+**Command Services**
+
+**`NutritionalAssessmentCommandService`** — Depende de `INutritionalAssessmentRepository`, `IUnitOfWork`, **`IIamContextFacade`**, **`ICareRelationshipContextFacade`**, `ILogger<...>` e `IMediator`.
+
+| Método | Subflujo | Comportamiento |
+|---|---|---|
+| `Handle(RecordAssessmentCommand)` | 3.1 | *Practitioner Only Measures* vía el ACL de IAM y *Active Care Link Required* vía el OHS de Care Relationship, que degrada a `false`. Publica `NutritionalAssessmentRecorded`. |
+| `Handle(TakeClinicalMeasurementCommand)` | 3.1 | Valida el protocolo antes de cargar nada, verifica propiedad y rechaza valoraciones cerradas. Publica **`ClinicalMeasurementTaken`** (evento de integración). |
+| `Handle(CloseAssessmentCommand)` | 3.1 | Publica `AssessmentClosed`; tras esto el agregado es inmutable. |
+
+**`NutritionalDiagnosisCommandService`** — Depende de los repositorios de diagnóstico y valoración, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. Su método `Handle(IssueDiagnosisCommand)` (3.2) aplica las guardas en orden: razonamiento no vacío, vínculo activo, valoración existente y del paciente, **valoración cerrada** —un diagnóstico lee una foto terminada, no una que aún se edita— y *One Active Diagnosis Per Patient*.
+
+**`NutritionPlanCommandService`** — Depende de los tres repositorios clínicos, `IUnitOfWork`, **`IBmrCalculator`**, `ILogger<...>` e `IMediator`; declara las constantes privadas `KcalPerGramProtein = 4m`, `KcalPerGramCarbohydrate = 4m` y `KcalPerGramFat = 9m`.
+
+| Método | Subflujo | Comportamiento |
+|---|---|---|
+| `Handle(ProposeTargetsCommand)` | 3.3 | Valida cada value object reportando **su propio error**; exige diagnóstico activo y propiedad; toma la última medición y, si la ecuación requiere porcentaje de grasa y falta, responde `ClinicalMeasurementRequired`; ejecuta la aritmética y calcula la siguiente versión. Publica `TargetsProposed` (interno). |
+| `Handle(PrescribeTargetsCommand)` | 3.4 | Valida el resultado de prescripción y *Override Requires Reason*. Publica **exactamente uno** de `TargetsOverridden` o `TargetsAcceptedAsProposed`, nunca ambos. |
+| `Handle(PublishNutritionPlanCommand)` | 3.5 | Requiere plan prescrito y no publicado; aplica *No Plan Without Diagnosis* y *One Active Version Per Patient*. Publica `NutritionPlanPublished`. |
+| `Handle(PublishActiveTargetsCommand)` | 3.5 / 3.6 | Sólo desde política. **El único lugar donde algo de un plan sale del bounded context**, y sólo lleva el contrato reducido. Publica **`ActiveTargetsUpdated`**. |
+| `Handle(AdjustNutritionPlanCommand)` | 3.6 | *Change Reason Required*; crea la versión ajustada y marca la anterior como superseded. Publica `NutritionPlanAdjusted` y `PlanVersionSuperseded`. |
+
+La aritmética de la propuesta, en el orden en que las reglas la enuncian: el BMR sale de la ecuación elegida; el TDEE es el BMR por el factor de actividad; el objetivo energético es el TDEE menos el déficit; la proteína son los gramos por kilo por el peso de referencia; la grasa es el porcentaje de energía dividido entre nueve; y los hidratos salen **por diferencia**. Todo resultado se redondea a dos decimales y es recalculable con una calculadora de bolsillo.
+
+**`ReviewItemCommandService`** — la bandeja de entrada. Depende de `IReviewItemRepository`, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. **Nada en esta clase toca un `NutritionPlan`, y no depende en absoluto del plan command service**: esa ausencia de dependencia es lo que hace estructural la regla *Signal Notifies Never Modifies The Plan*. `Handle(OpenReviewItemCommand)` aplica *One Open Item Per Patient And Signal Type* y resuelve el profesional desde el vínculo activo; `Handle(ResolveReviewItemCommand)` exige que la resolución declare si el plan fue ajustado.
+
+**Query Services** — `NutritionalAssessmentQueryService`, `NutritionalDiagnosisQueryService`, `NutritionPlanQueryService` y `ReviewItemQueryService`; este último añade `CountOpen(int)`, usado por el ACL.
+
+**Event Handlers (políticas)** — Cuatro, todos con scope de DI aislado:
+
+| Handler | Escucha | Política | Emite |
+|---|---|---|---|
+| `OnNutritionPlanPublishedHandler` | `NutritionPlanPublished` (propio) | *When Nutrition Plan Published* (3.5) | `PublishActiveTargetsCommand` |
+| `OnNutritionPlanAdjustedHandler` | `NutritionPlanAdjusted` (propio) | *When Nutrition Plan Adjusted* (3.6): un ajuste republica el contrato exactamente igual que una primera publicación | `PublishActiveTargetsCommand` |
+| `OnSustainedDeviationDetectedHandler` | `SustainedDeviationDetected` (Monitoring) | *When Sustained Deviation Detected* (3.7) | `OpenReviewItemCommand` con `SignalType.SustainedDeviation` |
+| `OnAlertEscalatedToPractitionerHandler` | `AlertEscalatedToPractitioner` (Monitoring) | *When Alert Escalated To Practitioner* (3.7) | `OpenReviewItemCommand` con `SignalType.ConsistencyEscalation` |
+
+Los dos últimos resuelven **exactamente un servicio** y emiten **exactamente un comando**, y ese comando abre un ítem en una bandeja: no resuelven el plan command service, no importan nada sobre planes y no existe rama que pueda alcanzar uno. Que una persona dé el siguiente paso no es un detalle de experiencia de usuario, es lo que impide que un algoritmo cambie un plan clínico basándose en una estimación hecha a partir de una foto.
+
+**ACL Facade** — `NutritionalCareContextFacade` depende de `INutritionPlanQueryService` e `IReviewItemQueryService`. `GetActiveTargetsByPatientId` sólo devuelve datos si el plan está publicado y tiene objetivos prescritos, y **sólo cruza el contrato publicado**: sin diagnóstico y sin base de cálculo.
+
