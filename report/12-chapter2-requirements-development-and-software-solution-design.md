@@ -1342,3 +1342,55 @@ Database:
 
 ![IAM Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/iam.puml)
 
+### 2.6.6. Bounded Context: Food Catalog
+
+#### 2.6.6.1. Domain Layer
+
+**Food Catalog** (`Healthify.Platform.FoodCatalog`) mantiene el catálogo local de alimentos de referencia: nombre y nutrientes **por 100 gramos**. Es un subdominio genérico y deliberadamente delgado: todo lo interesante ocurre **en su borde**, en la capa anticorrupción. Su Domain Layer declara un único aggregate root y cuatro value objects, y tres decisiones de diseño lo definen: la importación traduce y anuncia pero no escribe; ningún identificador externo entra al dominio; y la búsqueda es local-first.
+
+**Aggregate Root**
+
+**`ReferenceFood`** — Una entrada del catálogo local: un nombre y sus nutrientes por 100 gramos. El value object compuesto `NutrientsPer100g` se almacena como columnas planas y se reconstruye por propiedad calculada, siguiendo el patrón del proyecto.
+
+| Atributo | Tipo | Scope | Descripción |
+|---|---|---|---|
+| `Id` | `ReferenceFoodId` | `public get / private set` | Identidad tipada. |
+| `LocalNameText` | `string` | `public get / private set` | **Proyección persistida del VO `LocalName`**, guardada como `string` plano porque la búsqueda hace *match* sobre él y EF Core no puede traducir a SQL un acceso a miembro de un tipo convertido. |
+| `EnergyKcalPer100g`, `ProteinGPer100g`, `CarbGPer100g`, `FatGPer100g` | `decimal` | `public get / private set` | Proyección de `NutrientsPer100g`. |
+| `SourceHash` | `SourceHash` | `public get / private set` | Huella del registro upstream: **almacenada, comparada y nunca expuesta en un resource**. |
+| `IsLocalOverride` | `bool` | `public get / private set` | Marca de entrada creada localmente por un profesional. **No existe método que la limpie.** |
+| `LocalName` | `LocalName` | `public` (computada) | Reconstruido desde `LocalNameText`. |
+| `NutrientsPer100g` | `NutrientsPer100g` | `public` (computada) | Reconstruido desde las cuatro columnas. |
+
+| Método | Scope | Descripción |
+|---|---|---|
+| `ReferenceFood(LocalName, NutrientsPer100g, SourceHash)` | `public` | Constructor de importación; deja `IsLocalOverride` en falso. |
+| `ReferenceFood(CreateLocalOverrideCommand)` | `public` | Constructor de override local; genera el hash con `SourceHash.ForLocalOverride(...)` y marca la entrada como override. |
+| `RefreshFromUpstream(LocalName, NutrientsPer100g)` | `public` | **Lanza si la entrada es un override local**: un override existe precisamente porque el catálogo externo estaba equivocado o callado sobre ese alimento, así que una importación **nunca toca uno**. |
+| `StoreNutrients(NutrientsPer100g)` | `private` | Aplana el value object en columnas. |
+
+**Value Objects**
+
+| Clase | Propósito | Reglas y miembros |
+|---|---|---|
+| `LocalName` | El nombre que un alimento lleva **dentro de esta plataforma**. Es el resultado de la traducción, nunca la etiqueta del proveedor. | `MaxLength = 200`; rechaza vacío y recorta. Implementa *Taxonomy Translation Mandatory*. |
+| `NutrientsPer100g` | Contenido nutricional, **siempre por 100 gramos y nunca por porción**: la porción la declara quien registra la comida. | Energía máxima de 950 kcal (nada comestible alcanza esa densidad); macros entre 0 y 100 g; redondeo a dos decimales. |
+| `SourceHash` | **Huella digital del registro upstream** del que se tradujo un alimento. | `Length = 64` (SHA-256 en hexadecimal minúscula); factories estáticas `Of(params string[])` y `ForLocalOverride(string)`. |
+| `ReferenceFoodId` | Identidad tipada. | `Value : int > 0`, `internal static FromRaw(int)`, operadores de conversión. |
+
+La razón de usar un digest y no un identificador es concreta: un identificador externo sería un concepto ajeno viviendo dentro del dominio, y tarde o temprano algo lo leería de vuelta y lo usaría como tal. **Un digest no puede.**
+
+**Commands (4)** — `ImportCatalogSnapshotCommand`, `CacheFoodLocallyCommand` (sin endpoint; lleva el payload traducido como primitivos, **sin identificador externo, por construcción**), `SearchFoodCommand` y `CreateLocalOverrideCommand`.
+
+**Queries (3)** — `GetReferenceFoodByIdQuery`, `SearchReferenceFoodsQuery` (read model Food Results List) y `GetLocalFoodCatalogQuery` (read model Local Food Catalog, que llena la copia offline del dispositivo).
+
+**Domain Events (6)** — `ExternalCatalogSnapshotImported`, `ReferenceFoodTranslated`, `TranslationFailed`, `ReferenceFoodCached`, `FoodSearchPerformed` y `LocalFoodOverrideCreated`. **Ninguno cruza frontera de bounded context**: Intake & Body Response lee el catálogo de forma **síncrona** por el ACL, porque registrar una comida necesita el alimento en ese momento. `TranslationFailed` no es una excepción sino una **rama negativa**: descartar el registro es el resultado correcto, porque la alternativa es dejar entrar un registro a medio traducir que luego se contaría como ingesta.
+
+**Errors** — `enum FoodCatalogError` con nueve valores: `ExternalCatalogUnavailable`, `TaxonomyTranslationFailed`, `ExternalIdNotAllowed`, `SourceHashRequired`, `ReferenceFoodNotFound`, `PractitionerOnly`, `LocalNameAndNutrientsRequired`, `DuplicatedLocalOverride` y `UnexpectedError`.
+
+**Repositories (abstracción)** — `IReferenceFoodRepository : IBaseRepository<ReferenceFood>` declara `FindBySourceHashAsync(SourceHash)` —la huella upstream es lo que hace **idempotentes** la importación y el sembrado—, `SearchByLocalNameAsync(string, int)` —que hace *match* sobre el nombre local y **nunca sobre una etiqueta de proveedor**—, `ListLocalCatalogAsync(int)`, `ExistsLocalOverrideWithNameAsync(string)` y `CountAsync()`.
+
+**Domain Services** — `IExternalFoodCatalogProvider`, con la propiedad `ProviderName` y el método `FetchSnapshotAsync(string term, int max, CancellationToken)`, más los records `ExternalFoodRecord(LocalName, NutrientsPer100g, SourceHash)` y `ExternalCatalogSnapshot(string, IReadOnlyList<ExternalFoodRecord>, IReadOnlyList<string>)`. **Ésta es la capa anticorrupción vista desde dentro**: el dominio sabe que llegan snapshots y que algunos registros no traducen, pero **no sabe que alguien habla HTTP**. La ausencia de un campo identificador en `ExternalFoodRecord` es la regla, compilada: un adaptador no tiene dónde poner uno aunque quisiera. Un registro **o traduce completamente o se reporta como fallo y se descarta**, sin un tercer estado parcial, porque un alimento con nombre y sin nutrientes se registraría como una comida que no vale nada.
+
+**Relaciones entre clases:** `ReferenceFood` compone `ReferenceFoodId` y `SourceHash`, y agrega de forma reconstruida `LocalName` y `NutrientsPer100g`, derivados respectivamente de `LocalNameText` y de las cuatro columnas de nutrientes. `ExternalFoodRecord` compone los mismos tres value objects, y `ExternalCatalogSnapshot` agrega 0..* `ExternalFoodRecord`. `IExternalFoodCatalogProvider` **depende** de `ExternalCatalogSnapshot` (`fetches`) e `IReferenceFoodRepository` depende de `SourceHash` (`findsBy`). No hay ninguna relación entre agregados dentro del contexto, porque sólo existe uno.
+
