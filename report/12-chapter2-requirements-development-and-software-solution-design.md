@@ -20,7 +20,13 @@ Con el propósito de comprender de manera integral las necesidades, comportamien
 
 ### 2.3.1. User Personas
 
+Esta sección presenta las fichas de User Persona elaboradas en UXPressia, una por cada segmento objetivo identificado. Los arquetipos se construyen a partir de las características observadas en el análisis de entrevistas y se articulan con los hallazgos del análisis competitivo. En particular, ambos arquetipos reflejan la limitación estructural detectada en las plataformas existentes, consistente en que el periodo entre consultas depende de lo que el paciente recuerda y decide reportar. El primer arquetipo representa al nutricionista de clínica o centro de salud que conduce el tratamiento, mientras que el segundo representa a la persona en tratamiento nutricional activo. 
+
+#### Segmento 1: Nutricionista
+
 ![Willyan User Persona](../assets/img/chapter2/willyan-user-persona.png)
+
+#### Segmento 2: Paciente en tratamiento nutricional activo
 
 ![Evelyn User Persona](../assets/img/chapter2/evelyn-user-persona.png)
 
@@ -28,13 +34,25 @@ Con el propósito de comprender de manera integral las necesidades, comportamien
 
 ### 2.3.3. User Journey Mapping
 
+Esta sección presenta los User Journey Maps elaborados en UXPressia, uno por cada User Persona identificado. Los diagramas corresponden a la versión As Is, es decir, ilustran el recorrido que cada segmento experimenta actualmente en la situación previa a la existencia de Healthify. El recorrido representado abarca el ciclo completo del tratamiento nutricional, desde el momento en que se establece el vínculo entre el profesional y su paciente hasta la consulta de seguimiento en la que se evalúa el progreso alcanzado. La intención de estos mapas es exponer los puntos de fricción que se producen específicamente durante el periodo que transcurre entre una consulta y la siguiente, que constituye el foco del problema abordado por el proyecto.
+
+#### Segmento 1: Nutricionista
+
 ![Willyan User Journey Mapping](../assets/img/chapter2/willyan-user-journey-mapping.png)
+
+#### Segmento 2: Paciente en tratamiento nutricional activo
 
 ![Evelyn User Journey Mapping](../assets/img/chapter2/evelyn-user-journey-mapping.png)
 
 ### 2.3.4. Empathy Mapping
 
+Esta sección presenta los Empathy Maps elaborados en UXPressia para cada uno de los User Personas identificados. El proceso de elaboración se inició con la preparación de la sesión colaborativa, en la cual el equipo situó al User Persona correspondiente en el centro del artefacto y distribuyó en cada cuadrante las observaciones derivadas del análisis de entrevistas. El trabajo se orientó a responder las preguntas guía relativas a con quién se está empatizando, qué necesita hacer el usuario, qué está diciendo, qué está viendo, qué está haciendo, qué está escuchando y cómo se siente y qué piensa. Finalmente se identificaron los dolores y las ganancias a partir de las preguntas referidas a qué le preocupa, qué puede contribuir a resolver sus problemas y qué puede convencerlo de que la propuesta constituye la alternativa correcta.
+
+#### Segmento 1: Nutricionista
+
 ![Willyan Empathy Map](../assets/img/chapter2/willyan-empathy-map.png)
+
+#### Segmento 2: Paciente en tratamiento nutricional activo
 
 ![Evelyn Empathy Map](../assets/img/chapter2/evelyn-empathy-map.png)
 
