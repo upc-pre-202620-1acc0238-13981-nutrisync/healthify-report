@@ -32,6 +32,120 @@ Esta sección presenta las fichas de User Persona elaboradas en UXPressia, una p
 
 ### 2.3.2. User Task Matrix
 
+Esta sección presenta el User Task Matrix correspondiente a los dos segmentos objetivo de Healthify, representados respectivamente por Willyan Guerrero, en su condición de nutricionista de centro de salud, y por Evelyn del Águila, en su condición de paciente en tratamiento nutricional activo. La matriz concentra las tareas que ambos arquetipos realizan actualmente para cumplir sus objetivos, con independencia de la existencia de la solución propuesta. Para cada tarea se consigna la frecuencia con que se ejecuta y la importancia que reviste para el usuario correspondiente.
+
+#### Segmento 1: Nutricionista
+
+<table>
+<tr>
+<th rowspan="2">Task</th>
+<th colspan="2">Willyan Guerrero</th>
+<th colspan="2">Entrevistado 2</th>
+<th colspan="2">Entrevistado 3</th>
+</tr>
+<tr>
+<th>Frequency</th><th>Importance</th><th>Frequency</th><th>Importance</th><th>Frequency</th><th>Importance</th>
+</tr>
+<tr>
+<td>Evaluar nutricionalmente al paciente mediante entrevista y mediciones</td>
+<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Establecer el diagnóstico nutricional</td>
+<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Diseñar el plan de alimentación individualizado</td>
+<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Realizar el monitoreo del paciente entre consultas</td>
+<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Reconstruir los hábitos de consumo del periodo transcurrido</td>
+<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Ajustar el plan alimentario sin cita presencial</td>
+<td>Normalmente</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Solicitar u otorgar equivalencias o reemplazos de alimentos</td>
+<td>Normalmente</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Verificar el grado de cumplimiento del plan alimentario</td>
+<td>Normalmente</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Programar la siguiente consulta de seguimiento</td>
+<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Derivar al paciente a otra especialidad ante ausencia de progreso</td>
+<td>A veces</td><td>Media</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Compartir o revisar los resultados de análisis bioquímicos</td>
+<td>A veces</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Controlar el peso corporal del paciente de forma periódica</td>
+<td>A veces</td><td>Media</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+</table>
+
+#### Segmento 2: Paciente en tratamiento nutricional activo
+
+<table>
+<tr>
+<th rowspan="2">Task</th>
+<th colspan="2">Evelyn del Águila</th>
+<th colspan="2">Entrevistado 2</th>
+<th colspan="2">Entrevistado 3</th>
+</tr>
+<tr>
+<th>Frequency</th><th>Importance</th><th>Frequency</th><th>Importance</th><th>Frequency</th><th>Importance</th>
+</tr>
+<tr>
+<td>Registrar y comunicar lo consumido en cada comida</td>
+<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Consultar el plan alimentario prescrito antes de preparar los alimentos</td>
+<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Verificar el grado de cumplimiento del plan alimentario</td>
+<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Reportar el consumo de alimentos ajenos al plan</td>
+<td>A veces</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Controlar el peso corporal de forma periódica</td>
+<td>Normalmente</td><td>Media</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Solicitar equivalencias o reemplazos de alimentos</td>
+<td>A veces</td><td>Media</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Compartir los resultados de análisis bioquímicos</td>
+<td>A veces</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Reconstruir los hábitos de consumo del periodo transcurrido en la consulta de seguimiento</td>
+<td>A veces</td><td>Media</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+<tr>
+<td>Programar la siguiente consulta de seguimiento</td>
+<td>A veces</td><td>Media</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+</tr>
+</table>
+
 ### 2.3.3. User Journey Mapping
 
 Esta sección presenta los User Journey Maps elaborados en UXPressia, uno por cada User Persona identificado. Los diagramas corresponden a la versión As Is, es decir, ilustran el recorrido que cada segmento experimenta actualmente en la situación previa a la existencia de Healthify. El recorrido representado abarca el ciclo completo del tratamiento nutricional, desde el momento en que se establece el vínculo entre el profesional y su paciente hasta la consulta de seguimiento en la que se evalúa el progreso alcanzado. La intención de estos mapas es exponer los puntos de fricción que se producen específicamente durante el periodo que transcurre entre una consulta y la siguiente, que constituye el foco del problema abordado por el proyecto.
