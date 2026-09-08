@@ -18,11 +18,23 @@
 
 ### 2.3.1. User Personas
 
+![Willyan User Persona](../assets/img/chapter2/willyan-user-persona.png)
+
+![Evelyn User Persona](../assets/img/chapter2/evelyn-user-persona.png)
+
 ### 2.3.2. User Task Matrix
 
 ### 2.3.3. User Journey Mapping
 
+![Willyan User Journey Mapping](../assets/img/chapter2/willyan-user-journey-mapping.png)
+
+![Evelyn User Journey Mapping](../assets/img/chapter2/evelyn-user-journey-mapping.png)
+
 ### 2.3.4. Empathy Mapping
+
+![Willyan Empathy Map](../assets/img/chapter2/willyan-empathy-map.png)
+
+![Evelyn Empathy Map](../assets/img/chapter2/evelyn-empathy-map.png)
 
 ### 2.3.5. Big Picture EventStorming
 
