@@ -1727,6 +1727,9 @@ El Impact Mapping del nutricionista se orienta al uso recurrente de la informaci
 | 48 | US37 | Envío de consulta mediante formulario de contacto | 3 | Sprint 1 |
 | 49 | US34 | Conocimiento de la startup, misión y visión | 1 | Sprint 1 |
 
+A continuación, se presenta el Product Backlog elaborado en Trello:
+![Product Backlog](../assets/img/chapter2/ProductBacklog.png)
+
 <div style="page-break-after: always"></div>
 
 ## 2.5. Strategic-Level Domain-Driven Design
