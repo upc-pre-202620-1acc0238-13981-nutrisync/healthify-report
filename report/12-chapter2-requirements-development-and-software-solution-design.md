@@ -1675,9 +1675,57 @@ El Impact Mapping del nutricionista se orienta al uso recurrente de la informaci
 
 ### 2.4.3. Product Backlog
 
-| **#Order** | **Uer Story ID** | **Title** | **Description** | **Story Points** <br>**(1/2/3/5/8)** |
+| **# Order** | **Uer Story ID** | **Title** | **Story Points** <br>**(1/2/3/5/8)** | **Sprint** |
 | :--- | :--- | :--- | :--- | :--- |
-| 1 | | | | |
+| 1 | US08 | Registro de comida por fotografía | 8 | Sprint 1 |
+| 2 | SS01 | Investigación de Google ML Kit para el reconocimiento de alimentos | 3 | Sprint 1 |
+| 3 | TS05 | Servicios de registro de ingesta alimentaria | 5 | Sprint 1 |
+| 4 | US10 | Registro manual de comida mediante catálogo | 5 | Sprint 1 |
+| 5 | SS02 | Investigación de Open Food Facts para el catálogo de alimentos | 3 | Sprint 1 |
+| 6 | US09 | Confirmación o ajuste de estimación de porción | 3 | Sprint 1 |
+| 7 | US11 | Registro de consumo fuera del plan | 2 | Sprint 1 |
+| 8 | US23 | Visualización de metas nutricionales vigentes | 3 | Sprint 1 |
+| 9 | US26 | Prescripción y publicación del plan nutricional | 8 | Sprint 2 |
+| 10 | US25 | Obtención de propuesta de metas nutricionales calculadas | 5 | Sprint 2 |
+| 11 | TS04 | Servicios de prescripción y gestión del plan nutricional | 8 | Sprint 1 |
+| 12 | US14 | Consulta del cumplimiento nutricional diario | 5 | Sprint 2 |
+| 13 | US16 | Consulta del monitoreo del paciente | 5 | Sprint 2 |
+| 14 | TS07 | Servicios de monitoreo y expediente del paciente | 8 | Sprint 2 |
+| 15 | US21 | Registro y finalización de la evaluación nutricional | 5 | Sprint 2 |
+| 16 | US22 | Emisión del diagnóstico nutricional | 5 | Sprint 2 |
+| 17 | TS03 | Servicios de evaluación y diagnóstico nutricional | 5 | Sprint 1 |
+| 18 | US01 | Vinculación mediante invitación QR | 5 | Sprint 1 |
+| 19 | US04 | Generación de invitación QR para un nuevo paciente | 5 | Sprint 1 |
+| 20 | US02 | Otorgamiento de consentimiento para compartir información | 3 | Sprint 1 |
+| 21 | TS02 | Servicios de gestión de vínculos de cuidado | 5 | Sprint 1 |
+| 22 | US12 | Registro de autopesaje | 3 | Sprint 2 |
+| 23 | US13 | Visualización de tendencia de peso | 5 | Sprint 2 |
+| 24 | TS06 | Servicios de autopesaje y seguimiento corporal | 5 | Sprint 1 |
+| 25 | US20 | Acceso al expediente unificado del paciente | 5 | Sprint 2 |
+| 26 | US05 | Consulta de pacientes con vínculo activo | 3 | Sprint 2 |
+| 27 | US17 | Revisión y resolución de señales de seguimiento | 5 | Sprint 3 |
+| 28 | SS03 | Investigación y definición de la lógica de la señal de consistencia | 3 | Sprint 3 |
+| 29 | US15 | Visualización de señal de consistencia | 8 | Sprint 3 |
+| 30 | US27 | Ajuste del plan nutricional entre consultas | 5 | Sprint 3 |
+| 31 | US31 | Registro y sincronización sin conexión | 8 | Sprint 2 |
+| 32 | TS08 | Sincronización de registros offline | 8 | Sprint 2 |
+| 33 | US18 | Acceso al expediente personal unificado | 5 | Sprint 3 |
+| 34 | US24 | Acuse de recibo de metas nutricionales actualizadas | 2 | Sprint 2 |
+| 35 | US19 | Registro de derivación a otro especialista | 2 | Sprint 3 |
+| 36 | US06 | Alta del paciente al finalizar el tratamiento | 2 | Sprint 3 |
+| 37 | US07 | Revocación del vínculo de cuidado | 2 | Sprint 3 |
+| 38 | US03 | Revocación del consentimiento | 2 | Sprint 3 |
+| 39 | US28 | Creación de cuenta | 3 | Sprint 1 |
+| 40 | US29 | Inicio de sesión | 3 | Sprint 1 |
+| 41 | US30 | Cierre de sesión | 1 | Sprint 1 |
+| 42 | TS01 | Servicios de registro, autenticación y autorización | 5 | Sprint 1 |
+| 43 | US32 | Visualización de la propuesta de valor de Healthify | 2 | Sprint 1 |
+| 44 | US33 | Consulta de las principales funcionalidades de Healthify | 2 | Sprint 1 |
+| 45 | US36 | Acceso a la descarga de Healthify | 2 | Sprint 1 |
+| 46 | US38 | Consulta de términos y políticas de Healthify | 2 | Sprint 1 |
+| 47 | US35 | Cambio de idioma del Landing Page | 3 | Sprint 1 |
+| 48 | US37 | Envío de consulta mediante formulario de contacto | 3 | Sprint 1 |
+| 49 | US34 | Conocimiento de la startup, misión y visión | 1 | Sprint 1 |
 
 <div style="page-break-after: always"></div>
 
