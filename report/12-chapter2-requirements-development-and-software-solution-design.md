@@ -331,13 +331,13 @@ El Deployment Diagram (diagrama suplementario del modelo C4, elaborado en notaci
    - **Compute Instance:** Máquina virtual que hospeda el `Docker Engine`.
    - **Docker Engine:** Entorno de ejecución de contenedores, dentro del cual corren dos contenedores aislados entre sí:
       - **API Container:** Contenedor que aloja el artefacto `API Application (ASP.NET Core)`.
-      - **Database Container:** Contenedor que aloja la base de datos `PostgreSQL`.
+      - **Database Container:** Contenedor que aloja la base de datos `MySQL 8`.
 
 **Relaciones:**
 
 - `Mobile Device → Oracle Cloud Infrastructure` (`JSON/HTTPS`): la aplicación móvil consume la API RESTful del backend.
 - `Mobile Device → GitHub Pages` (`HTTPS`): el dispositivo accede al Landing Page como contenido estático.
-- `API Application → Database` (`SQL/TCP`): la API se conecta a PostgreSQL a través de la red interna de Docker, pese a correr en contenedores independientes.
+- `API Application → Database` (`SQL/TCP`): la API se conecta a MySQL 8 a través de la red interna de Docker, pese a correr en contenedores independientes.
 
 ![Deployment Diagram](../assets/img/artifacts/healthify-DeploymentDiagram.png)
 
