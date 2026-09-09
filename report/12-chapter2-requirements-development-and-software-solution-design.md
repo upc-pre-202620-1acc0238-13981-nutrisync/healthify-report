@@ -1730,6 +1730,8 @@ El Impact Mapping del nutricionista se orienta al uso recurrente de la informaci
 A continuación, se presenta el Product Backlog elaborado en Trello:
 ![Product Backlog](../assets/img/chapter2/ProductBacklog.png)
 
+*Product Backlog URL:* [Healthify Product Backlog](https://trello.com/b/u2pRzwEi/healthify-product-backlog)
+
 <div style="page-break-after: always"></div>
 
 ## 2.5. Strategic-Level Domain-Driven Design
