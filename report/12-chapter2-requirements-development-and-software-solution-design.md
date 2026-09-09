@@ -53,9 +53,9 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 | **EP_TS** | RESTful API — Technical Stories | Agrupa las Technical Stories necesarias para implementar los servicios RESTful que soportan las funcionalidades de Healthify y permiten la comunicación entre las aplicaciones cliente y el backend. |
 | **EP_SS** | Spike Stories | Agrupa las investigaciones, análisis y pruebas de viabilidad técnica necesarias para reducir incertidumbre antes de implementar funcionalidades o integraciones de Healthify. |
 
-#### EP01 — Gestión de la Relación de Cuidado
+### EP01 — Gestión de la Relación de Cuidado
 
-**US01 — Vinculación mediante invitación QR**
+<br>***US01 — Vinculación mediante invitación QR***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -87,7 +87,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US02 — Otorgamiento de consentimiento para compartir información**
+<br>***US02 — Otorgamiento de consentimiento para compartir información***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -119,7 +119,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US03 — Revocación del consentimiento**
+<br>***US03 — Revocación del consentimiento***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -151,7 +151,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US04 — Generación de invitación QR para un nuevo paciente**
+<br>***US04 — Generación de invitación QR para un nuevo paciente***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -183,7 +183,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US05 — Consulta de pacientes con vínculo activo**
+<br>***US05 — Consulta de pacientes con vínculo activo***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -215,7 +215,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US06 — Alta del paciente al finalizar el tratamiento**
+<br>***US06 — Alta del paciente al finalizar el tratamiento***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -247,7 +247,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US07 — Revocación del vínculo de cuidado**
+<br>***US07 — Revocación del vínculo de cuidado***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -278,10 +278,11 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <td colspan="8"><strong>Escenario 1: Revocación de vínculo activo</strong><br>Dado que el nutricionista mantiene un vínculo de cuidado activo<br>Cuando el nutricionista solicita revocar el vínculo de cuidado<br>Entonces el sistema registra el vínculo como revocado.<br><br><strong>Escenario 2: Acceso mediante vínculo revocado</strong><br>Dado que el nutricionista tiene un vínculo que se encuentra revocado<br>Cuando el nutricionista solicita acceder a información protegida mediante el vínculo revocado<br>Entonces el sistema rechaza el acceso.</td>
   </tr>
 </table>
+<br>
 
-#### EP02 — Gestión de Ingesta Alimentaria
+### EP02 — Gestión de Ingesta Alimentaria
 
-**US08 — Registro de comida por fotografía**
+<br>***US08 — Registro de comida por fotografía***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -313,7 +314,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US09 — Confirmación o ajuste de estimación de porción**
+<br>***US09 — Confirmación o ajuste de estimación de porción***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -345,7 +346,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US10 — Registro manual de comida mediante catálogo**
+<br>***US10 — Registro manual de comida mediante catálogo***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -377,7 +378,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US11 — Registro de consumo fuera del plan**
+<br>***US11 — Registro de consumo fuera del plan***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -408,10 +409,11 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <td colspan="8"><strong>Escenario 1: Registro del consumo</strong><br>Dado que el paciente desea declarar un consumo fuera del plan<br>Cuando el paciente registra el consumo fuera del plan<br>Entonces el sistema conserva la declaración con su fecha y hora sin exigir el detalle del alimento consumido.<br><br><strong>Escenario 2: Tratamiento no punitivo</strong><br>Dado que el paciente tiene un consumo fuera del plan registrado<br>Cuando el paciente consulta posteriormente el consumo registrado fuera del plan<br>Entonces el sistema conserva el dato sin asignarle una valoración punitiva.</td>
   </tr>
 </table>
+<br>
 
-#### EP03 — Seguimiento de Respuesta Corporal
+### EP03 — Seguimiento de Respuesta Corporal
 
-**US12 — Registro de autopesaje**
+<br>***US12 — Registro de autopesaje***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -443,7 +445,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US13 — Visualización de tendencia de peso**
+<br>***US13 — Visualización de tendencia de peso***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -474,10 +476,11 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <td colspan="8"><strong>Escenario 1: Datos suficientes</strong><br>Dado que el paciente tiene autopesajes elegibles dentro del periodo consultado<br>Cuando el paciente consulta la tendencia de su peso<br>Entonces el sistema proporciona una tendencia calculada a partir de los registros válidos.<br><br><strong>Escenario 2: Datos insuficientes</strong><br>Dado que el paciente no tiene suficientes autopesajes elegibles<br>Cuando el paciente consulta la tendencia de su peso<br>Entonces el sistema informa que aún no existe información suficiente para establecer una tendencia.</td>
   </tr>
 </table>
+<br>
 
-#### EP04 — Monitoreo y Seguimiento del Plan Nutricional
+### EP04 — Monitoreo y Seguimiento del Plan Nutricional
 
-**US14 — Consulta del cumplimiento nutricional diario**
+<br>***US14 — Consulta del cumplimiento nutricional diario***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -509,7 +512,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US15 — Visualización de señal de consistencia**
+<br>***US15 — Visualización de señal de consistencia***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -541,7 +544,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US16 — Consulta del monitoreo del paciente**
+<br>***US16 — Consulta del monitoreo del paciente***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -573,7 +576,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US17 — Revisión y resolución de señales de seguimiento**
+<br>***US17 — Revisión y resolución de señales de seguimiento***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -604,10 +607,11 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <td colspan="8"><strong>Escenario 1: Situación disponible para revisión</strong><br>Dado que el nutricionista tiene una condición de seguimiento que cumple la regla vigente de escalamiento<br>Cuando el nutricionista consulta los elementos pendientes de revisión<br>Entonces el sistema incluye la situación correspondiente.<br><br><strong>Escenario 2: Resolución sin cambio del plan</strong><br>Dado que el nutricionista revisa una situación y determina que no requiere modificación del tratamiento<br>Cuando el nutricionista registra su decisión<br>Entonces el sistema conserva la resolución sin alterar el plan vigente.<br><br><strong>Escenario 3: Resolución con ajuste</strong><br>Dado que el nutricionista determina que corresponde ajustar el tratamiento<br>Cuando el nutricionista inicia el ajuste del plan<br>Entonces el sistema procesa el cambio mediante una nueva versión del plan con su motivo correspondiente.<br><br><strong>Escenario 4: Ausencia de modificación automática</strong><br>Dado que el nutricionista tiene una señal de seguimiento generada por el sistema<br>Cuando el nutricionista consulta una señal de seguimiento escalada para revisión<br>Entonces el sistema mantiene el plan sin cambios hasta que exista una decisión profesional.</td>
   </tr>
 </table>
+<br>
 
-#### EP05 — Expediente y Continuidad del Cuidado
+### EP05 — Expediente y Continuidad del Cuidado
 
-**US18 — Acceso al expediente personal unificado**
+<br>***US18 — Acceso al expediente personal unificado***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -639,7 +643,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US19 — Registro de derivación a otro especialista**
+<br>***US19 — Registro de derivación a otro especialista***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -671,7 +675,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US20 — Acceso al expediente unificado del paciente**
+<br>***US20 — Acceso al expediente unificado del paciente***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -702,10 +706,11 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <td colspan="8"><strong>Escenario 1: Acceso autorizado</strong><br>Dado que el nutricionista mantiene un vínculo activo con el paciente y existe consentimiento vigente<br>Cuando el nutricionista solicita consultar el expediente del paciente<br>Entonces el sistema proporciona la información clínica y de seguimiento autorizada.<br><br><strong>Escenario 2: Información histórica</strong><br>Dado que el nutricionista atiende a un paciente con información clínica y de seguimiento registrada<br>Cuando el nutricionista consulta el expediente unificado del paciente<br>Entonces el sistema conserva y proporciona la trazabilidad de la información correspondiente.<br><br><strong>Escenario 3: Acceso no autorizado</strong><br>Dado que el nutricionista no cuenta con un vínculo activo o consentimiento vigente<br>Cuando el nutricionista solicita consultar el expediente del paciente<br>Entonces el sistema rechaza el acceso.</td>
   </tr>
 </table>
+<br>
 
-#### EP06 — Evaluación y Diagnóstico Nutricional
+### EP06 — Evaluación y Diagnóstico Nutricional
 
-**US21 — Registro y finalización de la evaluación nutricional**
+<br>***US21 — Registro y finalización de la evaluación nutricional***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -737,7 +742,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US22 — Emisión del diagnóstico nutricional**
+<br>***US22 — Emisión del diagnóstico nutricional***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -768,10 +773,11 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <td colspan="8"><strong>Escenario 1: Diagnóstico con fundamento</strong><br>Dado que el nutricionista dispone de una evaluación del paciente<br>Cuando el nutricionista registra un diagnóstico con su justificación<br>Entonces el sistema conserva ambos elementos asociados al tratamiento.<br><br><strong>Escenario 2: Diagnóstico sin fundamento requerido</strong><br>Dado que el nutricionista registra un diagnóstico que requiere justificación clínica<br>Cuando el nutricionista intenta registrar el diagnóstico sin proporcionar la justificación clínica requerida<br>Entonces el sistema rechaza el registro.<br><br><strong>Escenario 3: Conservación histórica</strong><br>Dado que el nutricionista tiene un diagnóstico previamente registrado<br>Cuando el nutricionista registra una nueva evaluación o un nuevo diagnóstico<br>Entonces el sistema conserva los antecedentes anteriores.</td>
   </tr>
 </table>
+<br>
 
-#### EP07 — Prescripción y Gestión del Plan Nutricional
+### EP07 — Prescripción y Gestión del Plan Nutricional
 
-**US23 — Visualización de metas nutricionales vigentes**
+<br>***US23 — Visualización de metas nutricionales vigentes***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -803,7 +809,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US24 — Confirmación de recepción de nuevas metas nutricionales**
+<br>***US24 — Confirmación de recepción de nuevas metas nutricionales***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -835,7 +841,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US25 — Obtención de propuesta de metas nutricionales calculadas**
+<br>***US25 — Obtención de propuesta de metas nutricionales calculadas***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -867,7 +873,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US26 — Prescripción y publicación del plan nutricional**
+<br>***US26 — Prescripción y publicación del plan nutricional***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -899,7 +905,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US27 — Ajuste del plan nutricional entre consultas**
+<br>***US27 — Ajuste del plan nutricional entre consultas***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -930,10 +936,11 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <td colspan="8"><strong>Escenario 1: Ajuste con motivo</strong><br>Dado que el nutricionista tiene un plan activo<br>Cuando el nutricionista registra cambios y proporciona la razón correspondiente<br>Entonces el sistema genera una nueva versión del plan.<br><br><strong>Escenario 2: Ajuste sin motivo</strong><br>Dado que el nutricionista tiene un plan activo<br>Cuando el nutricionista intenta modificar el plan nutricional sin proporcionar la razón requerida<br>Entonces el sistema rechaza el cambio.<br><br><strong>Escenario 3: Conservación histórica</strong><br>Dado que el nutricionista ha publicado una nueva versión del plan<br>Cuando el nutricionista consulta el historial después de publicar una nueva versión<br>Entonces el sistema conserva las versiones anteriores sin reescribir los datos históricos calculados con ellas.</td>
   </tr>
 </table>
+<br>
 
-#### EP08 — Identidad y Acceso
+### EP08 — Identidad y Acceso
 
-**US28 — Creación de cuenta**
+<br>***US28 — Creación de cuenta***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -965,7 +972,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US29 — Inicio de sesión**
+<br>***US29 — Inicio de sesión***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -997,7 +1004,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US30 — Cierre de sesión**
+<br>***US30 — Cierre de sesión***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1028,11 +1035,11 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <td colspan="8"><strong>Escenario 1: Cierre de sesión exitoso</strong><br>Dado que el paciente o el nutricionista mantiene una sesión autenticada<br>Cuando el paciente o el nutricionista solicita cerrar sesión<br>Entonces el sistema finaliza el acceso asociado a la sesión.<br><br><strong>Escenario 2: Acceso posterior</strong><br>Dado que el paciente o el nutricionista ha finalizado previamente su sesión<br>Cuando el paciente o el nutricionista intenta acceder a una operación que requiere autenticación<br>Entonces el sistema exige una nueva autenticación.</td>
   </tr>
 </table>
+<br>
 
+### EP09 — Offline y Sincronización
 
-#### EP09 — Offline y Sincronización
-
-**US31 — Registro y sincronización sin conexión**
+<br>***US31 — Registro y sincronización sin conexión***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1063,10 +1070,11 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <td colspan="8"><strong>Escenario 1: Registro sin conexión</strong><br>Dado que el paciente utiliza Healthify sin conexión a Internet<br>Cuando el paciente registra una ingesta o autopesaje válido<br>Entonces el sistema conserva el registro localmente como pendiente de sincronización.<br><br><strong>Escenario 2: Recuperación de conectividad</strong><br>Dado que el paciente tiene registros pendientes de sincronización<br>Cuando el paciente vuelve a disponer de conexión a Internet<br>Entonces el sistema inicia la sincronización de los registros pendientes.<br><br><strong>Escenario 3: Sincronización exitosa</strong><br>Dado que el paciente tiene un registro pendiente aceptado por el servicio remoto<br>Cuando el paciente consulta el estado del registro después de la sincronización<br>Entonces el sistema lo considera sincronizado.<br><br><strong>Escenario 4: Reintento sin duplicación</strong><br>Dado que el paciente tiene una sincronización pendiente debido a una interrupción previa<br>Cuando el paciente reintenta la sincronización del mismo registro<br>Entonces el sistema evita crear una segunda copia del mismo registro.</td>
   </tr>
 </table>
+<br>
 
-#### EP10 — Landing Page
+### EP10 — Landing Page
 
-**US32 — Visualización de la propuesta de valor de Healthify**
+<br>***US32 — Visualización de la propuesta de valor de Healthify***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1098,7 +1106,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US33 — Consulta de las principales funcionalidades de Healthify**
+<br>***US33 — Consulta de las principales funcionalidades de Healthify***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1130,7 +1138,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US34 — Conocimiento de la startup, misión y visión**
+<br>***US34 — Conocimiento de la startup, misión y visión***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1162,7 +1170,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US35 — Cambio de idioma del Landing Page**
+<br>***US35 — Cambio de idioma del Landing Page***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1194,7 +1202,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US36 — Acceso a Healthify desde el Landing Page**
+<br>***US36 — Acceso a Healthify desde el Landing Page***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1226,7 +1234,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US37 — Envío de consulta mediante formulario de contacto**
+<br>***US37 — Envío de consulta mediante formulario de contacto***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1258,7 +1266,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US38 — Consulta de términos y políticas de Healthify**
+<br>***US38 — Consulta de términos y políticas de Healthify***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1289,10 +1297,11 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <td colspan="8"><strong>Escenario 1: Documentos vigentes disponibles</strong><br>Dado que el visitante solicita consultar los términos o políticas<br>Cuando el visitante accede a la información legal<br>Entonces el sistema proporciona la versión vigente de los documentos disponibles.<br><br><strong>Escenario 2: Correspondencia con el idioma activo</strong><br>Dado que el visitante ha seleccionado un idioma para el que existe una versión del documento<br>Cuando el visitante solicita consultar el documento<br>Entonces el sistema proporciona el documento correspondiente a dicho idioma.</td>
   </tr>
 </table>
+<br>
 
-#### EP_TS — RESTful API — Technical Stories
+### EP_TS — RESTful API — Technical Stories
 
-**TS01 — Servicios de registro, autenticación y autorización**
+<br>***TS01 — Servicios de registro, autenticación y autorización***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1324,7 +1333,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**TS02 — Servicios de gestión de vínculos de cuidado**
+<br>***TS02 — Servicios de gestión de vínculos de cuidado***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1356,7 +1365,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**TS03 — Servicios de evaluación y diagnóstico nutricional**
+<br>***TS03 — Servicios de evaluación y diagnóstico nutricional***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1388,7 +1397,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**TS04 — Servicios de prescripción y gestión del plan nutricional**
+<br>***TS04 — Servicios de prescripción y gestión del plan nutricional***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1420,7 +1429,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**TS05 — Servicios de registro de ingesta alimentaria**
+<br>***TS05 — Servicios de registro de ingesta alimentaria***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1452,7 +1461,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**TS06 — Servicios de autopesaje y seguimiento corporal**
+<br>***TS06 — Servicios de autopesaje y seguimiento corporal***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1484,7 +1493,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**TS07 — Servicios de monitoreo y expediente del paciente**
+<br>***TS07 — Servicios de monitoreo y expediente del paciente***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1516,7 +1525,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**TS08 — Sincronización de registros offline**
+<br>***TS08 — Sincronización de registros offline***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1547,10 +1556,11 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <td colspan="8"><strong>Escenario 1: Sincronización de registros pendientes</strong><br>Dado que el Developer dispone de registros locales válidos pendientes de sincronización<br>Cuando el Developer envía una solicitud con registros locales pendientes válidos<br>Entonces el sistema responde con el estado de sincronización correspondiente a cada registro.<br><br><strong>Escenario 2: Reenvío del mismo registro</strong><br>Dado que el Developer recibe nuevamente una operación de sincronización que ya fue procesada<br>Cuando el Developer reenvía una operación que ya fue procesada previamente<br>Entonces el sistema evita crear un registro duplicado y devuelve un resultado consistente.<br><br><strong>Escenario 3: Fallo parcial</strong><br>Dado que el Developer recibe una solicitud de sincronización que contiene registros válidos y registros que no pueden ser procesados<br>Cuando el Developer envía una solicitud de sincronización que contiene registros válidos y registros con error<br>Entonces el sistema identifica los registros sincronizados y aquellos que permanecen pendientes.<br><br><strong>Escenario 4: Conflicto de información</strong><br>Dado que el Developer recibe una solicitud de sincronización con un conflicto entre la versión local y la información disponible en el servidor<br>Cuando el Developer envía una solicitud de sincronización que presenta un conflicto con la información del servidor<br>Entonces el sistema aplica la política de resolución de conflictos vigente y devuelve el resultado al cliente.</td>
   </tr>
 </table>
+<br>
 
-#### EP_SS — Spike Stories
+### EP_SS — Spike Stories
 
-**SS01 — Investigación de Google ML Kit para el reconocimiento de alimentos**
+<br>***SS01 — Investigación de Google ML Kit para el reconocimiento de alimentos***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1582,7 +1592,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**SS02 — Investigación de Open Food Facts para el catálogo de alimentos**
+<br>***SS02 — Investigación de Open Food Facts para el catálogo de alimentos***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1614,7 +1624,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**SS03 — Investigación y definición de la lógica de la señal de consistencia**
+<br>***SS03 — Investigación y definición de la lógica de la señal de consistencia***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1650,7 +1660,9 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 
 ### 2.4.2. Impact Mapping
 
+#### Impact Mapping - Paciente
 
+#### Impact Mapping - Nutricionista
 
 <div style="page-break-after: always"></div>
 
