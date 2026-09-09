@@ -65,6 +65,50 @@ El tablero resultante quedó organizado en cinco fases narrativas, que se descri
 
 ### 2.3.6. Ubiquitous Language
 
+Esta sección presenta el glosario de términos del dominio nutricional que el equipo utiliza de manera uniforme en las entrevistas, en el modelado, en la documentación y en el código. Los términos se expresan en inglés, acompañados de su equivalente en español, y su definición corresponde al significado que tienen en el dominio del negocio y no a su implementación técnica. El glosario se construyó a partir del análisis lingüístico de las entrevistas y del Big Picture EventStorming, y es normativo: un término que aparezca en el modelo y no figure en esta tabla no existe en el dominio.
+
+| Término (inglés) | Equivalente en español | Definición |
+|---|---|---|
+| `Patient` | Paciente | Persona en tratamiento nutricional activo vinculada a un profesional mediante consentimiento vigente |
+| `Practitioner` | Nutricionista | Profesional de la nutrición responsable del acto clínico. Nunca se le denomina doctor ni usuario |
+| `Care Link` | Vínculo de cuidado | Relación consentida entre un paciente y un profesional que habilita el acceso a la información del tratamiento |
+| `Invitation` | Invitación | Token de un solo uso, entregado como código QR durante la consulta, que permite establecer el vínculo |
+| `Consent` | Consentimiento | Autorización otorgada por el paciente, siempre revocable, sin la cual el vínculo no habilita ningún acceso |
+| `Discharge` | Alta del tratamiento | Cierre del vínculo por decisión clínica del profesional, con razón obligatoria |
+| `Nutritional Assessment` | Evaluación nutricional | Primera fase del acto clínico: recolección de hábitos, antecedentes, actividad y mediciones |
+| `Clinical Measurement` | Medición clínica | Medición antropométrica tomada por el profesional bajo protocolo; tiene autoridad clínica |
+| `Nutritional Diagnosis` | Diagnóstico nutricional | Segunda fase del acto clínico: juicio profesional fundamentado sobre el estado nutricional del paciente |
+| `Nutrition Plan` | Plan de alimentación | Tercera fase del acto clínico: artefacto clínico versionado que contiene metas, pautas y restricciones |
+| `Calculation Basis` | Base de cálculo | Parámetros que el profesional elige antes del cálculo: ecuación, peso de referencia, factor de actividad y estrategia de déficit |
+| `Target Proposal` | Propuesta de metas | Resultado del cálculo determinista, previo a la prescripción |
+| `Prescribed Targets` | Metas prescritas | Metas que el profesional firma, ya sea aceptando la propuesta o sobrescribiéndola con una razón |
+| `Active Targets` | Metas vigentes | Conjunto reducido de metas, pautas y restricciones que el paciente recibe. No es el plan clínico |
+| `Diary Entry` | Entrada de diario | Registro de un evento de consumo realizado por el paciente |
+| `Provenance` | Procedencia | Origen de una entrada de diario: fotografía, registro manual o declaración fuera del plan |
+| `Proposed Estimate` | Estimación propuesta | Estimación de porción y nutrientes calculada a partir de la fotografía, siempre con su nivel de confianza y sujeta a confirmación del paciente |
+| `Off Plan Entry` | Comida fuera del plan | Declaración del paciente de haber comido fuera de lo prescrito, sin detalle exigido y sin penalización |
+| `Self Weigh In` | Autopesaje | Pesaje realizado por el paciente en casa, con protocolo declarado. No tiene autoridad clínica por sí solo |
+| `Weight Trend` | Tendencia de peso | Suavizado estadístico de los autopesajes, único formato en que el peso del paciente se presenta como dato |
+| `Evaluation Window` | Ventana de evaluación | Periodo mínimo de siete días sobre el cual se evalúa el tratamiento |
+| `Daily Compliance` | Cumplimiento diario | Resultado de comparar lo registrado en un día contra las metas vigentes de ese día |
+| `Deviation` | Desviación | Diferencia sostenida entre lo prescrito y lo realmente registrado |
+| `Logging Gap` | Vacío de registro | Días sin ninguna entrada de diario. No constituye desviación ni incumplimiento |
+| `Consistency Index` | Índice de consistencia | Contraste entre la tendencia de peso y la ingesta registrada, utilizado como señal de calidad del dato |
+| `Review Item` | Ítem de revisión | Señal de seguimiento recibida por el profesional que espera una decisión humana |
+| `Referral` | Derivación | Envío del paciente a otro especialista, con especialidad y razón registradas |
+| `Scheduled Follow Up` | Seguimiento programado | Próxima consulta acordada con el paciente |
+| `Reference Food` | Alimento de referencia | Ítem del catálogo nutricional traducido al dominio desde una fuente externa |
+
+Del análisis lingüístico surgieron además cinco expresiones que el equipo decidió prohibir porque introducen ambigüedad o contradicen decisiones de producto ya tomadas.
+
+| Expresión prohibida | Razón | Término que la reemplaza |
+|---|---|---|
+| `Weight` | Designa dos realidades con autoridad clínica distinta | `Clinical Measurement` o `Self Weigh In` |
+| `Food` | Confunde el ítem del catálogo con el evento de consumo | `Reference Food` o `Diary Entry` |
+| `Plan` del lado del paciente | El paciente nunca recibe el plan clínico completo | `Active Targets` |
+| `Compliance` sin granularidad | El día y el tratamiento son escalas distintas | `Daily Compliance` o `Treatment Adherence` |
+| `Cheat`, `Fail`, `Violation` | Vocabulario de castigo, contrario a las decisiones éticas del producto | `Off Plan Entry` |
+
 ## 2.4. Requirements Specification
 
 ### 2.4.1. User Stories
