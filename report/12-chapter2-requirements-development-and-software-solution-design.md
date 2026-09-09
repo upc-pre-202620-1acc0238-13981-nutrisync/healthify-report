@@ -803,7 +803,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-**US24 — Acuse de recibo de metas nutricionales actualizadas**
+**US24 — Confirmación de recepción de nuevas metas nutricionales**
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -819,7 +819,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
   <tr>
     <th colspan="2">Title</th>
-    <td colspan="6">Acuse de recibo de metas nutricionales actualizadas</td>
+    <td colspan="6">Confirmación de recepción de nuevas metas nutricionales</td>
   </tr>
   <tr>
     <th colspan="8">Description</th>
@@ -1649,6 +1649,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 <div style="page-break-after: always"></div>
 
 ### 2.4.2. Impact Mapping
+
+
 
 <div style="page-break-after: always"></div>
 
