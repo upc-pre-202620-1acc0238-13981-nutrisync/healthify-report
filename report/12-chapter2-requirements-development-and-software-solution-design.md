@@ -1660,9 +1660,11 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 
 ### 2.4.2. Impact Mapping
 
-#### Impact Mapping - Paciente
+### Impact Mapping - Paciente
+![Impact Mapping Paciente](../assets/img/chapter2/ImpactmapPaciente.png)
 
-#### Impact Mapping - Nutricionista
+El Impact Mapping del paciente se orienta a promover un registro continuo de información durante el tratamiento nutricional. Para alcanzar este objetivo, se consideran como impactos principales el registro frecuente de la alimentación, el seguimiento de la evolución corporal, la consulta del seguimiento del plan nutricional y la continuidad de los registros sin conexión. Estos comportamientos se apoyan en los Deliverables y User Stories definidos previamente.
+<br>
 
 <div style="page-break-after: always"></div>
 
