@@ -1202,7 +1202,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US36 — Acceso a Healthify desde el Landing Page***
+<br>***US36 — Acceso a la descarga de Healthify desde el Landing Page***
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1218,19 +1218,19 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
   <tr>
     <th colspan="2">Title</th>
-    <td colspan="6">Acceso a Healthify desde el Landing Page</td>
+    <td colspan="6">Acceso a la descarga de Healthify desde el Landing Page</td>
   </tr>
   <tr>
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como visitante, deseo acceder desde el Landing Page al punto de entrada de Healthify, para iniciar el proceso de registro o autenticación cuando decida utilizar la solución.</td>
+    <td colspan="8">Como visitante, deseo acceder desde el Landing Page al medio de distribución de Healthify, para obtener la aplicación móvil cuando decida utilizar la solución.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Acceso disponible</strong><br>Dado que el visitante consulta el Landing Page<br>Cuando el visitante solicita acceder a Healthify<br>Entonces el sistema lo dirige al punto de entrada correspondiente de la aplicación.<br><br><strong>Escenario 2: Destino disponible</strong><br>Dado que el visitante solicita el acceso a la aplicación<br>Cuando el visitante solicita acceder a la aplicación desde el Landing Page<br>Entonces el sistema completa la redirección correctamente.</td>
+    <td colspan="8"><strong>Escenario 1: Acceso al medio de distribución</strong><br>Dado que el visitante consulta el Landing Page<br>Cuando el visitante selecciona la opción para obtener Healthify<br>Entonces el sistema lo dirige al medio de distribución disponible de la aplicación móvil.<br><br><strong>Escenario 2: Aplicación no disponible para distribución</strong><br>Dado que el visitante desea obtener la aplicación móvil Healthify<br>Cuando el visitante selecciona la opción correspondiente y no existe una versión disponible para distribución<br>Entonces el sistema informa que la aplicación aún no se encuentra disponible para su descarga.</td>
   </tr>
 </table>
 
@@ -1678,6 +1678,8 @@ El Impact Mapping del nutricionista se orienta al uso recurrente de la informaci
 | **#Order** | **Uer Story ID** | **Title** | **Description** | **Story Points** <br>**(1/2/3/5/8)** |
 | :--- | :--- | :--- | :--- | :--- |
 | 1 | | | | |
+
+<div style="page-break-after: always"></div>
 
 ## 2.5. Strategic-Level Domain-Driven Design
 
