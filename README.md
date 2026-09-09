@@ -41,7 +41,7 @@ Healthify
     <tr><td>U202411669</td><td>Del Aguila Del Aguila, Olenka Priscilla</td></tr>
     <tr><td>U202415495</td><td>Espinoza Cruz, Angela Milagros</td></tr>
     <tr><td>U20241B227</td><td>Mora Rivera, Joel Fernando</td></tr>
-    <tr><td>U20241D159</td><td>Vergraray Calderon, Rose Almendra</td></tr>
+    <tr><td>U20241D159</td><td>Vergaray Calderon, Rose Almendra</td></tr>
     <tr><td>U202417857</td><td>Villarreal Bazan, Angel Martin</td></tr>
   </tbody>
 </table>
