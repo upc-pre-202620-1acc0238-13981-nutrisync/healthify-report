@@ -219,7 +219,7 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 
 **B. API Application Components (Backend)**
 
-El backend se organiza en 6 Bounded Contexts y un Shared Kernel, cada uno siguiendo el patrón de arquitectura del Domain-Driven Design. Todos los Bounded Contexts comparten una única base de datos PostgreSQL, accedida a través de los repositorios de Entity Framework Core en la capa de Infrastructure de cada uno.
+El backend se organiza en 6 Bounded Contexts y un Shared Kernel, cada uno siguiendo el patrón de arquitectura del Domain-Driven Design. Todos los Bounded Contexts comparten una única base de datos MySQL 8, accedida a través de los repositorios de Entity Framework Core en la capa de Infrastructure de cada uno.
 
 El diagrama a continuación muestra todos los componentes de la arquitectura en un único bloque.
 
