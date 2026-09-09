@@ -5,9 +5,11 @@
 ### 1.1.1. Descripción del Startup
 
 NutriSync es una startup tecnológica que busca resolver una falta de información concreta dentro del proceso de tratamiento nutricional: lo que sucede entre una consulta y la siguiente. El nutricionista ya cuenta con un lugar donde almacenar la evaluación, el diagnóstico y el plan de alimentación de su paciente. Sin embargo, no tiene una forma confiable de conocer qué comió realmente durante las semanas en que no hay contacto directo. Actualmente, esa información depende principalmente de lo que el paciente recuerda y decide contar en la siguiente cita, un registro que puede verse afectado por dos problemas: la omisión de ciertos alimentos que el paciente puede preferir no reportar y la estimación imprecisa de las porciones consumidas. 
-<br>NutriSync nace para cerrar esa brecha sin sustituir el criterio profesional, y lo hace a través de su producto Healthify. 
-<br>Nuestra misión es dar al nutricionista visibilidad real sobre cómo su paciente sigue el plan nutricional durante el periodo entre consultas, y darle al paciente una forma simple y práctica de registrar su alimentación diaria, manteniendo las decisiones clínicas exclusivamente en manos del profesional. 
-<br>Nuestra visión es convertirnos en la startup de referencia para el seguimiento nutricional continuo en Latinoamérica, reconocida por ofrecer, a través de Healthify, información confiable sobre el seguimiento del plan nutricional al profesional de la salud y al paciente una experiencia de registro diario que no juzga y no exige detalles innecesarios.
+NutriSync nace para cerrar esa brecha sin sustituir el criterio profesional, y lo hace a través de su producto Healthify. 
+
+Nuestra misión es dar al nutricionista visibilidad real sobre cómo su paciente sigue el plan nutricional durante el periodo entre consultas, y darle al paciente una forma simple y práctica de registrar su alimentación diaria, manteniendo las decisiones clínicas exclusivamente en manos del profesional. 
+
+Nuestra visión es convertirnos en la startup de referencia para el seguimiento nutricional continuo en Latinoamérica, reconocida por ofrecer, a través de Healthify, información confiable sobre el seguimiento del plan nutricional al profesional de la salud y al paciente una experiencia de registro diario que no juzga y no exige detalles innecesarios.
 
 <div style="page-break-after: always"></div>
 
@@ -44,13 +46,19 @@ Aplicamos la técnica de las 5W's y 2H's (Who, What, When, Where, Why, How, How 
 #### 1.2.2.1. Lean UX Problem Statements
 
 De acuerdo con el curso, se elabora un único Problem Statement para todo el proyecto, considerando ambos segmentos dentro del mismo enunciado.
+<br>
 
 **Problem Statement**
-<br>El estado actual del tratamiento y seguimiento nutricional se ha enfocado principalmente en la evaluación del paciente, el diagnóstico, la elaboración de un plan de alimentación y su posterior seguimiento. Una vez establecidas las indicaciones durante la consulta, el paciente debe aplicarlas en su vida cotidiana durante el periodo entre consultas, mientras el nutricionista realiza el seguimiento de su progreso. 
-<br>La brecha que buscamos abordar frente a los productos y servicios utilizados actualmente se encuentra en el periodo entre consultas, donde puede resultar difícil contar con información continua, organizada y confiable sobre la alimentación del paciente. Durante este periodo, el seguimiento depende en gran medida de la información que el paciente registra, recuerda o comunica al profesional, la cual puede ser incompleta, imprecisa o encontrarse distribuida entre distintos medios. Esto dificulta que el nutricionista disponga de una visión clara de lo ocurrido para evaluar el progreso del paciente y determinar si corresponde realizar algún ajuste al tratamiento.
-<br>Nuestro producto, Healthify, busca abordar esta brecha mediante un vínculo digital entre el paciente y el nutricionista que facilite el registro cotidiano de la alimentación y el progreso del paciente durante el periodo entre consultas, y permita al profesional consultar esta información de manera organizada para apoyar el seguimiento, manteniendo las decisiones clínicas exclusivamente bajo su criterio.
-<br>Nuestro enfoque inicial estará puesto en pacientes que se encuentran en tratamiento nutricional activo para bajar de peso y en nutricionistas de clínicas o centros de salud que realizan seguimiento a sus pacientes durante el periodo entre consultas.
-<br>Sabremos que hemos tenido éxito cuando observemos que los pacientes mantienen un registro frecuente de su alimentación durante el periodo entre consultas, que los nutricionistas consultan la información registrada antes de la siguiente consulta y que utilizan los datos proporcionados por Healthify para sustentar sus decisiones de seguimiento y ajuste del tratamiento.
+
+El estado actual del tratamiento y seguimiento nutricional se ha enfocado principalmente en la evaluación del paciente, el diagnóstico, la elaboración de un plan de alimentación y su posterior seguimiento. Una vez establecidas las indicaciones durante la consulta, el paciente debe aplicarlas en su vida cotidiana durante el periodo entre consultas, mientras el nutricionista realiza el seguimiento de su progreso. 
+
+La brecha que buscamos abordar frente a los productos y servicios utilizados actualmente se encuentra en el periodo entre consultas, donde puede resultar difícil contar con información continua, organizada y confiable sobre la alimentación del paciente. Durante este periodo, el seguimiento depende en gran medida de la información que el paciente registra, recuerda o comunica al profesional, la cual puede ser incompleta, imprecisa o encontrarse distribuida entre distintos medios. Esto dificulta que el nutricionista disponga de una visión clara de lo ocurrido para evaluar el progreso del paciente y determinar si corresponde realizar algún ajuste al tratamiento.
+
+Nuestro producto, Healthify, busca abordar esta brecha mediante un vínculo digital entre el paciente y el nutricionista que facilite el registro cotidiano de la alimentación y el progreso del paciente durante el periodo entre consultas, y permita al profesional consultar esta información de manera organizada para apoyar el seguimiento, manteniendo las decisiones clínicas exclusivamente bajo su criterio.
+
+Nuestro enfoque inicial estará puesto en pacientes que se encuentran en tratamiento nutricional activo para bajar de peso y en nutricionistas de clínicas o centros de salud que realizan seguimiento a sus pacientes durante el periodo entre consultas.
+
+Sabremos que hemos tenido éxito cuando observemos que los pacientes mantienen un registro frecuente de su alimentación durante el periodo entre consultas, que los nutricionistas consultan la información registrada antes de la siguiente consulta y que utilizan los datos proporcionados por Healthify para sustentar sus decisiones de seguimiento y ajuste del tratamiento.
 
 #### 1.2.2.2. Lean UX Assumptions
 
