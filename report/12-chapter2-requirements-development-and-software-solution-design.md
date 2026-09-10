@@ -136,6 +136,39 @@ Esta sección documenta el proceso de diseño estratégico con el que el equipo 
 
 ### 2.5.1. EventStorming
 
+Esta sección documenta la segunda sesión de EventStorming, realizada por el equipo en Miro con una duración aproximada de dos horas, orientada a alcanzar el mayor nivel de detalle posible sobre el dominio ya explorado. Mientras que la sesión de Big Picture se limitó a actores, eventos y políticas, esta sesión incorporó los elementos que permiten pasar del relato del negocio a un modelo accionable.
+
+El trabajo consistió en recorrer la línea de tiempo del tablero anterior y, para cada evento de dominio, reconstruir hacia atrás la cadena completa que lo produce. Para cada hecho el equipo se preguntó qué intención humana o automática lo desencadenó, lo que dio origen a los comandos en notas azules; qué pieza del modelo es responsable de aceptarlo o rechazarlo, lo que dio origen a los agregados en notas amarillo intenso; qué regla protege ese agregado, lo que dio origen a las reglas de negocio en notas rojas; y qué vista necesita alguien para tomar la siguiente decisión, lo que dio origen a los read models en notas verdes. Adicionalmente se marcaron en notas rosa claro los servicios externos, que en el modelo resultante son únicamente cuatro: el proveedor de autenticación, ML Kit para la estimación de porción en el dispositivo, y Open Food Facts y USDA Food Data Central como fuentes del catálogo.
+
+**Convención de composición.** El equipo acordó una regla de encadenamiento que se respeta en todo el tablero y que facilita después la traducción a código:
+
+```
+Actor ──► Command ──► Aggregate ──► Business Rules ──► Domain Event ──► Read Model
+Policy ──► Command ──► Aggregate ──► Business Rules ──► Domain Event ──► Read Model
+```
+
+Las reglas de negocio cuelgan siempre del agregado, porque es el agregado quien las hace cumplir; los servicios externos cuelgan del comando o del agregado y nunca inician un flujo por sí solos; y el cruce de una frontera de contexto ocurre siempre desde un evento de dominio hacia una política del contexto de destino, nunca desde un comando.
+
+Enlace del Event-Storming: [https://miro.com/welcomeonboard/MU44Nlk4L2dlOVFveWtDZ05SOTU5cThreUNlUUM1SytYY1lJZ29UeU9uWStqbEY4RVBQWWxxNXoxWjhqTXYvMkhIeFVQR1FFNUN2NEtSVWZRVVlDdzd6U0hDZUFBcjhESm5VZ3pkSHh2cEdHRWRJVTVWR3ZEclhJN3hucXdsZzF0R2lncW1vRmFBVnlLcVJzTmdFdlNRPT0hdjE=?share_link_id=478718202765](https://miro.com/welcomeonboard/MU44Nlk4L2dlOVFveWtDZ05SOTU5cThreUNlUUM1SytYY1lJZ29UeU9uWStqbEY4RVBQWWxxNXoxWjhqTXYvMkhIeFVQR1FFNUN2NEtSVWZRVVlDdzd6U0hDZUFBcjhESm5VZ3pkSHh2cEdHRWRJVTVWR3ZEclhJN3hucXdsZzF0R2lncW1vRmFBVnlLcVJzTmdFdlNRPT0hdjE=?share_link_id=478718202765)
+
+![Design Level EventStorming - Tablero completo](../assets/img/artifacts/event-storming/design-level-eventstorming-completo.png)
+
+El modelo resultante quedó organizado en treinta y seis subflujos distribuidos en seis contextos, con cincuenta y cuatro comandos, dieciocho agregados, ciento veinticinco reglas de negocio, sesenta y tres eventos de dominio y treinta y una políticas.
+
+| Bounded context | Agregados | Comandos | Reglas | Eventos | Políticas |
+|---|---|---:|---:|---:|---:|
+| `Identity & Access Management` | 2 | 4 | 9 | 5 | 1 |
+| `Care Relationship` | 2 | 10 | 19 | 10 | 4 |
+| `Nutritional Care` | 4 | 11 | 28 | 13 | 4 |
+| `Intake & Body Response` | 4 | 10 | 28 | 12 | 4 |
+| `Monitoring & Adherence` | 5 | 15 | 33 | 17 | 16 |
+| `Food Catalog` | 1 | 4 | 8 | 6 | 2 |
+| **Total** | **18** | **54** | **125** | **63** | **31** |
+
+![Design Level EventStorming - Detalle de un subflujo](../assets/img/artifacts/event-storming/design-level-eventstorming-detalle-subflujo.png)
+
+
+
 #### 2.5.1.1. Candidate Context Discovery
 
 #### 2.5.1.2. Domain Message Flows Modeling
