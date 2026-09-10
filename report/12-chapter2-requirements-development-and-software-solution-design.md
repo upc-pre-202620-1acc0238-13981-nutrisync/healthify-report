@@ -132,6 +132,8 @@ Del análisis lingüístico surgieron además cinco expresiones que el equipo de
 
 ## 2.5. Strategic-Level Domain-Driven Design
 
+Esta sección documenta el proceso de diseño estratégico con el que el equipo descompuso Healthify en subconjuntos con límites naturales. El punto de partida fue el Big Picture EventStorming presentado en la sección 2.3.5, que se profundizó hasta el nivel de diseño para identificar comandos, agregados y reglas de negocio; sobre ese modelo se realizó el descubrimiento de contextos candidatos, se representaron los flujos de mensajes entre ellos mediante Domain Storytelling, se detalló cada contexto en su Bounded Context Canvas y finalmente se elaboró el Context Map con los patrones de relación que gobiernan cada integración. El criterio de frontera que el equipo aplicó de manera transversal es que un bounded context no es un módulo ni una pantalla ni una fase de un proceso, sino una frontera dentro de la cual cada término significa exactamente una cosa.
+
 ### 2.5.1. EventStorming
 
 #### 2.5.1.1. Candidate Context Discovery
