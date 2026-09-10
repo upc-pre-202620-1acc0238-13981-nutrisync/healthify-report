@@ -216,6 +216,26 @@ La sesión también descartó explícitamente siete contextos candidatos, decisi
 
 #### 2.5.1.2. Domain Message Flows Modeling
 
+Esta sección documenta cómo colaboran los bounded contexts para resolver los casos de negocio relevantes. Para ello el equipo aplicó Domain Storytelling, elaborando un diagrama por escenario en el que cada actor y cada contexto aparece como un participante, y cada mensaje se numera en el orden en que ocurre. El propósito de estos diagramas es verificar que las fronteras definidas en la sección anterior resisten los flujos reales del negocio y que ningún escenario obliga a un contexto a conocer el modelo interno de otro.
+
+Se modelaron cuatro escenarios, elegidos por ser los que más fronteras atraviesan.
+
+**Escenario 1 — Vinculación del paciente durante la consulta.** El profesional emite la invitación, el paciente la redime escaneando el código QR y otorga su consentimiento; `Care Relationship` publica `Care Link Established` y `Monitoring & Adherence` reacciona abriendo la ventana de evaluación. El escenario demuestra que el vínculo es condición previa de todo lo demás.
+
+![Domain Message Flow - Vinculación del paciente](../assets/img/artifacts/domain-storytelling/domain-storytelling-vinculacion.svg)
+
+**Escenario 2 — Prescripción y publicación de metas.** El profesional registra la evaluación, emite el diagnóstico, elige la base de cálculo, prescribe las metas y publica el plan; `Nutritional Care` publica `Active Targets Updated`, que es consumido simultáneamente por `Intake & Body Response` para refrescar su caché de metas, por `Monitoring & Adherence` para tomar el snapshot del día y por `Care Relationship` para marcar las metas como pendientes de acuse de recibo. El escenario evidencia que lo que cruza la frontera es el contrato reducido y no el plan clínico: el diagnóstico y la base de cálculo nunca salen de `Nutritional Care`.
+
+![Domain Message Flow - Prescripción y publicación de metas](../assets/img/artifacts/domain-storytelling/domain-storytelling-prescripcion.svg)
+
+**Escenario 3 — Registro de comida entre consultas, con y sin conexión.** El paciente fotografía su comida, ML Kit propone la estimación en el dispositivo, el paciente la confirma o la ajusta y `Intake & Body Response` publica `Meal Logged` y `Estimate Confirmed By Patient`; `Monitoring & Adherence` evalúa el día contra el snapshot correspondiente. La variante sin conexión muestra la entrada encolada y el reprocesamiento de la ventana tras `Entry Synchronized`. El escenario demuestra que el profesional no participa en ningún paso de la cadena.
+
+![Domain Message Flow - Registro de comida y sincronización](../assets/img/artifacts/domain-storytelling/domain-storytelling-registro-comida.svg)
+
+**Escenario 4 — Detección de desviación y decisión del profesional.** `Monitoring & Adherence` detecta la desviación sostenida y publica la señal; `Nutritional Care` la recibe mediante una política, crea un ítem de revisión y lo deposita en la bandeja del profesional, quien decide si ajusta el plan o cierra el ítem sin ajustarlo. El escenario es el que más se discutió en la sesión, porque hace visible la decisión de diseño más importante del modelo: la cadena automática entra por una política y muere en una bandeja de entrada, de manera que ningún algoritmo modifica un plan clínico.
+
+![Domain Message Flow - Detección de desviación y decisión clínica](../assets/img/artifacts/domain-storytelling/domain-storytelling-desviacion.svg)
+
 #### 2.5.1.3. Bounded Context Canvases
 
 ### 2.5.2. Context Mapping
