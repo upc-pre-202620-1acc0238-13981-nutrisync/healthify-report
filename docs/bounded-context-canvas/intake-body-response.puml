@@ -1,0 +1,100 @@
+@startsalt
+{
+{#
+{
+<size:22><b>Name</b></size>
+<size:14>Intake & Body Response</size>
+} | {
+<size:22><b>Model Traits</b></size>
+<color:gray>draft, execute, audit, enforcer, interchange, gateway, etc.</color>
+<b>Execute</b> · <b>Gateway</b> · offline-first capture
+}
+{
+{
+<size:22><b>Description</b></size>
+<color:gray>Summary of purpose and responsibilities</color>
+Capture faithfully what the patient eats and how their
+body responds, without passing any judgement on it.
+Patient-write only.
+}
+--
+{
+<size:22><b>Strategic Classification</b></size>
+{
+<color:gray><u>Domain</u></color> | <color:gray><u>Business Model</u></color> | <color:gray><u>Evolution</u></color>
+<b>Core</b> | <color:gray>Revenue</color> | <color:gray>Genesis</color>
+<color:gray>Supporting</color> | <b>Engagement</b> | <b>Custom built</b>
+<color:gray>Generic</color> | <color:gray>Compliance</color> | <color:gray>Product</color>
+<color:gray>Other</color> | <color:gray>Cost reduction</color> | <color:gray>Commodity</color>
+}
+}
+} | {
+<size:22><b>Information and Services Provided</b></size>
+{#
+{
+<b>Queryable Information</b>
+Diary Entries · Daily Diary
+Daily Intake Summary
+Weight Trend Chart
+Self Weigh-Ins
+Active Targets
+Pending Sync Queue
+} | {
+<b>Invokable Commands</b>
+Log Meal By Photo
+Log Meal Manually
+Log Off Plan Meal
+Confirm Estimate · Adjust Estimate
+Record Self Weigh In
+Sync Pending Entries
+}
+{
+<b>Published Events</b>
+Meal Logged
+Estimate Confirmed By Patient
+Off Plan Entry Logged
+Weight Trend Recalculated
+Entry Synchronized
+} | {
+<b>Reactive Jobs</b>
+Active Targets Updated → Refresh Active Targets Cache
+Meal Logged by Photo → Estimate Portion
+Self Weigh In Recorded → Recalculate Weight Trend
+}
+}
+}
+{
+{
+<size:22><b>Business Decisions</b></size>
+<color:gray>Key business rules, policies, and decisions</color>
+A diary entry is never deleted
+Provenance and local timestamp are mandatory
+A photo estimate is stored as a proposal, always with its confidence
+Off-plan entries require no detail and carry no penalty
+Only protocol-compliant weigh-ins smooth the trend
+The daily weight is never exposed as a headline
+Offline entries are queued and synced idempotently
+Declared local timestamp is never rewritten
+}
+--
+{
+<size:22><b>Ubiquitous Language</b></size>
+<color:gray>Key domain terminology</color>
+Diary Entry · Provenance · Proposed Estimate
+Off Plan Entry · Self Weigh In · Weight Trend
+Active Targets Cache
+}
+} | {
+<size:22><b>Dependencies and Relationships</b></size>
+{#
+<b>Suppliers</b> | . | <b>Consumers</b> | .
+<color:gray>Name</color> | <color:gray>Relationship</color> | <color:gray>Name</color> | <color:gray>Relationship</color>
+Nutritional Care | Published Language | Monitoring & Adherence | Customer/Supplier
+Care Relationship | Open Host Service | Patient Record · BFF | Open Host Service
+Food Catalog | Customer/Supplier | . | .
+}
+}
+}
+<color:gray><b>Bounded Context Canvas V2</b> · Nick Tune · ntcoding.co.uk</color>
+}
+@endsalt

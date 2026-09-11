@@ -1,0 +1,99 @@
+@startsalt
+{
+{#
+{
+<size:22><b>Name</b></size>
+<size:14>Monitoring & Adherence</size>
+} | {
+<size:22><b>Model Traits</b></size>
+<color:gray>draft, execute, audit, enforcer, interchange, gateway, etc.</color>
+<b>Analysis</b> · <b>Specification</b> · evaluates against rules and thresholds
+}
+{
+{
+<size:22><b>Description</b></size>
+<color:gray>Summary of purpose and responsibilities</color>
+Compare what was prescribed with what was actually
+logged, and interpret the difference over time.
+}
+--
+{
+<size:22><b>Strategic Classification</b></size>
+{
+<color:gray><u>Domain</u></color> | <color:gray><u>Business Model</u></color> | <color:gray><u>Evolution</u></color>
+<b>Core</b> | <b>Revenue</b> | <color:gray>Genesis</color>
+<color:gray>Supporting</color> | <color:gray>Engagement</color> | <b>Custom built</b>
+<color:gray>Generic</color> | <color:gray>Compliance</color> | <color:gray>Product</color>
+<color:gray>Other</color> | <color:gray>Cost reduction</color> | <color:gray>Commodity</color>
+}
+}
+} | {
+<size:22><b>Information and Services Provided</b></size>
+{#
+{
+<b>Queryable Information</b>
+Evaluation Windows
+Daily Compliance Indicator
+Deviations
+Consistency Index · Consistency Card
+Referrals
+Scheduled Follow-Ups
+Patient Monitoring Panel
+} | {
+<b>Invokable Commands</b>
+Record Referral
+Schedule Follow Up
+}
+{
+<b>Published Events</b>
+Sustained Deviation Detected
+Alert Escalated To Practitioner
+} | {
+<b>Reactive Jobs</b>
+Care Link Established → Open Evaluation Window
+Care Link Revoked → Close Evaluation Window
+Active Targets Updated → Snapshot Active Targets
+Clinical Measurement Taken → Append Anthropometry Point
+Intake events → Evaluate Day · Re-Evaluate Window
+Day Evaluated → Detect Deviation
+Deviation Detected → Flag Sustained Deviation
+Weight Trend Recalculated → Recompute Consistency Index
+Consistency Alert Raised → Prompt Patient
+Logging Gap Detected → Remind Patient
+Scheduled: Logging Gap · Consistency Escalation · Missed Follow-Up
+}
+}
+}
+{
+{
+<size:22><b>Business Decisions</b></size>
+<color:gray>Key business rules, policies, and decisions</color>
+Each day is evaluated against that day's targets snapshot
+No deviation is computed under a 7-day window
+A deviation is sustained only if it persists across the majority of the window
+A logging gap is not a deviation and never escalates
+Consistency alerts prompt the patient first; escalation only after 3 weeks
+Escalation notifies, it never modifies the plan
+}
+--
+{
+<size:22><b>Ubiquitous Language</b></size>
+<color:gray>Key domain terminology</color>
+Evaluation Window · Daily Compliance · Deviation
+Logging Gap · Consistency Index · Referral
+Scheduled Follow Up
+}
+} | {
+<size:22><b>Dependencies and Relationships</b></size>
+{#
+<b>Suppliers</b> | . | <b>Consumers</b> | .
+<color:gray>Name</color> | <color:gray>Relationship</color> | <color:gray>Name</color> | <color:gray>Relationship</color>
+Care Relationship | Open Host Service + Events | Nutritional Care | Events only
+Nutritional Care | Customer/Supplier | Monitoring Panel · BFF | Open Host Service
+Intake & Body Response | Customer/Supplier | . | .
+}
+}
+}
+<color:gray><b>Bounded Context Canvas V2</b> · Nick Tune · ntcoding.co.uk</color>
+}
+@endsalt
