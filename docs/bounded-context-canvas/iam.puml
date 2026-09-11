@@ -1,0 +1,83 @@
+@startsalt
+{
+{#
+{
+<size:22><b>Name</b></size>
+<size:14>Identity & Access</size>
+} | {
+<size:22><b>Model Traits</b></size>
+<color:gray>draft, execute, audit, enforcer, interchange, gateway, etc.</color>
+<b>Gateway</b>
+}
+{
+{
+<size:22><b>Description</b></size>
+<color:gray>Summary of purpose and responsibilities</color>
+Authenticate users and issue the role claim.
+}
+--
+{
+<size:22><b>Strategic Classification</b></size>
+{
+<color:gray><u>Domain</u></color> | <color:gray><u>Business Model</u></color> | <color:gray><u>Evolution</u></color>
+<color:gray>Core</color> | <color:gray>Revenue</color> | <color:gray>Genesis</color>
+<color:gray>Supporting</color> | <color:gray>Engagement</color> | <color:gray>Custom built</color>
+<b>Generic</b> | <b>Compliance</b> | <color:gray>Product</color>
+<color:gray>Other</color> | <color:gray>Cost reduction</color> | <b>Commodity</b>
+}
+}
+} | {
+<size:22><b>Information and Services Provided</b></size>
+{#
+{
+<b>Queryable Information</b>
+User by Id
+Is Patient · Is Practitioner
+User Sessions
+} | {
+<b>Invokable Commands</b>
+Register Account
+Sign In
+Sign Out
+}
+{
+<b>Published Events</b>
+<color:gray>No domain event outside the context:</color>
+<color:gray>role claim travels inside the session token</color>
+} | {
+<b>Reactive Jobs</b>
+Role Claim Issued → Select Navigation Shell
+}
+}
+}
+{
+{
+<size:22><b>Business Decisions</b></size>
+<color:gray>Key business rules, policies, and decisions</color>
+Email is unique; strong password required
+Role is declared at registration
+Role is immutable per session; changing role requires re-authentication
+Lockout after five failed attempts
+Registering grants access to nothing without a Care Link
+}
+--
+{
+<size:22><b>Ubiquitous Language</b></size>
+<color:gray>Key domain terminology</color>
+User · User Session · Role Claim
+Navigation Shell
+}
+} | {
+<size:22><b>Dependencies and Relationships</b></size>
+{#
+<b>Suppliers</b> | . | <b>Consumers</b> | .
+<color:gray>Name</color> | <color:gray>Relationship</color> | <color:gray>Name</color> | <color:gray>Relationship</color>
+<color:gray>None</color> | . | Care Relationship | Conformist
+. | . | Nutritional Care | Conformist
+. | . | Patient Record · BFF | Open Host Service
+}
+}
+}
+<color:gray><b>Bounded Context Canvas V2</b> · Nick Tune · ntcoding.co.uk</color>
+}
+@endsalt
