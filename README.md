@@ -124,7 +124,7 @@ AV1:<br>
     - [2.5.3.2. Software Architecture Container Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2532-software-architecture-container-level-diagrams)
     - [2.5.3.3. Software Architecture Deployment Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2533-software-architecture-deployment-diagrams)
 - [2.6. Tactical-Level Domain-Driven Design](report/12-chapter2-requirements-development-and-software-solution-design.md#26-tactical-level-domain-driven-design)
-  - [2.6.1. Bounded Context: &lt;Bounded Context Name&gt;](report/12-chapter2-requirements-development-and-software-solution-design.md#261-bounded-context)
+  - [2.6.1. Bounded Context: Intake &amp; Body Response](report/12-chapter2-requirements-development-and-software-solution-design.md#261-bounded-context-intake--body-response)
     - [2.6.1.1. Domain Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2611-domain-layer)
     - [2.6.1.2. Interface Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2612-interface-layer)
     - [2.6.1.3. Application Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2613-application-layer)
