@@ -151,6 +151,15 @@ AV1:<br>
     - [2.6.3.6. Bounded Context Software Architecture Code Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2636-bounded-context-software-architecture-code-level-diagrams)
       - [2.6.3.6.1. Bounded Context Domain Layer Class Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#26361-bounded-context-domain-layer-class-diagrams)
       - [2.6.3.6.2. Bounded Context Database Design Diagram](report/12-chapter2-requirements-development-and-software-solution-design.md#26362-bounded-context-database-design-diagram)
+  - [2.6.4. Bounded Context: Nutritional Care](report/12-chapter2-requirements-development-and-software-solution-design.md#264-bounded-context-nutritional-care)
+    - [2.6.4.1. Domain Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2641-domain-layer)
+    - [2.6.4.2. Interface Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2642-interface-layer)
+    - [2.6.4.3. Application Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2643-application-layer)
+    - [2.6.4.4. Infrastructure Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2644-infrastructure-layer)
+    - [2.6.4.5. Bounded Context Software Architecture Component Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2645-bounded-context-software-architecture-component-level-diagrams)
+    - [2.6.4.6. Bounded Context Software Architecture Code Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2646-bounded-context-software-architecture-code-level-diagrams)
+      - [2.6.4.6.1. Bounded Context Domain Layer Class Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#26461-bounded-context-domain-layer-class-diagrams)
+      - [2.6.4.6.2. Bounded Context Database Design Diagram](report/12-chapter2-requirements-development-and-software-solution-design.md#26462-bounded-context-database-design-diagram)
 
 [CAPÍTULO III: SOLUTION UI/UX DESIGN](report/13-chapter3-solution-ui-ux-design.md)
 
