@@ -1,0 +1,37 @@
+@startuml Healthify - IAM Database Diagram
+
+skinparam linetype ortho
+hide circle
+hide methods
+
+!define TABLE(name,desc) entity name as "desc" << (T, #AADDFF) >>
+!define PK(x) <u>x</u>
+!define FK(x) <i>x</i>
+
+TABLE(users, "users") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  email : VARCHAR(255) NOT NULL
+  password_hash : VARCHAR(255) NOT NULL
+  role : VARCHAR(20) NOT NULL
+  failed_sign_in_attempts : INT NOT NULL
+  locked_out_at : DATETIME
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(user_sessions, "user_sessions") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(user_id) : INT NOT NULL
+  role_claim : VARCHAR(20) NOT NULL
+  navigation_shell : VARCHAR(30)
+  started_at : DATETIME NOT NULL
+  terminated_at : DATETIME
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+users ||..o{ user_sessions : "opens"
+
+@enduml

@@ -1,0 +1,511 @@
+@startuml Healthify - Monitoring and Adherence - Application
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.MonitoringAdherence.Application" {
+
+  package "CommandServices" {
+    ' Subflows 5.1 to 5.5, 5.9 and 5.11. Every one is driven by a policy: none
+    ' of these commands has an endpoint.
+    interface IEvaluationWindowCommandService {
+      +Handle(command: OpenEvaluationWindowCommand, ct): Task<Result<EvaluationWindow, MonitoringError>>
+      +Handle(command: SnapshotActiveTargetsCommand, ct): Task<Result<EvaluationWindow, MonitoringError>>
+      +Handle(command: AppendAnthropometryPointCommand, ct): Task<Result<EvaluationWindow, MonitoringError>>
+      +Handle(command: EvaluateDayCommand, ct): Task<Result<EvaluationWindow, MonitoringError>>
+      +Handle(command: ReEvaluateWindowCommand, ct): Task<Result<EvaluationWindow, MonitoringError>>
+      +Handle(command: FlagLoggingGapCommand, ct): Task<Result<EvaluationWindow, MonitoringError>>
+      +Handle(command: RemindPatientCommand, ct): Task<Result<EvaluationWindow, MonitoringError>>
+      +Handle(command: CloseEvaluationWindowCommand, ct): Task<Result<EvaluationWindow, MonitoringError>>
+    }
+    interface IDeviationCommandService {
+      +Handle(command: DetectDeviationCommand, ct): Task<Result<Deviation, MonitoringError>>
+      +Handle(command: FlagSustainedDeviationCommand, ct): Task<Result<Deviation, MonitoringError>>
+    }
+    interface IConsistencyIndexCommandService {
+      +Handle(command: RecomputeConsistencyIndexCommand, ct): Task<Result<ConsistencyIndex, MonitoringError>>
+      +Handle(command: PromptPatientCommand, ct): Task<Result<ConsistencyIndex, MonitoringError>>
+      +Handle(command: EscalateToPractitionerCommand, ct): Task<Result<ConsistencyIndex, MonitoringError>>
+    }
+    interface IReferralCommandService {
+      +Handle(command: RecordReferralCommand, ct): Task<Result<Referral, MonitoringError>>
+    }
+    interface IScheduledFollowUpCommandService {
+      +Handle(command: ScheduleFollowUpCommand, ct): Task<Result<ScheduledFollowUp, MonitoringError>>
+      +Handle(command: FlagMissedFollowUpCommand, ct): Task<Result<ScheduledFollowUp, MonitoringError>>
+    }
+  }
+
+  package "QueryServices" {
+    interface IEvaluationWindowQueryService {
+      +Handle(query: GetEvaluationWindowsByPatientIdQuery, ct): Task<IEnumerable<EvaluationWindow>>
+      +Handle(query: GetCurrentEvaluationWindowByPatientIdQuery, ct): Task<EvaluationWindow?>
+      +Handle(query: GetDailyComplianceByPatientIdQuery, ct): Task<IReadOnlyList<DailyCompliance>>
+      +Handle(query: GetOpenEvaluationWindowsQuery, ct): Task<IEnumerable<EvaluationWindow>>
+    }
+    interface IDeviationQueryService {
+      +Handle(query: GetDeviationsByPatientIdQuery, ct): Task<IEnumerable<Deviation>>
+    }
+    interface IConsistencyIndexQueryService {
+      +Handle(query: GetConsistencyIndexByPatientIdQuery, ct): Task<ConsistencyIndex?>
+      +Handle(query: GetEscalatableConsistencyIndicesQuery, ct): Task<IEnumerable<ConsistencyIndex>>
+    }
+    interface IReferralQueryService {
+      +Handle(query: GetReferralsByPatientIdQuery, ct): Task<IEnumerable<Referral>>
+    }
+    interface IScheduledFollowUpQueryService {
+      +Handle(query: GetScheduledFollowUpsByPractitionerIdQuery, ct): Task<IEnumerable<ScheduledFollowUp>>
+      +Handle(query: GetOverdueScheduledFollowUpsQuery, ct): Task<IEnumerable<ScheduledFollowUp>>
+    }
+  }
+
+  package "Internal" {
+    package "Internal.CommandServices" {
+      ' The only class in the platform that sets what was prescribed beside
+      ' what was recorded. It reads the recorded side through the published
+      ' contract of the context that owns it; neither side is written here.
+      class EvaluationWindowCommandService {
+        +Handle(command: OpenEvaluationWindowCommand, ct): Task<Result<...>>
+        +Handle(command: SnapshotActiveTargetsCommand, ct): Task<Result<...>>
+        +Handle(command: AppendAnthropometryPointCommand, ct): Task<Result<...>>
+        +Handle(command: EvaluateDayCommand, ct): Task<Result<...>>
+        +Handle(command: ReEvaluateWindowCommand, ct): Task<Result<...>>
+        +Handle(command: FlagLoggingGapCommand, ct): Task<Result<...>>
+        +Handle(command: RemindPatientCommand, ct): Task<Result<...>>
+        +Handle(command: CloseEvaluationWindowCommand, ct): Task<Result<...>>
+        -EvaluateSingleDay(patientId, date, isReEvaluation, ct): Task<Result<...>>
+        -ConfiguredWindowDays(): int
+      }
+      class DeviationCommandService {
+        +Handle(command: DetectDeviationCommand, ct): Task<Result<...>>
+        +Handle(command: FlagSustainedDeviationCommand, ct): Task<Result<...>>
+        -PublishDetected(deviation: Deviation, ct): Task
+      }
+      ' TODO UNCALIBRATED: Monitoring:ConsistencyAlertThreshold ships at 1.5
+      ' kg/week, derived rather than validated. At zero the key reads as unset:
+      ' the index is computed and shown, and nothing escalates.
+      class ConsistencyIndexCommandService {
+        -{static} TrendDays: int = 90
+        +Handle(command: RecomputeConsistencyIndexCommand, ct): Task<Result<...>>
+        +Handle(command: PromptPatientCommand, ct): Task<Result<...>>
+        +Handle(command: EscalateToPractitionerCommand, ct): Task<Result<...>>
+        -ConfiguredThreshold(): decimal
+      }
+      class ReferralCommandService {
+        +Handle(command: RecordReferralCommand, ct): Task<Result<...>>
+      }
+      ' It injects nothing that could revoke a link or discharge a patient.
+      class ScheduledFollowUpCommandService {
+        +Handle(command: ScheduleFollowUpCommand, ct): Task<Result<...>>
+        +Handle(command: FlagMissedFollowUpCommand, ct): Task<Result<...>>
+      }
+    }
+
+    package "Internal.QueryServices" {
+      class EvaluationWindowQueryService
+      class DeviationQueryService
+      class ConsistencyIndexQueryService
+      class ReferralQueryService
+      class ScheduledFollowUpQueryService
+    }
+
+    package "Internal.EventHandlers" {
+      ' Integration event 1 of 13. Interpretation starts when the relationship
+      ' does.
+      class OnCareLinkEstablishedHandler {
+        +Handle(notification: CareLinkEstablished, ct): Task
+      }
+      ' Integration event 5 of 13: the one that freezes the contract.
+      class OnActiveTargetsUpdatedMonitoringHandler {
+        +Handle(notification: ActiveTargetsUpdated, ct): Task
+      }
+      ' Integration event 3 of 13.
+      class OnClinicalMeasurementTakenHandler {
+        +Handle(notification: ClinicalMeasurementTaken, ct): Task
+      }
+      ' Integration events 7, 8 and 9 of 13. Three separate policies in the
+      ' model, so three separate handlers.
+      class OnMealLoggedHandler {
+        +Handle(notification: MealLogged, ct): Task
+      }
+      class OnEstimateConfirmedByPatientHandler {
+        +Handle(notification: EstimateConfirmedByPatient, ct): Task
+      }
+      class OnOffPlanEntryLoggedHandler {
+        +Handle(notification: OffPlanEntryLogged, ct): Task
+      }
+      ' Integration event 11 of 13. Re-evaluates one day, and only that day.
+      class OnEntrySynchronizedHandler {
+        +Handle(notification: EntrySynchronized, ct): Task
+      }
+      class OnDayEvaluatedHandler {
+        +Handle(notification: DayEvaluated, ct): Task
+      }
+      ' The gate between an observation and a signal.
+      class OnDeviationDetectedHandler {
+        +Handle(notification: DeviationDetected, ct): Task
+      }
+      ' Integration event 10 of 13.
+      class OnWeightTrendRecalculatedHandler {
+        +Handle(notification: WeightTrendRecalculated, ct): Task
+      }
+      ' The only handler of the alert: no path by which a practitioner learns
+      ' about one the patient has not been asked about first.
+      class OnConsistencyAlertRaisedHandler {
+        +Handle(notification: ConsistencyAlertRaised, ct): Task
+      }
+      ' The only handler of a logging gap in the whole platform, and all it
+      ' does is remind the patient.
+      class OnLoggingGapDetectedHandler {
+        +Handle(notification: LoggingGapDetected, ct): Task
+      }
+      ' Integration event 2 of 13.
+      class OnCareLinkRevokedHandler {
+        +Handle(notification: CareLinkRevoked, ct): Task
+      }
+      ' The body the three Subflow 5.4 policies share.
+      class MonitoringDayEvaluation <<static>> {
+        +{static} Evaluate(scopeFactory, logger, patientId, localTimestamp, ct): Task
+      }
+    }
+  }
+
+  package "Acl" {
+    ' A composite read model that asks a question this context cannot answer
+    ' gets an empty section rather than a failed page.
+    class MonitoringContextFacade {
+      +GetDailyComplianceSeries(patientId: int, days: int, ct): Task<IReadOnlyList<DailyComplianceItem>>
+      +GetConsistencyState(patientId: int, ct): Task<ConsistencyStateItem?>
+      +GetAnthropometrySeries(patientId: int, ct): Task<IReadOnlyList<DailyComplianceItem>>
+      +GetAnthropometrySeriesPoints(patientId: int, ct): Task<IReadOnlyList<AnthropometryPointItem>>
+      +GetReferrals(patientId: int, ct): Task<IReadOnlyList<ReferralItem>>
+    }
+  }
+}
+
+package "MonitoringAdherence.Domain" <<external>> {
+  class EvaluationWindow
+  class Deviation
+  class ConsistencyIndex
+  class Referral
+  class ScheduledFollowUp
+  class TargetsSnapshot
+  class DailyCompliance
+  class AnthropometryPoint
+  class DeviationDirection
+  class DeviationMagnitude
+  class ConsistencyState
+  class OpenEvaluationWindowCommand
+  class SnapshotActiveTargetsCommand
+  class AppendAnthropometryPointCommand
+  class EvaluateDayCommand
+  class ReEvaluateWindowCommand
+  class DetectDeviationCommand
+  class FlagSustainedDeviationCommand
+  class RecomputeConsistencyIndexCommand
+  class PromptPatientCommand
+  class EscalateToPractitionerCommand
+  class FlagLoggingGapCommand
+  class RemindPatientCommand
+  class CloseEvaluationWindowCommand
+  class RecordReferralCommand
+  class ScheduleFollowUpCommand
+  class FlagMissedFollowUpCommand
+  class GetEvaluationWindowsByPatientIdQuery
+  class GetCurrentEvaluationWindowByPatientIdQuery
+  class GetDailyComplianceByPatientIdQuery
+  class GetOpenEvaluationWindowsQuery
+  class GetDeviationsByPatientIdQuery
+  class GetConsistencyIndexByPatientIdQuery
+  class GetEscalatableConsistencyIndicesQuery
+  class GetReferralsByPatientIdQuery
+  class GetScheduledFollowUpsByPractitionerIdQuery
+  class GetOverdueScheduledFollowUpsQuery
+  class EvaluationWindowOpened
+  class TargetsSnapshotTaken
+  class AnthropometryPointAppended
+  class DayEvaluated
+  class DailyComplianceComputed
+  class WindowReEvaluated
+  class DeviationDetected
+  class SustainedDeviationDetected
+  class ConsistencyIndexRecomputed
+  class ConsistencyAlertRaised
+  class PatientPromptedAboutConsistency
+  class AlertEscalatedToPractitioner
+  class LoggingGapDetected
+  class PatientReminded
+  class ReferralRecorded
+  class FollowUpScheduled
+  class FollowUpMissed
+  class EvaluationWindowClosed
+  interface IEvaluationWindowRepository
+  interface IDeviationRepository
+  interface IConsistencyIndexRepository
+  interface IReferralRepository
+  interface IScheduledFollowUpRepository
+  enum MonitoringError
+}
+
+package "MonitoringAdherence.Interfaces.Acl" <<external>> {
+  interface IMonitoringContextFacade
+  class DailyComplianceItem <<record>>
+  class ConsistencyStateItem <<record>>
+  class AnthropometryPointItem <<record>>
+  class ReferralItem <<record>>
+}
+
+package "Events owned by other contexts" <<external>> {
+  class CareLinkEstablished
+  class CareLinkRevoked
+  class ActiveTargetsUpdated
+  class ClinicalMeasurementTaken
+  class MealLogged
+  class EstimateConfirmedByPatient
+  class OffPlanEntryLogged
+  class EntrySynchronized
+  class WeightTrendRecalculated
+}
+
+package "Other contexts' ACL" <<external>> {
+  interface ICareRelationshipContextFacade
+  interface IIntakeContextFacade
+}
+
+package "Shared / Cortex" <<external>> {
+  class "Result<TValue, TError>" as Result
+  interface IUnitOfWork
+  interface IMediator
+  interface "IEventHandler<T>" as IEventHandler
+  interface IServiceScopeFactory
+  interface IConfiguration
+  interface "ILogger<T>" as ILogger
+}
+
+' --- Service interface realizations ---
+EvaluationWindowCommandService ..|> IEvaluationWindowCommandService
+DeviationCommandService ..|> IDeviationCommandService
+ConsistencyIndexCommandService ..|> IConsistencyIndexCommandService
+ReferralCommandService ..|> IReferralCommandService
+ScheduledFollowUpCommandService ..|> IScheduledFollowUpCommandService
+EvaluationWindowQueryService ..|> IEvaluationWindowQueryService
+DeviationQueryService ..|> IDeviationQueryService
+ConsistencyIndexQueryService ..|> IConsistencyIndexQueryService
+ReferralQueryService ..|> IReferralQueryService
+ScheduledFollowUpQueryService ..|> IScheduledFollowUpQueryService
+MonitoringContextFacade ..|> IMonitoringContextFacade
+OnCareLinkEstablishedHandler ..|> IEventHandler
+OnActiveTargetsUpdatedMonitoringHandler ..|> IEventHandler
+OnClinicalMeasurementTakenHandler ..|> IEventHandler
+OnMealLoggedHandler ..|> IEventHandler
+OnEstimateConfirmedByPatientHandler ..|> IEventHandler
+OnOffPlanEntryLoggedHandler ..|> IEventHandler
+OnEntrySynchronizedHandler ..|> IEventHandler
+OnDayEvaluatedHandler ..|> IEventHandler
+OnDeviationDetectedHandler ..|> IEventHandler
+OnWeightTrendRecalculatedHandler ..|> IEventHandler
+OnConsistencyAlertRaisedHandler ..|> IEventHandler
+OnLoggingGapDetectedHandler ..|> IEventHandler
+OnCareLinkRevokedHandler ..|> IEventHandler
+
+' --- EvaluationWindowCommandService (Subflows 5.1 to 5.5, 5.9, 5.11) ---
+EvaluationWindowCommandService --> IEvaluationWindowRepository : uses
+EvaluationWindowCommandService --> IIntakeContextFacade : reads the recorded side through
+EvaluationWindowCommandService --> IUnitOfWork : commits with
+EvaluationWindowCommandService --> IConfiguration : reads window and gap settings from
+EvaluationWindowCommandService --> IMediator : publishes via
+EvaluationWindowCommandService --> ILogger : logs to
+EvaluationWindowCommandService ..> OpenEvaluationWindowCommand : handles
+EvaluationWindowCommandService ..> SnapshotActiveTargetsCommand : handles
+EvaluationWindowCommandService ..> AppendAnthropometryPointCommand : handles
+EvaluationWindowCommandService ..> EvaluateDayCommand : handles
+EvaluationWindowCommandService ..> ReEvaluateWindowCommand : handles
+EvaluationWindowCommandService ..> FlagLoggingGapCommand : handles
+EvaluationWindowCommandService ..> RemindPatientCommand : handles
+EvaluationWindowCommandService ..> CloseEvaluationWindowCommand : handles
+EvaluationWindowCommandService ..> EvaluationWindow : creates / mutates
+EvaluationWindowCommandService ..> TargetsSnapshot : appends
+EvaluationWindowCommandService ..> AnthropometryPoint : appends
+EvaluationWindowCommandService ..> DailyCompliance : evaluates
+EvaluationWindowCommandService ..> EvaluationWindowOpened : publishes
+EvaluationWindowCommandService ..> TargetsSnapshotTaken : publishes
+EvaluationWindowCommandService ..> AnthropometryPointAppended : publishes
+EvaluationWindowCommandService ..> DayEvaluated : publishes
+EvaluationWindowCommandService ..> DailyComplianceComputed : publishes
+EvaluationWindowCommandService ..> WindowReEvaluated : publishes
+EvaluationWindowCommandService ..> LoggingGapDetected : publishes
+EvaluationWindowCommandService ..> PatientReminded : publishes
+EvaluationWindowCommandService ..> EvaluationWindowClosed : publishes
+EvaluationWindowCommandService ..> MonitoringError : returns
+
+' --- DeviationCommandService (Subflow 5.6) ---
+DeviationCommandService --> IDeviationRepository : uses
+DeviationCommandService --> IEvaluationWindowRepository : reads the horizon from
+DeviationCommandService --> IUnitOfWork : commits with
+DeviationCommandService --> IConfiguration : reads the sustained ratio from
+DeviationCommandService --> IMediator : publishes via
+DeviationCommandService --> ILogger : logs to
+DeviationCommandService ..> DetectDeviationCommand : handles
+DeviationCommandService ..> FlagSustainedDeviationCommand : handles
+DeviationCommandService ..> Deviation : detects / restates
+DeviationCommandService ..> DeviationDirection : deduplicates per direction
+DeviationCommandService ..> DeviationMagnitude : measures
+DeviationCommandService ..> DeviationDetected : publishes
+DeviationCommandService ..> SustainedDeviationDetected : publishes once
+DeviationCommandService ..> MonitoringError : returns
+
+' --- ConsistencyIndexCommandService (Subflows 5.7 and 5.8) ---
+ConsistencyIndexCommandService --> IConsistencyIndexRepository : uses
+ConsistencyIndexCommandService --> IEvaluationWindowRepository : reads the intake series from
+ConsistencyIndexCommandService --> IIntakeContextFacade : reads the weight trend through
+ConsistencyIndexCommandService --> ICareRelationshipContextFacade : resolves the practitioner with
+ConsistencyIndexCommandService --> IUnitOfWork : commits with
+ConsistencyIndexCommandService --> IConfiguration : reads the threshold and the weeks from
+ConsistencyIndexCommandService --> IMediator : publishes via
+ConsistencyIndexCommandService --> ILogger : logs to
+ConsistencyIndexCommandService ..> RecomputeConsistencyIndexCommand : handles
+ConsistencyIndexCommandService ..> PromptPatientCommand : handles
+ConsistencyIndexCommandService ..> EscalateToPractitionerCommand : handles
+ConsistencyIndexCommandService ..> ConsistencyIndex : creates / recomputes
+ConsistencyIndexCommandService ..> DailyCompliance : one of the two series
+ConsistencyIndexCommandService ..> ConsistencyIndexRecomputed : publishes
+ConsistencyIndexCommandService ..> ConsistencyAlertRaised : publishes
+ConsistencyIndexCommandService ..> PatientPromptedAboutConsistency : publishes
+ConsistencyIndexCommandService ..> AlertEscalatedToPractitioner : publishes
+ConsistencyIndexCommandService ..> MonitoringError : returns
+
+' --- ReferralCommandService and ScheduledFollowUpCommandService (5.10) ---
+ReferralCommandService --> IReferralRepository : uses
+ReferralCommandService --> ICareRelationshipContextFacade : requires a live link
+ReferralCommandService --> IUnitOfWork : commits with
+ReferralCommandService --> IMediator : publishes via
+ReferralCommandService --> ILogger : logs to
+ReferralCommandService ..> RecordReferralCommand : handles
+ReferralCommandService ..> Referral : creates
+ReferralCommandService ..> ReferralRecorded : publishes
+ReferralCommandService ..> MonitoringError : returns
+ScheduledFollowUpCommandService --> IScheduledFollowUpRepository : uses
+ScheduledFollowUpCommandService --> ICareRelationshipContextFacade : requires a live link
+ScheduledFollowUpCommandService --> IUnitOfWork : commits with
+ScheduledFollowUpCommandService --> IMediator : publishes via
+ScheduledFollowUpCommandService --> ILogger : logs to
+ScheduledFollowUpCommandService ..> ScheduleFollowUpCommand : handles
+ScheduledFollowUpCommandService ..> FlagMissedFollowUpCommand : handles
+ScheduledFollowUpCommandService ..> ScheduledFollowUp : creates / flags
+ScheduledFollowUpCommandService ..> FollowUpScheduled : publishes
+ScheduledFollowUpCommandService ..> FollowUpMissed : publishes
+ScheduledFollowUpCommandService ..> MonitoringError : returns
+
+' --- Policies from other contexts ---
+OnCareLinkEstablishedHandler ..> CareLinkEstablished : subscribes to
+OnCareLinkEstablishedHandler --> IEvaluationWindowCommandService : delegates to
+OnCareLinkEstablishedHandler ..> OpenEvaluationWindowCommand : issues
+OnActiveTargetsUpdatedMonitoringHandler ..> ActiveTargetsUpdated : subscribes to
+OnActiveTargetsUpdatedMonitoringHandler --> IEvaluationWindowCommandService : delegates to
+OnActiveTargetsUpdatedMonitoringHandler ..> SnapshotActiveTargetsCommand : issues
+OnClinicalMeasurementTakenHandler ..> ClinicalMeasurementTaken : subscribes to
+OnClinicalMeasurementTakenHandler --> IEvaluationWindowCommandService : delegates to
+OnClinicalMeasurementTakenHandler ..> AppendAnthropometryPointCommand : issues
+OnMealLoggedHandler ..> MealLogged : subscribes to
+OnMealLoggedHandler ..> MonitoringDayEvaluation : delegates to
+OnEstimateConfirmedByPatientHandler ..> EstimateConfirmedByPatient : subscribes to
+OnEstimateConfirmedByPatientHandler ..> MonitoringDayEvaluation : delegates to
+OnOffPlanEntryLoggedHandler ..> OffPlanEntryLogged : subscribes to
+OnOffPlanEntryLoggedHandler ..> MonitoringDayEvaluation : delegates to
+MonitoringDayEvaluation --> IEvaluationWindowCommandService : delegates to
+MonitoringDayEvaluation ..> EvaluateDayCommand : issues
+OnEntrySynchronizedHandler ..> EntrySynchronized : subscribes to
+OnEntrySynchronizedHandler --> IEvaluationWindowCommandService : delegates to
+OnEntrySynchronizedHandler ..> ReEvaluateWindowCommand : issues
+OnWeightTrendRecalculatedHandler ..> WeightTrendRecalculated : subscribes to
+OnWeightTrendRecalculatedHandler --> IConsistencyIndexCommandService : delegates to
+OnWeightTrendRecalculatedHandler ..> RecomputeConsistencyIndexCommand : issues
+OnCareLinkRevokedHandler ..> CareLinkRevoked : subscribes to
+OnCareLinkRevokedHandler --> IEvaluationWindowCommandService : delegates to
+OnCareLinkRevokedHandler ..> CloseEvaluationWindowCommand : issues
+
+' --- Internal policies ---
+OnDayEvaluatedHandler ..> DayEvaluated : subscribes to
+OnDayEvaluatedHandler --> IDeviationCommandService : delegates to
+OnDayEvaluatedHandler ..> DetectDeviationCommand : issues
+OnDeviationDetectedHandler ..> DeviationDetected : subscribes to
+OnDeviationDetectedHandler --> IDeviationCommandService : delegates to
+OnDeviationDetectedHandler ..> FlagSustainedDeviationCommand : issues
+OnConsistencyAlertRaisedHandler ..> ConsistencyAlertRaised : subscribes to
+OnConsistencyAlertRaisedHandler --> IConsistencyIndexCommandService : delegates to
+OnConsistencyAlertRaisedHandler ..> PromptPatientCommand : issues
+OnLoggingGapDetectedHandler ..> LoggingGapDetected : subscribes to
+OnLoggingGapDetectedHandler --> IEvaluationWindowCommandService : delegates to
+OnLoggingGapDetectedHandler ..> RemindPatientCommand : issues
+
+' --- Every handler opens its own DI scope and logs ---
+OnCareLinkEstablishedHandler --> IServiceScopeFactory : opens scope with
+OnActiveTargetsUpdatedMonitoringHandler --> IServiceScopeFactory : opens scope with
+OnClinicalMeasurementTakenHandler --> IServiceScopeFactory : opens scope with
+OnEntrySynchronizedHandler --> IServiceScopeFactory : opens scope with
+OnDayEvaluatedHandler --> IServiceScopeFactory : opens scope with
+OnDeviationDetectedHandler --> IServiceScopeFactory : opens scope with
+OnWeightTrendRecalculatedHandler --> IServiceScopeFactory : opens scope with
+OnConsistencyAlertRaisedHandler --> IServiceScopeFactory : opens scope with
+OnLoggingGapDetectedHandler --> IServiceScopeFactory : opens scope with
+OnCareLinkRevokedHandler --> IServiceScopeFactory : opens scope with
+MonitoringDayEvaluation --> IServiceScopeFactory : opens scope with
+MonitoringDayEvaluation --> ILogger : logs to
+OnMealLoggedHandler --> ILogger : logs to
+OnEstimateConfirmedByPatientHandler --> ILogger : logs to
+OnOffPlanEntryLoggedHandler --> ILogger : logs to
+OnCareLinkEstablishedHandler --> ILogger : logs to
+
+' --- Query services ---
+EvaluationWindowQueryService --> IEvaluationWindowRepository : uses
+EvaluationWindowQueryService ..> GetEvaluationWindowsByPatientIdQuery : handles
+EvaluationWindowQueryService ..> GetCurrentEvaluationWindowByPatientIdQuery : handles
+EvaluationWindowQueryService ..> GetDailyComplianceByPatientIdQuery : handles
+EvaluationWindowQueryService ..> GetOpenEvaluationWindowsQuery : handles
+EvaluationWindowQueryService ..> EvaluationWindow : returns
+EvaluationWindowQueryService ..> DailyCompliance : returns (closed windows included)
+DeviationQueryService --> IDeviationRepository : uses
+DeviationQueryService ..> GetDeviationsByPatientIdQuery : handles
+DeviationQueryService ..> Deviation : returns
+ConsistencyIndexQueryService --> IConsistencyIndexRepository : uses
+ConsistencyIndexQueryService ..> GetConsistencyIndexByPatientIdQuery : handles
+ConsistencyIndexQueryService ..> GetEscalatableConsistencyIndicesQuery : handles
+ConsistencyIndexQueryService ..> ConsistencyIndex : returns
+ReferralQueryService --> IReferralRepository : uses
+ReferralQueryService ..> GetReferralsByPatientIdQuery : handles
+ReferralQueryService ..> Referral : returns
+ScheduledFollowUpQueryService --> IScheduledFollowUpRepository : uses
+ScheduledFollowUpQueryService ..> GetScheduledFollowUpsByPractitionerIdQuery : handles
+ScheduledFollowUpQueryService ..> GetOverdueScheduledFollowUpsQuery : handles
+ScheduledFollowUpQueryService ..> ScheduledFollowUp : returns
+
+' --- ACL facade ---
+MonitoringContextFacade --> IEvaluationWindowQueryService : uses
+MonitoringContextFacade --> IConsistencyIndexQueryService : uses
+MonitoringContextFacade --> IReferralQueryService : uses
+MonitoringContextFacade ..> GetDailyComplianceByPatientIdQuery : issues
+MonitoringContextFacade ..> GetEvaluationWindowsByPatientIdQuery : issues
+MonitoringContextFacade ..> GetConsistencyIndexByPatientIdQuery : issues
+MonitoringContextFacade ..> GetReferralsByPatientIdQuery : issues
+MonitoringContextFacade ..> ConsistencyState : reads
+MonitoringContextFacade ..> AnthropometryPoint : reads (clinical only)
+MonitoringContextFacade ..> DailyComplianceItem : returns
+MonitoringContextFacade ..> ConsistencyStateItem : returns
+MonitoringContextFacade ..> AnthropometryPointItem : returns
+MonitoringContextFacade ..> ReferralItem : returns
+
+' --- Result wrapper across command services ---
+IEvaluationWindowCommandService ..> Result
+IDeviationCommandService ..> Result
+IConsistencyIndexCommandService ..> Result
+IReferralCommandService ..> Result
+IScheduledFollowUpCommandService ..> Result
+IEvaluationWindowCommandService ..> MonitoringError : returns
+IDeviationCommandService ..> MonitoringError : returns
+IConsistencyIndexCommandService ..> MonitoringError : returns
+IReferralCommandService ..> MonitoringError : returns
+IScheduledFollowUpCommandService ..> MonitoringError : returns
+
+@enduml

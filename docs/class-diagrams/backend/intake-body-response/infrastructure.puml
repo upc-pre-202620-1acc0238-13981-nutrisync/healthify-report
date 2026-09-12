@@ -1,0 +1,134 @@
+@startuml Healthify - Intake and Body Response - Infrastructure
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.IntakeBodyResponse.Infrastructure" {
+
+  package "Persistence.EFC.Configuration" {
+    class ActiveTargetsCacheEntityTypeConfiguration {
+      -{static} StringListComparer: ValueComparer<List<string>>
+      +Configure(builder: EntityTypeBuilder<ActiveTargetsCache>): void
+    }
+    class DiaryEntryEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<DiaryEntry>): void
+    }
+    class SelfWeighInEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<SelfWeighIn>): void
+    }
+    class WeightTrendEntityTypeConfiguration {
+      -{static} PointListComparer: ValueComparer<List<WeightTrendPoint>>
+      +Configure(builder: EntityTypeBuilder<WeightTrend>): void
+    }
+  }
+
+  package "Persistence.EFC.Repositories" {
+    ' The patient is the key, so finding by identifier and finding by patient
+    ' are the same operation.
+    class ActiveTargetsCacheRepository {
+      +FindByPatientIdAsync(patientId: int, ct): Task<ActiveTargetsCache?>
+    }
+    ' Nothing here overrides or calls the inherited Remove: Entry Never Deleted.
+    class DiaryEntryRepository {
+      -{static} PendingState: SyncState
+      -{static} ConflictedState: SyncState
+      +FindByIdAsync(id: int, ct): Task<DiaryEntry?>
+      +ListByPatientIdAsync(patientId: int, date: DateOnly?, ct): Task<IEnumerable<DiaryEntry>>
+      +FindByClientEntryIdAsync(clientEntryId: Guid, ct): Task<DiaryEntry?>
+      +ListUnreconciledByPatientIdAsync(patientId: int, ct): Task<IEnumerable<DiaryEntry>>
+    }
+    class SelfWeighInRepository {
+      +FindByIdAsync(id: int, ct): Task<SelfWeighIn?>
+      +ListByPatientIdAsync(patientId: int, ct): Task<IEnumerable<SelfWeighIn>>
+    }
+    class WeightTrendRepository {
+      +FindByPatientIdAsync(patientId: int, ct): Task<WeightTrend?>
+    }
+  }
+}
+
+package "IntakeBodyResponse.Domain" <<external>> {
+  class ActiveTargetsCache
+  class DiaryEntry
+  class SelfWeighIn
+  class WeightTrend
+  class DiaryEntryId
+  class SelfWeighInId
+  class Provenance
+  class SyncState
+  class WeightTrendPoint
+  interface IActiveTargetsCacheRepository
+  interface IDiaryEntryRepository
+  interface ISelfWeighInRepository
+  interface IWeightTrendRepository
+}
+
+package "Shared.Infrastructure / EF Core" <<external>> {
+  class AppDbContext
+  class "BaseRepository<T>" as BaseRepository
+  interface "IBaseRepository<T>" as IBaseRepository
+  interface "IEntityTypeConfiguration<T>" as IEntityTypeConfiguration
+  class "ValueComparer<T>" as ValueComparer
+  class AuditableEntityInterceptor
+  ' It excludes properties literally named LocalTimestamp, which is why the
+  ' declared wall clock keeps that exact name on both aggregates.
+  class UtcDateTimeInterceptor
+  class JsonSerializer
+}
+
+' --- EF Core entity configurations ---
+ActiveTargetsCacheEntityTypeConfiguration ..|> IEntityTypeConfiguration
+DiaryEntryEntityTypeConfiguration ..|> IEntityTypeConfiguration
+SelfWeighInEntityTypeConfiguration ..|> IEntityTypeConfiguration
+WeightTrendEntityTypeConfiguration ..|> IEntityTypeConfiguration
+' The patient identifier is the primary key of both patient-rooted tables.
+ActiveTargetsCacheEntityTypeConfiguration ..> ActiveTargetsCache : maps to active_targets_caches
+DiaryEntryEntityTypeConfiguration ..> DiaryEntry : maps to diary_entries
+SelfWeighInEntityTypeConfiguration ..> SelfWeighIn : maps to self_weigh_ins
+WeightTrendEntityTypeConfiguration ..> WeightTrend : maps to weight_trends
+DiaryEntryEntityTypeConfiguration ..> DiaryEntryId : converts
+DiaryEntryEntityTypeConfiguration ..> Provenance : converts
+DiaryEntryEntityTypeConfiguration ..> SyncState : converts
+SelfWeighInEntityTypeConfiguration ..> SelfWeighInId : converts
+WeightTrendEntityTypeConfiguration ..> WeightTrendPoint : serializes the series
+' Without the comparer EF never notices a list change and updates are lost.
+ActiveTargetsCacheEntityTypeConfiguration --> ValueComparer : compares the JSON lists with
+ActiveTargetsCacheEntityTypeConfiguration --> JsonSerializer : stores guidelines / restrictions as JSON
+WeightTrendEntityTypeConfiguration --> ValueComparer : compares the JSON series with
+WeightTrendEntityTypeConfiguration --> JsonSerializer : stores points as JSON
+AppDbContext ..> ActiveTargetsCacheEntityTypeConfiguration : applies
+AppDbContext ..> DiaryEntryEntityTypeConfiguration : applies
+AppDbContext ..> SelfWeighInEntityTypeConfiguration : applies
+AppDbContext ..> WeightTrendEntityTypeConfiguration : applies
+AppDbContext --> AuditableEntityInterceptor : stamps created_at / updated_at
+AppDbContext --> UtcDateTimeInterceptor : normalises every date except LocalTimestamp
+
+' --- Repositories ---
+ActiveTargetsCacheRepository --|> BaseRepository
+DiaryEntryRepository --|> BaseRepository
+SelfWeighInRepository --|> BaseRepository
+WeightTrendRepository --|> BaseRepository
+BaseRepository ..|> IBaseRepository
+ActiveTargetsCacheRepository ..|> IActiveTargetsCacheRepository
+DiaryEntryRepository ..|> IDiaryEntryRepository
+SelfWeighInRepository ..|> ISelfWeighInRepository
+WeightTrendRepository ..|> IWeightTrendRepository
+ActiveTargetsCacheRepository --> AppDbContext : queries
+DiaryEntryRepository --> AppDbContext : queries
+SelfWeighInRepository --> AppDbContext : queries
+WeightTrendRepository --> AppDbContext : queries
+ActiveTargetsCacheRepository ..> ActiveTargetsCache : persists
+' Filtered on the wall clock the patient was reading, so a meal logged at nine
+' in the evening in Lima belongs to that evening and not to the next UTC day.
+DiaryEntryRepository ..> DiaryEntry : persists
+DiaryEntryRepository ..> DiaryEntryId : rebuilds typed id
+' Compared through the value converter: EF cannot translate a member of a
+' converted type, so the state is compared as a whole value object.
+DiaryEntryRepository ..> SyncState : filters the pending queue by
+SelfWeighInRepository ..> SelfWeighIn : persists (every reading, none excluded)
+SelfWeighInRepository ..> SelfWeighInId : rebuilds typed id
+WeightTrendRepository ..> WeightTrend : persists
+
+@enduml

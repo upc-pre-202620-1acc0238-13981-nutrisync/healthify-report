@@ -1,0 +1,161 @@
+@startuml Healthify - IAM - Interfaces
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.Iam.Interfaces" {
+
+  package "Acl" {
+    ' Public ACL contract of Iam. Every parameter and return value is a
+    ' primitive or a primitives-only DTO, never a command, aggregate or entity.
+    ' Iam relates to the rest of the platform as a Conformist.
+    interface IIamContextFacade {
+      +GetUserById(userId: int, ct): Task<UserIdentityItem?>
+      +IsPractitioner(userId: int, ct): Task<bool>
+      +IsPatient(userId: int, ct): Task<bool>
+    }
+    class UserIdentityItem <<record>> {
+      -UserId: int
+      -Email: string
+      -Role: string
+    }
+  }
+
+  package "REST" {
+    class AuthenticationController {
+      +SignUp(resource: SignUpResource): Task<IActionResult>
+      +SignIn(resource: SignInResource): Task<IActionResult>
+      +SignOutSession(): Task<IActionResult>
+    }
+    class UsersController {
+      +GetUserById(userId: int): Task<IActionResult>
+      +GetSessionsByUserId(userId: int): Task<IActionResult>
+    }
+    class SessionsController {
+      +GetNavigationShell(sessionId: int): Task<IActionResult>
+    }
+  }
+
+  package "REST.Resources" {
+    class SignUpResource <<record>>
+    class SignInResource <<record>>
+    class SignInResponseResource <<record>>
+    class UserResource <<record>>
+    class UserSessionResource <<record>>
+    class NavigationShellResource <<record>>
+  }
+
+  package "REST.Transform" {
+    class RegisterAccountCommandAssembler <<static>>
+    class SignInCommandAssembler <<static>>
+    class SignOutCommandAssembler <<static>>
+    class UserResourceAssembler <<static>>
+    class SignInResponseResourceAssembler <<static>>
+    class UserSessionResourceAssembler <<static>>
+    class NavigationShellResourceAssembler <<static>>
+    ' The single place where an IamError becomes an HTTP status.
+    class IamActionResultAssembler <<static>>
+  }
+}
+
+package "Iam.Application" <<external>> {
+  interface IUserCommandService
+  interface IUserSessionCommandService
+  interface IUserQueryService
+  interface IUserSessionQueryService
+  class SignInOutcome
+}
+
+package "Iam.Domain" <<external>> {
+  class User
+  class UserSession
+  class RegisterAccountCommand
+  class SignInCommand
+  class SignOutCommand
+  class GetUserByIdQuery
+  class GetUserSessionByIdQuery
+  class GetUserSessionsByUserIdQuery
+  enum IamError
+}
+
+package "Shared / ASP.NET" <<external>> {
+  class ControllerBase
+  class "Result<TValue, TError>" as Result
+  class ProblemDetailsFactory
+  class ControllerBaseExtensions <<static>>
+  interface "IStringLocalizer<T>" as IStringLocalizerGeneric
+}
+
+package "Iam.Resources" {
+  class IamMessages
+}
+
+' Resolved generic: every Iam controller depends on IStringLocalizer<IamMessages>.
+interface "IStringLocalizer<IamMessages>" as IStringLocalizer
+IStringLocalizer ..|> IStringLocalizerGeneric
+IStringLocalizer ..> IamMessages : parameterized by
+
+' --- Controllers ---
+AuthenticationController --|> ControllerBase
+UsersController --|> ControllerBase
+SessionsController --|> ControllerBase
+AuthenticationController --> IUserCommandService : uses
+AuthenticationController --> IUserSessionCommandService : uses
+AuthenticationController --> IStringLocalizer : uses
+UsersController --> IUserQueryService : uses
+UsersController --> IUserSessionQueryService : uses
+UsersController --> IStringLocalizer : uses
+SessionsController --> IUserSessionQueryService : uses
+SessionsController --> IStringLocalizer : uses
+
+' --- Identifiers always come from the token, never from the payload ---
+AuthenticationController ..> ControllerBaseExtensions : reads session / user id
+UsersController ..> ControllerBaseExtensions : authorizes owner
+SessionsController ..> ControllerBaseExtensions : authorizes owner
+
+' --- Controllers to assemblers ---
+AuthenticationController ..> RegisterAccountCommandAssembler : uses
+AuthenticationController ..> SignInCommandAssembler : uses
+AuthenticationController ..> SignOutCommandAssembler : uses
+AuthenticationController ..> IamActionResultAssembler : uses
+UsersController ..> UserResourceAssembler : uses
+UsersController ..> UserSessionResourceAssembler : uses
+UsersController ..> IamActionResultAssembler : uses
+SessionsController ..> NavigationShellResourceAssembler : uses
+SessionsController ..> IamActionResultAssembler : uses
+UsersController ..> GetUserByIdQuery : builds
+UsersController ..> GetUserSessionsByUserIdQuery : builds
+SessionsController ..> GetUserSessionByIdQuery : builds
+
+' --- Request resource to command assemblers ---
+RegisterAccountCommandAssembler ..> SignUpResource : from
+RegisterAccountCommandAssembler ..> RegisterAccountCommand : to
+SignInCommandAssembler ..> SignInResource : from
+SignInCommandAssembler ..> SignInCommand : to
+SignOutCommandAssembler ..> SignOutCommand : to (both ids from the token)
+
+' --- Entity to response resource assemblers ---
+UserResourceAssembler ..> User : from
+UserResourceAssembler ..> UserResource : to
+SignInResponseResourceAssembler ..> SignInOutcome : from
+SignInResponseResourceAssembler ..> SignInResponseResource : to
+UserSessionResourceAssembler ..> UserSession : from
+UserSessionResourceAssembler ..> UserSessionResource : to
+' Exposes ActiveRoleClaim, so a terminated session reports no role.
+NavigationShellResourceAssembler ..> UserSession : from
+NavigationShellResourceAssembler ..> NavigationShellResource : to
+
+' --- Result to IActionResult assembler (centralizes every IamError mapping) ---
+IamActionResultAssembler ..> Result : maps
+IamActionResultAssembler ..> IamError : maps
+IamActionResultAssembler ..> ProblemDetailsFactory : builds problem details with
+IamActionResultAssembler ..> IStringLocalizer : localizes with
+IamActionResultAssembler ..> UserResourceAssembler : uses
+IamActionResultAssembler ..> SignInResponseResourceAssembler : uses
+
+' --- ACL facade contract & its DTO ---
+IIamContextFacade ..> UserIdentityItem : returns
+
+@enduml

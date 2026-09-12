@@ -1,0 +1,113 @@
+@startuml MonitoringAdherence_Component_Diagram
+' =============================================================================
+'  Healthify Platform - Bounded Context: Monitoring and Adherence
+'  C4 Model - Level 3: Component Diagram
+'  Container decomposed: Healthify Platform API (ASP.NET Core 10 Web API)
+' =============================================================================
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_TOP_DOWN()
+LAYOUT_WITH_LEGEND()
+
+title Component Diagram - Bounded Context "Monitoring and Adherence" (Container: Healthify Platform API)
+
+Person(practitioner, "Practitioner", "Reads the monitoring panel, issues referrals and schedules follow-ups")
+Person(patient, "Patient", "Sees the consistency alert and is asked about it before anything is escalated")
+
+Container(mobile, "Mobile Application", "Flutter / MAUI", "Monitoring panel of the practitioner and alert surface of the patient")
+
+Container_Boundary(api, "Healthify Platform API") {
+
+    ' ------------------------------------------------------------- Interfaces
+    Component(patientMonitoringController, "PatientMonitoringController", "ASP.NET Core REST Controller", "api/v1/patients. Compliance and deviations")
+    Component(referralsController, "ReferralsController", "ASP.NET Core REST Controller", "api/v1/referrals. Issue and read referrals")
+    Component(followUpsController, "ScheduledFollowUpsController", "ASP.NET Core REST Controller", "api/v1/scheduled-follow-ups. Schedule and complete")
+    Component(monAssemblers, "Monitoring Transform Assemblers", "C# static assemblers", "Maps resources, commands and responses")
+
+    ' ------------------------------------------------------------- Application
+    Component(windowCmdService, "EvaluationWindowCommandService", "C# Application Service (CQRS command side)", "Opens windows and evaluates each day")
+    Component(deviationCmdService, "DeviationCommandService", "C# Application Service (CQRS command side)", "Detects and escalates deviations")
+    Component(consistencyCmdService, "ConsistencyIndexCommandService", "C# Application Service (CQRS command side)", "Maintains the index and raises alerts")
+    Component(referralCmdService, "ReferralCommandService", "C# Application Service (CQRS command side)", "Issues and tracks referrals")
+    Component(followUpCmdService, "ScheduledFollowUpCommandService", "C# Application Service (CQRS command side)", "Schedules, completes and misses follow-ups")
+    Component(monQryServices, "Monitoring Query Services", "C# Application Services (CQRS query side)", "Read windows, deviations, index, referrals")
+    Component(monHandlers, "Monitoring Event Handlers", "Cortex.Mediator IEventHandler of T", "13 policies: this context mostly reacts")
+    Component(monFacade, "MonitoringContextFacade", "C# ACL - Open Host Service", "Publishes the panel series and state")
+
+    ' ------------------------------------------------------------- Domain
+    Component(windowAggregate, "EvaluationWindow", "C# Aggregate Root", "Frozen targets and daily compliance")
+    Component(deviationAggregate, "Deviation", "C# Aggregate Root", "Distance from targets over a period")
+    Component(consistencyAggregate, "ConsistencyIndex", "C# Aggregate Root", "Logging consistency and its alerts")
+    Component(referralAggregate, "Referral / ScheduledFollowUp", "C# Aggregate Roots", "Referral and follow-up appointment")
+    Component(monValueObjects, "Value Objects and Errors", "C# records and enums", "TargetsSnapshot, DailyCompliance, states, errors")
+
+    ' ------------------------------------------------------------- Infrastructure
+    Component(monRepos, "Monitoring Repositories", "C# Repositories over EF Core 10", "Persist windows, deviations, referrals")
+    Component(monEfcConfig, "Monitoring EntityTypeConfigurations", "EF Core 10 Fluent API", "Maps tables, series and audit")
+    Component(consistencyHostedService, "ConsistencyEscalationHostedService", "ASP.NET Core BackgroundService", "Escalates alerts already shown")
+    Component(gapHostedService, "LoggingGapDetectionHostedService", "ASP.NET Core BackgroundService", "Detects days with no logging")
+    Component(followUpHostedService, "MissedFollowUpHostedService", "ASP.NET Core BackgroundService", "Marks overdue follow-ups as missed")
+}
+
+ContainerDb(db, "Healthify Database", "MySQL 8.4", "Owns the evaluation window, deviation, consistency index, referral, follow-up and audit tables")
+
+Container_Ext(careRelCtx, "Care Relationship", "Sibling bounded context", "Publishes CareLinkEstablished and CareLinkRevoked, and answers the authorisation query")
+Container_Ext(intakeCtx, "Intake and Body Response", "Sibling bounded context", "Publishes the diary and weight events, and serves the daily summaries through its Open Host Service")
+Container_Ext(nutritionalCareCtx, "Nutritional Care", "Sibling bounded context", "Publishes ActiveTargetsUpdated and ClinicalMeasurementTaken; receives SustainedDeviationDetected and AlertEscalatedToPractitioner as review items")
+Container_Ext(readModelsCtx, "Read Models", "Composition layer of the same container", "Composes the patient monitoring panel from this and the sibling facades")
+
+' ------------------------------------------------------------------ Relations
+Rel(practitioner, mobile, "Reads the panel, refers and schedules follow-ups", "Touch")
+Rel(patient, mobile, "Sees the consistency alert and answers it", "Touch")
+Rel(mobile, patientMonitoringController, "Reads compliance, consistency and deviations", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, referralsController, "Issues and reads referrals", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, followUpsController, "Schedules and completes follow-ups", "JSON/HTTPS, Bearer JWT")
+
+Rel(patientMonitoringController, monAssemblers, "Maps aggregates to resources through", "in-process")
+Rel(referralsController, monAssemblers, "Maps resources and commands through", "in-process")
+Rel(followUpsController, monAssemblers, "Maps resources and commands through", "in-process")
+
+Rel(patientMonitoringController, monQryServices, "Sends monitoring queries", "in-process")
+Rel(referralsController, referralCmdService, "Sends referral commands", "in-process")
+Rel(referralsController, monQryServices, "Reads referrals", "in-process")
+Rel(followUpsController, followUpCmdService, "Sends follow-up commands", "in-process")
+Rel(followUpsController, monQryServices, "Reads follow-ups", "in-process")
+
+Rel(careRelCtx, monHandlers, "Publishes CareLinkEstablished and CareLinkRevoked", "Cortex.Mediator, in-process")
+Rel(nutritionalCareCtx, monHandlers, "Publishes ActiveTargetsUpdated and ClinicalMeasurementTaken", "Cortex.Mediator, in-process")
+Rel(intakeCtx, monHandlers, "Publishes MealLogged, EstimateConfirmedByPatient, OffPlanEntryLogged, EntrySynchronized and WeightTrendRecalculated", "Cortex.Mediator, in-process")
+Rel(monHandlers, windowCmdService, "Opens, freezes and evaluates windows", "in-process, own DI scope")
+Rel(monHandlers, deviationCmdService, "Detects and escalates deviations", "in-process, own DI scope")
+Rel(monHandlers, consistencyCmdService, "Updates the index and raises alerts", "in-process, own DI scope")
+Rel(monHandlers, intakeCtx, "Reads the daily summary of the evaluated day", "in-process ACL call")
+
+Rel(windowCmdService, windowAggregate, "Opens, freezes and evaluates", "in-process")
+Rel(deviationCmdService, deviationAggregate, "Detects and escalates", "in-process")
+Rel(consistencyCmdService, consistencyAggregate, "Recomputes and alerts", "in-process")
+Rel(referralCmdService, referralAggregate, "Issues and tracks", "in-process")
+Rel(followUpCmdService, referralAggregate, "Schedules, completes and misses", "in-process")
+Rel(windowAggregate, monValueObjects, "Is built from", "in-process")
+Rel(deviationAggregate, monValueObjects, "Is built from", "in-process")
+
+Rel(consistencyHostedService, consistencyCmdService, "Escalates alerts already shown to the patient", "in-process, scoped")
+Rel(gapHostedService, consistencyCmdService, "Reports days with no logging", "in-process, scoped")
+Rel(followUpHostedService, followUpCmdService, "Marks overdue follow-ups as missed", "in-process, scoped")
+
+Rel(windowCmdService, monRepos, "Reads and writes through", "in-process")
+Rel(deviationCmdService, monRepos, "Reads and writes through", "in-process")
+Rel(consistencyCmdService, monRepos, "Reads and writes through", "in-process")
+Rel(referralCmdService, monRepos, "Reads and writes through", "in-process")
+Rel(followUpCmdService, monRepos, "Reads and writes through", "in-process")
+Rel(monQryServices, monRepos, "Reads through", "in-process")
+Rel(monFacade, monRepos, "Resolves the panel series through", "in-process")
+Rel(monRepos, monEfcConfig, "Is mapped by", "EF Core model")
+Rel(monRepos, db, "Reads from and writes to", "EF Core 10 / MySQL, TCP 3306")
+
+Rel(patientMonitoringController, careRelCtx, "Authorises access to the patient data", "in-process ACL call")
+Rel(referralCmdService, careRelCtx, "Confirms the care link is active", "in-process ACL call")
+Rel(followUpCmdService, careRelCtx, "Confirms the care link is active", "in-process ACL call")
+Rel(deviationCmdService, nutritionalCareCtx, "Publishes SustainedDeviationDetected: notifies, never modifies the plan", "Cortex.Mediator, in-process")
+Rel(consistencyCmdService, nutritionalCareCtx, "Publishes AlertEscalatedToPractitioner", "Cortex.Mediator, in-process")
+Rel(readModelsCtx, monFacade, "Composes the monitoring panel from", "in-process ACL call")
+
+@enduml

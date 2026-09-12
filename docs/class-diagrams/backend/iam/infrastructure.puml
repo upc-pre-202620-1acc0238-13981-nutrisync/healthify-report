@@ -1,0 +1,125 @@
+@startuml Healthify - IAM - Infrastructure
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.Iam.Infrastructure" {
+
+  package "Hashing.BCrypt" {
+    ' This is the whole of the "Auth Provider" the event storming draws:
+    ' no third-party identity service is involved.
+    class BCryptHashingService {
+      +Hash(password: Password): string
+      +Verify(plainPassword: string, passwordHash: string): bool
+    }
+  }
+
+  package "Tokens.JWT" {
+    ' HMAC-SHA256 session token. Its parameters mirror exactly what the bearer
+    ' handler in the composition root validates.
+    class JwtTokenService {
+      -configuration: IConfiguration
+      +GenerateToken(user: User, session: UserSession): string
+    }
+  }
+
+  package "Persistence.EFC.Configuration" {
+    class UserEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<User>): void
+    }
+    class UserSessionEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<UserSession>): void
+    }
+  }
+
+  package "Persistence.EFC.Repositories" {
+    class UserRepository {
+      +FindByIdAsync(id: int, ct): Task<User?>
+      +FindByEmailAsync(email: Email, ct): Task<User?>
+      +ExistsByEmailAsync(email: Email, ct): Task<bool>
+    }
+    class UserSessionRepository {
+      +FindByIdAsync(id: int, ct): Task<UserSession?>
+      +ListByUserIdAsync(userId: int, ct): Task<IEnumerable<UserSession>>
+    }
+  }
+}
+
+package "Iam.Domain" <<external>> {
+  class User
+  class UserSession
+  class UserId
+  class SessionId
+  class Email
+  class Password
+  class Role
+  class NavigationShell
+  interface IUserRepository
+  interface IUserSessionRepository
+  interface IHashingService
+  interface ITokenService
+}
+
+package "Shared.Infrastructure / EF Core" <<external>> {
+  class AppDbContext
+  class "BaseRepository<T>" as BaseRepository
+  interface "IBaseRepository<T>" as IBaseRepository
+  interface "IEntityTypeConfiguration<T>" as IEntityTypeConfiguration
+  class "ValueConverter<TModel, TProvider>" as ValueConverter
+  class AuditableEntityInterceptor
+}
+
+package "External libraries" <<external>> {
+  class "BCrypt.Net" as BCryptNet
+  class JwtSecurityTokenHandler
+  interface IConfiguration
+}
+
+' --- Ports implemented by this layer (adapters) ---
+BCryptHashingService ..|> IHashingService
+JwtTokenService ..|> ITokenService
+UserRepository ..|> IUserRepository
+UserSessionRepository ..|> IUserSessionRepository
+
+' --- Hashing adapter ---
+BCryptHashingService --> BCryptNet : delegates to
+BCryptHashingService ..> Password : hashes
+
+' --- Token adapter ---
+JwtTokenService --> IConfiguration : reads TokenSettings from
+JwtTokenService --> JwtSecurityTokenHandler : writes token with
+JwtTokenService ..> User : claims subject / email from
+JwtTokenService ..> UserSession : claims role / sessionId from
+JwtTokenService ..> Role : stamps immutable claim
+
+' --- EF Core entity configurations ---
+UserEntityTypeConfiguration ..|> IEntityTypeConfiguration
+UserSessionEntityTypeConfiguration ..|> IEntityTypeConfiguration
+UserEntityTypeConfiguration ..> User : maps to table users
+UserSessionEntityTypeConfiguration ..> UserSession : maps to table user_sessions
+UserEntityTypeConfiguration ..> UserId : converts
+UserEntityTypeConfiguration ..> Email : converts
+UserEntityTypeConfiguration ..> Role : converts
+UserSessionEntityTypeConfiguration ..> SessionId : converts
+UserSessionEntityTypeConfiguration ..> Role : converts
+UserSessionEntityTypeConfiguration ..> NavigationShell : converts
+UserSessionEntityTypeConfiguration --> ValueConverter : uses for nullable VO
+AppDbContext ..> UserEntityTypeConfiguration : applies
+AppDbContext ..> UserSessionEntityTypeConfiguration : applies
+AppDbContext --> AuditableEntityInterceptor : stamps created_at / updated_at
+
+' --- Repositories ---
+UserRepository --|> BaseRepository
+UserSessionRepository --|> BaseRepository
+BaseRepository ..|> IBaseRepository
+UserRepository --> AppDbContext : queries
+UserSessionRepository --> AppDbContext : queries
+UserRepository ..> User : persists
+UserRepository ..> Email : looks up by
+UserRepository ..> UserId : rebuilds typed id
+UserSessionRepository ..> UserSession : persists
+UserSessionRepository ..> SessionId : rebuilds typed id
+
+@enduml

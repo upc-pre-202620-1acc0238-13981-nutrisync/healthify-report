@@ -1,0 +1,103 @@
+@startuml CareRelationship_Component_Diagram
+' =============================================================================
+'  Healthify Platform - Bounded Context: Care Relationship
+'  C4 Model - Level 3: Component Diagram
+'  Container decomposed: Healthify Platform API (ASP.NET Core 10 Web API)
+' =============================================================================
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_TOP_DOWN()
+LAYOUT_WITH_LEGEND()
+
+title Component Diagram - Bounded Context "Care Relationship" (Container: Healthify Platform API)
+
+Person(practitioner, "Practitioner", "Issues the invitation, discharges the patient and reads the list of linked patients")
+Person(patient, "Patient", "Redeems the QR invitation, grants consent and may withdraw it at any time")
+
+Container(mobile, "Mobile Application", "Flutter / MAUI", "Scans and renders the QR invitation token and shows the state of the care link")
+
+Container_Boundary(api, "Healthify Platform API") {
+
+    ' ------------------------------------------------------------- Interfaces
+    Component(invitationsController, "InvitationsController", "ASP.NET Core REST Controller", "api/v1/invitations. Issue and redeem")
+    Component(careLinksController, "CareLinksController", "ASP.NET Core REST Controller", "api/v1/care-links. Consent and discharge")
+    Component(patientCareLinksController, "PatientCareLinksController", "ASP.NET Core REST Controller", "api/v1/patients. Active link and acknowledgement")
+    Component(practitionerPatientsController, "PractitionerPatientsController", "ASP.NET Core REST Controller", "api/v1/practitioners. Patient list")
+    Component(crAssemblers, "Care Relationship Transform Assemblers", "C# static assemblers", "Maps resources, commands and responses")
+
+    ' ------------------------------------------------------------- Application
+    Component(invitationCmdService, "InvitationCommandService", "C# Application Service (CQRS command side)", "Issues, redeems and expires invitations")
+    Component(careLinkCmdService, "CareLinkCommandService", "C# Application Service (CQRS command side)", "Establishes, consents, revokes and discharges")
+    Component(invitationQryService, "InvitationQueryService", "C# Application Service (CQRS query side)", "Reads invitations by id or token")
+    Component(careLinkQryService, "CareLinkQueryService", "C# Application Service (CQRS query side)", "Reads links by patient or practitioner")
+    Component(onRedeemed, "OnInvitationRedeemedHandler", "Cortex.Mediator IEventHandler of InvitationRedeemed", "Policy 2.2: the only path into a link")
+    Component(onWithdrawn, "OnConsentWithdrawnHandler", "Cortex.Mediator IEventHandler of ConsentWithdrawn", "Policy 2.5: withdrawal revokes the link")
+    Component(onTargetsUpdated, "OnActiveTargetsUpdatedCareRelationshipHandler", "Cortex.Mediator IEventHandler of ActiveTargetsUpdated", "Policy 2.4: flags targets as pending")
+    Component(crFacade, "CareRelationshipContextFacade", "C# ACL - Open Host Service", "Publishes the active link authorisation")
+
+    ' ------------------------------------------------------------- Domain
+    Component(careLinkAggregate, "CareLink", "C# Aggregate Root", "Guards consent, revocation and discharge")
+    Component(invitationAggregate, "Invitation", "C# Aggregate Root", "Single-use token with an expiry")
+    Component(crValueObjects, "Value Objects and Errors", "C# records and enums", "InvitationToken, Consent, ClinicalReason, errors")
+
+    ' ------------------------------------------------------------- Infrastructure
+    Component(crRepos, "CareLinkRepository / InvitationRepository", "C# Repositories over EF Core 10", "Persist care links and invitations")
+    Component(crEfcConfig, "CareLink / Invitation EntityTypeConfiguration", "EF Core 10 Fluent API", "Maps tables, token index and audit")
+    Component(expiryHostedService, "InvitationExpiryHostedService", "ASP.NET Core BackgroundService", "Sweeps and expires stale invitations")
+}
+
+ContainerDb(db, "Healthify Database", "MySQL 8.4", "Owns the care_links, invitations and audit tables of this context")
+
+Container_Ext(iamCtx, "IAM", "Sibling bounded context", "Consulted through IIamContextFacade to confirm the two parties exist and hold the expected roles")
+Container_Ext(nutritionalCareCtx, "Nutritional Care", "Sibling bounded context", "Publishes ActiveTargetsUpdated; nothing here reaches back into it")
+Container_Ext(downstreamCtx, "Nutritional Care, Intake and Body Response, Monitoring and Adherence, Read Models", "Sibling bounded contexts", "Ask the Open Host Service whether the link is active before touching patient data")
+
+' ------------------------------------------------------------------ Relations
+Rel(practitioner, mobile, "Issues an invitation, discharges a patient", "Touch")
+Rel(patient, mobile, "Scans the QR, grants or withdraws consent, acknowledges targets", "Touch")
+Rel(mobile, invitationsController, "Issues and redeems invitations", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, careLinksController, "Manages consent and discharge", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, patientCareLinksController, "Reads the active link and acknowledges targets", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, practitionerPatientsController, "Lists the patients of the practitioner", "JSON/HTTPS, Bearer JWT")
+
+Rel(invitationsController, crAssemblers, "Maps resources and commands through", "in-process")
+Rel(careLinksController, crAssemblers, "Maps resources and commands through", "in-process")
+Rel(patientCareLinksController, crAssemblers, "Maps resources and commands through", "in-process")
+Rel(practitionerPatientsController, crAssemblers, "Maps resources through", "in-process")
+
+Rel(invitationsController, invitationCmdService, "Sends invitation commands", "in-process")
+Rel(invitationsController, invitationQryService, "Sends invitation queries", "in-process")
+Rel(careLinksController, careLinkCmdService, "Sends consent and discharge commands", "in-process")
+Rel(careLinksController, careLinkQryService, "Sends care link queries", "in-process")
+Rel(patientCareLinksController, careLinkCmdService, "Sends AcknowledgeActiveTargetsCommand", "in-process")
+Rel(patientCareLinksController, careLinkQryService, "Reads the active link", "in-process")
+Rel(practitionerPatientsController, careLinkQryService, "Reads the links of the practitioner", "in-process")
+
+Rel(invitationCmdService, invitationAggregate, "Issues, redeems and expires", "in-process")
+Rel(careLinkCmdService, careLinkAggregate, "Establishes, consents, revokes and discharges", "in-process")
+Rel(careLinkAggregate, crValueObjects, "Is built from", "in-process")
+Rel(invitationAggregate, crValueObjects, "Is built from", "in-process")
+
+Rel(invitationCmdService, onRedeemed, "Publishes InvitationRedeemed to", "Cortex.Mediator, own DI scope")
+Rel(onRedeemed, careLinkCmdService, "Sends EstablishCareLinkCommand", "in-process")
+Rel(careLinkCmdService, onWithdrawn, "Publishes ConsentWithdrawn to", "Cortex.Mediator, own DI scope")
+Rel(onWithdrawn, careLinkCmdService, "Sends RevokeCareLinkCommand", "in-process")
+Rel(nutritionalCareCtx, onTargetsUpdated, "Publishes ActiveTargetsUpdated", "Cortex.Mediator, in-process")
+Rel(onTargetsUpdated, careLinkCmdService, "Sends MarkTargetsPendingAcknowledgementCommand", "in-process")
+
+Rel(expiryHostedService, invitationCmdService, "Issues ExpireInvitationCommand on the sweep", "in-process, scoped")
+Rel(expiryHostedService, invitationQryService, "Fetches expirable invitations", "in-process, scoped")
+
+Rel(invitationCmdService, crRepos, "Reads and writes through", "in-process")
+Rel(careLinkCmdService, crRepos, "Reads and writes through", "in-process")
+Rel(invitationQryService, crRepos, "Reads through", "in-process")
+Rel(careLinkQryService, crRepos, "Reads through", "in-process")
+Rel(crFacade, crRepos, "Resolves link questions through", "in-process")
+Rel(crRepos, crEfcConfig, "Is mapped by", "EF Core model")
+Rel(crRepos, db, "Reads from and writes to", "EF Core 10 / MySQL, TCP 3306")
+
+Rel(invitationCmdService, iamCtx, "Validates the identity and role of both parties", "in-process ACL call")
+Rel(careLinkCmdService, iamCtx, "Validates the identity and role of both parties", "in-process ACL call")
+Rel(downstreamCtx, crFacade, "Asks whether the care link is active", "in-process ACL call")
+
+@enduml

@@ -1,0 +1,521 @@
+@startuml Healthify - Nutritional Care - Domain
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.NutritionalCare.Domain" {
+
+  package "Model.Aggregates" {
+    ' Clinical phase 1. Once closed it is immutable: a correction does not edit
+    ' it, it creates a new assessment that points back at this one.
+    class NutritionalAssessment {
+      -Id: AssessmentId
+      -PatientId: int
+      -PractitionerId: int
+      -Habits: string
+      -MedicalHistory: string
+      -PhysicalActivity: string
+      -Biochemistry: string?
+      -AgeYears: int
+      -BiologicalSex: BiologicalSex
+      -SupersedesAssessmentId: int?
+      -ClosedAt: DateTimeOffset?
+      -_measurements: List<ClinicalMeasurement>
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +Measurements: IReadOnlyCollection<ClinicalMeasurement>
+      +IsClosed: bool <<derived>>
+      +LatestMeasurement: ClinicalMeasurement? <<derived>>
+      #NutritionalAssessment()
+      +NutritionalAssessment(command: RecordAssessmentCommand)
+      +TakeClinicalMeasurement(command: TakeClinicalMeasurementCommand): ClinicalMeasurement
+      +Close(): void
+    }
+
+    ' Clinical phase 2. Deliberately crosses no boundary: the patient does not
+    ' read their diagnosis in the app.
+    class NutritionalDiagnosis {
+      -Id: DiagnosisId
+      -PatientId: int
+      -PractitionerId: int
+      -AssessmentId: int
+      -Statement: string
+      -Rationale: ClinicalRationale
+      -IssuedAt: DateTimeOffset
+      -SupersededAt: DateTimeOffset?
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +IsActive: bool <<derived>>
+      #NutritionalDiagnosis()
+      +NutritionalDiagnosis(command: IssueDiagnosisCommand)
+      +Supersede(): void
+    }
+
+    ' Clinical phase 3, and the root of the versioning: proposed by arithmetic,
+    ' prescribed by a person, and only then published. The three composite value
+    ' objects are stored flat and rebuilt by the computed properties.
+    class NutritionPlan {
+      -Id: PlanId
+      -PatientId: int
+      -PractitionerId: int
+      -DiagnosisId: int
+      -Version: int
+      -BasisEquation: Equation
+      -BasisReferenceWeightKind: string
+      -BasisReferenceWeightKg: decimal
+      -BasisActivityFactor: decimal
+      -BasisDeficitKind: string
+      -BasisDeficitValue: decimal
+      -BasisComputedBmr: decimal
+      -BasisComputedTdee: decimal
+      -ProposalEnergyKcal: decimal
+      -ProposalProteinG: decimal
+      -ProposalCarbG: decimal
+      -ProposalFatG: decimal
+      -PrescribedEnergyKcal: decimal?
+      -PrescribedProteinG: decimal?
+      -PrescribedCarbG: decimal?
+      -PrescribedFatG: decimal?
+      -PrescribedOutcome: string?
+      -PrescribedOverrideReason: string?
+      -ChangeReason: ChangeReason?
+      -PublishedAt: DateTimeOffset?
+      -SupersededAt: DateTimeOffset?
+      -IsActive: bool
+      -_guidelines: List<string>
+      -_restrictions: List<string>
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +CalculationBasis: CalculationBasis <<derived>>
+      +TargetProposal: TargetProposal <<derived>>
+      +PrescribedTargets: PrescribedTargets? <<derived>>
+      +IsPrescribed: bool <<derived>>
+      +IsPublished: bool <<derived>>
+      +IsSuperseded: bool <<derived>>
+      #NutritionPlan()
+      +NutritionPlan(patientId, practitionerId, diagnosisId, version, basis, proposal)
+      +PrescribeTargets(targets: PrescribedTargets): void
+      +Publish(guidelines, restrictions): void
+      +Supersede(): void
+      +CreateAdjustedVersion(command: AdjustNutritionPlanCommand, changeReason: ChangeReason): NutritionPlan
+    }
+
+    ' Where the automation ends. A signal notifies and never modifies: there is
+    ' no path from a review item to Adjust Nutrition Plan.
+    class ReviewItem {
+      -Id: ReviewItemId
+      -PatientId: int
+      -PractitionerId: int
+      -SignalType: SignalType
+      -Evidence: string
+      -State: ReviewItemState
+      -ResolvedWithAdjustment: bool?
+      -ResolvedAt: DateTimeOffset?
+      -ResolutionNote: string?
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +IsOpen: bool <<derived>>
+      #ReviewItem()
+      +ReviewItem(command: OpenReviewItemCommand, practitionerId: int)
+      +Resolve(resolvedWithAdjustment: bool, note: string?): void
+    }
+  }
+
+  package "Model.Entities" {
+    ' A Clinical Measurement and a Self Weigh In are different things: this one
+    ' is taken under a recorded protocol and carries clinical authority.
+    class ClinicalMeasurement {
+      -Id: int
+      -AssessmentId: AssessmentId
+      -WeightKg: decimal
+      -HeightCm: decimal
+      -Protocol: MeasurementProtocol
+      -BodyFatPercentage: decimal?
+      -WaistCircumferenceCm: decimal?
+      -TakenAt: DateTimeOffset
+      #ClinicalMeasurement()
+      ~ClinicalMeasurement(weightKg, heightCm, protocol, bodyFat, waist)
+    }
+  }
+
+  package "Model.ValueObjects" {
+    class AssessmentId <<record>> {
+      -Value: int
+      +{static} FromRaw(value: int): AssessmentId
+    }
+    class DiagnosisId <<record>> {
+      -Value: int
+      +{static} FromRaw(value: int): DiagnosisId
+    }
+    class PlanId <<record>> {
+      -Value: int
+      +{static} FromRaw(value: int): PlanId
+    }
+    class ReviewItemId <<record>> {
+      -Value: int
+      +{static} FromRaw(value: int): ReviewItemId
+    }
+    class BiologicalSex <<record>> {
+      +{static} Female: string
+      +{static} Male: string
+      -Value: string
+      +IsMale: bool <<derived>>
+    }
+    class MeasurementProtocol <<record>> {
+      -{static} MaximumLength: int = 300
+      -Value: string
+    }
+    class ClinicalRationale <<record>> {
+      -{static} MaximumLength: int = 2000
+      -Value: string
+    }
+    ' Which equation to use is irreducible clinical judgement: it arrives in the
+    ' command, the aggregate never picks it.
+    class Equation <<record>> {
+      +{static} MifflinStJeor: string
+      +{static} HarrisBenedict: string
+      +{static} FaoWhoUnu: string
+      +{static} KatchMcArdle: string
+      -Value: string
+      +RequiresBodyFatPercentage: bool <<derived>>
+    }
+    class ReferenceWeight <<record>> {
+      +{static} Actual: string
+      +{static} Ideal: string
+      +{static} Adjusted: string
+      -Kind: string
+      -ValueKg: decimal
+    }
+    class DeficitStrategy <<record>> {
+      +{static} FixedKcal: string
+      +{static} PercentOfTdee: string
+      -Kind: string
+      -Value: decimal
+      +DeficitKcalFor(tdee: decimal): decimal
+    }
+    ' What makes a target auditable: the equation is published, the parameters
+    ' were chosen by a human, the number can be recomputed by hand.
+    class CalculationBasis <<record>> {
+      -Equation: Equation
+      -ReferenceWeightKind: string
+      -ReferenceWeightKg: decimal
+      -ActivityFactor: decimal
+      -DeficitKind: string
+      -DeficitValue: decimal
+      -ComputedBmr: decimal
+      -ComputedTdee: decimal
+      +ReferenceWeight: ReferenceWeight <<derived>>
+      +DeficitStrategy: DeficitStrategy <<derived>>
+      +{static} From(equation, referenceWeight, activityFactor, deficitStrategy, bmr, tdee): CalculationBasis
+    }
+    ' A proposal is not a prescription.
+    class TargetProposal <<record>> {
+      -EnergyKcal: decimal
+      -ProteinG: decimal
+      -CarbG: decimal
+      -FatG: decimal
+    }
+    class PrescriptionOutcome <<record>> {
+      +{static} AcceptedAsProposed: string
+      +{static} Overridden: string
+      -Value: string
+      +IsOverridden: bool <<derived>>
+    }
+    class OverrideReason <<record>> {
+      -{static} MaximumLength: int = 500
+      -Value: string
+    }
+    ' Every target in the platform is traceable to a person through this.
+    class PrescribedTargets <<record>> {
+      -EnergyKcal: decimal
+      -ProteinG: decimal
+      -CarbG: decimal
+      -FatG: decimal
+      -Outcome: PrescriptionOutcome
+      -OverrideReason: OverrideReason?
+    }
+    class ChangeReason <<record>> {
+      -{static} MaximumLength: int = 500
+      -Value: string
+    }
+    class SignalType <<record>> {
+      +{static} SustainedDeviation: string
+      +{static} ConsistencyEscalation: string
+      -Value: string
+    }
+    class ReviewItemState <<record>> {
+      +{static} Open: string
+      +{static} Resolved: string
+      -Value: string
+      +IsOpen: bool <<derived>>
+    }
+  }
+
+  package "Model.Commands" {
+    class RecordAssessmentCommand <<record>>
+    class TakeClinicalMeasurementCommand <<record>>
+    class CloseAssessmentCommand <<record>>
+    class IssueDiagnosisCommand <<record>>
+    ' The five decisions the system never makes arrive here.
+    class ProposeTargetsCommand <<record>>
+    class PrescribeTargetsCommand <<record>>
+    class PublishNutritionPlanCommand <<record>>
+    ' Issued by a policy, never by a user. No REST endpoint.
+    class PublishActiveTargetsCommand <<record>> {
+      -PlanId: int
+    }
+    class AdjustNutritionPlanCommand <<record>>
+    ' Issued by the policies reacting to signals from Monitoring. No endpoint,
+    ' and it can never modify a plan.
+    class OpenReviewItemCommand <<record>> {
+      -PatientId: int
+      -SignalType: string
+      -Evidence: string
+    }
+    class ResolveReviewItemCommand <<record>>
+  }
+
+  package "Model.Queries" {
+    class GetAssessmentByIdQuery <<record>>
+    class GetAssessmentsByPatientIdQuery <<record>>
+    class GetActiveDiagnosisByPatientIdQuery <<record>>
+    class GetPlanByIdQuery <<record>>
+    class GetActivePlanByPatientIdQuery <<record>>
+    class GetPlansByPatientIdQuery <<record>>
+    class GetReviewItemByIdQuery <<record>>
+    class GetOpenReviewItemsByPractitionerIdQuery <<record>>
+  }
+
+  package "Model.Events" {
+    class NutritionalAssessmentRecorded <<record>>
+    ' Integration event 3 of 13: crosses into Monitoring and Adherence.
+    class ClinicalMeasurementTaken <<record>>
+    class AssessmentClosed <<record>>
+    class NutritionalDiagnosisIssued <<record>>
+    class TargetsProposed <<record>>
+    class TargetsAcceptedAsProposed <<record>>
+    class TargetsOverridden <<record>>
+    class NutritionPlanPublished <<record>>
+    class NutritionPlanAdjusted <<record>>
+    class PlanVersionSuperseded <<record>>
+    class ReviewItemCreated <<record>>
+    class ReviewItemResolved <<record>>
+    class DailyTargets <<record>> {
+      -EnergyKcal: decimal
+      -ProteinG: decimal
+      -CarbG: decimal
+      -FatG: decimal
+    }
+    ' The Published Language of this context, and the only thing about a plan
+    ' that ever reaches the patient. Integration events 4, 5 and 6 of 13.
+    ' No diagnosis, no rationale, no calculation basis travels on it.
+    class ActiveTargetsUpdated <<record>> {
+      -PatientId: int
+      -PlanVersion: int
+      -ValidFrom: DateTimeOffset
+      -DailyTargets: DailyTargets
+      -Guidelines: IReadOnlyList<string>
+      -Restrictions: IReadOnlyList<string>
+    }
+  }
+
+  package "Model.Errors" {
+    enum NutritionalCareError {
+      ActiveCareLinkRequired
+      PractitionerOnly
+      HabitsHistoryAndActivityRequired
+      AssessmentNotFound
+      AssessmentAlreadyClosed
+      MeasurementProtocolRequired
+      ClosedAssessmentRequired
+      ClinicalRationaleRequired
+      PatientAlreadyHasActiveDiagnosis
+      DiagnosisNotFound
+      ActiveDiagnosisRequired
+      IncompleteCalculationBasis
+      UnsupportedEquation
+      InvalidActivityFactor
+      InvalidDeficitStrategy
+      InvalidReferenceWeight
+      PreviousProposalRequired
+      OverrideReasonRequired
+      PlanNotFound
+      PlanRequiresDiagnosis
+      PatientAlreadyHasActivePlanVersion
+      CalculationBasisRequired
+      ChangeReasonRequired
+      PlanVersionAlreadySuperseded
+      ReviewItemNotFound
+      ReviewItemAlreadyOpenForSignalType
+      ResolutionOutcomeRequired
+      PlanNotInExpectedState
+      ClinicalMeasurementRequired
+      UnexpectedError
+    }
+  }
+
+  package "Repositories" {
+    interface INutritionalAssessmentRepository {
+      +ListByPatientIdAsync(patientId: int, ct): Task<IEnumerable<NutritionalAssessment>>
+    }
+    interface INutritionalDiagnosisRepository {
+      +FindActiveByPatientIdAsync(patientId: int, ct): Task<NutritionalDiagnosis?>
+    }
+    interface INutritionPlanRepository {
+      +FindActiveByPatientIdAsync(patientId: int, ct): Task<NutritionPlan?>
+      +ListByPatientIdAsync(patientId: int, ct): Task<IEnumerable<NutritionPlan>>
+      +GetLatestVersionAsync(patientId: int, ct): Task<int>
+    }
+    interface IReviewItemRepository {
+      +ExistsOpenForPatientAndSignalTypeAsync(patientId: int, signalType: SignalType, ct): Task<bool>
+      +ListOpenByPractitionerIdAsync(practitionerId: int, ct): Task<IEnumerable<ReviewItem>>
+      +CountOpenByPractitionerIdAsync(practitionerId: int, ct): Task<int>
+    }
+  }
+
+  package "Services" {
+    ' Facts an equation reads. Facts, not clinical choices.
+    class BmrInputs <<record>> {
+      -ReferenceWeightKg: decimal
+      -HeightCm: decimal
+      -AgeYears: int
+      -BiologicalSex: BiologicalSex
+      -BodyFatPercentage: decimal?
+    }
+    ' Not an external service and not a model: deterministic arithmetic with
+    ' published equations, reproducible by hand from the calculation basis.
+    interface IBmrCalculator {
+      +ComputeBmr(equation: Equation, inputs: BmrInputs): decimal
+    }
+  }
+}
+
+package "Shared.Domain" <<external>> {
+  interface IAuditableEntity
+  interface "IBaseRepository<T>" as IBaseRepository
+  abstract DomainEventBase
+}
+
+' --- Aggregate roots & auditing ---
+NutritionalAssessment ..|> IAuditableEntity
+NutritionalDiagnosis ..|> IAuditableEntity
+NutritionPlan ..|> IAuditableEntity
+ReviewItem ..|> IAuditableEntity
+
+' --- The clinical chain: assessment, diagnosis, plan, and the inbox ---
+NutritionalAssessment "1" *--> "0..*" ClinicalMeasurement : Anthropometry
+NutritionalDiagnosis "0..*" ..> "1" NutritionalAssessment : reads a closed one (AssessmentId)
+NutritionPlan "0..*" ..> "1" NutritionalDiagnosis : grounded on (DiagnosisId)
+NutritionPlan "1" ..> "0..1" NutritionPlan : supersedes the previous version
+NutritionalAssessment "0..1" ..> "1" NutritionalAssessment : correction supersedes
+ReviewItem ..> NutritionPlan : signals about, never modifies
+
+' --- Identity & value objects ---
+NutritionalAssessment *--> "1" AssessmentId : identified by
+NutritionalAssessment *--> "1" BiologicalSex : stratifies the equations
+NutritionalDiagnosis *--> "1" DiagnosisId : identified by
+NutritionalDiagnosis *--> "1" ClinicalRationale : reasoned with
+NutritionPlan *--> "1" PlanId : identified by
+NutritionPlan *--> "1" CalculationBasis : always recorded
+NutritionPlan *--> "1" TargetProposal : arithmetic result
+NutritionPlan *--> "0..1" PrescribedTargets : what a person signed
+NutritionPlan *--> "0..1" ChangeReason : justifies the version
+ReviewItem *--> "1" ReviewItemId : identified by
+ReviewItem *--> "1" SignalType : classified by
+ReviewItem *--> "1" ReviewItemState : Open or Resolved
+ClinicalMeasurement *--> "1" MeasurementProtocol : authorised by
+ClinicalMeasurement ..> AssessmentId : owned by
+
+' --- Composition of the calculation value objects ---
+CalculationBasis *--> "1" Equation : ran on
+CalculationBasis ..> ReferenceWeight : rebuilt from flat components
+CalculationBasis ..> DeficitStrategy : rebuilt from flat components
+PrescribedTargets *--> "1" PrescriptionOutcome : accepted or overridden
+PrescribedTargets *--> "0..1" OverrideReason : required when overridden
+TargetProposal ..> PrescribedTargets : signed into
+
+' --- Domain service ---
+IBmrCalculator ..> Equation : selects
+IBmrCalculator ..> BmrInputs : reads
+BmrInputs ..> BiologicalSex : stratified by
+BmrInputs ..> ClinicalMeasurement : sourced from
+IBmrCalculator ..> CalculationBasis : feeds ComputedBmr
+
+' --- Repositories ---
+INutritionalAssessmentRepository --|> IBaseRepository
+INutritionalDiagnosisRepository --|> IBaseRepository
+INutritionPlanRepository --|> IBaseRepository
+IReviewItemRepository --|> IBaseRepository
+INutritionalAssessmentRepository ..> NutritionalAssessment : manages
+INutritionalDiagnosisRepository ..> NutritionalDiagnosis : manages
+INutritionPlanRepository ..> NutritionPlan : manages
+IReviewItemRepository ..> ReviewItem : manages
+IReviewItemRepository ..> SignalType : filters by
+
+' --- Aggregate construction & the commands they apply ---
+NutritionalAssessment ..> RecordAssessmentCommand : built from
+NutritionalAssessment ..> TakeClinicalMeasurementCommand : applies
+NutritionalAssessment ..> CloseAssessmentCommand : applies
+NutritionalDiagnosis ..> IssueDiagnosisCommand : built from
+NutritionPlan ..> ProposeTargetsCommand : built from
+NutritionPlan ..> PrescribeTargetsCommand : applies
+NutritionPlan ..> PublishNutritionPlanCommand : applies
+NutritionPlan ..> AdjustNutritionPlanCommand : applies
+NutritionPlan ..> PublishActiveTargetsCommand : republishes the contract for
+ReviewItem ..> OpenReviewItemCommand : built from
+ReviewItem ..> ResolveReviewItemCommand : applies
+
+' --- Queries target their read models ---
+GetAssessmentByIdQuery ..> NutritionalAssessment : queries
+GetAssessmentsByPatientIdQuery ..> NutritionalAssessment : queries
+GetActiveDiagnosisByPatientIdQuery ..> NutritionalDiagnosis : queries
+GetPlanByIdQuery ..> NutritionPlan : queries
+GetActivePlanByPatientIdQuery ..> NutritionPlan : queries
+GetPlansByPatientIdQuery ..> NutritionPlan : queries
+GetReviewItemByIdQuery ..> ReviewItem : queries
+GetOpenReviewItemsByPractitionerIdQuery ..> ReviewItem : queries
+
+' --- Domain events ---
+NutritionalAssessmentRecorded --|> DomainEventBase
+ClinicalMeasurementTaken --|> DomainEventBase
+AssessmentClosed --|> DomainEventBase
+NutritionalDiagnosisIssued --|> DomainEventBase
+TargetsProposed --|> DomainEventBase
+TargetsAcceptedAsProposed --|> DomainEventBase
+TargetsOverridden --|> DomainEventBase
+NutritionPlanPublished --|> DomainEventBase
+NutritionPlanAdjusted --|> DomainEventBase
+PlanVersionSuperseded --|> DomainEventBase
+ReviewItemCreated --|> DomainEventBase
+ReviewItemResolved --|> DomainEventBase
+ActiveTargetsUpdated --|> DomainEventBase
+ActiveTargetsUpdated *--> "1" DailyTargets : carries
+
+NutritionalAssessment ..> NutritionalAssessmentRecorded : raises
+ClinicalMeasurement ..> ClinicalMeasurementTaken : raises
+NutritionalAssessment ..> AssessmentClosed : raises
+NutritionalDiagnosis ..> NutritionalDiagnosisIssued : raises
+NutritionPlan ..> TargetsProposed : raises
+' Exactly one of the two, never both.
+NutritionPlan ..> TargetsAcceptedAsProposed : raises
+NutritionPlan ..> TargetsOverridden : raises
+NutritionPlan ..> NutritionPlanPublished : raises
+NutritionPlan ..> NutritionPlanAdjusted : raises
+NutritionPlan ..> PlanVersionSuperseded : raises
+NutritionPlan ..> ActiveTargetsUpdated : publishes the reduced contract
+ReviewItem ..> ReviewItemCreated : raises
+ReviewItem ..> ReviewItemResolved : raises
+
+' --- Policies expressed as event to command chains (inside this context) ---
+NutritionPlanPublished ..> PublishActiveTargetsCommand : policy issues
+NutritionPlanAdjusted ..> PublishActiveTargetsCommand : policy issues
+
+' --- Errors: one value per business rule this context enforces ---
+NutritionalCareError ..> NutritionalAssessment : reports failures of
+NutritionalCareError ..> NutritionalDiagnosis : reports failures of
+NutritionalCareError ..> NutritionPlan : reports failures of
+NutritionalCareError ..> ReviewItem : reports failures of
+
+@enduml

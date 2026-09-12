@@ -1,0 +1,277 @@
+@startuml Healthify - IAM - Domain
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.Iam.Domain" {
+
+  package "Model.Aggregates" {
+    ' User is a partial class: User.cs + UserAudit.cs (IAuditableEntity).
+    ' Answers "who you are" and nothing else: being linked to a practitioner is
+    ' the question CareRelationship answers.
+    class User {
+      -{static} MaxFailedSignInAttempts: int = 5
+      -Id: UserId
+      -Email: Email
+      -PasswordHash: string
+      -Role: Role
+      -FailedSignInAttempts: int
+      -LockedOutAt: DateTimeOffset?
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +IsLockedOut: bool <<derived>>
+      #User()
+      +User(command: RegisterAccountCommand, passwordHash: string)
+      +RegisterFailedSignInAttempt(): void
+      +RegisterSuccessfulSignIn(): void
+      +StartSession(): UserSession
+    }
+
+    ' UserSession is a partial class: UserSession.cs + UserSessionAudit.cs.
+    ' Separate aggregate root inside the same bounded context: UserId is a plain
+    ' int, there is no EF navigation between the two roots.
+    class UserSession {
+      -Id: SessionId
+      -UserId: int
+      -RoleClaim: Role
+      -NavigationShell: NavigationShell?
+      -StartedAt: DateTimeOffset
+      -TerminatedAt: DateTimeOffset?
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +IsActive: bool <<derived>>
+      +ActiveRoleClaim: Role? <<derived>>
+      #UserSession()
+      ~UserSession(userId: int, roleClaim: Role)
+      +SelectNavigationShell(shell: NavigationShell): void
+      +Terminate(): void
+    }
+  }
+
+  package "Model.ValueObjects" {
+    class UserId <<record>> {
+      -Value: int
+      +UserId(value: int)
+      +{static} FromRaw(value: int): UserId
+      +ToString(): string
+    }
+    class SessionId <<record>> {
+      -Value: int
+      +SessionId(value: int)
+      +{static} FromRaw(value: int): SessionId
+      +ToString(): string
+    }
+    class Email <<record>> {
+      -Value: string
+      +Email(value: string)
+      -{static} Pattern(): Regex
+      +ToString(): string
+    }
+    ' Exists only long enough to be hashed: never persisted, never logged.
+    class Password <<record>> {
+      -{static} MinimumLength: int = 8
+      -{static} MaximumLength: int = 128
+      -Value: string
+      +Password(value: string)
+    }
+    ' Hotspot: one account holds exactly one role, declared at registration and
+    ' immutable. Holding both roles would mean two accounts.
+    class Role <<record>> {
+      +{static} Patient: string
+      +{static} Practitioner: string
+      -{static} Allowed: HashSet<string>
+      -Value: string
+      +Role(value: string)
+      +IsPatient: bool <<derived>>
+      +IsPractitioner: bool <<derived>>
+      +ToString(): string
+    }
+    class NavigationShell <<record>> {
+      +{static} PatientShell: string
+      +{static} PractitionerShell: string
+      -{static} Allowed: HashSet<string>
+      -Value: string
+      +NavigationShell(value: string)
+      +{static} ForRole(role: Role): NavigationShell
+      +MatchesRole(role: Role): bool
+      +ToString(): string
+    }
+  }
+
+  package "Model.Commands" {
+    class RegisterAccountCommand <<record>> {
+      -Email: string
+      -Password: string
+      -Role: string
+    }
+    class SignInCommand <<record>> {
+      -Email: string
+      -Password: string
+    }
+    ' Issued by the policy that reacts to RoleClaimIssued, never by a user.
+    class SelectNavigationShellCommand <<record>> {
+      -SessionId: int
+      -NavigationShell: string
+    }
+    class SignOutCommand <<record>> {
+      -SessionId: int
+      -UserId: int
+    }
+  }
+
+  package "Model.Queries" {
+    class GetUserByIdQuery <<record>> {
+      -UserId: int
+    }
+    class GetUserByEmailQuery <<record>> {
+      -Email: string
+    }
+    class GetUserSessionByIdQuery <<record>> {
+      -SessionId: int
+    }
+    class GetUserSessionsByUserIdQuery <<record>> {
+      -UserId: int
+    }
+  }
+
+  package "Model.Events" {
+    ' Every Iam event stays inside Iam: no other bounded context may subscribe.
+    class AccountCreated <<record>> {
+      -UserId: int
+      -Email: string
+      -Role: string
+    }
+    class SessionStarted <<record>> {
+      -SessionId: int
+      -UserId: int
+      -StartedAt: DateTimeOffset
+    }
+    class RoleClaimIssued <<record>> {
+      -SessionId: int
+      -UserId: int
+      -Role: string
+    }
+    class NavigationShellSelected <<record>> {
+      -SessionId: int
+      -UserId: int
+      -NavigationShell: string
+    }
+    class SessionTerminated <<record>> {
+      -SessionId: int
+      -UserId: int
+      -TerminatedAt: DateTimeOffset
+    }
+  }
+
+  package "Model.Errors" {
+    enum IamError {
+      EmailAlreadyTaken
+      InvalidEmail
+      WeakPassword
+      RoleNotDeclared
+      InvalidRole
+      UserNotFound
+      InvalidCredentials
+      AccountLocked
+      SessionNotFound
+      SessionAlreadyTerminated
+      ShellAlreadySelectedForSession
+      RoleChangeRequiresReAuthentication
+      RoleImmutablePerSession
+      UnexpectedError
+    }
+  }
+
+  package "Repositories" {
+    interface IUserRepository {
+      +FindByEmailAsync(email: Email, ct): Task<User?>
+      +ExistsByEmailAsync(email: Email, ct): Task<bool>
+    }
+    interface IUserSessionRepository {
+      +ListByUserIdAsync(userId: int, ct): Task<IEnumerable<UserSession>>
+    }
+  }
+
+  package "Services" {
+    ' The "Auth Provider" of the event storming is implemented inside the
+    ' platform: there is no third-party identity provider.
+    interface IHashingService {
+      +Hash(password: Password): string
+      +Verify(plainPassword: string, passwordHash: string): bool
+    }
+    interface ITokenService {
+      +GenerateToken(user: User, session: UserSession): string
+    }
+  }
+}
+
+package "Shared.Domain" <<external>> {
+  interface IAuditableEntity
+  interface "IBaseRepository<T>" as IBaseRepository
+  abstract DomainEventBase
+}
+
+' --- Aggregate roots & auditing ---
+User ..|> IAuditableEntity
+UserSession ..|> IAuditableEntity
+User "1" ..> "0..*" UserSession : starts (by UserId, no navigation)
+
+' --- Identity & value objects held by the aggregates ---
+User *--> "1" UserId : identified by
+User *--> "1" Email : identified by
+User *--> "1" Role : holds
+UserSession *--> "1" SessionId : identified by
+UserSession *--> "1" Role : freezes as RoleClaim
+UserSession *--> "0..1" NavigationShell : mounts
+
+' --- Value object collaborations ---
+NavigationShell ..> Role : derived from / matches
+Password ..> User : hashed into PasswordHash
+Email ..> UserId : uniquely resolves
+
+' --- Aggregate construction & invariants ---
+User ..> RegisterAccountCommand : built from
+UserSession ..> SelectNavigationShellCommand : applies
+UserSession ..> SignOutCommand : terminated by
+SignInCommand ..> User : authenticates
+SignInCommand ..> Password : validated as
+
+' --- Repositories ---
+IUserRepository --|> IBaseRepository
+IUserSessionRepository --|> IBaseRepository
+IUserRepository ..> User : manages
+IUserSessionRepository ..> UserSession : manages
+
+' --- Domain services ---
+IHashingService ..> Password : hashes
+IHashingService ..> User : verifies credentials of
+ITokenService ..> User : stamps subject of
+ITokenService ..> UserSession : stamps role claim of
+
+' --- Queries target their read models ---
+GetUserByIdQuery ..> User : queries
+GetUserByEmailQuery ..> User : queries
+GetUserSessionByIdQuery ..> UserSession : queries
+GetUserSessionsByUserIdQuery ..> UserSession : queries
+
+' --- Domain events ---
+AccountCreated --|> DomainEventBase
+SessionStarted --|> DomainEventBase
+RoleClaimIssued --|> DomainEventBase
+NavigationShellSelected --|> DomainEventBase
+SessionTerminated --|> DomainEventBase
+
+User ..> AccountCreated : registration raises
+UserSession ..> SessionStarted : sign-in raises
+UserSession ..> RoleClaimIssued : sign-in raises
+UserSession ..> NavigationShellSelected : shell selection raises
+UserSession ..> SessionTerminated : sign-out raises
+RoleClaimIssued ..> SelectNavigationShellCommand : policy issues
+
+' --- Errors: one value per business rule this context enforces ---
+IamError ..> User : reports failures of
+IamError ..> UserSession : reports failures of
+
+@enduml
