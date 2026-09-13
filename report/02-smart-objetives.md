@@ -24,3 +24,25 @@ A continuación, cada integrante del equipo formula un plan de al menos dos obje
 | Relevant | Consolida mi experiencia práctica y mi capacidad de trabajo en equipo organizado y coherente en un contexto profesional real. |
 | Time-bound | Dentro del primer año posterior a mi egreso. |
 
+## Angela Milagros Espinoza Cruz
+
+**Objetivo 1 — Especialización en desarrollo web**
+
+| Criterio | Descripción |
+| :--- | :--- |
+| Specific | Cursar una especialización en desarrollo web full-stack que complemente mi experiencia previa en diseño y desarrollo de páginas web. |
+| Measurable | Finalizar la especialización con la construcción de al menos dos proyectos publicados en un portafolio propio. |
+| Attainable | Ya cuento con conocimientos en Python, Figma y C++, y experiencia previa en diseño y desarrollo web, lo que reduce la curva de aprendizaje. |
+| Relevant | Refuerza mi perfil como profesional innovadora capaz de explorar nuevas herramientas y crear soluciones aplicadas a problemas reales. |
+| Time-bound | En los 6 meses siguientes a mi egreso. |
+
+**Objetivo 2 — Presentación de una innovación técnica en un evento del sector**
+
+| Criterio | Descripción |
+| :--- | :--- |
+| Specific | Presentar un proyecto o solución propia en un meetup, conferencia o concurso de innovación tecnológica. |
+| Measurable | Lograr una postulación aceptada y realizar la presentación ante un público o jurado evaluador. |
+| Attainable | Mi experiencia en comunicación asertiva y en el desarrollo de soluciones innovadoras me permite preparar una propuesta competitiva. |
+| Relevant | Impulsa mi proactividad y visibilidad profesional en la comunidad tecnológica, alineado con mi motivación por la innovación constante. |
+| Time-bound | Dentro de los 12 meses posteriores a mi egreso. |
+
