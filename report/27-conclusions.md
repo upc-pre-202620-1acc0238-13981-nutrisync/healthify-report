@@ -30,6 +30,22 @@ Del contraste entre los supuestos y el comportamiento real surgió además un ap
 
 ---
 
+#### Sobre los Hypothesis Statements
+
+La Hypothesis Statement 1 planteó que el uso recurrente de Healthify por parte de los pacientes se lograría si estos pudieran registrar su alimentación de manera sencilla y práctica mediante fotografías o de forma manual. Ambas pacientes entrevistadas afirmaron que usarían a diario un registro por foto con confirmación del sistema, condicionando su uso continuo a que la herramienta sea eficiente, no falle con frecuencia y no exija ingresar datos manualmente. El abandono previo de Fitia indica que el registro manual debe mantenerse como alternativa para que la fotografía no sea un punto único de fallo, pero no como el flujo principal. Esta hipótesis se considera validada de forma cualitativa; sin embargo, al ser identificada en el Lean UX Canvas como la más riesgosa del proyecto, requiere confirmarse mediante pruebas con un prototipo funcional, dado que la intención declarada por un usuario no garantiza su comportamiento real.
+
+La Hypothesis Statement 2 sostuvo que la continuidad de uso del paciente se lograría si este pudiera registrar su peso y visualizar su evolución. Las entrevistas confirmaron el interés por conocer el progreso, pero la frecuencia de pesaje semanal o quincenal sugiere que el peso, por sí solo, no será un motor de uso diario de la aplicación. Por ello, esta hipótesis se considera parcialmente validada, y su aporte a la continuidad de uso debe evaluarse en conjunto con el registro de comidas y no de manera aislada.
+
+La Hypothesis Statement 3 afirmó que la incorporación recurrente de Healthify en el seguimiento nutricional se lograría si los nutricionistas dispusieran de información continua y organizada sobre la alimentación y el peso de sus pacientes. El nutricionista entrevistado confirmó que hoy reconstruye esa información mediante entrevista en cada consulta y la recibe por canales informales, lo que respalda la necesidad planteada. Esta hipótesis se considera validada de forma cualitativa, aunque la evidencia proviene de un solo profesional, por lo que es necesario ampliar la muestra del segmento antes de extraer conclusiones generalizables.
+
+La Hypothesis Statement 4 propuso que los nutricionistas utilizarían la información de Healthify para sus ajustes si contaran con indicadores derivados de la alimentación y del peso, sin que el sistema realice ajustes automáticos al tratamiento. Si bien la guía de entrevista incluyó una pregunta sobre la utilidad de una alerta de inconsistencia entre lo registrado y la evolución del peso, la respuesta no quedó documentada con suficiente detalle, por lo que esta hipótesis permanece pendiente de validación. El modelo de dominio ya contempla estos indicadores a través del cumplimiento diario, la detección de desviación sostenida y el índice de consistencia, lo que permitirá evaluarlos con un prototipo de la bandeja de revisión.
+
+La Hypothesis Statement 5 planteó que los nutricionistas relacionarían mejor lo ocurrido entre consultas con el plan de alimentación si pudieran registrar y consultar el plan y sus ajustes dentro de Healthify. Esta es la hipótesis que presenta mayor riesgo a partir de la evidencia recogida, dado que el nutricionista entrevistado ya registra el plan en Nutrimind y podría no estar dispuesto a hacerlo en una segunda herramienta. Por esta razón, el equipo decidió que lo que cruza hacia el paciente no sea el plan clínico completo, sino un contrato reducido de metas vigentes (`Active Targets`), lo que abre la posibilidad de alimentar ese contrato en el futuro sin exigir al profesional duplicar su trabajo.
+
+La Hypothesis Statement 6 sostuvo que la adopción y el uso continuo de Healthify se lograrían mediante un vínculo digital entre paciente y nutricionista que mantenga diferenciadas sus funciones. Las entrevistas mostraron que ambas pacientes mantienen una relación uno a uno con su nutricionista y que desean centralizar en un solo lugar la información de su tratamiento, lo que respalda la pertinencia del vínculo. No obstante, el flujo concreto de invitación mediante código QR durante la consulta y el otorgamiento de consentimiento aún no ha sido probado con usuarios, por lo que esta hipótesis se considera parcialmente validada.
+
+---
+
 ## Video App Validation
 
 ## Video About the product
