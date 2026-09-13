@@ -68,3 +68,25 @@ A continuación, cada integrante del equipo formula un plan de al menos dos obje
 | Relevant | Refleja mi actitud competitiva positiva y mi compromiso con la superación constante de retos profesionales. |
 | Time-bound | Dentro de los 2 años posteriores a mi egreso. |
 
+## Rose Almendra Vergaray Calderon
+
+**Objetivo 1 — Especialización en desarrollo de software con bases de datos avanzadas**
+
+| Criterio | Descripción |
+| :--- | :--- |
+| Specific | Cursar una especialización en desarrollo backend con manejo avanzado de bases de datos relacionales y no relacionales. |
+| Measurable | Completar la especialización y aplicar lo aprendido en la construcción de al menos un proyecto personal documentado. |
+| Attainable | Cuento con base previa en Python, HTML, Java, C++ y experiencia en manejo de bases de datos desarrollada durante la carrera. |
+| Relevant | Fortalece mi crecimiento profesional a través del aprendizaje constante y la exploración de nuevas herramientas, valores que me definen. |
+| Time-bound | Dentro de los 8 meses posteriores a mi egreso. |
+
+**Objetivo 2 — Mentoría y trabajo colaborativo en un entorno profesional**
+
+| Criterio | Descripción |
+| :--- | :--- |
+| Specific | Participar activamente como mentora o colaboradora en una comunidad tecnológica o programa de mentoría para nuevos desarrolladores. |
+| Measurable | Completar al menos un ciclo de mentoría o colaboración con retroalimentación registrada de los participantes. |
+| Attainable | Mi experiencia en trabajo en equipo y comunicación desarrollada durante el proyecto Healthify respalda mi capacidad de guiar a otros. |
+| Relevant | Se alinea con mi convicción de que el trabajo en equipo y la comunicación son esenciales para crecer tanto personal como profesionalmente. |
+| Time-bound | Dentro de los 12 meses posteriores a mi egreso. |
+
