@@ -198,3 +198,45 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Self Weigh In (Autopesaje)** | Pesaje realizado por el paciente en casa con protocolo declarado; no tiene autoridad clínica por sí solo. |
 | **Weight Trend (Tendencia de peso)** | Suavizado estadístico (media móvil) de los autopesajes; único formato en que el peso del paciente se presenta. |
 
+## Abreviaturas y acrónimos
+
+| Sigla | Significado | Descripción breve |
+|---|---|---|
+| **ACL** | Anticorruption Layer | Capa de traducción entre un modelo propio y uno externo. |
+| **API** | Application Programming Interface | Contrato que permite la comunicación entre sistemas de software. |
+| **BC** | Bounded Context | Frontera explícita de un modelo de dominio. |
+| **BFF** | Backend for Frontend | Servicio que compone datos para una interfaz específica. |
+| **C4** | Context, Containers, Components, Code | Modelo de diagramación de arquitectura en cuatro niveles. |
+| **CQRS** | Command Query Responsibility Segregation | Separación de operaciones de escritura y lectura. |
+| **CRUD** | Create, Read, Update, Delete | Operaciones básicas sobre datos persistentes. |
+| **DDD** | Domain-Driven Design | Diseño guiado por el dominio del negocio. |
+| **DI** | Dependency Injection | Inyección de dependencias. |
+| **DTO** | Data Transfer Object | Objeto que transporta datos entre capas o sistemas. |
+| **EF Core** | Entity Framework Core | ORM de la plataforma .NET. |
+| **HTTP / HTTPS** | Hypertext Transfer Protocol (Secure) | Protocolo de comunicación web, en su versión cifrada con TLS. |
+| **IA / AI** | Inteligencia Artificial / Artificial Intelligence | Capacidad de un sistema de realizar tareas que requieren inferencia, como estimar porciones desde una imagen. |
+| **IAM** | Identity and Access Management | Gestión de identidades, autenticación y autorización. |
+| **ID** | Identifier | Identificador único de un registro o agregado. |
+| **JSON** | JavaScript Object Notation | Formato ligero de intercambio de datos. |
+| **JWT** | JSON Web Token | Token firmado que transporta claims de identidad y rol. |
+| **LINQ** | Language Integrated Query | Sintaxis de consultas integrada en C#. |
+| **ML** | Machine Learning | Aprendizaje automático. |
+| **MVP** | Minimum Viable Product | Versión mínima del producto que permite validar hipótesis con usuarios reales. |
+| **OHS** | Open Host Service | Servicio publicado para ser consumido por otros contextos. |
+| **ORM** | Object-Relational Mapping | Técnica que mapea objetos a tablas relacionales. |
+| **PK** | Primary Key | Clave primaria de una tabla. |
+| **QR** | Quick Response code | Código bidimensional usado para redimir la invitación durante la consulta. |
+| **REST** | Representational State Transfer | Estilo arquitectónico para APIs basadas en recursos y HTTP. |
+| **SEO** | Search Engine Optimization | Optimización para motores de búsqueda. |
+| **SMART** | Specific, Measurable, Attainable, Relevant, Time-bound | Criterios para formular objetivos. |
+| **SQL** | Structured Query Language | Lenguaje de consulta de bases de datos relacionales. |
+| **UI** | User Interface | Interfaz de usuario. |
+| **UML** | Unified Modeling Language | Lenguaje unificado de modelado. |
+| **US** | User Story | Historia de usuario. |
+| **USDA** | United States Department of Agriculture | Departamento de Agricultura de EE. UU., proveedor de FoodData Central. |
+| **UTC** | Coordinated Universal Time | Tiempo universal coordinado, referencia horaria del servidor. |
+| **UX** | User Experience | Experiencia de usuario. |
+| **VO** | Value Object | Objeto de valor inmutable. |
+| **WCAG** | Web Content Accessibility Guidelines | Pautas internacionales de accesibilidad web. |
+
+<div style="page-break-after: always"></div>
