@@ -14,6 +14,22 @@ En respuesta a este problema, el equipo diseñó Healthify a partir de un modelo
 
 ---
 
+#### Sobre los Assumptions y el comportamiento real de los segmentos
+
+Se asumió que el primer segmento estaría conformado por pacientes adultos de Lima en tratamiento nutricional activo para bajar de peso. Las entrevistas confirmaron el rango de edad definido, con pacientes de 20 y 52 años, pero mostraron que el segmento es más amplio de lo supuesto tanto en ubicación como en motivación: una de las entrevistadas reside en Iquitos y llegó al tratamiento por derivación, tras un examen ocupacional que reveló triglicéridos y glucosa elevados, mientras que la otra reside en Lima y acudió por decisión propia para mejorar su alimentación. Este hallazgo sugiere que el segmento debe considerar también a pacientes con riesgo metabólico y a ciudades fuera de Lima, lo que a su vez refuerza la decisión de diseñar la aplicación con un enfoque offline-first.
+
+Se asumió que el paciente buscaría registrar su alimentación de manera sencilla y práctica, con poco tiempo y esfuerzo, y que utilizaría Healthify como parte de su vida cotidiana. Este supuesto fue validado de manera cualitativa por dos comportamientos opuestos que conducen a la misma conclusión. Una de las pacientes envía diariamente y sin excepción fotos de sus tres comidas a su nutricionista, lo que demuestra que el registro fotográfico ya es un hábito natural cuando el esfuerzo es mínimo. La otra paciente no lleva ningún registro formal y abandonó la aplicación Fitia por la fricción de buscar cada alimento e ingresar las cantidades manualmente después de cada comida, lo que confirma que el esfuerzo de registro es la principal causa de abandono.
+
+Se asumió que el paciente buscaría conocer cómo evoluciona su peso a lo largo del tratamiento. Las entrevistas mostraron interés en el progreso, pero con una frecuencia de pesaje menor a la esperada: una paciente se pesa cada dos semanas por decisión propia y la otra una vez por semana según lo indicado por su nutricionista. Este comportamiento, sumado a que el pesaje en casa se realiza sin supervisión profesional, llevó al equipo a distinguir en el modelo el `Self Weigh In` del paciente de la `Clinical Measurement` tomada por el nutricionista, y a presentar el peso del paciente únicamente como una `Weight Trend` suavizada y no como un valor diario.
+
+Se asumió que el nutricionista necesita información continua sobre lo ocurrido entre consultas y que valoraría una herramienta que no sustituya su criterio profesional. El nutricionista entrevistado confirmó ambos supuestos: mantiene un contacto virtual con sus pacientes con frecuencia variable según el caso, individualiza cada plan de alimentación, realiza ajustes con base en nuevas preguntas y deriva al paciente a un endocrinólogo cuando lo considera necesario. Esta forma de trabajar es coherente con la decisión de diseño de que ningún algoritmo modifique un plan clínico y de que toda señal automática se convierta en un ítem de revisión que espera una decisión humana.
+
+Se asumió que Healthify podría diferenciarse de otras soluciones al centrarse en el periodo entre consultas. Las entrevistas respaldan este supuesto, dado que ninguna de las herramientas observadas cubre de forma estructurada el registro del paciente entre consultas. No obstante, el hecho de que el nutricionista ya utilice Nutrimind para el acto clínico introduce el riesgo de que perciba duplicidad si Healthify también le exige registrar el plan de alimentación. Finalmente, los supuestos relacionados con el modelo de acceso gratuito y con los resultados de negocio (retención, adopción recurrente y crecimiento de usuarios activos) no fueron explorados en las entrevistas y requieren un producto en uso para ser evaluados, por lo que permanecen pendientes de validación.
+
+Del contraste entre los supuestos y el comportamiento real surgió además un aprendizaje que no estaba contemplado inicialmente: ambas pacientes valoraron poder declarar una comida fuera del plan sin tener que justificarse, ya sea para ahorrar tiempo o para evitar la sensación de ser juzgadas. Este hallazgo llevó al equipo a modelar el `Off Plan Entry` sin detalle obligatorio y a prohibir en el Ubiquitous Language términos de castigo como *cheat*, *fail* o *violation*, bajo el criterio de que pedir explicaciones es precisamente lo que hace que el paciente deje de declarar.
+
+---
+
 ## Video App Validation
 
 ## Video About the product
