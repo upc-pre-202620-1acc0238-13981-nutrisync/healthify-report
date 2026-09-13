@@ -314,7 +314,88 @@ Esta sección presenta los Empathy Maps elaborados en UXPressia para cada uno de
 
 ### 2.3.5. Big Picture EventStorming
 
+Esta sección presenta el Big Picture EventStorming elaborado por el equipo en Miro. La sesión tuvo una duración aproximada de dos horas y se organizó siguiendo el Step-by-Step Guide de la técnica. El objetivo no fue diseñar el sistema, sino comprender el dominio del negocio tal como ocurre hoy: el recorrido completo de un tratamiento nutricional, desde que el profesional y el paciente establecen su vínculo hasta el alta, incluyendo el periodo entre consultas, que es donde se ubica el problema del proyecto.
+
+El proceso se desarrolló en cuatro momentos. En el primero, el equipo realizó un chaotic exploration en el que cada integrante escribió en notas naranjas los eventos de dominio que reconocía del análisis de entrevistas y del benchmark, redactados siempre como hechos ya ocurridos y en pasado participio. En el segundo momento se ordenó la línea de tiempo de izquierda a derecha, se eliminaron los duplicados y se unificó la redacción de los eventos que describían el mismo hecho con palabras distintas. En el tercer momento se incorporaron los actores humanos en notas amarillas, distinguiendo explícitamente al `Patient` del `Practitioner`, porque ninguno de los dos origina los mismos hechos y esa asimetría resultó ser la regla estructural del producto. En el cuarto momento se marcaron con notas moradas las políticas, es decir, las reacciones automáticas del tipo "cuando ocurre X entonces sucede Y", y con notas rosadas los hotspots, que son las preguntas abiertas que la sesión no logró cerrar y que quedaron registradas como pendientes de validación.
+
+**Convención de notas utilizada en el tablero:**
+
+| Nota | Elemento | Significado en el modelo |
+|---|---|---|
+| Amarillo claro | Actor | `Patient` o `Practitioner`, nunca un usuario genérico |
+| Naranja | Domain Event | Un hecho que ya ocurrió en el negocio |
+| Morado | Policy | Reacción automática del tipo cuando X entonces Y |
+| Verde claro | Read Model | Vista que alguien consulta para decidir
+
+![Big Picture EventStorming - Tablero completo](../assets/img/artifacts/event-storming/big-picture-eventstorming-completo.png)
+
+El tablero resultante quedó organizado en cinco fases narrativas, que se describen a continuación.
+
+**Fase 1 — Vinculación, dentro de la consulta.** El profesional crea su cuenta y emite una invitación; el paciente la redime escaneando el código QR durante la consulta presencial y otorga su consentimiento. Los hechos relevantes son `Invitation Issued`, `Invitation Redeemed`, `Care Link Established` y `Consent Granted`. Aquí aparece la primera política del tablero: cuando se establece el vínculo, se abre automáticamente una ventana de evaluación para ese paciente.
+
+![Fase 1 - Vinculación y consentimiento](../assets/img/artifacts/event-storming/big-picture-fase1-vinculacion.png)
+
+**Fase 2 — El acto clínico, dentro de la consulta.** Ocurre con un solo actor presente, el profesional, y reproduce las tres primeras fases que el nutricionista entrevistado describió como su proceso de trabajo: evaluación, diagnóstico e intervención. La cadena de hechos va de `Nutritional Assessment Recorded` y `Clinical Measurement Taken` hasta `Nutritional Diagnosis Issued`, `Targets Proposed`, `Targets Accepted As Proposed` o `Targets Overridden`, y culmina en `Nutrition Plan Published` y `Active Targets Updated`. Este último hecho es el que más consecuencias tiene en el resto del tablero, porque desencadena tres políticas simultáneas en zonas distintas del dominio.
+
+![Fase 2 - Acto clínico](../assets/img/artifacts/event-storming/big-picture-fase2-acto-clinico.png)
+
+**Fase 3 — Entre consultas.** Es la zona del tablero donde vive el enunciado del problema. Participan los dos actores de manera asíncrona, sin estar en el mismo lugar ni en el mismo momento, y con conectividad intermitente. El paciente produce `Meal Logged`, `Estimate Confirmed By Patient`, `Off Plan Entry Logged`, `Self Weigh In Recorded` y `Entry Queued Offline`; el sistema reacciona con `Day Evaluated`, `Daily Compliance Computed`, `Deviation Detected`, `Sustained Deviation Detected` y `Consistency Index Recomputed`. Durante la sesión se identificó aquí una decisión de diseño que el equipo dejó explícita en el tablero: la alerta de consistencia notifica primero al paciente mediante `Patient Prompted About Consistency` y solo escala al profesional después de tres semanas sostenidas, mientras que `Logging Gap Detected` nunca escala ni cuenta como incumplimiento.
+
+![Fase 3 - Periodo entre consultas](../assets/img/artifacts/event-storming/big-picture-fase3-entre-consultas.png)
+
+**Fase 4 — La decisión clínica.** El profesional recibe la señal en su bandeja de revisión y decide. Los hechos son `Review Item Created`, `Nutrition Plan Adjusted`, `Plan Version Superseded` y `Review Item Resolved`. La sesión hizo visible que ninguna política conecta la señal con el ajuste del plan: la automatización se detiene en la bandeja y es un humano quien continúa la cadena.
+
+![Fase 4 - Decisión clínica del profesional](../assets/img/artifacts/event-storming/big-picture-fase4-decision-clinica.png)
+
+**Fase 5 — Cierre.** Comprende `Referral Recorded`, `Treatment Discharged`, `Consent Withdrawn` y `Care Link Revoked`, con la política que cierra la ventana de evaluación cuando el vínculo se revoca.
+
+![Fase 5 - Cierre del tratamiento](../assets/img/artifacts/event-storming/big-picture-fase5-cierre.png)
+
 ### 2.3.6. Ubiquitous Language
+
+Esta sección presenta el glosario de términos del dominio nutricional que el equipo utiliza de manera uniforme en las entrevistas, en el modelado, en la documentación y en el código. Los términos se expresan en inglés, acompañados de su equivalente en español, y su definición corresponde al significado que tienen en el dominio del negocio y no a su implementación técnica. El glosario se construyó a partir del análisis lingüístico de las entrevistas y del Big Picture EventStorming, y es normativo: un término que aparezca en el modelo y no figure en esta tabla no existe en el dominio.
+
+| Término (inglés) | Equivalente en español | Definición |
+|---|---|---|
+| `Patient` | Paciente | Persona en tratamiento nutricional activo vinculada a un profesional mediante consentimiento vigente |
+| `Practitioner` | Nutricionista | Profesional de la nutrición responsable del acto clínico. Nunca se le denomina doctor ni usuario |
+| `Care Link` | Vínculo de cuidado | Relación consentida entre un paciente y un profesional que habilita el acceso a la información del tratamiento |
+| `Invitation` | Invitación | Token de un solo uso, entregado como código QR durante la consulta, que permite establecer el vínculo |
+| `Consent` | Consentimiento | Autorización otorgada por el paciente, siempre revocable, sin la cual el vínculo no habilita ningún acceso |
+| `Discharge` | Alta del tratamiento | Cierre del vínculo por decisión clínica del profesional, con razón obligatoria |
+| `Nutritional Assessment` | Evaluación nutricional | Primera fase del acto clínico: recolección de hábitos, antecedentes, actividad y mediciones |
+| `Clinical Measurement` | Medición clínica | Medición antropométrica tomada por el profesional bajo protocolo; tiene autoridad clínica |
+| `Nutritional Diagnosis` | Diagnóstico nutricional | Segunda fase del acto clínico: juicio profesional fundamentado sobre el estado nutricional del paciente |
+| `Nutrition Plan` | Plan de alimentación | Tercera fase del acto clínico: artefacto clínico versionado que contiene metas, pautas y restricciones |
+| `Calculation Basis` | Base de cálculo | Parámetros que el profesional elige antes del cálculo: ecuación, peso de referencia, factor de actividad y estrategia de déficit |
+| `Target Proposal` | Propuesta de metas | Resultado del cálculo determinista, previo a la prescripción |
+| `Prescribed Targets` | Metas prescritas | Metas que el profesional firma, ya sea aceptando la propuesta o sobrescribiéndola con una razón |
+| `Active Targets` | Metas vigentes | Conjunto reducido de metas, pautas y restricciones que el paciente recibe. No es el plan clínico |
+| `Diary Entry` | Entrada de diario | Registro de un evento de consumo realizado por el paciente |
+| `Provenance` | Procedencia | Origen de una entrada de diario: fotografía, registro manual o declaración fuera del plan |
+| `Proposed Estimate` | Estimación propuesta | Estimación de porción y nutrientes calculada a partir de la fotografía, siempre con su nivel de confianza y sujeta a confirmación del paciente |
+| `Off Plan Entry` | Comida fuera del plan | Declaración del paciente de haber comido fuera de lo prescrito, sin detalle exigido y sin penalización |
+| `Self Weigh In` | Autopesaje | Pesaje realizado por el paciente en casa, con protocolo declarado. No tiene autoridad clínica por sí solo |
+| `Weight Trend` | Tendencia de peso | Suavizado estadístico de los autopesajes, único formato en que el peso del paciente se presenta como dato |
+| `Evaluation Window` | Ventana de evaluación | Periodo mínimo de siete días sobre el cual se evalúa el tratamiento |
+| `Daily Compliance` | Cumplimiento diario | Resultado de comparar lo registrado en un día contra las metas vigentes de ese día |
+| `Deviation` | Desviación | Diferencia sostenida entre lo prescrito y lo realmente registrado |
+| `Logging Gap` | Vacío de registro | Días sin ninguna entrada de diario. No constituye desviación ni incumplimiento |
+| `Consistency Index` | Índice de consistencia | Contraste entre la tendencia de peso y la ingesta registrada, utilizado como señal de calidad del dato |
+| `Review Item` | Ítem de revisión | Señal de seguimiento recibida por el profesional que espera una decisión humana |
+| `Referral` | Derivación | Envío del paciente a otro especialista, con especialidad y razón registradas |
+| `Scheduled Follow Up` | Seguimiento programado | Próxima consulta acordada con el paciente |
+| `Reference Food` | Alimento de referencia | Ítem del catálogo nutricional traducido al dominio desde una fuente externa |
+
+Del análisis lingüístico surgieron además cinco expresiones que el equipo decidió prohibir porque introducen ambigüedad o contradicen decisiones de producto ya tomadas.
+
+| Expresión prohibida | Razón | Término que la reemplaza |
+|---|---|---|
+| `Weight` | Designa dos realidades con autoridad clínica distinta | `Clinical Measurement` o `Self Weigh In` |
+| `Food` | Confunde el ítem del catálogo con el evento de consumo | `Reference Food` o `Diary Entry` |
+| `Plan` del lado del paciente | El paciente nunca recibe el plan clínico completo | `Active Targets` |
+| `Compliance` sin granularidad | El día y el tratamiento son escalas distintas | `Daily Compliance` o `Treatment Adherence` |
+| `Cheat`, `Fail`, `Violation` | Vocabulario de castigo, contrario a las decisiones éticas del producto | `Off Plan Entry` |
 
 ## 2.4. Requirements Specification
 
@@ -2024,15 +2105,170 @@ A continuación, se presenta el Product Backlog elaborado en Trello:
 
 ## 2.5. Strategic-Level Domain-Driven Design
 
+Esta sección documenta el proceso de diseño estratégico con el que el equipo descompuso Healthify en subconjuntos con límites naturales. El punto de partida fue el Big Picture EventStorming presentado en la sección 2.3.5, que se profundizó hasta el nivel de diseño para identificar comandos, agregados y reglas de negocio; sobre ese modelo se realizó el descubrimiento de contextos candidatos, se representaron los flujos de mensajes entre ellos mediante Domain Storytelling, se detalló cada contexto en su Bounded Context Canvas y finalmente se elaboró el Context Map con los patrones de relación que gobiernan cada integración. El criterio de frontera que el equipo aplicó de manera transversal es que un bounded context no es un módulo ni una pantalla ni una fase de un proceso, sino una frontera dentro de la cual cada término significa exactamente una cosa.
+
 ### 2.5.1. EventStorming
+
+Esta sección documenta la segunda sesión de EventStorming, realizada por el equipo en Miro con una duración aproximada de dos horas, orientada a alcanzar el mayor nivel de detalle posible sobre el dominio ya explorado. Mientras que la sesión de Big Picture se limitó a actores, eventos y políticas, esta sesión incorporó los elementos que permiten pasar del relato del negocio a un modelo accionable.
+
+El trabajo consistió en recorrer la línea de tiempo del tablero anterior y, para cada evento de dominio, reconstruir hacia atrás la cadena completa que lo produce. Para cada hecho el equipo se preguntó qué intención humana o automática lo desencadenó, lo que dio origen a los comandos en notas azules; qué pieza del modelo es responsable de aceptarlo o rechazarlo, lo que dio origen a los agregados en notas amarillo intenso; qué regla protege ese agregado, lo que dio origen a las reglas de negocio en notas rojas; y qué vista necesita alguien para tomar la siguiente decisión, lo que dio origen a los read models en notas verdes. Adicionalmente se marcaron en notas rosa claro los servicios externos, que en el modelo resultante son únicamente cuatro: el proveedor de autenticación, ML Kit para la estimación de porción en el dispositivo, y Open Food Facts y USDA Food Data Central como fuentes del catálogo.
+
+**Convención de composición.** El equipo acordó una regla de encadenamiento que se respeta en todo el tablero y que facilita después la traducción a código:
+
+```
+Actor ──► Command ──► Aggregate ──► Business Rules ──► Domain Event ──► Read Model
+Policy ──► Command ──► Aggregate ──► Business Rules ──► Domain Event ──► Read Model
+```
+
+Las reglas de negocio cuelgan siempre del agregado, porque es el agregado quien las hace cumplir; los servicios externos cuelgan del comando o del agregado y nunca inician un flujo por sí solos; y el cruce de una frontera de contexto ocurre siempre desde un evento de dominio hacia una política del contexto de destino, nunca desde un comando.
+
+Enlace del Event-Storming: [https://miro.com/welcomeonboard/MU44Nlk4L2dlOVFveWtDZ05SOTU5cThreUNlUUM1SytYY1lJZ29UeU9uWStqbEY4RVBQWWxxNXoxWjhqTXYvMkhIeFVQR1FFNUN2NEtSVWZRVVlDdzd6U0hDZUFBcjhESm5VZ3pkSHh2cEdHRWRJVTVWR3ZEclhJN3hucXdsZzF0R2lncW1vRmFBVnlLcVJzTmdFdlNRPT0hdjE=?share_link_id=478718202765](https://miro.com/welcomeonboard/MU44Nlk4L2dlOVFveWtDZ05SOTU5cThreUNlUUM1SytYY1lJZ29UeU9uWStqbEY4RVBQWWxxNXoxWjhqTXYvMkhIeFVQR1FFNUN2NEtSVWZRVVlDdzd6U0hDZUFBcjhESm5VZ3pkSHh2cEdHRWRJVTVWR3ZEclhJN3hucXdsZzF0R2lncW1vRmFBVnlLcVJzTmdFdlNRPT0hdjE=?share_link_id=478718202765)
+
+![Design Level EventStorming - Tablero completo](../assets/img/artifacts/event-storming/design-level-eventstorming-completo.png)
+
+El modelo resultante quedó organizado en treinta y seis subflujos distribuidos en seis contextos, con cincuenta y cuatro comandos, dieciocho agregados, ciento veinticinco reglas de negocio, sesenta y tres eventos de dominio y treinta y una políticas.
+
+| Bounded context | Agregados | Comandos | Reglas | Eventos | Políticas |
+|---|---|---:|---:|---:|---:|
+| `Identity & Access Management` | 2 | 4 | 9 | 5 | 1 |
+| `Care Relationship` | 2 | 10 | 19 | 10 | 4 |
+| `Nutritional Care` | 4 | 11 | 28 | 13 | 4 |
+| `Intake & Body Response` | 4 | 10 | 28 | 12 | 4 |
+| `Monitoring & Adherence` | 5 | 15 | 33 | 17 | 16 |
+| `Food Catalog` | 1 | 4 | 8 | 6 | 2 |
+| **Total** | **18** | **54** | **125** | **63** | **31** |
+
+![Design Level EventStorming - Detalle de un subflujo](../assets/img/artifacts/event-storming/design-level-eventstorming-detalle-subflujo.png)
+
+
 
 #### 2.5.1.1. Candidate Context Discovery
 
+Esta sección documenta la sesión en la que el equipo identificó los bounded contexts candidatos a partir del dominio modelado. La sesión tuvo una duración aproximada de dos horas y se aplicó la técnica look-for-pivotal-events, complementada al final con start-with-value para clasificar los contextos resultantes.
+
+El equipo recorrió la línea de tiempo buscando los eventos que cambian el estado del proceso de manera irreversible y que hacen que lo que ocurre después obedezca a reglas distintas de lo que ocurría antes. Se identificaron cuatro eventos pivote: `Care Link Established`, porque antes de él no existe relación alguna y después de él existe una relación consentida con obligaciones de acceso; `Nutrition Plan Published`, porque antes de él el profesional delibera y después existe un contrato que el paciente debe poder consultar; `Active Targets Updated`, porque es el hecho que cruza la frontera del consultorio hacia el periodo entre consultas; y `Sustained Deviation Detected`, porque devuelve el control al profesional después de un periodo enteramente asíncrono.
+
+El corte más importante quedó entre las fases 2 y 3 del tablero. El equipo verificó que a cada lado de esa línea cambian simultáneamente el número de actores, el requisito de consistencia y el modo de conectividad, lo que confirma que se trata de una frontera real y no de un cambio de pantalla. Sobre esa base se dibujaron las agrupaciones candidatas y cada una se sometió a cinco pruebas.
+
+| # | Prueba | Pregunta que responde |
+|---|---|---|
+| 1 | Lingüística | ¿Alguna palabra significa dos cosas distintas a cada lado de la línea? |
+| 2 | Invariante | ¿Qué regla protege este contexto que ningún otro puede proteger? |
+| 3 | Consistencia | ¿Exige consistencia fuerte inmediata o tolera consistencia eventual? |
+| 4 | Volatilidad | ¿A qué ritmo cambian el modelo y los datos? |
+| 5 | Competitiva | ¿Es aquí donde el producto se diferencia o donde solo debe estar a la altura? |
+
+La prueba lingüística fue la más productiva, porque cada ambigüedad encontrada justifica por sí sola una frontera: el término peso designa la medición clínica del profesional y también el autopesaje del paciente, que solo significa algo como tendencia; el término alimento designa el ítem del catálogo externo y también el evento de consumo de una persona concreta; y el término plan designa el artefacto clínico versionado y también el conjunto de metas del día. La primera ambigüedad separa `Nutritional Care` de `Intake & Body Response`, la segunda justifica el Anticorruption Layer sobre `Food Catalog` y la tercera justifica publicar un contrato reducido en lugar de exponer el plan completo.
+
+El resultado de la sesión fueron seis bounded contexts, clasificados por su aporte a la diferenciación del producto.
+
+| Clasificación | Bounded context | Responsabilidad | Consistencia |
+|---|---|---|---|
+| **Core** | `Intake & Body Response` | Capturar fielmente qué comió el paciente y cómo responde su cuerpo | Eventual, offline-first |
+| **Core** | `Monitoring & Adherence` | Comparar lo prescrito contra lo real e interpretar la diferencia | Eventual, ventana mínima de siete días |
+| Supporting | `Nutritional Care` | El acto clínico completo: evaluación, diagnóstico y prescripción | Fuerte, transaccional |
+| Supporting | `Care Relationship` | Quién puede ver a quién y con qué consentimiento | Fuerte, transaccional |
+| Generic | `Food Catalog` | Traducir el catálogo externo al dominio y cachearlo localmente | Eventual, cacheable |
+| Generic | `Identity & Access` | Autenticación y emisión del claim de rol | Delegada al proveedor |
+
+La clasificación de `Nutritional Care` como Supporting merece justificación explícita, porque es el contexto donde ocurre el acto profesional completo. El criterio de DDD no es la importancia sino la diferenciación: el expediente clínico, el diagnóstico y la prescripción versionada son exactamente el terreno que Nutrimind y Nutrium ya cubren, de modo que allí el objetivo es estar a la altura. Las tres piezas que constituyen la diferencia competitiva de Healthify son el registro por fotografía, el autopesaje expuesto como tendencia y el índice de consistencia; dos viven en `Intake & Body Response` y una en `Monitoring & Adherence`.
+
+La sesión también descartó explícitamente siete contextos candidatos, decisión que quedó registrada junto con la condición que los haría reaparecer.
+
+| Candidato descartado | Razón del descarte |
+|---|---|
+| `Patient Record` | Es un read model compuesto que une tres contextos y se publica vía BFF; confundir una vista con un contexto es uno de los errores más frecuentes en DDD |
+| `Assessment` como contexto propio | Acoplamiento máximo con diagnóstico e intervención y ninguna ambigüedad lingüística en la frontera |
+| `Portion Estimation / AI` | Es una capacidad técnica, no un lenguaje distinto; vive dentro de `Intake & Body Response` |
+| `Target Calculation` | Es aritmética determinista con parámetros elegidos por un humano; son reglas del agregado `Nutrition Plan` |
+| `Notifications` | Infraestructura genérica frente a la cual el sistema es conformista |
+| `Scheduling` | Demasiado delgado; se absorbe como el agregado `Scheduled Follow Up` |
+| `Gamification` | No existe por decisión ética del producto; convertirlo en contexto institucionalizaría algo que el equipo prohibió |
+
+![Candidate Context Discovery - Agrupación de contextos sobre el EventStorm](../assets/img/artifacts/event-storming/candidate-context-discovery.png)
+
 #### 2.5.1.2. Domain Message Flows Modeling
+
+Esta sección documenta cómo colaboran los bounded contexts para resolver los casos de negocio relevantes. Para ello el equipo aplicó Domain Storytelling, elaborando un diagrama por escenario en el que cada actor y cada contexto aparece como un participante, y cada mensaje se numera en el orden en que ocurre. El propósito de estos diagramas es verificar que las fronteras definidas en la sección anterior resisten los flujos reales del negocio y que ningún escenario obliga a un contexto a conocer el modelo interno de otro.
+
+Se modelaron cuatro escenarios, elegidos por ser los que más fronteras atraviesan.
+
+**Escenario 1 — Vinculación del paciente durante la consulta.** El profesional emite la invitación, el paciente la redime escaneando el código QR y otorga su consentimiento; `Care Relationship` publica `Care Link Established` y `Monitoring & Adherence` reacciona abriendo la ventana de evaluación. El escenario demuestra que el vínculo es condición previa de todo lo demás.
+
+![Domain Message Flow - Vinculación del paciente](../assets/img/artifacts/domain-storytelling/domain-storytelling-vinculacion.svg)
+
+**Escenario 2 — Prescripción y publicación de metas.** El profesional registra la evaluación, emite el diagnóstico, elige la base de cálculo, prescribe las metas y publica el plan; `Nutritional Care` publica `Active Targets Updated`, que es consumido simultáneamente por `Intake & Body Response` para refrescar su caché de metas, por `Monitoring & Adherence` para tomar el snapshot del día y por `Care Relationship` para marcar las metas como pendientes de acuse de recibo. El escenario evidencia que lo que cruza la frontera es el contrato reducido y no el plan clínico: el diagnóstico y la base de cálculo nunca salen de `Nutritional Care`.
+
+![Domain Message Flow - Prescripción y publicación de metas](../assets/img/artifacts/domain-storytelling/domain-storytelling-prescripcion.svg)
+
+**Escenario 3 — Registro de comida entre consultas, con y sin conexión.** El paciente fotografía su comida, ML Kit propone la estimación en el dispositivo, el paciente la confirma o la ajusta y `Intake & Body Response` publica `Meal Logged` y `Estimate Confirmed By Patient`; `Monitoring & Adherence` evalúa el día contra el snapshot correspondiente. La variante sin conexión muestra la entrada encolada y el reprocesamiento de la ventana tras `Entry Synchronized`. El escenario demuestra que el profesional no participa en ningún paso de la cadena.
+
+![Domain Message Flow - Registro de comida y sincronización](../assets/img/artifacts/domain-storytelling/domain-storytelling-registro-comida.svg)
+
+**Escenario 4 — Detección de desviación y decisión del profesional.** `Monitoring & Adherence` detecta la desviación sostenida y publica la señal; `Nutritional Care` la recibe mediante una política, crea un ítem de revisión y lo deposita en la bandeja del profesional, quien decide si ajusta el plan o cierra el ítem sin ajustarlo. El escenario es el que más se discutió en la sesión, porque hace visible la decisión de diseño más importante del modelo: la cadena automática entra por una política y muere en una bandeja de entrada, de manera que ningún algoritmo modifica un plan clínico.
+
+![Domain Message Flow - Detección de desviación y decisión clínica](../assets/img/artifacts/domain-storytelling/domain-storytelling-desviacion.svg)
 
 #### 2.5.1.3. Bounded Context Canvases
 
+Esta sección presenta el Bounded Context Canvas de cada uno de los seis contextos identificados. La elaboración siguió el proceso iterativo propuesto por la técnica: se definió primero el Context Overview con el propósito y la clasificación estratégica del contexto, se destilaron después las reglas de negocio y el lenguaje ubicuo propio del contexto, se analizaron sus capabilities distinguiendo los comandos que recibe, las consultas que atiende y los eventos que publica, se capturaron sus dependencias entrantes y salientes con el patrón de relación correspondiente, y finalmente se sometió cada canvas a una crítica de diseño en la que el equipo buscó señales de frontera mal trazada, como un número desproporcionado de dependencias o un lenguaje que se repite en dos contextos.
+
+Los canvases se elaboraron en el orden de importancia estratégica de cada contexto, comenzando por los dos contextos Core.
+
+**`Intake & Body Response` (Core).** Su propósito es capturar fielmente lo que el paciente come y cómo responde su cuerpo, sin emitir ningún juicio sobre ello. Es de escritura exclusiva del paciente: no existe ningún comando del profesional en este contexto, y el profesional accede a la información únicamente a través de un read model. Sus reglas más características son que una entrada nunca se elimina, que la procedencia y la marca de tiempo local son obligatorias, que la estimación de la fotografía se almacena solo como propuesta junto con su nivel de confianza, y que el valor diario del autopesaje nunca se expone como titular sino como tendencia.
+
+![Intake & Body Response Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/intake-body-response.puml)
+
+**`Monitoring & Adherence` (Core).** Su propósito es comparar lo prescrito contra lo realmente registrado e interpretar la diferencia. Es el contexto que concentra dieciséis de las treinta y una políticas del modelo, lo que confirma su naturaleza reactiva: casi nadie lo invoca directamente, sino que actúa a partir de lo que ocurre en los demás contextos. Sus reglas más características son que ningún día se evalúa contra metas distintas de las vigentes ese día, que una ventana menor a siete días nunca produce desviación, y que el vacío de registro se excluye del cálculo de desviación y nunca escala al profesional.
+
+![Monitoring & Adherence Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/monitoring-adherence.puml)
+
+**`Nutritional Care` (Supporting).** Su propósito es sostener el acto clínico completo: evaluación, diagnóstico, prescripción y ajuste del plan entre consultas. Sus reglas más características son que una evaluación cerrada es inmutable y su corrección genera una evaluación nueva, que no existe plan sin diagnóstico vigente, que todo ajuste exige una razón y que la versión anterior se supersede pero nunca se elimina. Es también el contexto que define el Published Language `Active Targets`.
+
+![Nutritional Care Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/nutritional-care.puml)
+
+**`Care Relationship` (Supporting).** Su propósito es determinar quién puede ver a quién y con qué consentimiento. Publica una única pregunta al resto del sistema, `Is Care Link Active`, y es donde se hace cumplir técnicamente el principio de asimetría entre los dos roles. Sus reglas más características son que la invitación es de un solo uso y con vencimiento, que el paciente no puede autovincularse, que el vínculo nace inactivo hasta que exista consentimiento y que el consentimiento es siempre revocable sin justificación.
+
+![Care Relationship Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/care-relationship.puml)
+
+**`Food Catalog` (Generic).** Su propósito es traducir el catálogo nutricional externo al dominio y mantenerlo disponible localmente. Sus reglas más características son que ningún identificador externo entra al dominio, que la traducción de taxonomía es obligatoria y que la búsqueda cae en la caché local cuando no hay conexión.
+
+![Food Catalog Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/food-catalog.puml)
+
+**`Identity & Access` (Generic).** Su propósito es autenticar y emitir el claim de rol. Es el único contexto que no publica ningún evento hacia los demás, porque el claim viaja dentro del token de sesión, que es infraestructura y no dominio. Sus reglas más características son que el rol se declara en el registro, que es inmutable durante la sesión y que cambiar de rol exige volver a autenticarse.
+
+![IAM Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/iam.puml)
+
 ### 2.5.2. Context Mapping
+
+Esta sección documenta la elaboración del Context Map, que representa las relaciones estructurales entre los seis bounded contexts. El equipo revisó la información recolectada en los canvases y, antes de fijar el mapa, evaluó explícitamente cuatro alternativas mediante las preguntas propias de la técnica: si convenía redistribuir capabilities entre contextos, si alguno debía dividirse, si alguna capability debía duplicarse y si hacía falta crear servicios compartidos.
+
+De esa discusión surgieron cuatro decisiones. La primera fue no trasladar el cálculo del índice de consistencia a `Intake & Body Response` pese a que allí están sus dos insumos, porque si el contexto que registra también juzga, el registro deja de ser un lugar seguro para declarar y se incentiva exactamente la omisión selectiva que el producto busca eliminar. La segunda fue mantener la tendencia de peso dentro de `Intake & Body Response`, porque es un suavizado de los datos del propio paciente que no necesita el plan y debe estar disponible sin conexión, a diferencia de la desviación y del índice, que sí requieren el plan y umbrales de interpretación. La tercera fue no crear un contexto compartido de expediente, ya que `Patient Record` es un read model compuesto que se publica vía BFF. La cuarta fue reducir el shared kernel al mínimo deliberado: únicamente los identificadores `PatientId`, `PractitionerId`, `CareLinkId` y `PlanId`, y las unidades de medida, bajo el criterio de que un shared kernel grande es un bounded context que no se llegó a dibujar.
+
+![Context Map de Healthify](../assets/img/artifacts/context-map.png)
+
+El mapa se lee de upstream a downstream en el sentido de las flechas, y cada contexto conserva el color de su clasificación estratégica: rojo para los dos contextos Core, azul para los Supporting, gris para los Generic y amarillo para el sistema externo. Las líneas continuas representan dependencias de las que el contexto downstream necesita para operar, ya sea un contrato consultado o datos que alimentan su modelo; las líneas punteadas representan acoplamientos deliberadamente débiles, en los que el downstream solo se conforma con un modelo ajeno o reacciona a una notificación sin depender de ella para funcionar.
+
+Los patrones de relación seleccionados para cada integración son los siguientes.
+
+| Relación | Patrón | Justificación |
+|---|---|---|
+| `Identity & Access` → `Care Relationship` | Conformist | El claim de rol viaja en el token de sesión: es infraestructura y no dominio. `Care Relationship` lo adopta tal cual para hacer cumplir la asimetría entre profesional y paciente |
+| `Identity & Access` → `Nutritional Care` | Conformist | Los comandos clínicos exigen el rol de profesional, que se toma sin traducción del proveedor de identidad. Los contextos del paciente no dependen del rol directamente, sino del vínculo que resuelve `Care Relationship` |
+| `Care Relationship` → `Nutritional Care` | Open Host Service | Publica una sola pregunta, `Is Care Link Active`, que `Nutritional Care` consulta antes de evaluar, diagnosticar o prescribir sobre un paciente |
+| `Care Relationship` → `Intake & Body Response` | Open Host Service | La misma pregunta determina si lo que registra el paciente puede ser leído por un profesional a través del read model |
+| `Care Relationship` → `Monitoring & Adherence` | Open Host Service + eventos | Además de consultar el vínculo, `Monitoring` reacciona a `Care Link Established` abriendo la ventana de evaluación, y deja de evaluar cuando el consentimiento se revoca |
+| `Nutritional Care` → `Intake & Body Response` | Published Language | El plan clínico no se expone entero; se publica `Active Targets`, un contrato reducido y versionado que `Intake & Body Response` cachea para operar sin conexión. El diagnóstico y la base de cálculo nunca cruzan la frontera |
+| `Nutritional Care` → `Monitoring & Adherence` | Integración por eventos | `Monitoring` consume `Active Targets Updated` y las mediciones clínicas para tomar el snapshot de metas vigentes del día, de modo que ningún día se evalúe contra metas distintas de las que regían entonces |
+| `Nutritional Care` ⇢ `Care Relationship` | Integración por eventos | `Care Relationship` reacciona a `Active Targets Updated` marcando las metas como pendientes de acuse de recibo por el paciente; es una notificación y no una dependencia de datos |
+| `Intake & Body Response` → `Monitoring & Adherence` | Customer/Supplier | `Monitoring` consume ingesta y tendencia de peso como cliente con voz: si necesita un dato nuevo, lo negocia con el proveedor. El contexto que registra no juzga, y el que juzga no registra |
+| `Monitoring & Adherence` ⇢ `Nutritional Care` | Integración por eventos, nunca por comandos | Modelarlo como comando crearía un ciclo de dependencia y permitiría que un algoritmo modificara un plan clínico. `Monitoring` publica la señal de desviación, `Nutritional Care` la convierte en un ítem de revisión y el profesional decide |
+| Open Food Facts / USDA → `Food Catalog` | Anticorruption Layer | La taxonomía externa es inestable, incompleta para el mercado peruano y responde a un lenguaje conceptual distinto; ningún identificador externo entra al dominio |
+| `Food Catalog` → `Intake & Body Response` | Customer/Supplier | El registro necesita el alimento en el momento del uso y no cuando el catálogo se actualice, por lo que `Intake & Body Response` define qué búsquedas y qué datos nutricionales debe garantizar el catálogo, incluida su disponibilidad en caché local |
+
+Dos rasgos del mapa merecen destacarse. El primero es que `Care Relationship` es el único contexto que aparece como upstream de los tres contextos que manejan información del paciente, lo que refleja que el vínculo consentido es condición previa de todo lo demás. El segundo es que el único ciclo aparente, entre `Nutritional Care` y `Monitoring & Adherence`, no es un ciclo de dependencia: en un sentido viajan las metas vigentes y en el otro solo una señal punteada que termina en la bandeja del profesional, de manera que ninguno de los dos contextos puede modificar el estado del otro.
+
+El mapa resultante contiene trece integraciones por evento originadas en nueve eventos distintos, sobre un total de sesenta y tres eventos del modelo. Que el ochenta y seis por ciento del comportamiento permanezca dentro de un solo contexto es la señal que el equipo tomó como confirmación de que las fronteras están bien trazadas; si durante la implementación apareciera la necesidad de un décimo evento de integración, sería indicio de que alguna frontera está filtrando responsabilidades.
 
 ### 2.5.3. Software Architecture
 

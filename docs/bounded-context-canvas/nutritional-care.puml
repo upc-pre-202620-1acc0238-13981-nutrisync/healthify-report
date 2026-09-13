@@ -1,0 +1,99 @@
+@startsalt
+{
+{#
+{
+<size:22><b>Name</b></size>
+<size:14>Nutritional Care</size>
+} | {
+<size:22><b>Model Traits</b></size>
+<color:gray>draft, execute, audit, enforcer, interchange, gateway, etc.</color>
+<b>Execute</b> · <b>Specification</b> · publishes the Active Targets contract
+}
+{
+{
+<size:22><b>Description</b></size>
+<color:gray>Summary of purpose and responsibilities</color>
+Support the complete clinical act: assessment,
+diagnosis, prescription and plan adjustment
+between visits.
+}
+--
+{
+<size:22><b>Strategic Classification</b></size>
+{
+<color:gray><u>Domain</u></color> | <color:gray><u>Business Model</u></color> | <color:gray><u>Evolution</u></color>
+<color:gray>Core</color> | <color:gray>Revenue</color> | <color:gray>Genesis</color>
+<b>Supporting</b> | <color:gray>Engagement</color> | <b>Custom built</b>
+<color:gray>Generic</color> | <b>Compliance</b> | <color:gray>Product</color>
+<color:gray>Other</color> | <color:gray>Cost reduction</color> | <color:gray>Commodity</color>
+}
+}
+} | {
+<size:22><b>Information and Services Provided</b></size>
+{#
+{
+<b>Queryable Information</b>
+Assessments
+Active Diagnosis
+Nutrition Plans · Plan Version History
+Active Plan · Active Targets
+Practitioner Review Inbox
+} | {
+<b>Invokable Commands</b>
+Record Assessment
+Take Clinical Measurement
+Close Assessment
+Issue Diagnosis
+Propose Targets · Prescribe Targets
+Publish Nutrition Plan
+Adjust Nutrition Plan
+Resolve Review Item
+}
+{
+<b>Published Events</b>
+Active Targets Updated · Published Language
+Clinical Measurement Taken
+} | {
+<b>Reactive Jobs</b>
+Nutrition Plan Published → Publish Active Targets
+Nutrition Plan Adjusted → Publish Active Targets
+Sustained Deviation Detected → Open Review Item
+Alert Escalated To Practitioner → Open Review Item
+}
+}
+}
+{
+{
+<size:22><b>Business Decisions</b></size>
+<color:gray>Key business rules, policies, and decisions</color>
+A closed assessment is immutable; a correction creates a new assessment
+No plan without an active diagnosis
+The practitioner chooses equation, reference weight, activity factor and deficit
+Overriding a proposal requires a reason
+Every adjustment requires a reason; previous versions are superseded, never deleted
+Diagnosis and calculation basis never leave the context
+A review item never modifies the plan automatically
+}
+--
+{
+<size:22><b>Ubiquitous Language</b></size>
+<color:gray>Key domain terminology</color>
+Nutritional Assessment · Clinical Measurement · Nutritional Diagnosis
+Nutrition Plan · Calculation Basis · Target Proposal
+Prescribed Targets · Active Targets · Review Item
+}
+} | {
+<size:22><b>Dependencies and Relationships</b></size>
+{#
+<b>Suppliers</b> | . | <b>Consumers</b> | .
+<color:gray>Name</color> | <color:gray>Relationship</color> | <color:gray>Name</color> | <color:gray>Relationship</color>
+Care Relationship | Open Host Service | Intake & Body Response | Published Language
+Identity & Access | Conformist | Monitoring & Adherence | Customer/Supplier
+Monitoring & Adherence | Events only | Care Relationship | Events only
+. | . | Patient Record · BFF | Open Host Service
+}
+}
+}
+<color:gray><b>Bounded Context Canvas V2</b> · Nick Tune · ntcoding.co.uk</color>
+}
+@endsalt
