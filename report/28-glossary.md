@@ -21,3 +21,19 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **User Persona** | Arquetipo ficticio, basado en datos de investigación, que representa a un segmento de usuarios y guía las decisiones de diseño. |
 | **User Task Matrix** | Matriz que relaciona las tareas que realizan los distintos segmentos de usuarios con su frecuencia e importancia. |
 
+## Gestión ágil y especificación de requisitos
+
+| Término | Definición |
+|---|---|
+| **Criterios de aceptación** | Condiciones verificables, generalmente redactadas en formato Given/When/Then, que una historia de usuario debe cumplir para considerarse terminada. |
+| **Epic** | Agrupación de historias de usuario relacionadas que, en conjunto, entregan una capacidad amplia del producto. |
+| **Objetivo SMART** | Objetivo Específico, Medible, Alcanzable, Relevante y con Tiempo definido (*Specific, Measurable, Attainable, Relevant, Time-bound*). |
+| **Product Backlog** | Lista priorizada y dinámica de todo el trabajo pendiente del producto, expresado principalmente como historias de usuario. |
+| **Scrum** | Marco de trabajo ágil que organiza el desarrollo en iteraciones de duración fija llamadas sprints, con roles, eventos y artefactos definidos. |
+| **Sprint** | Iteración de duración fija en la que el equipo construye un incremento potencialmente entregable del producto. |
+| **Sprint Backlog** | Subconjunto del Product Backlog seleccionado para un sprint, junto con el plan para entregarlo. |
+| **Sprint Planning / Sprint Review** | Eventos de Scrum en los que, respectivamente, se planifica el trabajo del sprint y se inspecciona el incremento obtenido con los interesados. |
+| **Stakeholder** | Persona u organización con interés o influencia en el producto: usuarios, docentes, inversionistas, equipo de desarrollo, entre otros. |
+| **Story Points** | Unidad relativa de estimación del esfuerzo y complejidad de una historia de usuario; en este proyecto se usa la escala 1, 2, 3, 5 y 8. |
+| **User Story (Historia de usuario)** | Descripción breve de una funcionalidad desde la perspectiva de quien la necesita, con la forma "Como… quiero… para…". |
+
