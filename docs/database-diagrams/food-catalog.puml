@@ -1,0 +1,43 @@
+@startuml Healthify - Food Catalog Database Diagram
+
+skinparam linetype ortho
+hide circle
+hide methods
+
+!define TABLE(name,desc) entity name as "desc" << (T, #AADDFF) >>
+!define EXT(name,desc) entity name as "desc" << (E, #DDDDDD) >>
+!define PK(x) <u>x</u>
+!define FK(x) <i>x</i>
+
+TABLE(reference_foods, "reference_foods") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  local_name : VARCHAR(200) NOT NULL
+  energy_kcal_per_100g : DECIMAL(10,2) NOT NULL
+  protein_g_per_100g : DECIMAL(10,2) NOT NULL
+  carb_g_per_100g : DECIMAL(10,2) NOT NULL
+  fat_g_per_100g : DECIMAL(10,2) NOT NULL
+  source_hash : VARCHAR(64) NOT NULL
+  is_local_override : TINYINT(1) NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+EXT(diary_entries, "diary_entries  (Intake and Body Response)") {
+  PK(id) : INT
+  --
+  FK(proposed_reference_food_id) : INT
+  FK(confirmed_reference_food_id) : INT
+}
+
+EXT(users, "users  (IAM)") {
+  PK(id) : INT
+  --
+  role : VARCHAR(20)
+}
+
+reference_foods ||..o{ diary_entries : "resolved via ACL"
+
+users ||..o{ reference_foods : "creates local override"
+
+@enduml

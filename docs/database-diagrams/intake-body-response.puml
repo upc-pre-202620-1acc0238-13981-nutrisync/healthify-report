@@ -1,0 +1,96 @@
+@startuml Healthify - Intake and Body Response Database Diagram
+
+skinparam linetype ortho
+hide circle
+hide methods
+
+!define TABLE(name,desc) entity name as "desc" << (T, #AADDFF) >>
+!define EXT(name,desc) entity name as "desc" << (E, #DDDDDD) >>
+!define PK(x) <u>x</u>
+!define FK(x) <i>x</i>
+
+TABLE(active_targets_caches, "active_targets_caches") {
+  PK(patient_id) : INT NOT NULL
+  --
+  plan_version : INT NOT NULL
+  valid_from : DATETIME NOT NULL
+  energy_kcal : DECIMAL(10,2) NOT NULL
+  protein_g : DECIMAL(10,2) NOT NULL
+  carb_g : DECIMAL(10,2) NOT NULL
+  fat_g : DECIMAL(10,2) NOT NULL
+  refreshed_at : DATETIME NOT NULL
+  guidelines : JSON NOT NULL
+  restrictions : JSON NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(diary_entries, "diary_entries") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(patient_id) : INT NOT NULL
+  local_timestamp : DATETIME(6) NOT NULL
+  local_utc_offset_minutes : INT NOT NULL
+  provenance : VARCHAR(20) NOT NULL
+  photo_ref : VARCHAR(500)
+  FK(proposed_reference_food_id) : INT
+  proposed_portion_grams : DECIMAL(10,2)
+  proposed_confidence : DECIMAL(6,4)
+  proposed_estimated_at : DATETIME
+  FK(confirmed_reference_food_id) : INT
+  confirmed_portion_grams : DECIMAL(10,2)
+  confirmed_at : DATETIME
+  sync_state : VARCHAR(20) NOT NULL
+  client_entry_id : CHAR(36)
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(self_weigh_ins, "self_weigh_ins") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(patient_id) : INT NOT NULL
+  value_kg : DECIMAL(10,2) NOT NULL
+  local_timestamp : DATETIME(6) NOT NULL
+  local_utc_offset_minutes : INT NOT NULL
+  protocol_fasted_state : TINYINT(1) NOT NULL
+  protocol_same_time_of_day : TINYINT(1) NOT NULL
+  protocol_same_scale : TINYINT(1) NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(weight_trends, "weight_trends") {
+  PK(patient_id) : INT NOT NULL
+  --
+  window_size : INT NOT NULL
+  last_recalculated_at : DATETIME NOT NULL
+  points : JSON NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+EXT(reference_foods, "reference_foods  (Food Catalog)") {
+  PK(id) : INT
+  --
+  local_name : VARCHAR(200)
+}
+
+EXT(users, "users  (IAM)") {
+  PK(id) : INT
+  --
+  role : VARCHAR(20)
+}
+
+users ||..o| active_targets_caches : "patient_id"
+users ||..o{ diary_entries : "patient_id"
+users ||..o{ self_weigh_ins : "patient_id"
+users ||..o| weight_trends : "patient_id"
+
+weight_trends ||..o{ self_weigh_ins : "smoothed from readings"
+
+active_targets_caches ||..o{ diary_entries : "targets the day"
+
+reference_foods ||..o{ diary_entries : "proposed / confirmed food"
+
+@enduml

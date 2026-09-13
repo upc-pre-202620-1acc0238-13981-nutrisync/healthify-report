@@ -1,0 +1,543 @@
+@startuml Healthify - Monitoring and Adherence - Domain
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.MonitoringAdherence.Domain" {
+
+  package "Model.Aggregates" {
+    ' One window per care relationship: it opens when the link is established
+    ' and closes when the link is revoked. It holds three series that are
+    ' deliberately never merged into one another.
+    class EvaluationWindow {
+      +{static} MinimumDays: int = 7
+      -Id: WindowId
+      -PatientId: int
+      -CareLinkId: int
+      -WindowDays: int
+      -FromDate: DateTime
+      -ToDate: DateTime
+      -State: WindowState
+      -ClosedAt: DateTimeOffset?
+      -LastLoggingGapFlaggedOn: DateTime?
+      -LastPatientRemindedAt: DateTimeOffset?
+      -_targetsSnapshots: List<TargetsSnapshot>
+      -_dailyComplianceSeries: List<DailyCompliance>
+      -_anthropometrySeries: List<AnthropometryPoint>
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +From: DateOnly <<derived>>
+      +To: DateOnly <<derived>>
+      +IsOpen: bool <<derived>>
+      +TargetsSnapshots: IReadOnlyList<TargetsSnapshot>
+      +TargetsSnapshot: TargetsSnapshot? <<derived>>
+      +DailyComplianceSeries: IReadOnlyList<DailyCompliance>
+      +AnthropometrySeries: IReadOnlyList<AnthropometryPoint>
+      +LoggedDaysCount: int <<derived>>
+      +IntakeSummary: IntakeSummary <<derived>>
+      #EvaluationWindow()
+      +EvaluationWindow(command: OpenEvaluationWindowCommand, windowDays: int, from: DateOnly)
+      +TakeSnapshot(snapshot: TargetsSnapshot): bool
+      +SnapshotInForceOn(date: DateOnly): TargetsSnapshot?
+      +AppendAnthropometryPoint(point: AnthropometryPoint): bool
+      +RecordDayEvaluation(day: DailyCompliance): bool
+      +MarkUnloggedDaysBefore(date: DateOnly): IReadOnlyList<DailyCompliance>
+      +DayEvaluation(date: DateOnly): DailyCompliance?
+      +CountingThrough(today: DateOnly): DateOnly
+      +SpanDays(today: DateOnly): int
+      +HasMinimumSpan(today: DateOnly): bool
+      +HorizonDays(today: DateOnly): IReadOnlyList<DailyCompliance>
+      +LastLoggedDate(): DateOnly?
+      +FlagLoggingGap(asOf: DateOnly): bool
+      +RemindPatient(): bool
+      +Close(closedAt: DateTimeOffset): void
+    }
+
+    ' A distance between what was prescribed and what was recorded, large
+    ' enough and repeated enough to be worth a name. Nothing here grades
+    ' anybody: a direction, a size and how many days it held.
+    class Deviation {
+      -Id: DeviationId
+      -WindowRef: WindowId
+      -PatientId: int
+      -MagnitudeRelativeValue: decimal
+      -MagnitudeEnergyKcal: decimal
+      -Direction: DeviationDirection
+      -DetectedAt: DateTimeOffset
+      -IsSustained: bool
+      -SustainedAt: DateTimeOffset?
+      -LoggedDaysConsidered: int
+      -DeviatingDaysConsidered: int
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +Magnitude: DeviationMagnitude <<derived>>
+      #Deviation()
+      +Deviation(windowRef, patientId, magnitude, direction, loggedDays, deviatingDays)
+      +{static} DetectFrom(windowRef: WindowId, patientId: int, horizon): Deviation?
+      +Restate(magnitude, loggedDaysConsidered, deviatingDaysConsidered): bool
+      +MarkSustained(sustainedRatio: decimal): bool
+      +Evidence(): string
+    }
+
+    ' How well the weight series and the recorded intake series agree. The
+    ' order is compiled in: Escalate refuses to run while ShownToPatientAt is
+    ' null, so a practitioner can never learn about an alert the patient has
+    ' not been asked about first. The patient is the root: one index each.
+    class ConsistencyIndex {
+      +{static} EnergyKcalPerKg: decimal = 7700
+      -PatientId: int <<key>>
+      -Value: decimal
+      -State: ConsistencyState
+      -FirstFlaggedAt: DateTimeOffset?
+      -ShownToPatientAt: DateTimeOffset?
+      -EscalatedAt: DateTimeOffset?
+      -AlertSinceAt: DateTimeOffset?
+      -LastRecomputedAt: DateTimeOffset
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +IsInAlert: bool <<derived>>
+      #ConsistencyIndex()
+      +ConsistencyIndex(patientId: int)
+      +Recompute(weightSeries, intakeSeries, alertThreshold: decimal): bool
+      +{static} CanCompute(weightSeries, intakeSeries): bool
+      +PromptPatient(): bool
+      +ThreeWeeksInAlertElapsed(escalationWeeks: int, asOf: DateTimeOffset): bool
+      +Escalate(): bool
+      +Evidence(): string
+      -NextState(alertThreshold: decimal): string
+      -MoveTo(nextState: string): bool
+      -{static} Later(a: DateOnly, b: DateOnly): DateOnly
+      -{static} Earlier(a: DateOnly, b: DateOnly): DateOnly
+    }
+
+    ' A record that something was decided on a date, not a workflow this
+    ' platform then manages. There is no state and no method that changes it.
+    class Referral {
+      -Id: ReferralId
+      -PatientId: int
+      -Specialty: Specialty
+      -Reason: ReferralReason
+      -IssuedBy: int
+      -IssuedAt: DateTimeOffset
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      #Referral()
+      +Referral(command: RecordReferralCommand)
+    }
+
+    ' The next visit, on the calendar. One transition, and it ends here:
+    ' nothing reads Missed to revoke a link or discharge a patient.
+    class ScheduledFollowUp {
+      -Id: FollowUpId
+      -PatientId: int
+      -PractitionerId: int
+      -ScheduledFor: DateTimeOffset
+      -State: FollowUpState
+      -MissedAt: DateTimeOffset?
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +IsScheduled: bool <<derived>>
+      #ScheduledFollowUp()
+      +ScheduledFollowUp(command: ScheduleFollowUpCommand)
+      +MarkMissed(asOf: DateTimeOffset): bool
+    }
+  }
+
+  package "Model.ValueObjects" {
+    class WindowId <<record>> {
+      -Value: int
+      +{static} FromRaw(value: int): WindowId
+    }
+    class DeviationId <<record>> {
+      -Value: int
+      +{static} FromRaw(value: int): DeviationId
+    }
+    class ReferralId <<record>> {
+      -Value: int
+      +{static} FromRaw(value: int): ReferralId
+    }
+    class FollowUpId <<record>> {
+      -Value: int
+      +{static} FromRaw(value: int): FollowUpId
+    }
+    ' The prescribed daily numbers as they stood at one moment, frozen. No
+    ' diagnosis, no rationale, no calculation basis: none of those ever leave
+    ' the context that owns them.
+    class TargetsSnapshot <<record>> {
+      -PlanVersion: int
+      -EnergyKcal: decimal
+      -ProteinG: decimal
+      -CarbG: decimal
+      -FatG: decimal
+      -TakenAt: DateTimeOffset
+      +EffectiveFrom: DateOnly <<derived>>
+    }
+    ' Three of the four outcomes describe eating; the fourth describes an empty
+    ' diary, and it is deliberately not one of the other three.
+    class DailyCompliance <<record>> {
+      +{static} Met: string
+      +{static} Exceeded: string
+      +{static} Short: string
+      +{static} Unlogged: string
+      +{static} ToleranceRatio: decimal = 0.10
+      -Date: DateOnly
+      -Outcome: string
+      -ObservedEnergyKcal: decimal
+      -TargetEnergyKcal: decimal
+      -PlanVersion: int
+      -EntryCount: int
+      -EvaluatedAt: DateTimeOffset
+      +IsLogged: bool <<derived>>
+      +IsOutsideBand: bool <<derived>>
+      +RelativeDeviation: decimal <<derived>>
+      +Direction: string? <<derived>>
+      +{static} Evaluate(date, hasAnyEntry, entryCount, observedEnergyKcal, snapshot): DailyCompliance
+      +SaysTheSameAs(other: DailyCompliance): bool
+    }
+    ' Source has exactly one legal value, and that is the enforcement: nothing
+    ' can be appended that did not come from a clinical measurement.
+    class AnthropometryPoint <<record>> {
+      +{static} ClinicalMeasurement: string
+      -Date: DateOnly
+      -ValueKg: decimal
+      -Source: string
+      +{static} FromClinicalMeasurement(date: DateOnly, valueKg: decimal): AnthropometryPoint
+    }
+    class WindowState <<record>> {
+      +{static} Open: string
+      +{static} Closed: string
+      -Value: string
+      +IsOpen: bool <<derived>>
+      +IsClosed: bool <<derived>>
+    }
+    ' Computed from the daily series rather than stored, so it can never
+    ' disagree with the series it summarises. Logged and unlogged days are
+    ' counted separately and never added together.
+    class IntakeSummary <<record>> {
+      -LoggedDays: int
+      -UnloggedDays: int
+      -TotalEnergyKcal: decimal
+      -MeanObservedEnergyKcal: decimal
+      -MeanTargetEnergyKcal: decimal
+      +{static} Empty: IntakeSummary
+      +{static} From(days: IEnumerable<DailyCompliance>): IntakeSummary
+    }
+    class DeviationDirection <<record>> {
+      +{static} Above: string
+      +{static} Below: string
+      -Value: string
+      +IsAbove: bool <<derived>>
+      +IsBelow: bool <<derived>>
+    }
+    class DeviationMagnitude <<record>> {
+      -RelativeValue: decimal
+      -AbsoluteEnergyKcal: decimal
+    }
+    ' Three states, and none of them is a judgement about the person.
+    class ConsistencyState <<record>> {
+      +{static} Normal: string
+      +{static} Watch: string
+      +{static} Alert: string
+      -Value: string
+      +IsNormal: bool <<derived>>
+      +IsWatch: bool <<derived>>
+      +IsAlert: bool <<derived>>
+    }
+    class Specialty <<record>> {
+      +{static} MaximumLength: int = 120
+      -Value: string
+    }
+    class ReferralReason <<record>> {
+      +{static} MaximumLength: int = 1000
+      -Value: string
+    }
+    ' Completed exists because the model names it; no command reaches it.
+    class FollowUpState <<record>> {
+      +{static} Scheduled: string
+      +{static} Completed: string
+      +{static} Missed: string
+      -Value: string
+      +IsScheduled: bool <<derived>>
+      +IsCompleted: bool <<derived>>
+      +IsMissed: bool <<derived>>
+    }
+  }
+
+  package "Model.Commands" {
+    ' Every command of Subflows 5.1 to 5.9 and 5.11 is driven by a policy:
+    ' none of them has an endpoint, because nobody decides to evaluate a day.
+    class OpenEvaluationWindowCommand <<record>>
+    class SnapshotActiveTargetsCommand <<record>>
+    class AppendAnthropometryPointCommand <<record>>
+    class EvaluateDayCommand <<record>>
+    class ReEvaluateWindowCommand <<record>>
+    class DetectDeviationCommand <<record>>
+    class FlagSustainedDeviationCommand <<record>>
+    class RecomputeConsistencyIndexCommand <<record>>
+    class PromptPatientCommand <<record>>
+    class EscalateToPractitionerCommand <<record>>
+    class FlagLoggingGapCommand <<record>>
+    class RemindPatientCommand <<record>>
+    class CloseEvaluationWindowCommand <<record>>
+    ' The only two commands in this context a person issues.
+    class RecordReferralCommand <<record>>
+    class ScheduleFollowUpCommand <<record>>
+    class FlagMissedFollowUpCommand <<record>>
+  }
+
+  package "Model.Queries" {
+    class GetEvaluationWindowsByPatientIdQuery <<record>>
+    class GetCurrentEvaluationWindowByPatientIdQuery <<record>>
+    class GetDailyComplianceByPatientIdQuery <<record>>
+    class GetOpenEvaluationWindowsQuery <<record>>
+    class GetDeviationsByPatientIdQuery <<record>>
+    class GetConsistencyIndexByPatientIdQuery <<record>>
+    class GetEscalatableConsistencyIndicesQuery <<record>>
+    class GetReferralsByPatientIdQuery <<record>>
+    class GetScheduledFollowUpsByPractitionerIdQuery <<record>>
+    class GetOverdueScheduledFollowUpsQuery <<record>>
+  }
+
+  package "Model.Events" {
+    class EvaluationWindowOpened <<record>>
+    class TargetsSnapshotTaken <<record>>
+    class AnthropometryPointAppended <<record>>
+    class DayEvaluated <<record>>
+    class DailyComplianceComputed <<record>>
+    class WindowReEvaluated <<record>>
+    class DeviationDetected <<record>>
+    ' Integration event 12 of 13: crosses into the clinical context.
+    class SustainedDeviationDetected <<record>> {
+      -DeviationId: int
+      -PatientId: int
+      -Magnitude: decimal
+      -Direction: string
+      -Evidence: string
+    }
+    class ConsistencyIndexRecomputed <<record>>
+    ' Exactly one subscriber, and that subscriber asks the patient.
+    class ConsistencyAlertRaised <<record>>
+    class PatientPromptedAboutConsistency <<record>>
+    ' Integration event 13 of 13: crosses into the clinical context.
+    class AlertEscalatedToPractitioner <<record>> {
+      -PatientId: int
+      -PractitionerId: int
+      -Value: decimal
+      -Evidence: string
+    }
+    ' Crosses no boundary, and this one is the important absence.
+    class LoggingGapDetected <<record>>
+    class PatientReminded <<record>>
+    class ReferralRecorded <<record>>
+    class FollowUpScheduled <<record>>
+    ' No context subscribes to it, which is how "a missed visit does not close
+    ' the care link" is kept.
+    class FollowUpMissed <<record>>
+    class EvaluationWindowClosed <<record>>
+  }
+
+  package "Model.Errors" {
+    ' There is no value here for a patient who did badly. This context reports
+    ' that it could not interpret something; it never reports a person.
+    enum MonitoringError {
+      EvaluationWindowNotFound
+      PatientAlreadyHasOpenWindow
+      WindowShorterThanMinimum
+      WindowClosed
+      ClosedWindowCannotBeReopened
+      TargetsSnapshotMissing
+      DayAlreadyEvaluated
+      InsufficientWindowLength
+      NoLoggedDays
+      DeviationNotFound
+      BothSeriesRequired
+      ConsistencyThresholdNotConfigured
+      PatientPromptRequiredBeforeEscalation
+      ThreeWeeksInAlertRequired
+      ActiveCareLinkRequired
+      SpecialtyAndReasonRequired
+      PatientAlreadyHasActiveScheduledFollowUp
+      ScheduledFollowUpNotFound
+      UnexpectedError
+    }
+  }
+
+  package "Repositories" {
+    interface IEvaluationWindowRepository {
+      +FindOpenByPatientIdAsync(patientId: int, ct): Task<EvaluationWindow?>
+      +ListByPatientIdAsync(patientId: int, ct): Task<IEnumerable<EvaluationWindow>>
+      +ListOpenAsync(batchSize: int, ct): Task<IEnumerable<EvaluationWindow>>
+    }
+    interface IDeviationRepository {
+      +ListByPatientIdAsync(patientId: int, ct): Task<IEnumerable<Deviation>>
+      +FindLatestByWindowAndDirectionAsync(windowId: WindowId, direction: DeviationDirection, ct): Task<Deviation?>
+    }
+    interface IConsistencyIndexRepository {
+      +FindByPatientIdAsync(patientId: int, ct): Task<ConsistencyIndex?>
+      +ListEscalatableAsync(alertSinceBefore: DateTimeOffset, batchSize: int, ct): Task<IEnumerable<ConsistencyIndex>>
+    }
+    interface IReferralRepository {
+      +ListByPatientIdAsync(patientId: int, ct): Task<IEnumerable<Referral>>
+    }
+    interface IScheduledFollowUpRepository {
+      +FindScheduledByPatientIdAsync(patientId: int, ct): Task<ScheduledFollowUp?>
+      +ListByPractitionerIdAsync(practitionerId: int, ct): Task<IEnumerable<ScheduledFollowUp>>
+      +ListOverdueAsync(asOf: DateTimeOffset, batchSize: int, ct): Task<IEnumerable<ScheduledFollowUp>>
+    }
+  }
+}
+
+package "Shared.Domain" <<external>> {
+  interface IAuditableEntity
+  interface "IBaseRepository<T>" as IBaseRepository
+  abstract DomainEventBase
+}
+
+' --- Aggregate roots & auditing ---
+EvaluationWindow ..|> IAuditableEntity
+Deviation ..|> IAuditableEntity
+ConsistencyIndex ..|> IAuditableEntity
+Referral ..|> IAuditableEntity
+ScheduledFollowUp ..|> IAuditableEntity
+
+' --- How the five aggregates relate around one patient ---
+' A separate aggregate in the same context: the reference is the typed
+' identity, with no EF navigation behind it.
+Deviation "0..*" ..> "1" EvaluationWindow : read from (WindowRef)
+' The index needs the window's evaluated days as one of its two series.
+ConsistencyIndex ..> EvaluationWindow : reads the intake series of
+' Both are recorded by the practitioner on the same care relationship the
+' window belongs to; neither is driven by the interpretation.
+Referral ..> EvaluationWindow : recorded during the same relationship
+ScheduledFollowUp ..> Referral : the visit the referral is discussed at
+
+' --- Identity & value objects held by the aggregates ---
+EvaluationWindow *--> "1" WindowId : identified by
+EvaluationWindow *--> "1" WindowState : Open or Closed
+EvaluationWindow *--> "0..*" TargetsSnapshot : prescribed series (append only)
+EvaluationWindow *--> "0..*" DailyCompliance : day-by-day series
+EvaluationWindow *--> "0..*" AnthropometryPoint : clinical weight series
+EvaluationWindow ..> IntakeSummary : computed from the daily series
+Deviation *--> "1" DeviationId : identified by
+Deviation *--> "1" DeviationDirection : Above or Below
+Deviation ..> DeviationMagnitude : rebuilt from two columns
+ConsistencyIndex *--> "1" ConsistencyState : Normal, Watch or Alert
+Referral *--> "1" ReferralId : identified by
+Referral *--> "1" Specialty : sent to
+Referral *--> "1" ReferralReason : because of
+ScheduledFollowUp *--> "1" FollowUpId : identified by
+ScheduledFollowUp *--> "1" FollowUpState : Scheduled, Completed or Missed
+
+' --- The comparison itself ---
+' Each day is evaluated against the snapshot in force on that day, so a plan
+' adjusted on Thursday cannot turn Monday into a bad day.
+DailyCompliance ..> TargetsSnapshot : evaluated against
+DailyCompliance ..> DeviationDirection : reports Above / Below
+Deviation ..> DailyCompliance : detected from the logged days of the horizon
+ConsistencyIndex ..> DailyCompliance : one of the two series
+' Two Series Never Merged: the clinical points and the patient's own smoothed
+' trend measure the same quantity with different authority and stay apart.
+AnthropometryPoint ..> ConsistencyIndex : deliberately NOT an input
+IntakeSummary ..> DailyCompliance : adds up only the logged ones
+
+' --- Aggregate construction & the commands they apply ---
+EvaluationWindow ..> OpenEvaluationWindowCommand : built from
+EvaluationWindow ..> SnapshotActiveTargetsCommand : applies
+EvaluationWindow ..> AppendAnthropometryPointCommand : applies
+EvaluationWindow ..> EvaluateDayCommand : applies
+EvaluationWindow ..> ReEvaluateWindowCommand : applies
+EvaluationWindow ..> FlagLoggingGapCommand : applies
+EvaluationWindow ..> RemindPatientCommand : applies
+EvaluationWindow ..> CloseEvaluationWindowCommand : applies
+Deviation ..> DetectDeviationCommand : built from
+Deviation ..> FlagSustainedDeviationCommand : applies
+ConsistencyIndex ..> RecomputeConsistencyIndexCommand : applies
+ConsistencyIndex ..> PromptPatientCommand : applies
+ConsistencyIndex ..> EscalateToPractitionerCommand : applies
+Referral ..> RecordReferralCommand : built from
+ScheduledFollowUp ..> ScheduleFollowUpCommand : built from
+ScheduledFollowUp ..> FlagMissedFollowUpCommand : applies
+
+' --- Repositories ---
+IEvaluationWindowRepository --|> IBaseRepository
+IDeviationRepository --|> IBaseRepository
+IConsistencyIndexRepository --|> IBaseRepository
+IReferralRepository --|> IBaseRepository
+IScheduledFollowUpRepository --|> IBaseRepository
+IEvaluationWindowRepository ..> EvaluationWindow : manages
+IEvaluationWindowRepository ..> WindowState : filters the open one by
+IDeviationRepository ..> Deviation : manages
+IDeviationRepository ..> DeviationDirection : restates one row per direction
+IConsistencyIndexRepository ..> ConsistencyIndex : manages
+IConsistencyIndexRepository ..> ConsistencyState : filters escalatable ones by
+IReferralRepository ..> Referral : manages
+IScheduledFollowUpRepository ..> ScheduledFollowUp : manages
+IScheduledFollowUpRepository ..> FollowUpState : filters overdue ones by
+
+' --- Queries target their read models ---
+GetEvaluationWindowsByPatientIdQuery ..> EvaluationWindow : queries
+GetCurrentEvaluationWindowByPatientIdQuery ..> EvaluationWindow : queries
+GetOpenEvaluationWindowsQuery ..> EvaluationWindow : queries
+GetDailyComplianceByPatientIdQuery ..> DailyCompliance : queries
+GetDeviationsByPatientIdQuery ..> Deviation : queries
+GetConsistencyIndexByPatientIdQuery ..> ConsistencyIndex : queries
+GetEscalatableConsistencyIndicesQuery ..> ConsistencyIndex : queries
+GetReferralsByPatientIdQuery ..> Referral : queries
+GetScheduledFollowUpsByPractitionerIdQuery ..> ScheduledFollowUp : queries
+GetOverdueScheduledFollowUpsQuery ..> ScheduledFollowUp : queries
+
+' --- Domain events ---
+EvaluationWindowOpened --|> DomainEventBase
+TargetsSnapshotTaken --|> DomainEventBase
+AnthropometryPointAppended --|> DomainEventBase
+DayEvaluated --|> DomainEventBase
+DailyComplianceComputed --|> DomainEventBase
+WindowReEvaluated --|> DomainEventBase
+DeviationDetected --|> DomainEventBase
+SustainedDeviationDetected --|> DomainEventBase
+ConsistencyIndexRecomputed --|> DomainEventBase
+ConsistencyAlertRaised --|> DomainEventBase
+PatientPromptedAboutConsistency --|> DomainEventBase
+AlertEscalatedToPractitioner --|> DomainEventBase
+LoggingGapDetected --|> DomainEventBase
+PatientReminded --|> DomainEventBase
+ReferralRecorded --|> DomainEventBase
+FollowUpScheduled --|> DomainEventBase
+FollowUpMissed --|> DomainEventBase
+EvaluationWindowClosed --|> DomainEventBase
+
+EvaluationWindow ..> EvaluationWindowOpened : raises
+EvaluationWindow ..> TargetsSnapshotTaken : raises
+EvaluationWindow ..> AnthropometryPointAppended : raises
+EvaluationWindow ..> DayEvaluated : raises
+EvaluationWindow ..> DailyComplianceComputed : raises
+EvaluationWindow ..> WindowReEvaluated : raises
+EvaluationWindow ..> LoggingGapDetected : raises
+EvaluationWindow ..> PatientReminded : raises
+EvaluationWindow ..> EvaluationWindowClosed : raises
+Deviation ..> DeviationDetected : raises
+Deviation ..> SustainedDeviationDetected : raises once, on the transition
+ConsistencyIndex ..> ConsistencyIndexRecomputed : raises
+ConsistencyIndex ..> ConsistencyAlertRaised : raises on entering Alert
+ConsistencyIndex ..> PatientPromptedAboutConsistency : raises
+ConsistencyIndex ..> AlertEscalatedToPractitioner : raises
+Referral ..> ReferralRecorded : raises
+ScheduledFollowUp ..> FollowUpScheduled : raises
+ScheduledFollowUp ..> FollowUpMissed : raises
+
+' --- Internal policies expressed as event to command chains ---
+DayEvaluated ..> DetectDeviationCommand : policy issues
+DeviationDetected ..> FlagSustainedDeviationCommand : policy issues
+ConsistencyAlertRaised ..> PromptPatientCommand : policy issues
+LoggingGapDetected ..> RemindPatientCommand : policy issues
+
+' --- Errors: one value per business rule this context enforces ---
+MonitoringError ..> EvaluationWindow : reports failures of
+MonitoringError ..> Deviation : reports failures of
+MonitoringError ..> ConsistencyIndex : reports failures of
+MonitoringError ..> Referral : reports failures of
+MonitoringError ..> ScheduledFollowUp : reports failures of
+
+@enduml

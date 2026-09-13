@@ -1,0 +1,145 @@
+@startuml Healthify - Food Catalog - Interfaces
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.FoodCatalog.Interfaces" {
+
+  package "Acl" {
+    ' A query contract, not a publication one: Intake resolves a food while the
+    ' patient is logging a meal, so it needs the answer at that moment.
+    interface IFoodCatalogContextFacade {
+      +GetReferenceFoodById(referenceFoodId: int, ct): Task<ReferenceFoodItem?>
+      +SearchReferenceFoods(term: string, max: int, ct): Task<IReadOnlyList<ReferenceFoodItem>>
+    }
+    ' No source hash on it: the fingerprint is an implementation detail of this
+    ' context and of no use to anybody outside it.
+    class ReferenceFoodItem <<record>> {
+      -ReferenceFoodId: int
+      -LocalName: string
+      -EnergyKcalPer100g: decimal
+      -ProteinGPer100g: decimal
+      -CarbGPer100g: decimal
+      -FatGPer100g: decimal
+      -IsLocalOverride: bool
+    }
+  }
+
+  package "REST" {
+    ' Searching is open: a food and its nutrients are public reference data.
+    ' Writing is not: only a practitioner adds an override or asks for an
+    ' import. Cache Food Locally has no endpoint at all.
+    class ReferenceFoodsController {
+      +SearchReferenceFoods(query: string?, max: int): Task<IActionResult>
+      +GetReferenceFoodById(referenceFoodId: int): Task<IActionResult>
+      +CreateLocalOverride(resource: CreateLocalOverrideResource): Task<IActionResult>
+      +ImportCatalogSnapshot(resource: ImportCatalogSnapshotResource): Task<IActionResult>
+    }
+    ' The list the patient device keeps so that a meal can be logged offline.
+    class LocalFoodCatalogController {
+      -{static} MaxEntries: int = 500
+      +GetLocalFoodCatalog(patientId: int): Task<IActionResult>
+    }
+  }
+
+  package "REST.Resources" {
+    class CreateLocalOverrideResource <<record>>
+    class ImportCatalogSnapshotResource <<record>>
+    ' There is no source hash on this resource and there never will be.
+    class ReferenceFoodResource <<record>>
+    class CatalogImportSummaryResource <<record>>
+  }
+
+  package "REST.Transform" {
+    class CreateLocalOverrideCommandAssembler <<static>>
+    class ImportCatalogSnapshotCommandAssembler <<static>>
+    class ReferenceFoodResourceAssembler <<static>>
+    class CatalogImportSummaryResourceAssembler <<static>>
+    ' The single place where a FoodCatalogError becomes an HTTP status.
+    class FoodCatalogActionResultAssembler <<static>>
+  }
+}
+
+package "FoodCatalog.Application" <<external>> {
+  interface IReferenceFoodCommandService
+  interface IReferenceFoodQueryService
+  class CatalogImportSummary
+}
+
+package "FoodCatalog.Domain" <<external>> {
+  class ReferenceFood
+  class CreateLocalOverrideCommand
+  class ImportCatalogSnapshotCommand
+  class SearchFoodCommand
+  class GetReferenceFoodByIdQuery
+  class GetLocalFoodCatalogQuery
+  enum FoodCatalogError
+}
+
+package "Shared / ASP.NET" <<external>> {
+  class ControllerBase
+  class "Result<TValue, TError>" as Result
+  class ProblemDetailsFactory
+  class ControllerBaseExtensions <<static>>
+  interface "IStringLocalizer<T>" as IStringLocalizerGeneric
+}
+
+package "FoodCatalog.Resources" {
+  class FoodCatalogMessages
+}
+
+' Resolved generic: ReferenceFoodsController depends on IStringLocalizer<FoodCatalogMessages>.
+interface "IStringLocalizer<FoodCatalogMessages>" as IStringLocalizer
+IStringLocalizer ..|> IStringLocalizerGeneric
+IStringLocalizer ..> FoodCatalogMessages : parameterized by
+
+' --- Controllers ---
+ReferenceFoodsController --|> ControllerBase
+LocalFoodCatalogController --|> ControllerBase
+ReferenceFoodsController --> IReferenceFoodCommandService : uses
+ReferenceFoodsController --> IReferenceFoodQueryService : uses
+ReferenceFoodsController --> IStringLocalizer : uses
+LocalFoodCatalogController --> IReferenceFoodQueryService : uses
+' No localizer of its own: it only ever answers 200 or 403.
+LocalFoodCatalogController ..> FoodCatalogMessages : shares localization resources
+
+' --- The trusted identity is the one in the token, not the one in the route ---
+ReferenceFoodsController ..> ControllerBaseExtensions : reads practitioner id
+LocalFoodCatalogController ..> ControllerBaseExtensions : authorizes the patient
+
+' --- Controllers to assemblers, commands and queries ---
+ReferenceFoodsController ..> SearchFoodCommand : builds
+ReferenceFoodsController ..> GetReferenceFoodByIdQuery : builds
+ReferenceFoodsController ..> CreateLocalOverrideCommandAssembler : uses
+ReferenceFoodsController ..> ImportCatalogSnapshotCommandAssembler : uses
+ReferenceFoodsController ..> ReferenceFoodResourceAssembler : uses
+ReferenceFoodsController ..> FoodCatalogActionResultAssembler : uses
+LocalFoodCatalogController ..> GetLocalFoodCatalogQuery : builds
+LocalFoodCatalogController ..> ReferenceFoodResourceAssembler : uses
+
+' --- Request resource to command assemblers ---
+CreateLocalOverrideCommandAssembler ..> CreateLocalOverrideResource : from
+CreateLocalOverrideCommandAssembler ..> CreateLocalOverrideCommand : to
+ImportCatalogSnapshotCommandAssembler ..> ImportCatalogSnapshotResource : from
+ImportCatalogSnapshotCommandAssembler ..> ImportCatalogSnapshotCommand : to
+
+' --- Entity to response resource assemblers ---
+ReferenceFoodResourceAssembler ..> ReferenceFood : from
+ReferenceFoodResourceAssembler ..> ReferenceFoodResource : to
+CatalogImportSummaryResourceAssembler ..> CatalogImportSummary : from
+CatalogImportSummaryResourceAssembler ..> CatalogImportSummaryResource : to
+
+' --- Result to IActionResult assembler (202 for an accepted import) ---
+FoodCatalogActionResultAssembler ..> Result : maps
+FoodCatalogActionResultAssembler ..> FoodCatalogError : maps
+FoodCatalogActionResultAssembler ..> ReferenceFoodResourceAssembler : uses
+FoodCatalogActionResultAssembler ..> CatalogImportSummaryResourceAssembler : uses
+FoodCatalogActionResultAssembler ..> ProblemDetailsFactory : builds problem details with
+FoodCatalogActionResultAssembler ..> IStringLocalizer : localizes with
+
+' --- ACL facade contract & its DTO ---
+IFoodCatalogContextFacade ..> ReferenceFoodItem : returns
+
+@enduml

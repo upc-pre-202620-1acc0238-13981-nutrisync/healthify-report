@@ -1,0 +1,98 @@
+@startuml IntakeBodyResponse_Component_Diagram
+' =============================================================================
+'  Healthify Platform - Bounded Context: Intake and Body Response
+'  C4 Model - Level 3: Component Diagram
+'  Container decomposed: Healthify Platform API (ASP.NET Core 10 Web API)
+' =============================================================================
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_TOP_DOWN()
+LAYOUT_WITH_LEGEND()
+
+title Component Diagram - Bounded Context "Intake and Body Response" (Container: Healthify Platform API)
+
+Person(patient, "Patient", "Logs meals, confirms the portion estimate and records self weigh-ins between consultations")
+Person(practitioner, "Practitioner", "Reads the diary and the weight trend of a linked patient; never writes here")
+
+Container(mobile, "Mobile Application", "Flutter / MAUI", "Offline-first diary. Runs the on-device portion estimation (ML Kit) and synchronises the entries when connectivity returns")
+
+Container_Boundary(api, "Healthify Platform API") {
+
+    ' ------------------------------------------------------------- Interfaces
+    Component(diaryController, "DiaryEntriesController", "ASP.NET Core REST Controller", "api/v1/diary-entries. Log and synchronise")
+    Component(weighInsController, "SelfWeighInsController", "ASP.NET Core REST Controller", "api/v1/self-weigh-ins. Record a weigh-in")
+    Component(patientIntakeController, "PatientIntakeController", "ASP.NET Core REST Controller", "api/v1/patients. Daily summary and trend")
+    Component(intakeAssemblers, "Intake Transform Assemblers", "C# static assemblers", "Maps resources, commands and responses")
+
+    ' ------------------------------------------------------------- Application
+    Component(diaryCmdService, "DiaryEntryCommandService", "C# Application Service (CQRS command side)", "Logs, confirms and synchronises entries")
+    Component(weighInCmdService, "SelfWeighInCommandService", "C# Application Service (CQRS command side)", "Records the self weigh-in")
+    Component(targetsCacheCmdService, "ActiveTargetsCacheCommandService", "C# Application Service (CQRS command side)", "Refreshes the local targets copy")
+    Component(intakeQryServices, "Intake Query Services", "C# Application Services (CQRS query side)", "Read diary, weigh-ins, trend and targets")
+    Component(onTargetsUpdated, "OnActiveTargetsUpdatedIntakeHandler", "Cortex.Mediator IEventHandler of ActiveTargetsUpdated", "Policy 4.1: caches the published targets")
+    Component(onPhotoEstimation, "OnMealLoggedPhotoEstimationHandler", "Cortex.Mediator IEventHandler of MealLogged", "Policy 4.2: stores the on-device proposal")
+    Component(onWeighIn, "OnSelfWeighInRecordedHandler", "Cortex.Mediator IEventHandler of SelfWeighInRecorded", "Recalculates the weight trend")
+    Component(intakeFacade, "IntakeContextFacade", "C# ACL - Open Host Service", "Publishes daily summaries and trend")
+
+    ' ------------------------------------------------------------- Domain
+    Component(diaryAggregate, "DiaryEntry", "C# Aggregate Root", "A meal with provenance and estimate")
+    Component(weighInAggregate, "SelfWeighIn", "C# Aggregate Root", "Weight measured by the patient")
+    Component(trendAggregate, "WeightTrend", "C# Aggregate Root", "Smoothed series of the weigh-ins")
+    Component(targetsCacheAggregate, "ActiveTargetsCache", "C# Aggregate Root", "Read-only copy of the published targets")
+    Component(intakeValueObjects, "Value Objects and Errors", "C# records and enums", "Estimates, Provenance, LocalTimestamp, errors")
+
+    ' ------------------------------------------------------------- Infrastructure
+    Component(intakeRepos, "Intake Repositories", "C# Repositories over EF Core 10", "Persist diary, weigh-ins, trend, cache")
+    Component(intakeEfcConfig, "Intake EntityTypeConfigurations", "EF Core 10 Fluent API", "Maps tables, sync index and audit")
+}
+
+ContainerDb(db, "Healthify Database", "MySQL 8.4", "Owns the diary entry, self weigh-in, weight trend, active targets cache and audit tables")
+
+Container_Ext(careRelCtx, "Care Relationship", "Sibling bounded context", "Consulted through ICareRelationshipContextFacade before any write or read of patient data")
+Container_Ext(foodCatalogCtx, "Food Catalog", "Sibling bounded context", "Consulted through IFoodCatalogContextFacade to resolve the food of an entry against the local catalog")
+Container_Ext(nutritionalCareCtx, "Nutritional Care", "Sibling bounded context", "Publishes ActiveTargetsUpdated")
+Container_Ext(monitoringCtx, "Monitoring and Adherence", "Sibling bounded context", "Subscribes to MealLogged, EstimateConfirmedByPatient, OffPlanEntryLogged, EntrySynchronized and WeightTrendRecalculated, and reads the summaries through the Open Host Service")
+
+' ------------------------------------------------------------------ Relations
+Rel(patient, mobile, "Logs meals, confirms estimates and weighs in", "Touch, works offline")
+Rel(practitioner, mobile, "Reads the diary and the trend", "Touch")
+Rel(mobile, diaryController, "Logs and synchronises diary entries", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, weighInsController, "Records a self weigh-in", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, patientIntakeController, "Reads the daily summary, the diary and the trend", "JSON/HTTPS, Bearer JWT")
+
+Rel(diaryController, intakeAssemblers, "Maps resources and commands through", "in-process")
+Rel(weighInsController, intakeAssemblers, "Maps resources and commands through", "in-process")
+Rel(patientIntakeController, intakeAssemblers, "Maps aggregates to resources through", "in-process")
+
+Rel(diaryController, diaryCmdService, "Sends diary commands", "in-process")
+Rel(weighInsController, weighInCmdService, "Sends RecordSelfWeighInCommand", "in-process")
+Rel(patientIntakeController, intakeQryServices, "Sends intake queries", "in-process")
+
+Rel(diaryCmdService, diaryAggregate, "Logs, confirms and synchronises", "in-process")
+Rel(weighInCmdService, weighInAggregate, "Records", "in-process")
+Rel(targetsCacheCmdService, targetsCacheAggregate, "Refreshes", "in-process")
+Rel(diaryAggregate, intakeValueObjects, "Is built from", "in-process")
+Rel(weighInAggregate, intakeValueObjects, "Is built from", "in-process")
+
+Rel(nutritionalCareCtx, onTargetsUpdated, "Publishes ActiveTargetsUpdated", "Cortex.Mediator, in-process")
+Rel(onTargetsUpdated, targetsCacheCmdService, "Refreshes the local targets cache", "in-process")
+Rel(diaryCmdService, onPhotoEstimation, "Publishes MealLogged to", "Cortex.Mediator, own DI scope")
+Rel(onPhotoEstimation, diaryCmdService, "Persists the on-device portion proposal", "in-process")
+Rel(weighInCmdService, onWeighIn, "Publishes SelfWeighInRecorded to", "Cortex.Mediator, own DI scope")
+Rel(onWeighIn, trendAggregate, "Recalculates and publishes WeightTrendRecalculated", "in-process")
+
+Rel(diaryCmdService, intakeRepos, "Reads and writes through", "in-process")
+Rel(weighInCmdService, intakeRepos, "Reads and writes through", "in-process")
+Rel(targetsCacheCmdService, intakeRepos, "Reads and writes through", "in-process")
+Rel(intakeQryServices, intakeRepos, "Reads through", "in-process")
+Rel(intakeFacade, intakeRepos, "Resolves summaries and trend points through", "in-process")
+Rel(intakeRepos, intakeEfcConfig, "Is mapped by", "EF Core model")
+Rel(intakeRepos, db, "Reads from and writes to", "EF Core 10 / MySQL, TCP 3306")
+
+Rel(diaryCmdService, careRelCtx, "Confirms the care link is active", "in-process ACL call")
+Rel(targetsCacheCmdService, careRelCtx, "Confirms the care link is active", "in-process ACL call")
+Rel(diaryCmdService, foodCatalogCtx, "Resolves the food of the entry", "in-process ACL call")
+Rel(monitoringCtx, intakeFacade, "Reads the daily summary and the weight trend", "in-process ACL call")
+Rel(diaryCmdService, monitoringCtx, "Publishes MealLogged, EstimateConfirmedByPatient, OffPlanEntryLogged and EntrySynchronized", "Cortex.Mediator, in-process")
+
+@enduml

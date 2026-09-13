@@ -1,0 +1,427 @@
+@startuml Healthify - Intake and Body Response - Domain
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.IntakeBodyResponse.Domain" {
+
+  package "Model.Aggregates" {
+    ' The patient copy of the published contract. There is no field here for a
+    ' diagnosis, a rationale, an equation, a reference weight, an activity
+    ' factor or a deficit, so there is nowhere for them to be cached even by
+    ' accident. The patient is the root: one cache each, replaced in place.
+    class ActiveTargetsCache {
+      -PatientId: int <<key>>
+      -PlanVersion: int
+      -ValidFrom: DateTimeOffset
+      -EnergyKcal: decimal
+      -ProteinG: decimal
+      -CarbG: decimal
+      -FatG: decimal
+      -RefreshedAt: DateTimeOffset
+      -_guidelines: List<string>
+      -_restrictions: List<string>
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +Guidelines: IReadOnlyList<string>
+      +Restrictions: IReadOnlyList<string>
+      #ActiveTargetsCache()
+      +ActiveTargetsCache(command: RefreshActiveTargetsCacheCommand)
+      +Refresh(command: RefreshActiveTargetsCacheCommand): void
+      -Apply(command: RefreshActiveTargetsCacheCommand): void
+    }
+
+    ' One thing the patient says they ate. Entry Never Deleted: there is no
+    ' method that removes one. It carries no compliance flag, no deviation, no
+    ' streak and no penalty - comparing belongs to Monitoring and Adherence.
+    class DiaryEntry {
+      -Id: DiaryEntryId
+      -PatientId: int
+      -LocalTimestamp: DateTime
+      -LocalUtcOffsetMinutes: int
+      -Provenance: Provenance
+      -PhotoRef: string?
+      -ProposedReferenceFoodId: int?
+      -ProposedPortionGrams: decimal?
+      -ProposedConfidence: decimal?
+      -ProposedEstimatedAt: DateTimeOffset?
+      -ConfirmedReferenceFoodId: int?
+      -ConfirmedPortionGrams: decimal?
+      -ConfirmedAt: DateTimeOffset?
+      -SyncState: SyncState
+      -ClientEntryId: Guid?
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +DeclaredLocalTimestamp: DateTimeOffset <<derived>>
+      +ProposedEstimate: ProposedEstimate? <<derived>>
+      +ConfirmedEstimate: ConfirmedEstimate? <<derived>>
+      +HasProposedEstimate: bool <<derived>>
+      +HasConfirmedEstimate: bool <<derived>>
+      +LocalDate: DateOnly <<derived>>
+      #DiaryEntry()
+      +DiaryEntry(patientId, localTimestamp, provenance, syncState, photoRef, clientEntryId)
+      +ProposeEstimate(estimate: ProposedEstimate): void
+      +ConfirmProposedEstimate(): void
+      +AdjustProposedEstimate(referenceFoodId: int, portionGrams: decimal): void
+      +ConfirmDirectly(estimate: ConfirmedEstimate): void
+      +MarkSynchronized(): void
+      +MarkConflicted(): void
+      +ResolveWithLatest(referenceFoodId, portionGrams, confirmedAt): bool
+      -StoreConfirmation(referenceFoodId: int, portionGrams: decimal): void
+    }
+
+    ' One reading the patient took of themselves. Not a clinical measurement,
+    ' and this context never pretends otherwise. A reading outside the protocol
+    ' is stored in full: it simply does not smooth the trend.
+    class SelfWeighIn {
+      -Id: SelfWeighInId
+      -PatientId: int
+      -ValueKg: decimal
+      -LocalTimestamp: DateTime
+      -LocalUtcOffsetMinutes: int
+      -ProtocolFastedState: bool
+      -ProtocolSameTimeOfDay: bool
+      -ProtocolSameScale: bool
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +DeclaredLocalTimestamp: DateTimeOffset <<derived>>
+      +ProtocolCompliance: ProtocolCompliance <<derived>>
+      +FollowsProtocol: bool <<derived>>
+      +LocalDate: DateOnly <<derived>>
+      #SelfWeighIn()
+      +SelfWeighIn(patientId, valueKg, localTimestamp, protocolCompliance)
+    }
+
+    ' The smoothed series, which is the unit this context publishes about body
+    ' weight. A single daily figure is never exposed as the headline. The
+    ' patient is the root: one trend each, recalculated in place.
+    class WeightTrend {
+      +{static} DefaultWindowSize: int = 7
+      -PatientId: int <<key>>
+      -WindowSize: int
+      -LastRecalculatedAt: DateTimeOffset
+      -_points: List<WeightTrendPoint>
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +Points: IReadOnlyList<WeightTrendPoint>
+      +HasPoints: bool <<derived>>
+      #WeightTrend()
+      +WeightTrend(patientId: int, windowSize: int = 7)
+      +Recalculate(weighIns: IReadOnlyList<SelfWeighIn>): IReadOnlyList<int>
+    }
+  }
+
+  package "Model.ValueObjects" {
+    class DiaryEntryId <<record>> {
+      -Value: int
+      +{static} FromRaw(value: int): DiaryEntryId
+    }
+    class SelfWeighInId <<record>> {
+      -Value: int
+      +{static} FromRaw(value: int): SelfWeighInId
+    }
+    ' The one timestamp in the platform the server does not own.
+    class LocalTimestamp <<record>> {
+      -{static} MaximumFutureSkew: TimeSpan = 24h
+      -Value: DateTimeOffset
+      +Date: DateOnly <<derived>>
+      +LocalTimestamp(value: DateTimeOffset)
+    }
+    ' An estimate without its confidence is a number pretending to be a
+    ' measurement.
+    class Confidence <<record>> {
+      -Value: decimal
+      +Confidence(value: decimal)
+    }
+    class WeightKg <<record>> {
+      +{static} Minimum: decimal = 20
+      +{static} Maximum: decimal = 400
+      -Value: decimal
+      +WeightKg(value: decimal)
+    }
+    ' Provenance is not metadata, it is part of the reading. OffPlan is not a
+    ' lesser value: it exists so declaring costs one tap.
+    class Provenance <<record>> {
+      +{static} Photo: string
+      +{static} Manual: string
+      +{static} OffPlan: string
+      -Value: string
+      +IsPhoto: bool <<derived>>
+      +IsManual: bool <<derived>>
+      +IsOffPlan: bool <<derived>>
+    }
+    class SyncState <<record>> {
+      +{static} Pending: string
+      +{static} Synced: string
+      +{static} Conflicted: string
+      -Value: string
+      +IsPending: bool <<derived>>
+      +IsSynced: bool <<derived>>
+      +IsConflicted: bool <<derived>>
+    }
+    ' What the on-device estimator thinks was eaten. A proposal, never a fact.
+    class ProposedEstimate <<record>> {
+      -ReferenceFoodId: int
+      -PortionGrams: decimal
+      -Confidence: Confidence
+      -EstimatedAt: DateTimeOffset
+    }
+    ' What the patient said. It carries no confidence, and that absence is the
+    ' point: the patient is not a probabilistic estimator.
+    class ConfirmedEstimate <<record>> {
+      -ReferenceFoodId: int
+      -PortionGrams: decimal
+      -ConfirmedAt: DateTimeOffset
+    }
+    ' Fasted, same time of day, same scale. The patient declares it; nothing
+    ' here verifies it and nothing here judges it.
+    class ProtocolCompliance <<record>> {
+      -FastedState: bool
+      -SameTimeOfDay: bool
+      -SameScale: bool
+      +FollowsProtocol: bool <<derived>>
+    }
+    class WeightTrendPoint <<record>> {
+      -Date: DateOnly
+      -SmoothedValueKg: decimal
+    }
+  }
+
+  package "Model.Commands" {
+    ' Issued by the policy reacting to ActiveTargetsUpdated. No endpoint.
+    class RefreshActiveTargetsCacheCommand <<record>>
+    class LogMealByPhotoCommand <<record>>
+    ' Issued by the photo estimation policy only. No endpoint.
+    class EstimatePortionCommand <<record>>
+    class ConfirmEstimateCommand <<record>>
+    class AdjustEstimateCommand <<record>>
+    class LogMealManuallyCommand <<record>>
+    ' No food, no portion, no reason, no note. Asking for them is what makes
+    ' people stop declaring.
+    class LogOffPlanMealCommand <<record>> {
+      -PatientId: int
+      -LocalTimestamp: DateTimeOffset
+    }
+    class RecordSelfWeighInCommand <<record>>
+    ' Issued by the policy reacting to SelfWeighInRecorded. No endpoint.
+    class RecalculateWeightTrendCommand <<record>> {
+      -PatientId: int
+    }
+    class PendingDiaryEntry <<record>> {
+      -ClientEntryId: Guid
+      -LocalTimestamp: DateTimeOffset
+      -Provenance: string
+      -PhotoRef: string?
+      -ReferenceFoodId: int?
+      -PortionGrams: decimal?
+      -Confidence: decimal?
+    }
+    class SyncPendingEntriesCommand <<record>> {
+      -PatientId: int
+      -Entries: IReadOnlyList<PendingDiaryEntry>
+    }
+  }
+
+  package "Model.Queries" {
+    class GetActiveTargetsByPatientIdQuery <<record>>
+    class GetDiaryEntryByIdQuery <<record>>
+    class GetDiaryEntriesByPatientIdQuery <<record>>
+    class GetPendingSyncQueueByPatientIdQuery <<record>>
+    class GetSelfWeighInsByPatientIdQuery <<record>>
+    class GetWeightTrendByPatientIdQuery <<record>>
+  }
+
+  package "Model.Events" {
+    class ActiveTargetsCacheRefreshed <<record>>
+    ' Integration event 7 of 13: crosses to Monitoring and Adherence 5.4.
+    class MealLogged <<record>> {
+      -DiaryEntryId: int
+      -PatientId: int
+      -LocalTimestamp: DateTimeOffset
+      -Provenance: string
+      -ProposedReferenceFoodId: int?
+      -ProposedPortionGrams: decimal?
+      -ProposedConfidence: decimal?
+    }
+    ' Crosses no boundary: a proposal is not intake.
+    class EstimateProposed <<record>>
+    ' Integration event 8 of 13.
+    class EstimateConfirmedByPatient <<record>>
+    class EstimateAdjustedByPatient <<record>>
+    ' Integration event 9 of 13. Carries the fact and the moment, no judgement.
+    class OffPlanEntryLogged <<record>>
+    ' Crosses no boundary: what leaves is the trend, never a single reading.
+    class SelfWeighInRecorded <<record>>
+    ' Integration event 10 of 13: one of the two series the consistency index
+    ' needs.
+    class WeightTrendRecalculated <<record>>
+    class SelfWeighInExcludedFromTrend <<record>>
+    class EntryQueuedOffline <<record>>
+    ' Integration event 11 of 13: a late entry re-evaluates its own day.
+    class EntrySynchronized <<record>>
+    class SyncConflictResolved <<record>>
+  }
+
+  package "Model.Errors" {
+    ' Read the list for what is missing: no value for a meal that was too
+    ' large or a week that went badly. This context reports that it could not
+    ' record something, never that what was recorded was wrong.
+    enum IntakeError {
+      ActiveTargetsCacheNotFound
+      PublishedContractOnly
+      ProvenanceRequired
+      LocalTimestampRequired
+      RetroactiveLoggingWindowExceeded
+      DiaryEntryNotFound
+      DiaryEntryCannotBeDeleted
+      ReferenceFoodNotResolved
+      EstimateNotProposed
+      EstimateAlreadyConfirmed
+      ConfidenceRequired
+      ImplausibleWeightValue
+      ProtocolComplianceRequired
+      SelfWeighInNotFound
+      WeightTrendNotFound
+      DuplicatedClientEntryId
+      LocalTimestampCannotBeRewritten
+      PatientWriteOnly
+      ActiveCareLinkRequired
+      UnexpectedError
+    }
+  }
+
+  package "Repositories" {
+    interface IActiveTargetsCacheRepository {
+      +FindByPatientIdAsync(patientId: int, ct): Task<ActiveTargetsCache?>
+    }
+    ' Nothing in this context calls the inherited Remove: the rule Entry Never
+    ' Deleted is kept by there being no code path to deletion.
+    interface IDiaryEntryRepository {
+      +ListByPatientIdAsync(patientId: int, date: DateOnly?, ct): Task<IEnumerable<DiaryEntry>>
+      +FindByClientEntryIdAsync(clientEntryId: Guid, ct): Task<DiaryEntry?>
+      +ListUnreconciledByPatientIdAsync(patientId: int, ct): Task<IEnumerable<DiaryEntry>>
+    }
+    interface ISelfWeighInRepository {
+      +ListByPatientIdAsync(patientId: int, ct): Task<IEnumerable<SelfWeighIn>>
+    }
+    interface IWeightTrendRepository {
+      +FindByPatientIdAsync(patientId: int, ct): Task<WeightTrend?>
+    }
+  }
+}
+
+package "Shared.Domain" <<external>> {
+  interface IAuditableEntity
+  interface "IBaseRepository<T>" as IBaseRepository
+  abstract DomainEventBase
+}
+
+package "FoodCatalog.Interfaces.Acl" <<external>> {
+  ' Resolved through the ACL: a plain int inside this context.
+  class ReferenceFoodItem <<record>>
+}
+
+' --- Aggregate roots & auditing ---
+ActiveTargetsCache ..|> IAuditableEntity
+DiaryEntry ..|> IAuditableEntity
+SelfWeighIn ..|> IAuditableEntity
+WeightTrend ..|> IAuditableEntity
+
+' --- How the four aggregates relate around one patient ---
+' All four are keyed by the patient. The trend is computed from the readings;
+' the targets cache is what the diary is aimed at, though nothing here compares
+' the two - that is Monitoring's work.
+WeightTrend "1" ..> "0..*" SelfWeighIn : smoothed from
+ActiveTargetsCache "1" ..> "0..*" DiaryEntry : what the day is aimed at
+DiaryEntry ..> ReferenceFoodItem : resolves its food through the ACL
+
+' --- Identity & value objects held by the aggregates ---
+DiaryEntry *--> "1" DiaryEntryId : identified by
+DiaryEntry *--> "1" Provenance : Photo, Manual or OffPlan
+DiaryEntry *--> "1" SyncState : Pending, Synced or Conflicted
+' Proposal and confirmation coexist on the same row: confirming does not
+' overwrite the proposal, adjusting does not delete it.
+DiaryEntry *--> "0..1" ProposedEstimate : what a model guessed
+DiaryEntry *--> "0..1" ConfirmedEstimate : what the person said
+DiaryEntry ..> LocalTimestamp : declared with
+SelfWeighIn *--> "1" SelfWeighInId : identified by
+SelfWeighIn *--> "1" ProtocolCompliance : declared with
+SelfWeighIn ..> WeightKg : validated as
+SelfWeighIn ..> LocalTimestamp : declared with
+WeightTrend *--> "0..*" WeightTrendPoint : smoothed series
+ProposedEstimate *--> "1" Confidence : always attached
+ProposedEstimate ..> ConfirmedEstimate : confirmed or corrected into
+ProtocolCompliance ..> WeightTrendPoint : only compliant readings smooth a point
+
+' --- Aggregate construction & the commands they apply ---
+ActiveTargetsCache ..> RefreshActiveTargetsCacheCommand : built from / refreshed by
+DiaryEntry ..> LogMealByPhotoCommand : built from
+DiaryEntry ..> LogMealManuallyCommand : built from
+DiaryEntry ..> LogOffPlanMealCommand : built from
+DiaryEntry ..> EstimatePortionCommand : applies
+DiaryEntry ..> ConfirmEstimateCommand : applies
+DiaryEntry ..> AdjustEstimateCommand : applies
+DiaryEntry ..> PendingDiaryEntry : reconciled from
+SyncPendingEntriesCommand o--> "0..*" PendingDiaryEntry : batch of
+SelfWeighIn ..> RecordSelfWeighInCommand : built from
+WeightTrend ..> RecalculateWeightTrendCommand : applies
+
+' --- Repositories ---
+IActiveTargetsCacheRepository --|> IBaseRepository
+IDiaryEntryRepository --|> IBaseRepository
+ISelfWeighInRepository --|> IBaseRepository
+IWeightTrendRepository --|> IBaseRepository
+IActiveTargetsCacheRepository ..> ActiveTargetsCache : manages
+IDiaryEntryRepository ..> DiaryEntry : manages
+IDiaryEntryRepository ..> SyncState : filters the pending queue by
+ISelfWeighInRepository ..> SelfWeighIn : manages
+IWeightTrendRepository ..> WeightTrend : manages
+
+' --- Queries target their read models ---
+GetActiveTargetsByPatientIdQuery ..> ActiveTargetsCache : queries
+GetDiaryEntryByIdQuery ..> DiaryEntry : queries
+GetDiaryEntriesByPatientIdQuery ..> DiaryEntry : queries
+GetPendingSyncQueueByPatientIdQuery ..> DiaryEntry : queries
+GetSelfWeighInsByPatientIdQuery ..> SelfWeighIn : queries
+GetWeightTrendByPatientIdQuery ..> WeightTrend : queries
+
+' --- Domain events ---
+ActiveTargetsCacheRefreshed --|> DomainEventBase
+MealLogged --|> DomainEventBase
+EstimateProposed --|> DomainEventBase
+EstimateConfirmedByPatient --|> DomainEventBase
+EstimateAdjustedByPatient --|> DomainEventBase
+OffPlanEntryLogged --|> DomainEventBase
+SelfWeighInRecorded --|> DomainEventBase
+WeightTrendRecalculated --|> DomainEventBase
+SelfWeighInExcludedFromTrend --|> DomainEventBase
+EntryQueuedOffline --|> DomainEventBase
+EntrySynchronized --|> DomainEventBase
+SyncConflictResolved --|> DomainEventBase
+
+ActiveTargetsCache ..> ActiveTargetsCacheRefreshed : raises
+DiaryEntry ..> MealLogged : raises
+DiaryEntry ..> EstimateProposed : raises
+DiaryEntry ..> EstimateConfirmedByPatient : raises
+DiaryEntry ..> EstimateAdjustedByPatient : raises
+DiaryEntry ..> OffPlanEntryLogged : raises
+DiaryEntry ..> EntryQueuedOffline : raises
+DiaryEntry ..> EntrySynchronized : raises
+DiaryEntry ..> SyncConflictResolved : raises
+SelfWeighIn ..> SelfWeighInRecorded : raises
+WeightTrend ..> WeightTrendRecalculated : raises
+WeightTrend ..> SelfWeighInExcludedFromTrend : raises per kept-but-excluded reading
+
+' --- Policies inside this context, as event to command chains ---
+MealLogged ..> EstimatePortionCommand : policy issues (Provenance = Photo)
+SelfWeighInRecorded ..> RecalculateWeightTrendCommand : policy issues
+
+' --- Errors: one value per business rule this context enforces ---
+IntakeError ..> ActiveTargetsCache : reports failures of
+IntakeError ..> DiaryEntry : reports failures of
+IntakeError ..> SelfWeighIn : reports failures of
+IntakeError ..> WeightTrend : reports failures of
+
+@enduml

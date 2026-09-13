@@ -1,0 +1,93 @@
+@startsalt
+{
+{#
+{
+<size:22><b>Name</b></size>
+<size:14>Care Relationship</size>
+} | {
+<size:22><b>Model Traits</b></size>
+<color:gray>draft, execute, audit, enforcer, interchange, gateway, etc.</color>
+<b>Gateway</b> · <b>Enforcer</b> · practitioner/patient asymmetry
+}
+{
+{
+<size:22><b>Description</b></size>
+<color:gray>Summary of purpose and responsibilities</color>
+Decide who can see whom, and under which consent.
+}
+--
+{
+<size:22><b>Strategic Classification</b></size>
+{
+<color:gray><u>Domain</u></color> | <color:gray><u>Business Model</u></color> | <color:gray><u>Evolution</u></color>
+<color:gray>Core</color> | <color:gray>Revenue</color> | <color:gray>Genesis</color>
+<b>Supporting</b> | <color:gray>Engagement</color> | <b>Custom built</b>
+<color:gray>Generic</color> | <b>Compliance</b> | <color:gray>Product</color>
+<color:gray>Other</color> | <color:gray>Cost reduction</color> | <color:gray>Commodity</color>
+}
+}
+} | {
+<size:22><b>Information and Services Provided</b></size>
+{#
+{
+<b>Queryable Information</b>
+Is Care Link Active
+Active Care Link by Patient
+Care Links by Practitioner
+Invitation by Token
+Targets Read Status
+} | {
+<b>Invokable Commands</b>
+Issue Invitation
+Redeem Invitation
+Grant Consent · Withdraw Consent
+Acknowledge Active Targets
+Discharge Patient
+}
+{
+<b>Published Events</b>
+Care Link Established
+Care Link Revoked
+} | {
+<b>Reactive Jobs</b>
+Invitation Redeemed → Establish Care Link
+Consent Withdrawn → Revoke Care Link
+Active Targets Updated → Mark Targets Pending Acknowledgement
+Scheduled: Invitation Expiry → Expire Invitation
+}
+}
+}
+{
+{
+<size:22><b>Business Decisions</b></size>
+<color:gray>Key business rules, policies, and decisions</color>
+Invitations are single use and expire
+A patient cannot link themselves
+A link starts inactive until consent is granted
+Consent is always revocable, with no justification
+A revoked link is kept with its revocation date
+A discharged link is never reactivated
+Acknowledging targets does not change the plan
+}
+--
+{
+<size:22><b>Ubiquitous Language</b></size>
+<color:gray>Key domain terminology</color>
+Invitation · Care Link · Consent · Discharge
+Targets Pending Acknowledgement
+}
+} | {
+<size:22><b>Dependencies and Relationships</b></size>
+{#
+<b>Suppliers</b> | . | <b>Consumers</b> | .
+<color:gray>Name</color> | <color:gray>Relationship</color> | <color:gray>Name</color> | <color:gray>Relationship</color>
+Identity & Access | Conformist | Nutritional Care | Open Host Service
+Nutritional Care | Events only | Intake & Body Response | Open Host Service
+. | . | Monitoring & Adherence | Open Host Service + Events
+. | . | Patient Record · BFF | Open Host Service
+}
+}
+}
+<color:gray><b>Bounded Context Canvas V2</b> · Nick Tune · ntcoding.co.uk</color>
+}
+@endsalt

@@ -1,0 +1,84 @@
+@startsalt
+{
+{#
+{
+<size:22><b>Name</b></size>
+<size:14>Food Catalog</size>
+} | {
+<size:22><b>Model Traits</b></size>
+<color:gray>draft, execute, audit, enforcer, interchange, gateway, etc.</color>
+<b>Gateway</b> · <b>Interchange</b> · anticorruption layer
+}
+{
+{
+<size:22><b>Description</b></size>
+<color:gray>Summary of purpose and responsibilities</color>
+Translate external nutritional catalogs into the
+domain and keep them available locally.
+}
+--
+{
+<size:22><b>Strategic Classification</b></size>
+{
+<color:gray><u>Domain</u></color> | <color:gray><u>Business Model</u></color> | <color:gray><u>Evolution</u></color>
+<color:gray>Core</color> | <color:gray>Revenue</color> | <color:gray>Genesis</color>
+<color:gray>Supporting</color> | <color:gray>Engagement</color> | <color:gray>Custom built</color>
+<b>Generic</b> | <color:gray>Compliance</color> | <b>Product</b>
+<color:gray>Other</color> | <b>Cost reduction</b> | <color:gray>Commodity</color>
+}
+}
+} | {
+<size:22><b>Information and Services Provided</b></size>
+{#
+{
+<b>Queryable Information</b>
+Local Food Catalog
+Reference Food by Id
+Food Results List
+} | {
+<b>Invokable Commands</b>
+Search Food
+Create Local Override
+Import Catalog Snapshot
+}
+{
+<b>Published Events</b>
+<color:gray>None outside the context:</color>
+<color:gray>the catalog is queried, not published</color>
+} | {
+<b>Reactive Jobs</b>
+Reference Food Translated → Cache Food Locally
+Scheduled: Catalog Import → Import Catalog Snapshot
+}
+}
+}
+{
+{
+<size:22><b>Business Decisions</b></size>
+<color:gray>Key business rules, policies, and decisions</color>
+No external id enters the domain
+Taxonomy translation is mandatory
+Source hash is stored to detect upstream changes
+Search falls back to local cache offline
+Local overrides are practitioner-only and flagged as such
+}
+--
+{
+<size:22><b>Ubiquitous Language</b></size>
+<color:gray>Key domain terminology</color>
+Reference Food · Local Override
+Local Food Catalog
+}
+} | {
+<size:22><b>Dependencies and Relationships</b></size>
+{#
+<b>Suppliers</b> | . | <b>Consumers</b> | .
+<color:gray>Name</color> | <color:gray>Relationship</color> | <color:gray>Name</color> | <color:gray>Relationship</color>
+Open Food Facts API | Anticorruption Layer | Intake & Body Response | Customer/Supplier
+USDA Food Data Central | Anticorruption Layer | Patient app | Open Host Service
+}
+}
+}
+<color:gray><b>Bounded Context Canvas V2</b> · Nick Tune · ntcoding.co.uk</color>
+}
+@endsalt

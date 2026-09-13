@@ -1,0 +1,252 @@
+@startuml Healthify - Care Relationship - Application
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.CareRelationship.Application" {
+
+  package "CommandServices" {
+    interface IInvitationCommandService {
+      +Handle(command: IssueInvitationCommand, ct): Task<Result<Invitation, CareRelationshipError>>
+      +Handle(command: ExpireInvitationCommand, ct): Task<Result<Invitation, CareRelationshipError>>
+      +Handle(command: RedeemInvitationCommand, ct): Task<Result<InvitationRedemptionOutcome, CareRelationshipError>>
+    }
+    interface ICareLinkCommandService {
+      +Handle(command: EstablishCareLinkCommand, ct): Task<Result<CareLink, CareRelationshipError>>
+      +Handle(command: GrantConsentCommand, ct): Task<Result<CareLink, CareRelationshipError>>
+      +Handle(command: WithdrawConsentCommand, ct): Task<Result<CareLink, CareRelationshipError>>
+      +Handle(command: RevokeCareLinkCommand, ct): Task<Result<CareLink, CareRelationshipError>>
+      +Handle(command: DischargePatientCommand, ct): Task<Result<CareLink, CareRelationshipError>>
+      +Handle(command: MarkTargetsPendingAcknowledgementCommand, ct): Task<Result<CareLink, CareRelationshipError>>
+      +Handle(command: AcknowledgeActiveTargetsCommand, ct): Task<Result<CareLink, CareRelationshipError>>
+    }
+  }
+
+  package "QueryServices" {
+    interface IInvitationQueryService {
+      +Handle(query: GetInvitationByIdQuery, ct): Task<Invitation?>
+      +Handle(query: GetInvitationByTokenQuery, ct): Task<Invitation?>
+      +Handle(query: GetExpirableInvitationsQuery, ct): Task<IEnumerable<Invitation>>
+    }
+    interface ICareLinkQueryService {
+      +Handle(query: GetCareLinkByIdQuery, ct): Task<CareLink?>
+      +Handle(query: GetActiveCareLinkByPatientIdQuery, ct): Task<CareLink?>
+      +Handle(query: GetCareLinksByPractitionerIdQuery, ct): Task<IEnumerable<CareLink>>
+    }
+  }
+
+  package "Internal" {
+    ' The care link is created by the policy reacting to InvitationRedeemed, in
+    ' its own scope, so the command service reads it back to answer the caller.
+    class InvitationRedemptionOutcome <<record>> {
+      -Invitation: Invitation
+      -CareLink: CareLink?
+    }
+
+    package "Internal.CommandServices" {
+      class InvitationCommandService {
+        +Handle(command: IssueInvitationCommand, ct): Task<Result<...>>
+        +Handle(command: ExpireInvitationCommand, ct): Task<Result<...>>
+        +Handle(command: RedeemInvitationCommand, ct): Task<Result<...>>
+      }
+      class CareLinkCommandService {
+        +Handle(command: EstablishCareLinkCommand, ct): Task<Result<...>>
+        +Handle(command: GrantConsentCommand, ct): Task<Result<...>>
+        +Handle(command: WithdrawConsentCommand, ct): Task<Result<...>>
+        +Handle(command: RevokeCareLinkCommand, ct): Task<Result<...>>
+        +Handle(command: DischargePatientCommand, ct): Task<Result<...>>
+        +Handle(command: MarkTargetsPendingAcknowledgementCommand, ct): Task<Result<...>>
+        +Handle(command: AcknowledgeActiveTargetsCommand, ct): Task<Result<...>>
+      }
+    }
+
+    package "Internal.QueryServices" {
+      class InvitationQueryService
+      class CareLinkQueryService
+    }
+
+    package "Internal.EventHandlers" {
+      ' Redeeming the QR code is what creates the care link. This is the only
+      ' path into one, which is how "a patient cannot self link" is structural.
+      class OnInvitationRedeemedHandler {
+        +Handle(notification: InvitationRedeemed, ct): Task
+      }
+      ' Withdrawing consent revokes the link; it is never a separate decision.
+      class OnConsentWithdrawnHandler {
+        +Handle(notification: ConsentWithdrawn, ct): Task
+      }
+      ' Integration event 6 of 13. Subscribes to an event Nutritional Care owns.
+      class OnActiveTargetsUpdatedCareRelationshipHandler {
+        +Handle(notification: ActiveTargetsUpdated, ct): Task
+      }
+    }
+  }
+
+  package "Acl" {
+    class CareRelationshipContextFacade {
+      +IsCareLinkActive(patientId: int, practitionerId: int, ct): Task<bool>
+      +GetActiveCareLinkByPatientId(patientId: int, ct): Task<CareLinkStatusItem?>
+    }
+  }
+}
+
+package "CareRelationship.Domain" <<external>> {
+  class Invitation
+  class CareLink
+  class InvitationToken
+  class ClinicalReason
+  class IssueInvitationCommand
+  class ExpireInvitationCommand
+  class RedeemInvitationCommand
+  class EstablishCareLinkCommand
+  class GrantConsentCommand
+  class WithdrawConsentCommand
+  class RevokeCareLinkCommand
+  class DischargePatientCommand
+  class MarkTargetsPendingAcknowledgementCommand
+  class AcknowledgeActiveTargetsCommand
+  class GetInvitationByIdQuery
+  class GetInvitationByTokenQuery
+  class GetExpirableInvitationsQuery
+  class GetCareLinkByIdQuery
+  class GetActiveCareLinkByPatientIdQuery
+  class GetCareLinksByPractitionerIdQuery
+  class InvitationIssued
+  class InvitationExpired
+  class InvitationRedeemed
+  class CareLinkEstablished
+  class ConsentGranted
+  class ConsentWithdrawn
+  class CareLinkRevoked
+  class TreatmentDischarged
+  class TargetsPendingAcknowledgement
+  class ActiveTargetsAcknowledged
+  interface IInvitationRepository
+  interface ICareLinkRepository
+  enum CareRelationshipError
+}
+
+package "CareRelationship.Interfaces.Acl" <<external>> {
+  interface ICareRelationshipContextFacade
+  class CareLinkStatusItem <<record>>
+}
+
+package "NutritionalCare.Domain.Model.Events" <<external>> {
+  class ActiveTargetsUpdated
+}
+
+package "Iam.Interfaces.Acl" <<external>> {
+  interface IIamContextFacade
+}
+
+package "Shared / Cortex" <<external>> {
+  class "Result<TValue, TError>" as Result
+  interface IUnitOfWork
+  interface IMediator
+  interface "IEventHandler<T>" as IEventHandler
+  interface IServiceScopeFactory
+  interface "ILogger<T>" as ILogger
+}
+
+' --- Service interface realizations ---
+InvitationCommandService ..|> IInvitationCommandService
+CareLinkCommandService ..|> ICareLinkCommandService
+InvitationQueryService ..|> IInvitationQueryService
+CareLinkQueryService ..|> ICareLinkQueryService
+CareRelationshipContextFacade ..|> ICareRelationshipContextFacade
+OnInvitationRedeemedHandler ..|> IEventHandler
+OnConsentWithdrawnHandler ..|> IEventHandler
+OnActiveTargetsUpdatedCareRelationshipHandler ..|> IEventHandler
+
+' --- InvitationCommandService (Subflows 2.1 and 2.2) ---
+InvitationCommandService --> IInvitationRepository : uses
+InvitationCommandService --> ICareLinkRepository : guards the one-link slot with
+InvitationCommandService --> IUnitOfWork : commits with
+InvitationCommandService --> IIamContextFacade : checks Practitioner Only with
+InvitationCommandService --> IMediator : publishes via
+InvitationCommandService --> ILogger : logs to
+InvitationCommandService ..> IssueInvitationCommand : handles
+InvitationCommandService ..> ExpireInvitationCommand : handles
+InvitationCommandService ..> RedeemInvitationCommand : handles
+InvitationCommandService ..> Invitation : creates / redeems / expires
+InvitationCommandService ..> InvitationToken : validates
+InvitationCommandService ..> InvitationRedemptionOutcome : produces
+InvitationCommandService ..> InvitationIssued : publishes
+InvitationCommandService ..> InvitationExpired : publishes
+InvitationCommandService ..> InvitationRedeemed : publishes
+InvitationCommandService ..> CareRelationshipError : returns
+
+' --- CareLinkCommandService (Subflows 2.2 to 2.5) ---
+CareLinkCommandService --> ICareLinkRepository : uses
+CareLinkCommandService --> IUnitOfWork : commits with
+CareLinkCommandService --> IIamContextFacade : checks Practitioner Only with
+CareLinkCommandService --> IMediator : publishes via
+CareLinkCommandService --> ILogger : logs to
+CareLinkCommandService ..> EstablishCareLinkCommand : handles
+CareLinkCommandService ..> GrantConsentCommand : handles
+CareLinkCommandService ..> WithdrawConsentCommand : handles
+CareLinkCommandService ..> RevokeCareLinkCommand : handles
+CareLinkCommandService ..> DischargePatientCommand : handles
+CareLinkCommandService ..> MarkTargetsPendingAcknowledgementCommand : handles
+CareLinkCommandService ..> AcknowledgeActiveTargetsCommand : handles
+CareLinkCommandService ..> CareLink : creates / mutates
+CareLinkCommandService ..> ClinicalReason : validates
+CareLinkCommandService ..> CareLinkEstablished : publishes
+CareLinkCommandService ..> ConsentGranted : publishes
+CareLinkCommandService ..> ConsentWithdrawn : publishes
+CareLinkCommandService ..> CareLinkRevoked : publishes
+CareLinkCommandService ..> TreatmentDischarged : publishes
+CareLinkCommandService ..> TargetsPendingAcknowledgement : publishes
+CareLinkCommandService ..> ActiveTargetsAcknowledged : publishes
+CareLinkCommandService ..> CareRelationshipError : returns
+
+' --- Policies. Each opens its own DI scope: handlers run in parallel ---
+OnInvitationRedeemedHandler ..> InvitationRedeemed : subscribes to
+OnInvitationRedeemedHandler --> IServiceScopeFactory : opens scope with
+OnInvitationRedeemedHandler --> ILogger : logs to
+OnInvitationRedeemedHandler --> ICareLinkCommandService : delegates to
+OnInvitationRedeemedHandler ..> EstablishCareLinkCommand : issues
+
+OnConsentWithdrawnHandler ..> ConsentWithdrawn : subscribes to
+OnConsentWithdrawnHandler --> IServiceScopeFactory : opens scope with
+OnConsentWithdrawnHandler --> ILogger : logs to
+OnConsentWithdrawnHandler --> ICareLinkCommandService : delegates to
+OnConsentWithdrawnHandler ..> RevokeCareLinkCommand : issues
+
+OnActiveTargetsUpdatedCareRelationshipHandler ..> ActiveTargetsUpdated : subscribes to
+OnActiveTargetsUpdatedCareRelationshipHandler --> IServiceScopeFactory : opens scope with
+OnActiveTargetsUpdatedCareRelationshipHandler --> ILogger : logs to
+OnActiveTargetsUpdatedCareRelationshipHandler --> ICareLinkCommandService : delegates to
+OnActiveTargetsUpdatedCareRelationshipHandler ..> MarkTargetsPendingAcknowledgementCommand : issues
+
+' --- Query services ---
+InvitationQueryService --> IInvitationRepository : uses
+InvitationQueryService ..> GetInvitationByIdQuery : handles
+InvitationQueryService ..> GetInvitationByTokenQuery : handles
+InvitationQueryService ..> GetExpirableInvitationsQuery : handles
+InvitationQueryService ..> InvitationToken : validates
+InvitationQueryService ..> Invitation : returns
+CareLinkQueryService --> ICareLinkRepository : uses
+CareLinkQueryService ..> GetCareLinkByIdQuery : handles
+CareLinkQueryService ..> GetActiveCareLinkByPatientIdQuery : handles
+CareLinkQueryService ..> GetCareLinksByPractitionerIdQuery : handles
+CareLinkQueryService ..> CareLink : returns
+
+' --- ACL facade: the Open Host Service the other five contexts consume ---
+CareRelationshipContextFacade --> ICareLinkQueryService : uses
+CareRelationshipContextFacade ..> GetActiveCareLinkByPatientIdQuery : issues
+CareRelationshipContextFacade ..> CareLinkStatusItem : returns
+
+' --- Application DTO composition ---
+InvitationRedemptionOutcome o--> "1" Invitation : carries
+InvitationRedemptionOutcome o--> "0..1" CareLink : carries
+
+' --- Result wrapper across command services ---
+IInvitationCommandService ..> Result
+ICareLinkCommandService ..> Result
+IInvitationCommandService ..> CareRelationshipError : returns
+ICareLinkCommandService ..> CareRelationshipError : returns
+
+@enduml

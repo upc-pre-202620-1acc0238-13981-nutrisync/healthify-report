@@ -1,0 +1,124 @@
+@startuml Healthify - Nutritional Care Database Diagram
+
+skinparam linetype ortho
+hide circle
+hide methods
+
+!define TABLE(name,desc) entity name as "desc" << (T, #AADDFF) >>
+!define EXT(name,desc) entity name as "desc" << (E, #DDDDDD) >>
+!define PK(x) <u>x</u>
+!define FK(x) <i>x</i>
+
+TABLE(nutritional_assessments, "nutritional_assessments") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(patient_id) : INT NOT NULL
+  FK(practitioner_id) : INT NOT NULL
+  habits : VARCHAR(4000) NOT NULL
+  medical_history : VARCHAR(4000) NOT NULL
+  physical_activity : VARCHAR(2000) NOT NULL
+  biochemistry : VARCHAR(4000)
+  age_years : INT NOT NULL
+  biological_sex : VARCHAR(10) NOT NULL
+  FK(supersedes_assessment_id) : INT
+  closed_at : DATETIME
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(clinical_measurements, "clinical_measurements") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(assessment_id) : INT NOT NULL
+  weight_kg : DECIMAL(10,2) NOT NULL
+  height_cm : DECIMAL(10,2) NOT NULL
+  protocol : VARCHAR(300) NOT NULL
+  body_fat_percentage : DECIMAL(10,2)
+  waist_circumference_cm : DECIMAL(10,2)
+  taken_at : DATETIME NOT NULL
+}
+
+TABLE(nutritional_diagnoses, "nutritional_diagnoses") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(patient_id) : INT NOT NULL
+  FK(practitioner_id) : INT NOT NULL
+  FK(assessment_id) : INT NOT NULL
+  statement : VARCHAR(1000) NOT NULL
+  rationale : VARCHAR(2000) NOT NULL
+  issued_at : DATETIME NOT NULL
+  superseded_at : DATETIME
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(nutrition_plans, "nutrition_plans") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(patient_id) : INT NOT NULL
+  FK(practitioner_id) : INT NOT NULL
+  FK(diagnosis_id) : INT NOT NULL
+  version : INT NOT NULL
+  basis_equation : VARCHAR(30) NOT NULL
+  basis_reference_weight_kind : VARCHAR(20) NOT NULL
+  basis_reference_weight_kg : DECIMAL(10,2) NOT NULL
+  basis_activity_factor : DECIMAL(10,2) NOT NULL
+  basis_deficit_kind : VARCHAR(20) NOT NULL
+  basis_deficit_value : DECIMAL(10,2) NOT NULL
+  basis_computed_bmr : DECIMAL(10,2) NOT NULL
+  basis_computed_tdee : DECIMAL(10,2) NOT NULL
+  proposal_energy_kcal : DECIMAL(10,2) NOT NULL
+  proposal_protein_g : DECIMAL(10,2) NOT NULL
+  proposal_carb_g : DECIMAL(10,2) NOT NULL
+  proposal_fat_g : DECIMAL(10,2) NOT NULL
+  prescribed_energy_kcal : DECIMAL(10,2)
+  prescribed_protein_g : DECIMAL(10,2)
+  prescribed_carb_g : DECIMAL(10,2)
+  prescribed_fat_g : DECIMAL(10,2)
+  prescribed_outcome : VARCHAR(30)
+  prescribed_override_reason : VARCHAR(500)
+  change_reason : VARCHAR(500)
+  published_at : DATETIME
+  superseded_at : DATETIME
+  is_active : TINYINT(1) NOT NULL
+  guidelines : JSON NOT NULL
+  restrictions : JSON NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(review_items, "review_items") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(patient_id) : INT NOT NULL
+  FK(practitioner_id) : INT NOT NULL
+  signal_type : VARCHAR(40) NOT NULL
+  evidence : VARCHAR(2000) NOT NULL
+  state : VARCHAR(20) NOT NULL
+  resolved_with_adjustment : TINYINT(1)
+  resolved_at : DATETIME
+  resolution_note : VARCHAR(1000)
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+EXT(users, "users  (IAM)") {
+  PK(id) : INT
+  --
+  role : VARCHAR(20)
+}
+
+nutritional_assessments ||--o{ clinical_measurements : "Anthropometry"
+nutritional_assessments ||..o| nutritional_assessments : "supersedes_assessment_id"
+nutritional_assessments ||..o{ nutritional_diagnoses : "assessment_id"
+nutritional_diagnoses ||..o{ nutrition_plans : "diagnosis_id"
+nutrition_plans ||..o| nutrition_plans : "superseded by next"
+
+review_items }..|| nutrition_plans : "concerns active plan"
+
+users ||..o{ nutritional_assessments : "patient_id / practitioner_id"
+users ||..o{ nutritional_diagnoses : "patient_id / practitioner_id"
+users ||..o{ nutrition_plans : "patient_id / practitioner_id"
+users ||..o{ review_items : "patient_id / practitioner_id"
+
+@enduml

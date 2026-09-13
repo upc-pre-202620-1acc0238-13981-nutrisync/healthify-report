@@ -1,0 +1,364 @@
+@startuml Healthify - Care Relationship - Domain
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.CareRelationship.Domain" {
+
+  package "Model.Aggregates" {
+    ' Invitation is a partial class: Invitation.cs + InvitationAudit.cs.
+    ' The single-use token the practitioner shows as a QR code. It is the only
+    ' way into the platform for a patient.
+    class Invitation {
+      -Id: InvitationId
+      -IssuedBy: int
+      -Token: InvitationToken
+      -ExpiresAt: DateTimeOffset
+      -RedeemedAt: DateTimeOffset?
+      -ExpiredAt: DateTimeOffset?
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +IsRedeemed: bool <<derived>>
+      +IsExpired: bool <<derived>>
+      #Invitation()
+      +Invitation(command: IssueInvitationCommand)
+      +IsValidAt(moment: DateTimeOffset): bool
+      +Redeem(redeemedAt: DateTimeOffset): void
+      +Expire(expiredAt: DateTimeOffset): void
+    }
+
+    ' CareLink is a partial class: CareLink.cs + CareLinkAudit.cs.
+    ' The single source of truth on who may see whom. Consent is stored as four
+    ' columns and rebuilt as a value object, because a nullable owned type is
+    ' fragile in EF Core and consent is genuinely absent at first.
+    class CareLink {
+      -Id: CareLinkId
+      -PatientId: int
+      -PractitionerId: int
+      -EstablishedAt: DateTimeOffset
+      -RevokedAt: DateTimeOffset?
+      -DischargedAt: DateTimeOffset?
+      -DischargeReason: string?
+      -PendingTargetsVersion: int?
+      -LastAcknowledgedVersion: int?
+      -ConsentGranted: bool
+      -ConsentScope: string?
+      -ConsentGrantedAt: DateTimeOffset?
+      -ConsentWithdrawnAt: DateTimeOffset?
+      -CreatedAt: DateTimeOffset?
+      -UpdatedAt: DateTimeOffset?
+      +Consent: Consent? <<derived>>
+      +IsActive: bool <<derived>>
+      +IsRevoked: bool <<derived>>
+      +IsDischarged: bool <<derived>>
+      #CareLink()
+      +CareLink(command: EstablishCareLinkCommand)
+      +GrantConsent(command: GrantConsentCommand): void
+      +WithdrawConsent(): void
+      +Revoke(): void
+      +Discharge(reason: ClinicalReason): void
+      +MarkTargetsPending(planVersion: int): void
+      +AcknowledgeActiveTargets(planVersion: int): void
+    }
+  }
+
+  package "Model.ValueObjects" {
+    class InvitationId <<record>> {
+      -Value: int
+      +InvitationId(value: int)
+      +{static} FromRaw(value: int): InvitationId
+    }
+    class CareLinkId <<record>> {
+      -Value: int
+      +CareLinkId(value: int)
+      +{static} FromRaw(value: int): CareLinkId
+    }
+    ' Opaque single-use secret carried by the QR code. Url-safe, so it fits.
+    class InvitationToken <<record>> {
+      -{static} ByteLength: int = 32
+      -{static} MinimumLength: int = 22
+      -{static} MaximumLength: int = 64
+      -Value: string
+      +InvitationToken(value: string)
+      +{static} Generate(): InvitationToken
+      +ToString(): string
+    }
+    ' The permission the patient gives, and can take back at any time without
+    ' explaining why. A consent without a recorded scope is an assumption.
+    class Consent <<record>> {
+      -{static} MaximumScopeLength: int = 200
+      -IsGranted: bool
+      -Scope: string
+      -GrantedAt: DateTimeOffset
+      -WithdrawnAt: DateTimeOffset?
+      +Consent(isGranted, scope, grantedAt, withdrawnAt)
+      +Withdraw(withdrawnAt: DateTimeOffset): Consent
+    }
+    ' The professional explains a discharge; the patient never explains leaving.
+    class ClinicalReason <<record>> {
+      -{static} MaximumLength: int = 500
+      -Value: string
+      +ClinicalReason(value: string)
+      +ToString(): string
+    }
+  }
+
+  package "Model.Commands" {
+    class IssueInvitationCommand <<record>> {
+      -IssuedBy: int
+      -ExpiresAt: DateTimeOffset
+    }
+    ' Issued by the time-driven policy, never by a user. No REST endpoint.
+    class ExpireInvitationCommand <<record>> {
+      -InvitationId: int
+    }
+    class RedeemInvitationCommand <<record>> {
+      -Token: string
+      -PatientId: int
+    }
+    ' Issued by the policy "When Invitation Redeemed". No REST endpoint.
+    class EstablishCareLinkCommand <<record>> {
+      -PatientId: int
+      -PractitionerId: int
+      -InvitationId: int
+    }
+    class GrantConsentCommand <<record>> {
+      -CareLinkId: int
+      -PatientId: int
+      -Scope: string
+    }
+    ' Carries no justification field on purpose.
+    class WithdrawConsentCommand <<record>> {
+      -CareLinkId: int
+      -PatientId: int
+    }
+    ' Issued by the policy "When Consent Withdrawn". No REST endpoint.
+    class RevokeCareLinkCommand <<record>> {
+      -CareLinkId: int
+    }
+    class DischargePatientCommand <<record>> {
+      -CareLinkId: int
+      -PractitionerId: int
+      -ClinicalReason: string
+    }
+    ' Issued by the policy reacting to ActiveTargetsUpdated. No REST endpoint.
+    class MarkTargetsPendingAcknowledgementCommand <<record>> {
+      -PatientId: int
+      -PlanVersion: int
+    }
+    class AcknowledgeActiveTargetsCommand <<record>> {
+      -CareLinkId: int
+      -PatientId: int
+      -PlanVersion: int
+    }
+  }
+
+  package "Model.Queries" {
+    class GetInvitationByIdQuery <<record>> {
+      -InvitationId: int
+    }
+    class GetInvitationByTokenQuery <<record>> {
+      -Token: string
+    }
+    class GetExpirableInvitationsQuery <<record>> {
+      -AsOf: DateTimeOffset
+      -MaxResults: int
+    }
+    class GetCareLinkByIdQuery <<record>> {
+      -CareLinkId: int
+    }
+    ' Backs the Open Host Service the other five contexts query.
+    class GetActiveCareLinkByPatientIdQuery <<record>> {
+      -PatientId: int
+    }
+    class GetCareLinksByPractitionerIdQuery <<record>> {
+      -PractitionerId: int
+    }
+  }
+
+  package "Model.Events" {
+    class InvitationIssued <<record>> {
+      -InvitationId: int
+      -IssuedBy: int
+      -ExpiresAt: DateTimeOffset
+    }
+    class InvitationExpired <<record>> {
+      -InvitationId: int
+      -IssuedBy: int
+      -ExpiredAt: DateTimeOffset
+    }
+    class InvitationRedeemed <<record>> {
+      -InvitationId: int
+      -PatientId: int
+      -PractitionerId: int
+    }
+    ' Integration event 1 of 13: crosses into Monitoring and Adherence.
+    class CareLinkEstablished <<record>> {
+      -CareLinkId: int
+      -PatientId: int
+      -PractitionerId: int
+    }
+    ' Crosses no boundary: Care Link Status is queried synchronously instead.
+    class ConsentGranted <<record>> {
+      -CareLinkId: int
+      -PatientId: int
+      -PractitionerId: int
+      -Scope: string
+    }
+    class ConsentWithdrawn <<record>> {
+      -CareLinkId: int
+      -PatientId: int
+      -WithdrawnAt: DateTimeOffset
+    }
+    ' Integration event 2 of 13: crosses into Monitoring and Adherence.
+    class CareLinkRevoked <<record>> {
+      -CareLinkId: int
+      -PatientId: int
+      -PractitionerId: int
+      -RevokedAt: DateTimeOffset
+    }
+    class TreatmentDischarged <<record>> {
+      -CareLinkId: int
+      -PatientId: int
+      -PractitionerId: int
+      -ClinicalReason: string
+      -DischargedAt: DateTimeOffset
+    }
+    class TargetsPendingAcknowledgement <<record>> {
+      -CareLinkId: int
+      -PatientId: int
+      -PlanVersion: int
+    }
+    class ActiveTargetsAcknowledged <<record>> {
+      -CareLinkId: int
+      -PatientId: int
+      -PlanVersion: int
+    }
+  }
+
+  package "Model.Errors" {
+    enum CareRelationshipError {
+      PractitionerOnly
+      ExpirationDateRequired
+      InvitationNotFound
+      InvitationExpired
+      InvitationAlreadyRedeemed
+      InvitationNotValid
+      RedeemedInvitationCannotExpire
+      PatientCannotSelfLink
+      PatientAlreadyHasActiveLink
+      CareLinkNotFound
+      ConsentScopeRequired
+      ConsentAlreadyGranted
+      NoActiveConsent
+      PendingVersionAlreadyExists
+      NoPendingTargetsVersion
+      AcknowledgedVersionNewerThanActive
+      ClinicalReasonRequired
+      CareLinkAlreadyRevoked
+      DischargedLinkCannotBeReactivated
+      CareLinkNotActive
+      UnexpectedError
+    }
+  }
+
+  package "Repositories" {
+    interface IInvitationRepository {
+      +FindByTokenAsync(token: InvitationToken, ct): Task<Invitation?>
+      +ListExpirableAsync(asOf: DateTimeOffset, maxResults: int, ct): Task<IEnumerable<Invitation>>
+    }
+    interface ICareLinkRepository {
+      +FindActiveByPatientIdAsync(patientId: int, ct): Task<CareLink?>
+      +FindUnclosedByPatientIdAsync(patientId: int, ct): Task<CareLink?>
+      +ExistsUnclosedByPatientIdAsync(patientId: int, ct): Task<bool>
+      +ListByPractitionerIdAsync(practitionerId: int, ct): Task<IEnumerable<CareLink>>
+    }
+  }
+}
+
+package "NutritionalCare.Domain.Model.Events" <<external>> {
+  ' One of the two cross-context imports the platform allows.
+  class ActiveTargetsUpdated
+}
+
+package "Shared.Domain" <<external>> {
+  interface IAuditableEntity
+  interface "IBaseRepository<T>" as IBaseRepository
+  abstract DomainEventBase
+}
+
+' --- Aggregate roots & auditing ---
+Invitation ..|> IAuditableEntity
+CareLink ..|> IAuditableEntity
+' Redeeming an invitation is the only path into a care link.
+Invitation "1" ..> "0..1" CareLink : redemption establishes
+
+' --- Identity & value objects held by the aggregates ---
+Invitation *--> "1" InvitationId : identified by
+Invitation *--> "1" InvitationToken : single-use secret
+CareLink *--> "1" CareLinkId : identified by
+CareLink *--> "0..1" Consent : rebuilt from four columns
+CareLink ..> ClinicalReason : recorded at discharge
+Consent ..> ClinicalReason : asymmetry - no reason asked to withdraw
+
+' --- Aggregate construction & invariants ---
+Invitation ..> IssueInvitationCommand : built from
+Invitation ..> RedeemInvitationCommand : redeemed by
+Invitation ..> ExpireInvitationCommand : expired by
+CareLink ..> EstablishCareLinkCommand : built from
+CareLink ..> GrantConsentCommand : applies
+CareLink ..> WithdrawConsentCommand : applies
+CareLink ..> RevokeCareLinkCommand : applies
+CareLink ..> DischargePatientCommand : applies
+CareLink ..> MarkTargetsPendingAcknowledgementCommand : applies
+CareLink ..> AcknowledgeActiveTargetsCommand : applies
+
+' --- Repositories ---
+IInvitationRepository --|> IBaseRepository
+ICareLinkRepository --|> IBaseRepository
+IInvitationRepository ..> Invitation : manages
+ICareLinkRepository ..> CareLink : manages
+
+' --- Queries target their read models ---
+GetInvitationByIdQuery ..> Invitation : queries
+GetInvitationByTokenQuery ..> Invitation : queries
+GetExpirableInvitationsQuery ..> Invitation : queries
+GetCareLinkByIdQuery ..> CareLink : queries
+GetActiveCareLinkByPatientIdQuery ..> CareLink : queries
+GetCareLinksByPractitionerIdQuery ..> CareLink : queries
+
+' --- Domain events ---
+InvitationIssued --|> DomainEventBase
+InvitationExpired --|> DomainEventBase
+InvitationRedeemed --|> DomainEventBase
+CareLinkEstablished --|> DomainEventBase
+ConsentGranted --|> DomainEventBase
+ConsentWithdrawn --|> DomainEventBase
+CareLinkRevoked --|> DomainEventBase
+TreatmentDischarged --|> DomainEventBase
+TargetsPendingAcknowledgement --|> DomainEventBase
+ActiveTargetsAcknowledged --|> DomainEventBase
+
+Invitation ..> InvitationIssued : raises
+Invitation ..> InvitationExpired : raises
+Invitation ..> InvitationRedeemed : raises
+CareLink ..> CareLinkEstablished : raises
+CareLink ..> ConsentGranted : raises
+CareLink ..> ConsentWithdrawn : raises
+CareLink ..> CareLinkRevoked : raises
+CareLink ..> TreatmentDischarged : raises
+CareLink ..> TargetsPendingAcknowledgement : raises
+CareLink ..> ActiveTargetsAcknowledged : raises
+
+' --- Policies expressed as event to command chains ---
+InvitationRedeemed ..> EstablishCareLinkCommand : policy issues
+ConsentWithdrawn ..> RevokeCareLinkCommand : policy issues
+ActiveTargetsUpdated ..> MarkTargetsPendingAcknowledgementCommand : policy issues
+
+' --- Errors: one value per business rule this context enforces ---
+CareRelationshipError ..> Invitation : reports failures of
+CareRelationshipError ..> CareLink : reports failures of
+
+@enduml

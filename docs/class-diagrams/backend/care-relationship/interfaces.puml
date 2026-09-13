@@ -1,0 +1,198 @@
+@startuml Healthify - Care Relationship - Interfaces
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.CareRelationship.Interfaces" {
+
+  package "Acl" {
+    ' The Open Host Service the other five contexts consume. It publishes
+    ' essentially one question, "is this link active", and everyone else is a
+    ' Conformist to the answer.
+    interface ICareRelationshipContextFacade {
+      +IsCareLinkActive(patientId: int, practitionerId: int, ct): Task<bool>
+      +GetActiveCareLinkByPatientId(patientId: int, ct): Task<CareLinkStatusItem?>
+    }
+    class CareLinkStatusItem <<record>> {
+      -CareLinkId: int
+      -PatientId: int
+      -PractitionerId: int
+      -IsActive: bool
+      -HasConsent: bool
+      -LastAcknowledgedVersion: int?
+    }
+  }
+
+  package "REST" {
+    class InvitationsController {
+      +IssueInvitation(resource: IssueInvitationResource): Task<IActionResult>
+      +GetInvitationById(invitationId: int): Task<IActionResult>
+      +RedeemInvitation(resource: RedeemInvitationResource): Task<IActionResult>
+    }
+    ' Revoke Care Link has no endpoint here on purpose: it is an internal
+    ' policy triggered by Consent Withdrawn, never a separate decision.
+    class CareLinksController {
+      +GetCareLinkById(careLinkId: int): Task<IActionResult>
+      +GetTargetsReadStatus(careLinkId: int): Task<IActionResult>
+      +GrantConsent(careLinkId: int, resource: GrantConsentResource): Task<IActionResult>
+      +WithdrawConsent(careLinkId: int): Task<IActionResult>
+      +AcknowledgeActiveTargets(careLinkId: int, resource: AcknowledgeActiveTargetsResource): Task<IActionResult>
+      +DischargePatient(careLinkId: int, resource: DischargePatientResource): Task<IActionResult>
+    }
+    class PatientCareLinksController {
+      +GetActiveCareLink(patientId: int): Task<IActionResult>
+    }
+    class PractitionerPatientsController {
+      +GetPatientsByPractitionerId(practitionerId: int): Task<IActionResult>
+    }
+  }
+
+  package "REST.Resources" {
+    class IssueInvitationResource <<record>>
+    class RedeemInvitationResource <<record>>
+    class InvitationResource <<record>>
+    class GrantConsentResource <<record>>
+    class AcknowledgeActiveTargetsResource <<record>>
+    class DischargePatientResource <<record>>
+    class CareLinkResource <<record>>
+    class TargetsReadStatusResource <<record>>
+  }
+
+  package "REST.Transform" {
+    class IssueInvitationCommandAssembler <<static>>
+    class RedeemInvitationCommandAssembler <<static>>
+    class GrantConsentCommandAssembler <<static>>
+    class WithdrawConsentCommandAssembler <<static>>
+    class AcknowledgeActiveTargetsCommandAssembler <<static>>
+    class DischargePatientCommandAssembler <<static>>
+    class InvitationResourceAssembler <<static>>
+    class CareLinkResourceAssembler <<static>>
+    class TargetsReadStatusResourceAssembler <<static>>
+    ' The single place where a CareRelationshipError becomes an HTTP status.
+    class CareRelationshipActionResultAssembler <<static>>
+  }
+}
+
+package "CareRelationship.Application" <<external>> {
+  interface IInvitationCommandService
+  interface IInvitationQueryService
+  interface ICareLinkCommandService
+  interface ICareLinkQueryService
+  class InvitationRedemptionOutcome
+}
+
+package "CareRelationship.Domain" <<external>> {
+  class Invitation
+  class CareLink
+  class IssueInvitationCommand
+  class RedeemInvitationCommand
+  class GrantConsentCommand
+  class WithdrawConsentCommand
+  class AcknowledgeActiveTargetsCommand
+  class DischargePatientCommand
+  class GetInvitationByIdQuery
+  class GetCareLinkByIdQuery
+  class GetActiveCareLinkByPatientIdQuery
+  class GetCareLinksByPractitionerIdQuery
+  enum CareRelationshipError
+}
+
+package "Shared / ASP.NET" <<external>> {
+  class ControllerBase
+  class "Result<TValue, TError>" as Result
+  class ProblemDetailsFactory
+  class ControllerBaseExtensions <<static>>
+  interface "IStringLocalizer<T>" as IStringLocalizerGeneric
+}
+
+package "CareRelationship.Resources" {
+  class CareRelationshipMessages
+}
+
+' Resolved generic: the controllers depend on IStringLocalizer<CareRelationshipMessages>.
+interface "IStringLocalizer<CareRelationshipMessages>" as IStringLocalizer
+IStringLocalizer ..|> IStringLocalizerGeneric
+IStringLocalizer ..> CareRelationshipMessages : parameterized by
+
+' --- Controllers ---
+InvitationsController --|> ControllerBase
+CareLinksController --|> ControllerBase
+PatientCareLinksController --|> ControllerBase
+PractitionerPatientsController --|> ControllerBase
+InvitationsController --> IInvitationCommandService : uses
+InvitationsController --> IInvitationQueryService : uses
+InvitationsController --> IStringLocalizer : uses
+CareLinksController --> ICareLinkCommandService : uses
+CareLinksController --> ICareLinkQueryService : uses
+CareLinksController --> IStringLocalizer : uses
+PatientCareLinksController --> ICareLinkQueryService : uses
+PatientCareLinksController --> IStringLocalizer : uses
+PractitionerPatientsController --> ICareLinkQueryService : uses
+' No localizer of its own: it only ever answers 200 or 403.
+PractitionerPatientsController ..> CareRelationshipMessages : shares localization resources
+
+' --- Identifiers always come from the session token, never from the payload ---
+InvitationsController ..> ControllerBaseExtensions : reads user id
+CareLinksController ..> ControllerBaseExtensions : reads user id
+PatientCareLinksController ..> ControllerBaseExtensions : authorizes participant
+PractitionerPatientsController ..> ControllerBaseExtensions : authorizes owner
+
+' --- Controllers to assemblers and queries ---
+InvitationsController ..> IssueInvitationCommandAssembler : uses
+InvitationsController ..> RedeemInvitationCommandAssembler : uses
+InvitationsController ..> InvitationResourceAssembler : uses
+InvitationsController ..> CareRelationshipActionResultAssembler : uses
+InvitationsController ..> GetInvitationByIdQuery : builds
+CareLinksController ..> GrantConsentCommandAssembler : uses
+CareLinksController ..> WithdrawConsentCommandAssembler : uses
+CareLinksController ..> AcknowledgeActiveTargetsCommandAssembler : uses
+CareLinksController ..> DischargePatientCommandAssembler : uses
+CareLinksController ..> CareLinkResourceAssembler : uses
+CareLinksController ..> TargetsReadStatusResourceAssembler : uses
+CareLinksController ..> CareRelationshipActionResultAssembler : uses
+CareLinksController ..> GetCareLinkByIdQuery : builds
+PatientCareLinksController ..> CareLinkResourceAssembler : uses
+PatientCareLinksController ..> CareRelationshipActionResultAssembler : uses
+PatientCareLinksController ..> GetActiveCareLinkByPatientIdQuery : builds
+PractitionerPatientsController ..> CareLinkResourceAssembler : uses
+PractitionerPatientsController ..> GetCareLinksByPractitionerIdQuery : builds
+
+' --- Request resource to command assemblers ---
+IssueInvitationCommandAssembler ..> IssueInvitationResource : from
+IssueInvitationCommandAssembler ..> IssueInvitationCommand : to
+RedeemInvitationCommandAssembler ..> RedeemInvitationResource : from
+RedeemInvitationCommandAssembler ..> RedeemInvitationCommand : to
+GrantConsentCommandAssembler ..> GrantConsentResource : from
+GrantConsentCommandAssembler ..> GrantConsentCommand : to
+AcknowledgeActiveTargetsCommandAssembler ..> AcknowledgeActiveTargetsResource : from
+AcknowledgeActiveTargetsCommandAssembler ..> AcknowledgeActiveTargetsCommand : to
+DischargePatientCommandAssembler ..> DischargePatientResource : from
+DischargePatientCommandAssembler ..> DischargePatientCommand : to
+' Both identifiers come from the route and the token: there is no payload.
+WithdrawConsentCommandAssembler ..> WithdrawConsentCommand : to
+
+' --- Entity to response resource assemblers ---
+' ToResourceWithToken is used exactly once: on the response that creates the
+' invitation. Every later read reports the token as null.
+InvitationResourceAssembler ..> Invitation : from
+InvitationResourceAssembler ..> InvitationResource : to
+CareLinkResourceAssembler ..> CareLink : from
+CareLinkResourceAssembler ..> CareLinkResource : to
+TargetsReadStatusResourceAssembler ..> CareLink : from
+TargetsReadStatusResourceAssembler ..> TargetsReadStatusResource : to
+
+' --- Result to IActionResult assembler ---
+CareRelationshipActionResultAssembler ..> Result : maps
+CareRelationshipActionResultAssembler ..> CareRelationshipError : maps
+CareRelationshipActionResultAssembler ..> InvitationRedemptionOutcome : unwraps
+CareRelationshipActionResultAssembler ..> InvitationResourceAssembler : uses
+CareRelationshipActionResultAssembler ..> CareLinkResourceAssembler : uses
+CareRelationshipActionResultAssembler ..> ProblemDetailsFactory : builds problem details with
+CareRelationshipActionResultAssembler ..> IStringLocalizer : localizes with
+
+' --- ACL facade contract & its DTO ---
+ICareRelationshipContextFacade ..> CareLinkStatusItem : returns
+
+@enduml

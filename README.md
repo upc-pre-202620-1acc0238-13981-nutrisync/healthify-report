@@ -41,7 +41,7 @@ Healthify
     <tr><td>U202411669</td><td>Del Aguila Del Aguila, Olenka Priscilla</td></tr>
     <tr><td>U202415495</td><td>Espinoza Cruz, Angela Milagros</td></tr>
     <tr><td>U20241B227</td><td>Mora Rivera, Joel Fernando</td></tr>
-    <tr><td>U20241D159</td><td>Vergraray Calderon, Rose Almendra</td></tr>
+    <tr><td>U20241D159</td><td>Vergaray Calderon, Rose Almendra</td></tr>
     <tr><td>U202417857</td><td>Villarreal Bazan, Angel Martin</td></tr>
   </tbody>
 </table>
@@ -58,7 +58,18 @@ Septiembre, 2026
 ## REGISTRO DE VERSIONES DEL INFORME
 | Versión | Fecha | Autor | Descripción de modificación |
 | :---: | :---: | :---: | :---: |
-| 0.1.0 | 02/09/2026 | Angel Villarreal | Commit inicial; estructura base del repositorio y esquemas de todos los capítulos (`main`) |
+| 0.1.0 | 28/08/2026 | Angel Villarreal | Commit inicial del repositorio (`main`) |
+| 0.2.0 | 02/09/2026 | Angel Villarreal | Estructura del README; logo UPC y fotos de integrantes; esquemas de student outcome, objetivos SMART, capítulos I–IV, conclusiones, glosario, bibliografía y anexos (`feature/setup`) |
+| 0.3.0 | 02/09/2026 – 03/09/2026 | Joel Mora | Sección 2.5.3 Software Architecture: diagramas de contexto, contenedores, componentes (frontend y backend) y despliegue (`feature/software-architecture`) |
+| 0.4.0 | 03/09/2026 – 05/09/2026 | Rose Vergaray | Cap. 1: descripción de la startup, análisis 5W2H, Lean UX (problem statement, assumptions, hypothesis statements, canvas) y segmentos objetivo (`feature/chapter1-introduction`) |
+| 0.5.0 | 07/09/2026 | Angel Villarreal / Olenka Del Aguila | Tactical-level DDD de los bounded contexts Intake & Body Response, Monitoring & Adherence, Care Relationship, Nutritional Care, IAM y Food Catalog: capas, diagramas de componentes, clases y base de datos (`feature/chapter2-bounded-context`) |
+| 0.6.0 | 08/09/2026 – 09/09/2026 | Angela Espinoza | Needfinding: personas, user journey mapping, empathy mapping, user task matrix; análisis competitivo (landscape, SWOT, logos) y estrategias frente a competidores (`feature/chapter2-needfinding`) |
+| 0.7.0 | 08/09/2026 – 09/09/2026 | Joel Mora | Actualización de la tecnología de base de datos a MySQL 8 en secciones 2.5.3–2.5.3.4 y sus diagramas (`feature/software-architecture`) |
+| 0.8.0 | 08/09/2026 – 09/09/2026 | Rose Vergaray | User, technical y spike stories; impact mapping de paciente y nutricionista; product backlog (tabla y tablero); corrección de apellido en README (`feature/chapter2-requirements-specification`) |
+| 0.9.0 | 09/09/2026 – 11/09/2026 | Todos los integrantes | Strategic-level DDD: Big Picture y Design Level EventStorming, ubiquitous language, candidate context discovery, domain message flows, bounded context canvases y context mapping (`feature/chapter2-bounded-context`) |
+| 0.10.0 | 12/09/2026 | Todos los integrantes | Integración de ramas a `develop` (PR #3–#7); entradas de los bounded contexts en la tabla de contenidos del README |
+| 0.11.0 | 13/09/2026 | Todos los integrantes | Acciones y conclusiones ABET 7.c.1 y 7.c.2; objetivos SMART de cada integrante; adición de las entrevistas |
+| 1.0.0 | 13/09/2026 | Angel Villarreal | AV1 Report |
 
 <div style="page-break-after: always"></div>
 
@@ -124,7 +135,7 @@ AV1:<br>
     - [2.5.3.2. Software Architecture Container Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2532-software-architecture-container-level-diagrams)
     - [2.5.3.3. Software Architecture Deployment Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2533-software-architecture-deployment-diagrams)
 - [2.6. Tactical-Level Domain-Driven Design](report/12-chapter2-requirements-development-and-software-solution-design.md#26-tactical-level-domain-driven-design)
-  - [2.6.1. Bounded Context: &lt;Bounded Context Name&gt;](report/12-chapter2-requirements-development-and-software-solution-design.md#261-bounded-context)
+  - [2.6.1. Bounded Context: Intake &amp; Body Response](report/12-chapter2-requirements-development-and-software-solution-design.md#261-bounded-context-intake--body-response)
     - [2.6.1.1. Domain Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2611-domain-layer)
     - [2.6.1.2. Interface Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2612-interface-layer)
     - [2.6.1.3. Application Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2613-application-layer)
@@ -133,6 +144,51 @@ AV1:<br>
     - [2.6.1.6. Bounded Context Software Architecture Code Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2616-bounded-context-software-architecture-code-level-diagrams)
       - [2.6.1.6.1. Bounded Context Domain Layer Class Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#26161-bounded-context-domain-layer-class-diagrams)
       - [2.6.1.6.2. Bounded Context Database Design Diagram](report/12-chapter2-requirements-development-and-software-solution-design.md#26162-bounded-context-database-design-diagram)
+  - [2.6.2. Bounded Context: Monitoring &amp; Adherence](report/12-chapter2-requirements-development-and-software-solution-design.md#262-bounded-context-monitoring--adherence)
+    - [2.6.2.1. Domain Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2621-domain-layer)
+    - [2.6.2.2. Interface Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2622-interface-layer)
+    - [2.6.2.3. Application Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2623-application-layer)
+    - [2.6.2.4. Infrastructure Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2624-infrastructure-layer)
+    - [2.6.2.5. Bounded Context Software Architecture Component Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2625-bounded-context-software-architecture-component-level-diagrams)
+    - [2.6.2.6. Bounded Context Software Architecture Code Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2626-bounded-context-software-architecture-code-level-diagrams)
+      - [2.6.2.6.1. Bounded Context Domain Layer Class Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#26261-bounded-context-domain-layer-class-diagrams)
+      - [2.6.2.6.2. Bounded Context Database Design Diagram](report/12-chapter2-requirements-development-and-software-solution-design.md#26262-bounded-context-database-design-diagram)
+  - [2.6.3. Bounded Context: Care Relationship](report/12-chapter2-requirements-development-and-software-solution-design.md#263-bounded-context-care-relationship)
+    - [2.6.3.1. Domain Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2631-domain-layer)
+    - [2.6.3.2. Interface Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2632-interface-layer)
+    - [2.6.3.3. Application Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2633-application-layer)
+    - [2.6.3.4. Infrastructure Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2634-infrastructure-layer)
+    - [2.6.3.5. Bounded Context Software Architecture Component Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2635-bounded-context-software-architecture-component-level-diagrams)
+    - [2.6.3.6. Bounded Context Software Architecture Code Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2636-bounded-context-software-architecture-code-level-diagrams)
+      - [2.6.3.6.1. Bounded Context Domain Layer Class Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#26361-bounded-context-domain-layer-class-diagrams)
+      - [2.6.3.6.2. Bounded Context Database Design Diagram](report/12-chapter2-requirements-development-and-software-solution-design.md#26362-bounded-context-database-design-diagram)
+  - [2.6.4. Bounded Context: Nutritional Care](report/12-chapter2-requirements-development-and-software-solution-design.md#264-bounded-context-nutritional-care)
+    - [2.6.4.1. Domain Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2641-domain-layer)
+    - [2.6.4.2. Interface Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2642-interface-layer)
+    - [2.6.4.3. Application Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2643-application-layer)
+    - [2.6.4.4. Infrastructure Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2644-infrastructure-layer)
+    - [2.6.4.5. Bounded Context Software Architecture Component Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2645-bounded-context-software-architecture-component-level-diagrams)
+    - [2.6.4.6. Bounded Context Software Architecture Code Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2646-bounded-context-software-architecture-code-level-diagrams)
+      - [2.6.4.6.1. Bounded Context Domain Layer Class Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#26461-bounded-context-domain-layer-class-diagrams)
+      - [2.6.4.6.2. Bounded Context Database Design Diagram](report/12-chapter2-requirements-development-and-software-solution-design.md#26462-bounded-context-database-design-diagram)
+  - [2.6.5. Bounded Context: IAM](report/12-chapter2-requirements-development-and-software-solution-design.md#265-bounded-context-iam)
+    - [2.6.5.1. Domain Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2651-domain-layer)
+    - [2.6.5.2. Interface Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2652-interface-layer)
+    - [2.6.5.3. Application Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2653-application-layer)
+    - [2.6.5.4. Infrastructure Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2654-infrastructure-layer)
+    - [2.6.5.5. Bounded Context Software Architecture Component Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2655-bounded-context-software-architecture-component-level-diagrams)
+    - [2.6.5.6. Bounded Context Software Architecture Code Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2656-bounded-context-software-architecture-code-level-diagrams)
+      - [2.6.5.6.1. Bounded Context Domain Layer Class Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#26561-bounded-context-domain-layer-class-diagrams)
+      - [2.6.5.6.2. Bounded Context Database Design Diagram](report/12-chapter2-requirements-development-and-software-solution-design.md#26562-bounded-context-database-design-diagram)
+  - [2.6.6. Bounded Context: Food Catalog](report/12-chapter2-requirements-development-and-software-solution-design.md#266-bounded-context-food-catalog)
+    - [2.6.6.1. Domain Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2661-domain-layer)
+    - [2.6.6.2. Interface Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2662-interface-layer)
+    - [2.6.6.3. Application Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2663-application-layer)
+    - [2.6.6.4. Infrastructure Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2664-infrastructure-layer)
+    - [2.6.6.5. Bounded Context Software Architecture Component Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2665-bounded-context-software-architecture-component-level-diagrams)
+    - [2.6.6.6. Bounded Context Software Architecture Code Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2666-bounded-context-software-architecture-code-level-diagrams)
+      - [2.6.6.6.1. Bounded Context Domain Layer Class Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#26661-bounded-context-domain-layer-class-diagrams)
+      - [2.6.6.6.2. Bounded Context Database Design Diagram](report/12-chapter2-requirements-development-and-software-solution-design.md#26662-bounded-context-database-design-diagram)
 
 [CAPÍTULO III: SOLUTION UI/UX DESIGN](report/13-chapter3-solution-ui-ux-design.md)
 

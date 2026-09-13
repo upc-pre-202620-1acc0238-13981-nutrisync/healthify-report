@@ -1,0 +1,257 @@
+@startuml Healthify - Monitoring and Adherence - Infrastructure
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.MonitoringAdherence.Infrastructure" {
+
+  package "Persistence.EFC.Configuration" {
+    class EvaluationWindowEntityTypeConfiguration {
+      -{static} SnapshotListComparer: ValueComparer<List<TargetsSnapshot>>
+      -{static} DayListComparer: ValueComparer<List<DailyCompliance>>
+      -{static} PointListComparer: ValueComparer<List<AnthropometryPoint>>
+      +Configure(builder: EntityTypeBuilder<EvaluationWindow>): void
+    }
+    class DeviationEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<Deviation>): void
+    }
+    class ConsistencyIndexEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<ConsistencyIndex>): void
+    }
+    class ReferralEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<Referral>): void
+    }
+    class ScheduledFollowUpEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<ScheduledFollowUp>): void
+    }
+  }
+
+  package "Persistence.EFC.Repositories" {
+    ' Nothing here overrides or calls the inherited Remove: a closed window is
+    ' a finished reading, not a deleted one.
+    class EvaluationWindowRepository {
+      -{static} OpenState: WindowState
+      +FindByIdAsync(id: int, ct): Task<EvaluationWindow?>
+      +FindOpenByPatientIdAsync(patientId: int, ct): Task<EvaluationWindow?>
+      +ListByPatientIdAsync(patientId: int, ct): Task<IEnumerable<EvaluationWindow>>
+      +ListOpenAsync(batchSize: int, ct): Task<IEnumerable<EvaluationWindow>>
+    }
+    class DeviationRepository {
+      +FindByIdAsync(id: int, ct): Task<Deviation?>
+      +ListByPatientIdAsync(patientId: int, ct): Task<IEnumerable<Deviation>>
+      +FindLatestByWindowAndDirectionAsync(windowId: WindowId, direction: DeviationDirection, ct): Task<Deviation?>
+    }
+    class ConsistencyIndexRepository {
+      -{static} AlertState: ConsistencyState
+      +FindByPatientIdAsync(patientId: int, ct): Task<ConsistencyIndex?>
+      +ListEscalatableAsync(alertSinceBefore: DateTimeOffset, batchSize: int, ct): Task<IEnumerable<ConsistencyIndex>>
+    }
+    class ReferralRepository {
+      +FindByIdAsync(id: int, ct): Task<Referral?>
+      +ListByPatientIdAsync(patientId: int, ct): Task<IEnumerable<Referral>>
+    }
+    class ScheduledFollowUpRepository {
+      -{static} ScheduledState: FollowUpState
+      +FindByIdAsync(id: int, ct): Task<ScheduledFollowUp?>
+      +FindScheduledByPatientIdAsync(patientId: int, ct): Task<ScheduledFollowUp?>
+      +ListByPractitionerIdAsync(practitionerId: int, ct): Task<IEnumerable<ScheduledFollowUp>>
+      +ListOverdueAsync(asOf: DateTimeOffset, batchSize: int, ct): Task<IEnumerable<ScheduledFollowUp>>
+    }
+  }
+
+  package "Scheduling" {
+    ' Policy "When N Days Without A Diary Entry" (Subflow 5.9). Runs every 12
+    ' hours by default. A gap never escalates: the only thing downstream of it
+    ' reminds the patient.
+    class LoggingGapDetectionHostedService {
+      -{static} BatchSize: int = 200
+      #ExecuteAsync(stoppingToken: CancellationToken): Task
+      -RunCycleAsync(stoppingToken: CancellationToken): Task
+      -{static} SafeWaitAsync(timer: PeriodicTimer, stoppingToken): Task<bool>
+    }
+    ' Policy "When Consistency Alert Sustained Three Weeks" (Subflow 5.8).
+    ' The thing it waits for is three weeks passing, and no event announces
+    ' that. TODO UNCALIBRATED: at an unset threshold nothing ever escalates,
+    ' and that dormant state is the safe one.
+    class ConsistencyEscalationHostedService {
+      -{static} BatchSize: int = 200
+      #ExecuteAsync(stoppingToken: CancellationToken): Task
+      -RunCycleAsync(stoppingToken: CancellationToken): Task
+      -{static} SafeWaitAsync(timer: PeriodicTimer, stoppingToken): Task<bool>
+    }
+    ' Policy "When Scheduled Date Passed Without Visit" (Subflow 5.10). It
+    ' moves one state on one row and closes nothing.
+    class MissedFollowUpHostedService {
+      -{static} BatchSize: int = 200
+      #ExecuteAsync(stoppingToken: CancellationToken): Task
+      -RunCycleAsync(stoppingToken: CancellationToken): Task
+      -{static} SafeWaitAsync(timer: PeriodicTimer, stoppingToken): Task<bool>
+    }
+  }
+}
+
+package "MonitoringAdherence.Domain" <<external>> {
+  class EvaluationWindow
+  class Deviation
+  class ConsistencyIndex
+  class Referral
+  class ScheduledFollowUp
+  class WindowId
+  class DeviationId
+  class ReferralId
+  class FollowUpId
+  class WindowState
+  class ConsistencyState
+  class FollowUpState
+  class DeviationDirection
+  class Specialty
+  class ReferralReason
+  class TargetsSnapshot
+  class DailyCompliance
+  class AnthropometryPoint
+  class FlagLoggingGapCommand
+  class EscalateToPractitionerCommand
+  class FlagMissedFollowUpCommand
+  class GetOpenEvaluationWindowsQuery
+  class GetEscalatableConsistencyIndicesQuery
+  class GetOverdueScheduledFollowUpsQuery
+  interface IEvaluationWindowRepository
+  interface IDeviationRepository
+  interface IConsistencyIndexRepository
+  interface IReferralRepository
+  interface IScheduledFollowUpRepository
+}
+
+package "MonitoringAdherence.Application" <<external>> {
+  interface IEvaluationWindowCommandService
+  interface IEvaluationWindowQueryService
+  interface IConsistencyIndexCommandService
+  interface IConsistencyIndexQueryService
+  interface IScheduledFollowUpCommandService
+  interface IScheduledFollowUpQueryService
+}
+
+package "Shared.Infrastructure / EF Core" <<external>> {
+  class AppDbContext
+  class "BaseRepository<T>" as BaseRepository
+  interface "IBaseRepository<T>" as IBaseRepository
+  interface "IEntityTypeConfiguration<T>" as IEntityTypeConfiguration
+  class "ValueComparer<T>" as ValueComparer
+  class AuditableEntityInterceptor
+  class JsonSerializer
+}
+
+package "ASP.NET hosting" <<external>> {
+  abstract BackgroundService
+  interface IServiceScopeFactory
+  interface IConfiguration
+  interface "ILogger<T>" as ILogger
+  class PeriodicTimer
+}
+
+' --- EF Core entity configurations ---
+EvaluationWindowEntityTypeConfiguration ..|> IEntityTypeConfiguration
+DeviationEntityTypeConfiguration ..|> IEntityTypeConfiguration
+ConsistencyIndexEntityTypeConfiguration ..|> IEntityTypeConfiguration
+ReferralEntityTypeConfiguration ..|> IEntityTypeConfiguration
+ScheduledFollowUpEntityTypeConfiguration ..|> IEntityTypeConfiguration
+EvaluationWindowEntityTypeConfiguration ..> EvaluationWindow : maps to evaluation_windows
+DeviationEntityTypeConfiguration ..> Deviation : maps to deviations
+' The patient identifier is the primary key: one index per patient.
+ConsistencyIndexEntityTypeConfiguration ..> ConsistencyIndex : maps to consistency_indices
+ReferralEntityTypeConfiguration ..> Referral : maps to referrals
+ScheduledFollowUpEntityTypeConfiguration ..> ScheduledFollowUp : maps to scheduled_follow_ups
+EvaluationWindowEntityTypeConfiguration ..> WindowId : converts
+EvaluationWindowEntityTypeConfiguration ..> WindowState : converts
+' The three series, stored as JSON through their backing fields.
+EvaluationWindowEntityTypeConfiguration ..> TargetsSnapshot : serializes
+EvaluationWindowEntityTypeConfiguration ..> DailyCompliance : serializes
+EvaluationWindowEntityTypeConfiguration ..> AnthropometryPoint : serializes
+' Without the comparers EF never notices a change and updates are lost.
+EvaluationWindowEntityTypeConfiguration --> ValueComparer : compares the three lists with
+EvaluationWindowEntityTypeConfiguration --> JsonSerializer : stores the series as JSON
+DeviationEntityTypeConfiguration ..> DeviationId : converts
+' A separate aggregate in the same context: the reference is stored as its
+' typed identity with no EF navigation behind it.
+DeviationEntityTypeConfiguration ..> WindowId : converts the reference
+DeviationEntityTypeConfiguration ..> DeviationDirection : converts
+ConsistencyIndexEntityTypeConfiguration ..> ConsistencyState : converts
+ReferralEntityTypeConfiguration ..> ReferralId : converts
+ReferralEntityTypeConfiguration ..> Specialty : converts
+ReferralEntityTypeConfiguration ..> ReferralReason : converts
+ScheduledFollowUpEntityTypeConfiguration ..> FollowUpId : converts
+ScheduledFollowUpEntityTypeConfiguration ..> FollowUpState : converts
+AppDbContext ..> EvaluationWindowEntityTypeConfiguration : applies
+AppDbContext ..> DeviationEntityTypeConfiguration : applies
+AppDbContext ..> ConsistencyIndexEntityTypeConfiguration : applies
+AppDbContext ..> ReferralEntityTypeConfiguration : applies
+AppDbContext ..> ScheduledFollowUpEntityTypeConfiguration : applies
+AppDbContext --> AuditableEntityInterceptor : stamps created_at / updated_at
+
+' --- Repositories ---
+EvaluationWindowRepository --|> BaseRepository
+DeviationRepository --|> BaseRepository
+ConsistencyIndexRepository --|> BaseRepository
+ReferralRepository --|> BaseRepository
+ScheduledFollowUpRepository --|> BaseRepository
+BaseRepository ..|> IBaseRepository
+EvaluationWindowRepository ..|> IEvaluationWindowRepository
+DeviationRepository ..|> IDeviationRepository
+ConsistencyIndexRepository ..|> IConsistencyIndexRepository
+ReferralRepository ..|> IReferralRepository
+ScheduledFollowUpRepository ..|> IScheduledFollowUpRepository
+EvaluationWindowRepository --> AppDbContext : queries
+DeviationRepository --> AppDbContext : queries
+ConsistencyIndexRepository --> AppDbContext : queries
+ReferralRepository --> AppDbContext : queries
+ScheduledFollowUpRepository --> AppDbContext : queries
+EvaluationWindowRepository ..> EvaluationWindow : persists
+EvaluationWindowRepository ..> WindowId : rebuilds typed id
+' Compared through the value converter: EF cannot translate a member of a
+' converted type, so the state is compared as a whole value object.
+EvaluationWindowRepository ..> WindowState : filters the open one by
+DeviationRepository ..> Deviation : persists
+DeviationRepository ..> DeviationId : rebuilds typed id
+DeviationRepository ..> DeviationDirection : filters by
+ConsistencyIndexRepository ..> ConsistencyIndex : persists
+' The escalation preconditions are expressed as a query, so the time-driven
+' policy never sees a row it is not allowed to act on.
+ConsistencyIndexRepository ..> ConsistencyState : filters escalatable ones by
+ReferralRepository ..> Referral : persists
+ReferralRepository ..> ReferralId : rebuilds typed id
+ScheduledFollowUpRepository ..> ScheduledFollowUp : persists
+ScheduledFollowUpRepository ..> FollowUpId : rebuilds typed id
+ScheduledFollowUpRepository ..> FollowUpState : filters overdue ones by
+
+' --- The three time-driven policies ---
+LoggingGapDetectionHostedService --|> BackgroundService
+ConsistencyEscalationHostedService --|> BackgroundService
+MissedFollowUpHostedService --|> BackgroundService
+LoggingGapDetectionHostedService --> IServiceScopeFactory : opens its own scope with
+LoggingGapDetectionHostedService --> IConfiguration : reads the interval from
+LoggingGapDetectionHostedService --> ILogger : logs to
+LoggingGapDetectionHostedService --> PeriodicTimer : paces cycles with
+LoggingGapDetectionHostedService --> IEvaluationWindowQueryService : lists open windows with
+LoggingGapDetectionHostedService --> IEvaluationWindowCommandService : issues the command through
+LoggingGapDetectionHostedService ..> GetOpenEvaluationWindowsQuery : issues
+LoggingGapDetectionHostedService ..> FlagLoggingGapCommand : issues
+ConsistencyEscalationHostedService --> IServiceScopeFactory : opens its own scope with
+ConsistencyEscalationHostedService --> IConfiguration : reads the interval and the weeks from
+ConsistencyEscalationHostedService --> ILogger : logs to
+ConsistencyEscalationHostedService --> PeriodicTimer : paces cycles with
+ConsistencyEscalationHostedService --> IConsistencyIndexQueryService : lists escalatable indices with
+ConsistencyEscalationHostedService --> IConsistencyIndexCommandService : issues the command through
+ConsistencyEscalationHostedService ..> GetEscalatableConsistencyIndicesQuery : issues
+ConsistencyEscalationHostedService ..> EscalateToPractitionerCommand : issues
+MissedFollowUpHostedService --> IServiceScopeFactory : opens its own scope with
+MissedFollowUpHostedService --> IConfiguration : reads the interval from
+MissedFollowUpHostedService --> ILogger : logs to
+MissedFollowUpHostedService --> PeriodicTimer : paces cycles with
+MissedFollowUpHostedService --> IScheduledFollowUpQueryService : lists overdue visits with
+MissedFollowUpHostedService --> IScheduledFollowUpCommandService : issues the command through
+MissedFollowUpHostedService ..> GetOverdueScheduledFollowUpsQuery : issues
+MissedFollowUpHostedService ..> FlagMissedFollowUpCommand : issues
+
+@enduml

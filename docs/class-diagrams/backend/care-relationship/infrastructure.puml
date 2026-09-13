@@ -1,0 +1,122 @@
+@startuml Healthify - Care Relationship - Infrastructure
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.CareRelationship.Infrastructure" {
+
+  package "Persistence.EFC.Configuration" {
+    class InvitationEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<Invitation>): void
+    }
+    class CareLinkEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<CareLink>): void
+    }
+  }
+
+  package "Persistence.EFC.Repositories" {
+    class InvitationRepository {
+      +FindByIdAsync(id: int, ct): Task<Invitation?>
+      +FindByTokenAsync(token: InvitationToken, ct): Task<Invitation?>
+      +ListExpirableAsync(asOf: DateTimeOffset, maxResults: int, ct): Task<IEnumerable<Invitation>>
+    }
+    class CareLinkRepository {
+      +FindByIdAsync(id: int, ct): Task<CareLink?>
+      +FindActiveByPatientIdAsync(patientId: int, ct): Task<CareLink?>
+      +FindUnclosedByPatientIdAsync(patientId: int, ct): Task<CareLink?>
+      +ExistsUnclosedByPatientIdAsync(patientId: int, ct): Task<bool>
+      +ListByPractitionerIdAsync(practitionerId: int, ct): Task<IEnumerable<CareLink>>
+      -Unclosed(): IQueryable<CareLink>
+    }
+  }
+
+  package "Scheduling" {
+    ' Background worker for the time-driven policy "When Expiration Date
+    ' Reached" (Subflow 2.1). Nobody triggers it: only the passage of time,
+    ' which is why it is a hosted service and not an event handler.
+    class InvitationExpiryHostedService {
+      -{static} BatchSize: int = 200
+      #ExecuteAsync(stoppingToken: CancellationToken): Task
+      -RunCycleAsync(stoppingToken: CancellationToken): Task
+      -{static} SafeWaitAsync(timer: PeriodicTimer, stoppingToken): Task<bool>
+    }
+  }
+}
+
+package "CareRelationship.Domain" <<external>> {
+  class Invitation
+  class CareLink
+  class InvitationId
+  class CareLinkId
+  class InvitationToken
+  class Consent
+  class ExpireInvitationCommand
+  class GetExpirableInvitationsQuery
+  interface IInvitationRepository
+  interface ICareLinkRepository
+}
+
+package "CareRelationship.Application" <<external>> {
+  interface IInvitationCommandService
+  interface IInvitationQueryService
+}
+
+package "Shared.Infrastructure / EF Core" <<external>> {
+  class AppDbContext
+  class "BaseRepository<T>" as BaseRepository
+  interface "IBaseRepository<T>" as IBaseRepository
+  interface "IEntityTypeConfiguration<T>" as IEntityTypeConfiguration
+  class AuditableEntityInterceptor
+}
+
+package "ASP.NET hosting" <<external>> {
+  abstract BackgroundService
+  interface IServiceScopeFactory
+  interface IConfiguration
+  interface "ILogger<T>" as ILogger
+  class PeriodicTimer
+}
+
+' --- EF Core entity configurations ---
+InvitationEntityTypeConfiguration ..|> IEntityTypeConfiguration
+CareLinkEntityTypeConfiguration ..|> IEntityTypeConfiguration
+InvitationEntityTypeConfiguration ..> Invitation : maps to table invitations
+CareLinkEntityTypeConfiguration ..> CareLink : maps to table care_links
+InvitationEntityTypeConfiguration ..> InvitationId : converts
+InvitationEntityTypeConfiguration ..> InvitationToken : converts (unique index)
+CareLinkEntityTypeConfiguration ..> CareLinkId : converts
+' Consent is persisted as four columns and ignored as a navigation.
+CareLinkEntityTypeConfiguration ..> Consent : flattens into four columns
+AppDbContext ..> InvitationEntityTypeConfiguration : applies
+AppDbContext ..> CareLinkEntityTypeConfiguration : applies
+AppDbContext --> AuditableEntityInterceptor : stamps created_at / updated_at
+
+' --- Repositories ---
+InvitationRepository --|> BaseRepository
+CareLinkRepository --|> BaseRepository
+BaseRepository ..|> IBaseRepository
+InvitationRepository ..|> IInvitationRepository
+CareLinkRepository ..|> ICareLinkRepository
+InvitationRepository --> AppDbContext : queries
+CareLinkRepository --> AppDbContext : queries
+InvitationRepository ..> Invitation : persists
+InvitationRepository ..> InvitationToken : looks up by
+InvitationRepository ..> InvitationId : rebuilds typed id
+CareLinkRepository ..> CareLink : persists
+CareLinkRepository ..> CareLinkId : rebuilds typed id
+
+' --- Time-driven policy ---
+InvitationExpiryHostedService --|> BackgroundService
+InvitationExpiryHostedService --> IServiceScopeFactory : opens its own scope with
+InvitationExpiryHostedService --> IConfiguration : reads the interval from
+InvitationExpiryHostedService --> ILogger : logs to
+InvitationExpiryHostedService --> PeriodicTimer : paces cycles with
+InvitationExpiryHostedService --> IInvitationQueryService : lists due invitations with
+InvitationExpiryHostedService --> IInvitationCommandService : issues the command through
+InvitationExpiryHostedService ..> GetExpirableInvitationsQuery : issues
+InvitationExpiryHostedService ..> ExpireInvitationCommand : issues
+InvitationExpiryHostedService ..> Invitation : expires (idempotent cycle)
+
+@enduml

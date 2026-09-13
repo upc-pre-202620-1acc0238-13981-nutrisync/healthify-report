@@ -1,0 +1,200 @@
+@startuml Healthify - IAM - Application
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Healthify.Platform.Iam.Application" {
+
+  package "CommandServices" {
+    interface IUserCommandService {
+      +Handle(command: RegisterAccountCommand, ct): Task<Result<User, IamError>>
+    }
+    interface IUserSessionCommandService {
+      +Handle(command: SignInCommand, ct): Task<Result<SignInOutcome, IamError>>
+      +Handle(command: SelectNavigationShellCommand, ct): Task<Result<UserSession, IamError>>
+      +Handle(command: SignOutCommand, ct): Task<Result<UserSession, IamError>>
+    }
+  }
+
+  package "QueryServices" {
+    interface IUserQueryService {
+      +Handle(query: GetUserByIdQuery, ct): Task<User?>
+      +Handle(query: GetUserByEmailQuery, ct): Task<User?>
+    }
+    interface IUserSessionQueryService {
+      +Handle(query: GetUserSessionByIdQuery, ct): Task<UserSession?>
+      +Handle(query: GetUserSessionsByUserIdQuery, ct): Task<IEnumerable<UserSession>>
+    }
+  }
+
+  package "Internal" {
+    ' Application DTO carrying what a successful sign-in produced.
+    ' Read model: Session Context. Not a domain type and not an HTTP resource.
+    class SignInOutcome <<record>> {
+      -User: User
+      -Session: UserSession
+      -Token: string
+    }
+
+    package "Internal.CommandServices" {
+      class UserCommandService {
+        +Handle(command: RegisterAccountCommand, ct): Task<Result<User, IamError>>
+      }
+      class UserSessionCommandService {
+        +Handle(command: SignInCommand, ct): Task<Result<SignInOutcome, IamError>>
+        +Handle(command: SelectNavigationShellCommand, ct): Task<Result<UserSession, IamError>>
+        +Handle(command: SignOutCommand, ct): Task<Result<UserSession, IamError>>
+      }
+    }
+
+    package "Internal.QueryServices" {
+      class UserQueryService {
+        +Handle(query: GetUserByIdQuery, ct): Task<User?>
+        +Handle(query: GetUserByEmailQuery, ct): Task<User?>
+      }
+      class UserSessionQueryService {
+        +Handle(query: GetUserSessionByIdQuery, ct): Task<UserSession?>
+        +Handle(query: GetUserSessionsByUserIdQuery, ct): Task<IEnumerable<UserSession>>
+      }
+    }
+
+    package "Internal.EventHandlers" {
+      ' The only policy of this bounded context, and it does not cross a
+      ' boundary: producer and subscriber are both Iam. Runs in its own DI
+      ' scope, because notifications are handled in parallel.
+      class OnRoleClaimIssuedHandler {
+        +Handle(notification: RoleClaimIssued, ct): Task
+      }
+    }
+  }
+
+  package "Acl" {
+    ' Delegates to the query service of its own context, never to a repository.
+    ' Every method degrades gracefully: null or false instead of throwing.
+    class IamContextFacade {
+      +GetUserById(userId: int, ct): Task<UserIdentityItem?>
+      +IsPractitioner(userId: int, ct): Task<bool>
+      +IsPatient(userId: int, ct): Task<bool>
+    }
+  }
+}
+
+package "Iam.Domain" <<external>> {
+  class User
+  class UserSession
+  class RegisterAccountCommand
+  class SignInCommand
+  class SelectNavigationShellCommand
+  class SignOutCommand
+  class GetUserByIdQuery
+  class GetUserByEmailQuery
+  class GetUserSessionByIdQuery
+  class GetUserSessionsByUserIdQuery
+  class AccountCreated
+  class SessionStarted
+  class RoleClaimIssued
+  class NavigationShellSelected
+  class SessionTerminated
+  class Email
+  class Role
+  class NavigationShell
+  interface IUserRepository
+  interface IUserSessionRepository
+  interface IHashingService
+  interface ITokenService
+  enum IamError
+}
+
+package "Iam.Interfaces.Acl" <<external>> {
+  interface IIamContextFacade
+  class UserIdentityItem <<record>>
+}
+
+package "Shared / Cortex" <<external>> {
+  class "Result<TValue, TError>" as Result
+  interface IUnitOfWork
+  interface IMediator
+  interface "IEventHandler<T>" as IEventHandler
+  interface IServiceScopeFactory
+  interface "ILogger<T>" as ILogger
+}
+
+' --- Service interface realizations ---
+UserCommandService ..|> IUserCommandService
+UserSessionCommandService ..|> IUserSessionCommandService
+UserQueryService ..|> IUserQueryService
+UserSessionQueryService ..|> IUserSessionQueryService
+IamContextFacade ..|> IIamContextFacade
+OnRoleClaimIssuedHandler ..|> IEventHandler
+
+' --- UserCommandService (Subflow 1.1 - Account Registration) ---
+UserCommandService --> IUserRepository : uses
+UserCommandService --> IUnitOfWork : commits with
+UserCommandService --> IHashingService : hashes with
+UserCommandService --> IMediator : publishes via
+UserCommandService --> ILogger : logs to
+UserCommandService ..> RegisterAccountCommand : handles
+UserCommandService ..> User : creates
+UserCommandService ..> Email : validates
+UserCommandService ..> Role : validates
+UserCommandService ..> AccountCreated : publishes
+UserCommandService ..> IamError : returns
+
+' --- UserSessionCommandService (Subflows 1.2 and 1.3) ---
+UserSessionCommandService --> IUserRepository : uses
+UserSessionCommandService --> IUserSessionRepository : uses
+UserSessionCommandService --> IUnitOfWork : commits with
+UserSessionCommandService --> IHashingService : verifies with
+UserSessionCommandService --> ITokenService : issues token with
+UserSessionCommandService --> IMediator : publishes via
+UserSessionCommandService --> ILogger : logs to
+UserSessionCommandService ..> SignInCommand : handles
+UserSessionCommandService ..> SelectNavigationShellCommand : handles
+UserSessionCommandService ..> SignOutCommand : handles
+UserSessionCommandService ..> UserSession : opens / terminates
+UserSessionCommandService ..> NavigationShell : validates
+UserSessionCommandService ..> SignInOutcome : produces
+UserSessionCommandService ..> SessionStarted : publishes
+UserSessionCommandService ..> RoleClaimIssued : publishes
+UserSessionCommandService ..> NavigationShellSelected : publishes
+UserSessionCommandService ..> SessionTerminated : publishes
+UserSessionCommandService ..> IamError : returns
+
+' --- Policy "When Role Claim Issued" (stays inside Iam) ---
+OnRoleClaimIssuedHandler ..> RoleClaimIssued : subscribes to
+OnRoleClaimIssuedHandler --> IServiceScopeFactory : opens scope with
+OnRoleClaimIssuedHandler --> ILogger : logs to
+OnRoleClaimIssuedHandler --> IUserSessionCommandService : delegates to
+OnRoleClaimIssuedHandler ..> NavigationShell : resolves ForRole
+OnRoleClaimIssuedHandler ..> SelectNavigationShellCommand : issues
+
+' --- Query services ---
+UserQueryService --> IUserRepository : uses
+UserQueryService ..> GetUserByIdQuery : handles
+UserQueryService ..> GetUserByEmailQuery : handles
+UserQueryService ..> Email : validates
+UserQueryService ..> User : returns
+UserSessionQueryService --> IUserSessionRepository : uses
+UserSessionQueryService ..> GetUserSessionByIdQuery : handles
+UserSessionQueryService ..> GetUserSessionsByUserIdQuery : handles
+UserSessionQueryService ..> UserSession : returns
+
+' --- ACL facade orchestration ---
+IamContextFacade --> IUserQueryService : uses
+IamContextFacade ..> GetUserByIdQuery : issues
+IamContextFacade ..> UserIdentityItem : returns
+IamContextFacade ..> Role : reads
+
+' --- Application DTO composition ---
+SignInOutcome o--> "1" User : carries
+SignInOutcome o--> "1" UserSession : carries
+
+' --- Result wrapper across command services ---
+IUserCommandService ..> Result
+IUserSessionCommandService ..> Result
+IUserCommandService ..> IamError : returns
+IUserSessionCommandService ..> IamError : returns
+
+@enduml

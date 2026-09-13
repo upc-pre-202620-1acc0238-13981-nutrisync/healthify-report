@@ -1,0 +1,121 @@
+@startuml NutritionalCare_Component_Diagram
+' =============================================================================
+'  Healthify Platform - Bounded Context: Nutritional Care
+'  C4 Model - Level 3: Component Diagram
+'  Container decomposed: Healthify Platform API (ASP.NET Core 10 Web API)
+' =============================================================================
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_TOP_DOWN()
+LAYOUT_WITH_LEGEND()
+
+title Component Diagram - Bounded Context "Nutritional Care" (Container: Healthify Platform API)
+
+Person(practitioner, "Practitioner", "The only actor who may assess, diagnose, prescribe targets and resolve a review item")
+Person(patient, "Patient", "Receives only the reduced published contract: targets, guidelines and restrictions")
+
+Container(mobile, "Mobile Application", "Flutter / MAUI", "Clinical navigation shell for the practitioner; the patient shell renders only the published targets")
+
+Container_Boundary(api, "Healthify Platform API") {
+
+    ' ------------------------------------------------------------- Interfaces
+    Component(assessmentsController, "NutritionalAssessmentsController", "ASP.NET Core REST Controller", "api/v1/nutritional-assessments. Record and close")
+    Component(diagnosesController, "NutritionalDiagnosesController", "ASP.NET Core REST Controller", "api/v1/nutritional-diagnoses. Issue and read")
+    Component(plansController, "NutritionPlansController", "ASP.NET Core REST Controller", "api/v1/nutrition-plans. Prescribe and publish")
+    Component(reviewItemsController, "ReviewItemsController", "ASP.NET Core REST Controller", "api/v1/review-items. Inbox of the practitioner")
+    Component(clinicalRecordController, "PatientClinicalRecordController", "ASP.NET Core REST Controller", "api/v1/patients. Clinical record of a patient")
+    Component(ncAssemblers, "Nutritional Care Transform Assemblers", "C# static assemblers", "Maps resources, commands and responses")
+
+    ' ------------------------------------------------------------- Application
+    Component(assessmentCmdService, "NutritionalAssessmentCommandService", "C# Application Service (CQRS command side)", "Records, measures and closes assessments")
+    Component(diagnosisCmdService, "NutritionalDiagnosisCommandService", "C# Application Service (CQRS command side)", "Issues the clinical diagnosis")
+    Component(planCmdService, "NutritionPlanCommandService", "C# Application Service (CQRS command side)", "Proposes, prescribes, publishes and adjusts")
+    Component(reviewItemCmdService, "ReviewItemCommandService", "C# Application Service (CQRS command side)", "Opens and resolves review items")
+    Component(ncQryServices, "Nutritional Care Query Services", "C# Application Services (CQRS query side)", "Read assessments, diagnoses, plans, items")
+    Component(onPublished, "OnNutritionPlanPublishedHandler", "Cortex.Mediator IEventHandler of NutritionPlanPublished", "Policy 3.5: publishes the reduced contract")
+    Component(onAdjusted, "OnNutritionPlanAdjustedHandler", "Cortex.Mediator IEventHandler of NutritionPlanAdjusted", "Policy 3.6: republishes on adjustment")
+    Component(onDeviation, "OnSustainedDeviationDetectedHandler", "Cortex.Mediator IEventHandler of SustainedDeviationDetected", "Policy 3.7: opens an item, never edits the plan")
+    Component(onEscalation, "OnAlertEscalatedToPractitionerHandler", "Cortex.Mediator IEventHandler of AlertEscalatedToPractitioner", "Policy 3.7: escalation opens an inbox item")
+    Component(ncFacade, "NutritionalCareContextFacade", "C# ACL - Open Host Service", "Publishes targets, never the diagnosis")
+
+    ' ------------------------------------------------------------- Domain
+    Component(assessmentAggregate, "NutritionalAssessment", "C# Aggregate Root with ClinicalMeasurement", "Anthropometry under a protocol, then frozen")
+    Component(diagnosisAggregate, "NutritionalDiagnosis", "C# Aggregate Root", "Clinical judgement confidential to this context")
+    Component(planAggregate, "NutritionPlan", "C# Aggregate Root", "Versioned plan, published never mutated")
+    Component(reviewItemAggregate, "ReviewItem", "C# Aggregate Root", "Inbox item closed only by a human")
+    Component(ncValueObjects, "Value Objects and Errors", "C# records and enums", "PrescribedTargets, CalculationBasis, reasons, errors")
+    Component(bmrPort, "IBmrCalculator", "C# Domain Service interface (port)", "Basal metabolic rate port of the domain")
+
+    ' ------------------------------------------------------------- Infrastructure
+    Component(bmrCalculator, "BmrCalculator", "C# adapter", "Implements the supported energy equations")
+    Component(ncRepos, "Nutritional Care Repositories", "C# Repositories over EF Core 10", "Persist assessments, diagnoses, plans, items")
+    Component(ncEfcConfig, "Nutritional Care EntityTypeConfigurations", "EF Core 10 Fluent API", "Maps tables, plan versions and audit")
+}
+
+ContainerDb(db, "Healthify Database", "MySQL 8.4", "Owns the assessment, measurement, diagnosis, plan, review item and audit tables of this context")
+
+Container_Ext(iamCtx, "IAM", "Sibling bounded context", "Consulted through IIamContextFacade to confirm the author is a practitioner")
+Container_Ext(careRelCtx, "Care Relationship", "Sibling bounded context", "Consulted through ICareRelationshipContextFacade: no clinical act without an active link")
+Container_Ext(monitoringCtx, "Monitoring and Adherence", "Sibling bounded context", "Publishes SustainedDeviationDetected and AlertEscalatedToPractitioner; subscribes to ActiveTargetsUpdated")
+Container_Ext(downstreamCtx, "Intake and Body Response, Care Relationship, Read Models", "Sibling bounded contexts", "Consume the published targets contract")
+
+' ------------------------------------------------------------------ Relations
+Rel(practitioner, mobile, "Assesses, diagnoses, prescribes and resolves review items", "Touch")
+Rel(patient, mobile, "Reads the published targets", "Touch")
+Rel(mobile, assessmentsController, "Records assessments and measurements", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, diagnosesController, "Issues and reads the diagnosis", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, plansController, "Proposes, prescribes, publishes and adjusts the plan", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, reviewItemsController, "Reads and resolves the inbox", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, clinicalRecordController, "Reads the clinical record of a patient", "JSON/HTTPS, Bearer JWT")
+
+Rel(assessmentsController, ncAssemblers, "Maps resources and commands through", "in-process")
+Rel(plansController, ncAssemblers, "Maps resources and commands through", "in-process")
+Rel(diagnosesController, ncAssemblers, "Maps resources and commands through", "in-process")
+Rel(reviewItemsController, ncAssemblers, "Maps resources and commands through", "in-process")
+Rel(clinicalRecordController, ncAssemblers, "Maps aggregates to resources through", "in-process")
+
+Rel(assessmentsController, assessmentCmdService, "Sends assessment commands", "in-process")
+Rel(diagnosesController, diagnosisCmdService, "Sends IssueDiagnosisCommand", "in-process")
+Rel(plansController, planCmdService, "Sends plan commands", "in-process")
+Rel(reviewItemsController, reviewItemCmdService, "Sends ResolveReviewItemCommand", "in-process")
+Rel(clinicalRecordController, ncQryServices, "Sends record queries", "in-process")
+Rel(plansController, ncQryServices, "Reads plans", "in-process")
+Rel(reviewItemsController, ncQryServices, "Reads open items", "in-process")
+
+Rel(assessmentCmdService, assessmentAggregate, "Records, measures and closes", "in-process")
+Rel(diagnosisCmdService, diagnosisAggregate, "Issues", "in-process")
+Rel(planCmdService, planAggregate, "Proposes, prescribes, publishes and versions", "in-process")
+Rel(reviewItemCmdService, reviewItemAggregate, "Opens and resolves", "in-process")
+Rel(planAggregate, ncValueObjects, "Is built from", "in-process")
+Rel(assessmentAggregate, ncValueObjects, "Is built from", "in-process")
+Rel(planCmdService, bmrPort, "Computes the calculation basis through", "in-process")
+Rel(bmrPort, bmrCalculator, "Is implemented by", "DI")
+
+Rel(planCmdService, onPublished, "Publishes NutritionPlanPublished to", "Cortex.Mediator, own DI scope")
+Rel(planCmdService, onAdjusted, "Publishes NutritionPlanAdjusted to", "Cortex.Mediator, own DI scope")
+Rel(onPublished, planCmdService, "Sends PublishActiveTargetsCommand", "in-process")
+Rel(onAdjusted, planCmdService, "Sends PublishActiveTargetsCommand", "in-process")
+Rel(monitoringCtx, onDeviation, "Publishes SustainedDeviationDetected", "Cortex.Mediator, in-process")
+Rel(monitoringCtx, onEscalation, "Publishes AlertEscalatedToPractitioner", "Cortex.Mediator, in-process")
+Rel(onDeviation, reviewItemCmdService, "Sends OpenReviewItemCommand", "in-process")
+Rel(onEscalation, reviewItemCmdService, "Sends OpenReviewItemCommand", "in-process")
+
+Rel(assessmentCmdService, ncRepos, "Reads and writes through", "in-process")
+Rel(diagnosisCmdService, ncRepos, "Reads and writes through", "in-process")
+Rel(planCmdService, ncRepos, "Reads and writes through", "in-process")
+Rel(reviewItemCmdService, ncRepos, "Reads and writes through", "in-process")
+Rel(ncQryServices, ncRepos, "Reads through", "in-process")
+Rel(ncFacade, ncRepos, "Resolves targets and inbox counts through", "in-process")
+Rel(ncRepos, ncEfcConfig, "Is mapped by", "EF Core model")
+Rel(ncRepos, db, "Reads from and writes to", "EF Core 10 / MySQL, TCP 3306")
+
+Rel(assessmentCmdService, iamCtx, "Confirms the author is a practitioner", "in-process ACL call")
+Rel(diagnosisCmdService, careRelCtx, "Confirms the care link is active", "in-process ACL call")
+Rel(assessmentCmdService, careRelCtx, "Confirms the care link is active", "in-process ACL call")
+Rel(reviewItemCmdService, careRelCtx, "Confirms the care link is active", "in-process ACL call")
+Rel(clinicalRecordController, careRelCtx, "Authorises access to the record", "in-process ACL call")
+Rel(downstreamCtx, ncFacade, "Reads the active targets and the open item count", "in-process ACL call")
+Rel(planCmdService, downstreamCtx, "Publishes ActiveTargetsUpdated: targets, guidelines and restrictions only", "Cortex.Mediator, in-process")
+Rel(planCmdService, monitoringCtx, "Publishes ActiveTargetsUpdated and ClinicalMeasurementTaken", "Cortex.Mediator, in-process")
+
+@enduml
