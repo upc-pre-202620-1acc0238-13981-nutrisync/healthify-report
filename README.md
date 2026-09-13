@@ -58,7 +58,18 @@ Septiembre, 2026
 ## REGISTRO DE VERSIONES DEL INFORME
 | Versión | Fecha | Autor | Descripción de modificación |
 | :---: | :---: | :---: | :---: |
-| 0.1.0 | 02/09/2026 | Angel Villarreal | Commit inicial; estructura base del repositorio y esquemas de todos los capítulos (`main`) |
+| 0.1.0 | 28/08/2026 | Angel Villarreal | Commit inicial del repositorio (`main`) |
+| 0.2.0 | 02/09/2026 | Angel Villarreal | Estructura del README; logo UPC y fotos de integrantes; esquemas de student outcome, objetivos SMART, capítulos I–IV, conclusiones, glosario, bibliografía y anexos (`feature/setup`) |
+| 0.3.0 | 02/09/2026 – 03/09/2026 | Joel Mora | Sección 2.5.3 Software Architecture: diagramas de contexto, contenedores, componentes (frontend y backend) y despliegue (`feature/software-architecture`) |
+| 0.4.0 | 03/09/2026 – 05/09/2026 | Rose Vergaray | Cap. 1: descripción de la startup, análisis 5W2H, Lean UX (problem statement, assumptions, hypothesis statements, canvas) y segmentos objetivo (`feature/chapter1-introduction`) |
+| 0.5.0 | 07/09/2026 | Angel Villarreal / Olenka Del Aguila | Tactical-level DDD de los bounded contexts Intake & Body Response, Monitoring & Adherence, Care Relationship, Nutritional Care, IAM y Food Catalog: capas, diagramas de componentes, clases y base de datos (`feature/chapter2-bounded-context`) |
+| 0.6.0 | 08/09/2026 – 09/09/2026 | Angela Espinoza | Needfinding: personas, user journey mapping, empathy mapping, user task matrix; análisis competitivo (landscape, SWOT, logos) y estrategias frente a competidores (`feature/chapter2-needfinding`) |
+| 0.7.0 | 08/09/2026 – 09/09/2026 | Joel Mora | Actualización de la tecnología de base de datos a MySQL 8 en secciones 2.5.3–2.5.3.4 y sus diagramas (`feature/software-architecture`) |
+| 0.8.0 | 08/09/2026 – 09/09/2026 | Rose Vergaray | User, technical y spike stories; impact mapping de paciente y nutricionista; product backlog (tabla y tablero); corrección de apellido en README (`feature/chapter2-requirements-specification`) |
+| 0.9.0 | 09/09/2026 – 11/09/2026 | Todos los integrantes | Strategic-level DDD: Big Picture y Design Level EventStorming, ubiquitous language, candidate context discovery, domain message flows, bounded context canvases y context mapping (`feature/chapter2-bounded-context`) |
+| 0.10.0 | 12/09/2026 | Todos los integrantes | Integración de ramas a `develop` (PR #3–#7); entradas de los bounded contexts en la tabla de contenidos del README |
+| 0.11.0 | 13/09/2026 | Todos los integrantes | Acciones y conclusiones ABET 7.c.1 y 7.c.2; objetivos SMART de cada integrante; adición de las entrevistas |
+| 1.0.0 | 13/09/2026 | Angel Villarreal | AV1 Report |
 
 <div style="page-break-after: always"></div>
 
