@@ -150,3 +150,26 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **USDA FoodData Central** | Base de datos nutricional del Departamento de Agricultura de los Estados Unidos, utilizada como segunda fuente externa del catálogo. |
 | **Value Converter** | Mecanismo de EF Core que transforma un value object en un tipo primitivo al guardar y lo reconstruye al leer. |
 
+## Diseño de producto e interfaces (UI/UX)
+
+| Término | Definición |
+|---|---|
+| **Accesibilidad** | Práctica de diseñar productos utilizables por personas con distintas capacidades, siguiendo pautas como WCAG. |
+| **Arquitectura de información** | Disciplina que organiza, etiqueta y estructura el contenido para que los usuarios encuentren y comprendan la información. |
+| **Figma** | Herramienta colaborativa en la nube para diseñar interfaces, wireframes, mock-ups y prototipos. |
+| **Guía de estilos (Style Guidelines)** | Documento que define los lineamientos visuales y de comunicación del producto: colores, tipografía, iconografía, espaciado y tono. |
+| **Heurísticas de usabilidad** | Principios generales (por ejemplo, las diez heurísticas de Nielsen) utilizados para evaluar la usabilidad de una interfaz. |
+| **Landing Page** | Página web de aterrizaje que presenta la propuesta de valor del producto y dirige al visitante hacia una acción concreta. |
+| **Meta Tags / SEO Tags** | Etiquetas HTML que describen el contenido de una página para los motores de búsqueda y redes sociales. |
+| **Mock-up** | Representación visual de alta fidelidad de una interfaz, con colores, tipografías e imágenes finales, pero sin interactividad. |
+| **Navigation Shell** | Estructura de navegación que la aplicación cliente monta según el rol de la sesión: una para el paciente y otra para el profesional. |
+| **Navigation System** | Conjunto de mecanismos (menús, pestañas, enlaces) que permiten al usuario desplazarse por el producto. |
+| **Organization / Labelling / Searching Systems** | Componentes de la arquitectura de información que definen, respectivamente, cómo se agrupa el contenido, cómo se nombra y cómo se busca. |
+| **Prototipo** | Modelo interactivo de la aplicación que simula la navegación y el comportamiento para validar el diseño con usuarios antes de implementarlo. |
+| **Responsive Design** | Enfoque de diseño que adapta la interfaz a distintos tamaños de pantalla y dispositivos. |
+| **UI (User Interface)** | Interfaz de usuario: conjunto de elementos visuales e interactivos con los que la persona interactúa con el sistema. |
+| **User Flow Diagram** | Diagrama que muestra los pasos que sigue un usuario para completar una tarea específica dentro de la aplicación. |
+| **UX (User Experience)** | Experiencia de usuario: percepción integral de la persona al usar un producto, incluyendo facilidad de uso, utilidad y satisfacción. |
+| **Wireflow** | Diagrama que combina wireframes con flechas de flujo para mostrar la navegación entre pantallas. |
+| **Wireframe** | Esquema de baja fidelidad que representa la estructura y distribución de los elementos de una pantalla, sin detalle visual. |
+
