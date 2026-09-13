@@ -90,3 +90,26 @@ A continuación, cada integrante del equipo formula un plan de al menos dos obje
 | Relevant | Se alinea con mi convicción de que el trabajo en equipo y la comunicación son esenciales para crecer tanto personal como profesionalmente. |
 | Time-bound | Dentro de los 12 meses posteriores a mi egreso. |
 
+## Angel Martin Villarreal Bazan
+
+**Objetivo 1 — Certificación en buenas prácticas de ingeniería de software**
+
+| Criterio | Descripción |
+| :--- | :--- |
+| Specific | Obtener una certificación en arquitectura de software o buenas prácticas de desarrollo (por ejemplo, Clean Architecture o un certificado de un proveedor cloud). |
+| Measurable | Aprobar el examen oficial de certificación correspondiente. |
+| Attainable | Cuento con sólidos conocimientos en C++, Java y lógica de programación desarrollados durante la carrera, además de la experiencia adquirida en el diseño de la solución de Healthify. |
+| Relevant | Fortalece mi enfoque en la mejora continua y el cumplimiento de objetivos técnicos de alto nivel. |
+| Time-bound | Dentro de los 9 meses posteriores a mi egreso. |
+
+**Objetivo 2 — Desarrollo de habilidades de liderazgo en gestión de proyectos**
+
+| Criterio | Descripción |
+| :--- | :--- |
+| Specific | Liderar la organización y coordinación de al menos un proyecto de software en un entorno laboral o de emprendimiento. |
+| Measurable | Completar la entrega del proyecto liderado, cumpliendo el cronograma y los objetivos planteados al inicio. |
+| Attainable | Mi capacidad de organización y liderazgo, evidenciada durante la coordinación del equipo en el desarrollo de Healthify, respalda este objetivo. |
+| Relevant | Refuerza mi perfil proactivo orientado a optimizar procesos y fomentar un entorno de trabajo colaborativo y eficiente. |
+| Time-bound | Dentro de los 18 meses posteriores a mi egreso. |
+
+<div style="page-break-after: always"></div>
