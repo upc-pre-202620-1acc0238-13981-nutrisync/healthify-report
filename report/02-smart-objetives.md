@@ -46,3 +46,25 @@ A continuación, cada integrante del equipo formula un plan de al menos dos obje
 | Relevant | Impulsa mi proactividad y visibilidad profesional en la comunidad tecnológica, alineado con mi motivación por la innovación constante. |
 | Time-bound | Dentro de los 12 meses posteriores a mi egreso. |
 
+## Joel Fernando Mora Rivera
+
+**Objetivo 1 — Certificación en bases de datos y arquitectura de datos**
+
+| Criterio | Descripción |
+| :--- | :--- |
+| Specific | Obtener una certificación en administración o arquitectura de bases de datos relacionales y no relacionales (por ejemplo, en un proveedor cloud como AWS o Azure). |
+| Measurable | Aprobar el examen oficial de certificación con el puntaje mínimo requerido por el proveedor. |
+| Attainable | Cuento con formación previa en gestión de bases de datos relacionales y no relacionales adquirida durante la carrera. |
+| Relevant | Fortalece mi enfoque en la optimización de procesos tecnológicos y mi perfil competitivo orientado a la resolución de desafíos técnicos. |
+| Time-bound | Dentro de los 9 meses posteriores a mi egreso. |
+
+**Objetivo 2 — Asunción de un rol de liderazgo técnico**
+
+| Criterio | Descripción |
+| :--- | :--- |
+| Specific | Asumir un rol de liderazgo técnico (por ejemplo, tech lead o coordinador de un equipo pequeño) en un proyecto laboral. |
+| Measurable | Liderar formalmente al menos un equipo o módulo de proyecto, evidenciado en la entrega de resultados y en una evaluación de desempeño favorable. |
+| Attainable | Mi experiencia previa en trabajo en equipo y comunicación efectiva durante el desarrollo de Healthify constituye una base sólida para este rol. |
+| Relevant | Refleja mi actitud competitiva positiva y mi compromiso con la superación constante de retos profesionales. |
+| Time-bound | Dentro de los 2 años posteriores a mi egreso. |
+
