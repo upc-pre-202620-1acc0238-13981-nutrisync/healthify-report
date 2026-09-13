@@ -173,3 +173,28 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Wireflow** | Diagrama que combina wireframes con flechas de flujo para mostrar la navegación entre pantallas. |
 | **Wireframe** | Esquema de baja fidelidad que representa la estructura y distribución de los elementos de una pantalla, sin detalle visual. |
 
+## Términos del dominio de Healthify
+
+| Término | Definición |
+|---|---|
+| **Active Targets (Metas vigentes)** | Contrato reducido y versionado con las metas, pautas y restricciones que el paciente recibe; no es el plan clínico completo. |
+| **Antropometría** | Conjunto de mediciones corporales (peso, talla, perímetros, pliegues) utilizadas en la evaluación nutricional. |
+| **Care Link (Vínculo de cuidado)** | Relación consentida entre un paciente y un profesional que habilita el acceso a la información del tratamiento. |
+| **Consent (Consentimiento)** | Autorización del paciente, siempre revocable, sin la cual el vínculo no habilita ningún acceso. |
+| **Consistency Index (Índice de consistencia)** | Contraste entre la tendencia de peso y la ingesta registrada, utilizado como señal de calidad del dato. |
+| **Daily Compliance (Cumplimiento diario)** | Resultado de comparar lo registrado en un día contra las metas vigentes de ese día. |
+| **Deviation (Desviación)** | Diferencia sostenida entre lo prescrito y lo realmente registrado durante una ventana de evaluación. |
+| **Diary Entry (Entrada de diario)** | Registro de un evento de consumo realizado por el paciente, por fotografía, de forma manual o como comida fuera del plan. |
+| **Evaluation Window (Ventana de evaluación)** | Periodo mínimo de siete días sobre el cual se evalúa el tratamiento. |
+| **Kcal (kilocaloría)** | Unidad de energía utilizada para expresar el aporte energético de los alimentos y las metas diarias. |
+| **Logging Gap (Vacío de registro)** | Días sin ninguna entrada de diario; no constituye desviación ni incumplimiento. |
+| **Macronutrientes** | Nutrientes que el organismo requiere en mayor cantidad: proteínas, carbohidratos y grasas, expresados en gramos. |
+| **Nutrition Plan (Plan de alimentación)** | Artefacto clínico versionado que contiene metas, pautas y restricciones, elaborado tras la evaluación y el diagnóstico. |
+| **Off Plan Entry (Comida fuera del plan)** | Declaración del paciente de haber comido fuera de lo prescrito, sin detalle exigido y sin penalización. |
+| **Patient (Paciente)** | Persona en tratamiento nutricional activo vinculada a un profesional mediante consentimiento vigente. |
+| **Practitioner (Nutricionista)** | Profesional de la nutrición responsable del acto clínico: evaluación, diagnóstico y prescripción. |
+| **Provenance (Procedencia)** | Origen de una entrada de diario: fotografía, registro manual o declaración fuera del plan. |
+| **Review Item (Ítem de revisión)** | Señal de seguimiento que llega a la bandeja del profesional y espera una decisión humana. |
+| **Self Weigh In (Autopesaje)** | Pesaje realizado por el paciente en casa con protocolo declarado; no tiene autoridad clínica por sí solo. |
+| **Weight Trend (Tendencia de peso)** | Suavizado estadístico (media móvil) de los autopesajes; único formato en que el peso del paciente se presenta. |
+
