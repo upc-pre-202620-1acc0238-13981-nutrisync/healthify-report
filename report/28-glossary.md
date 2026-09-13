@@ -68,3 +68,31 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Supporting Subdomain** | Subdominio necesario para el negocio y específico de él, pero no diferenciador. En Healthify: `Nutritional Care` y `Care Relationship`. |
 | **Ubiquitous Language (Lenguaje ubicuo)** | Vocabulario común y riguroso que el equipo usa por igual en entrevistas, modelos, documentación y código. |
 
+## Domain-Driven Design táctico y patrones de diseño
+
+| Término | Definición |
+|---|---|
+| **Aggregate / Aggregate Root** | Grupo de objetos de dominio tratados como una unidad de consistencia; la raíz es la única entrada desde el exterior y la responsable de hacer cumplir las reglas de negocio. |
+| **Assembler** | Clase que transforma recursos de la capa de interfaz en comandos o consultas, y resultados de dominio en recursos de respuesta. |
+| **Command (Comando)** | Mensaje que expresa la intención de cambiar el estado del sistema (por ejemplo, `LogMealByPhotoCommand`). |
+| **Command Service / Query Service** | Servicios de aplicación que atienden, respectivamente, comandos que modifican estado y consultas sin efectos secundarios. |
+| **Consistencia eventual** | Garantía de que los datos distribuidos convergerán a un estado consistente tras un intervalo, sin exigir actualización inmediata. |
+| **Consistencia fuerte (transaccional)** | Garantía de que todo cambio es visible y válido de inmediato dentro de una misma transacción. |
+| **CQRS** | Patrón que separa las operaciones de escritura (comandos) de las de lectura (consultas) en modelos o servicios distintos. |
+| **Domain Service** | Operación de dominio que no pertenece naturalmente a ninguna entidad o value object (por ejemplo, `IHashingService`, `ITokenService`). |
+| **Entity (Entidad)** | Objeto de dominio definido por su identidad y no por sus atributos. |
+| **Event Handler** | Componente que escucha un evento de dominio y ejecuta la política asociada, normalmente emitiendo un nuevo comando. |
+| **Facade (Fachada)** | Patrón que ofrece una interfaz simplificada sobre un subsistema; en el proyecto, cada contexto expone una fachada ACL (por ejemplo, `IIntakeContextFacade`) para ser consultado por otros. |
+| **Factory Method** | Patrón creacional que encapsula la creación de un objeto en un método; por ejemplo, `User.StartSession()` es el único camino para crear una `UserSession`. |
+| **Idempotencia** | Propiedad de una operación que produce el mismo resultado sin importar cuántas veces se ejecute; se aplica a la sincronización offline mediante `ClientEntryId`. |
+| **Identidad tipada (Strongly Typed Id)** | Value object que envuelve un identificador primitivo (por ejemplo, `DiaryEntryId`) para evitar confundir identificadores de agregados distintos. |
+| **Invariante** | Regla de negocio que debe cumplirse siempre dentro de un agregado, antes y después de cada operación. |
+| **Last Write Wins** | Estrategia de resolución de conflictos en la que prevalece la escritura más reciente. |
+| **Mediator** | Patrón que desacopla emisores y receptores de mensajes mediante un intermediario; se usa para publicar comandos y eventos de dominio. |
+| **Offline-first** | Estrategia de diseño en la que la aplicación funciona sin conexión, encola los cambios localmente y los sincroniza cuando se recupera la conectividad. |
+| **Repository (Repositorio)** | Abstracción que provee acceso a los agregados como si fueran una colección en memoria, ocultando los detalles de persistencia. |
+| **Resource** | Objeto de transferencia de la capa de interfaz que define la forma de las peticiones y respuestas de la API. |
+| **Result Pattern** | Patrón en el que una operación devuelve explícitamente un éxito con valor o un error tipado (`Result<T, Error>`), en lugar de lanzar excepciones. |
+| **Unit of Work** | Patrón que agrupa varias operaciones de persistencia en una sola transacción confirmada de manera atómica. |
+| **Value Object** | Objeto inmutable definido por sus atributos y no por su identidad, que encapsula validaciones y hace imposible representar estados inválidos (por ejemplo, `Email`, `WeightKg`). |
+
