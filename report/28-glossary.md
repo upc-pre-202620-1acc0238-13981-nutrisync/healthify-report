@@ -96,3 +96,27 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Unit of Work** | Patrón que agrupa varias operaciones de persistencia en una sola transacción confirmada de manera atómica. |
 | **Value Object** | Objeto inmutable definido por sus atributos y no por su identidad, que encapsula validaciones y hace imposible representar estados inválidos (por ejemplo, `Email`, `WeightKg`). |
 
+## Arquitectura de software y diagramas
+
+| Término | Definición |
+|---|---|
+| **Application Layer** | Capa que orquesta los casos de uso: recibe comandos y consultas, coordina agregados y repositorios, y publica eventos. No contiene reglas de negocio. |
+| **Arquitectura en capas** | Organización del código en capas con responsabilidades separadas (Interface, Application, Domain e Infrastructure) y dependencias dirigidas hacia el dominio. |
+| **Backend for Frontend (BFF)** | Patrón en el que un servicio intermedio compone datos de varios contextos para satisfacer las necesidades de una interfaz concreta. |
+| **C4 Model** | Modelo de diagramación de arquitectura en cuatro niveles de abstracción: Context, Container, Component y Code. |
+| **Class Diagram (Diagrama de clases)** | Diagrama UML que muestra clases, atributos, métodos y sus relaciones (asociación, composición, dependencia, generalización). |
+| **Component Diagram** | Nivel 3 del modelo C4: muestra los componentes internos de un contenedor y sus interacciones. |
+| **Composition Root** | Punto único de la aplicación donde se registran y ensamblan las dependencias mediante inyección de dependencias. |
+| **Container Diagram** | Nivel 2 del modelo C4: muestra las aplicaciones, servicios y almacenes de datos que componen el sistema. |
+| **Context Diagram** | Nivel 1 del modelo C4: muestra el sistema como una caja, sus usuarios y los sistemas externos con los que interactúa. |
+| **Database Design Diagram** | Diagrama que representa las tablas, columnas, claves e índices de la base de datos de un contexto. |
+| **Deployment Diagram** | Diagrama que muestra cómo se distribuyen los contenedores del sistema sobre la infraestructura física o en la nube. |
+| **Domain Layer** | Capa que contiene el modelo de negocio: agregados, entidades, value objects, eventos, comandos, consultas e interfaces de repositorio. |
+| **Infrastructure Layer** | Capa que implementa los detalles técnicos: persistencia, integraciones externas, seguridad y tareas en segundo plano. |
+| **Interface Layer** | Capa que expone el sistema al exterior mediante controladores REST, recursos y assemblers. |
+| **Inyección de dependencias (DI)** | Técnica en la que un objeto recibe sus dependencias desde el exterior en lugar de crearlas, favoreciendo el desacoplamiento y las pruebas. |
+| **Microservicio** | Estilo arquitectónico en el que el sistema se compone de servicios pequeños, autónomos y desplegables de forma independiente. |
+| **Monolito modular** | Aplicación desplegada como una sola unidad, pero organizada internamente en módulos con fronteras claras, como los bounded contexts de Healthify. |
+| **PlantUML** | Herramienta que genera diagramas UML y C4 a partir de descripciones en texto; se utiliza para los canvases, diagramas de clases, de componentes y de base de datos del informe. |
+| **UML** | Lenguaje Unificado de Modelado, estándar para visualizar y documentar el diseño de sistemas de software. |
+
