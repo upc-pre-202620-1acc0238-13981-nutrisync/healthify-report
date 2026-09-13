@@ -120,3 +120,33 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **PlantUML** | Herramienta que genera diagramas UML y C4 a partir de descripciones en texto; se utiliza para los canvases, diagramas de clases, de componentes y de base de datos del informe. |
 | **UML** | Lenguaje Unificado de Modelado, estándar para visualizar y documentar el diseño de sistemas de software. |
 
+## Tecnologías, backend y seguridad
+
+| Término | Definición |
+|---|---|
+| **API REST** | Interfaz de programación basada en HTTP que expone recursos mediante URL y verbos (`GET`, `POST`, `PUT`, `DELETE`). |
+| **ASP.NET Core** | Framework multiplataforma de Microsoft para construir APIs web con C#, sobre el que se implementa el backend de Healthify. |
+| **Backing field** | Campo privado que almacena el valor de una propiedad; EF Core lo utiliza para persistir colecciones sin exponerlas como mutables. |
+| **BackgroundService / Hosted Service** | Servicio de .NET que se ejecuta en segundo plano durante la vida de la aplicación; por ejemplo, `CatalogImportHostedService` importa el catálogo periódicamente. |
+| **BCrypt** | Algoritmo de hashing de contraseñas lento y con sal incorporada, diseñado para resistir ataques de fuerza bruta. |
+| **C#** | Lenguaje de programación orientado a objetos de Microsoft utilizado para el backend de la plataforma. |
+| **Claim** | Afirmación sobre un usuario (identificador, email, rol) contenida en un token de autenticación. |
+| **Controller (Controlador)** | Clase de la Interface Layer que recibe peticiones HTTP, las traduce en comandos o consultas y devuelve respuestas. |
+| **Entity Framework Core (EF Core)** | ORM de .NET que mapea clases de dominio a tablas relacionales y traduce consultas LINQ a SQL. |
+| **Hash** | Resultado de aplicar una función unidireccional a un dato; se usa para almacenar contraseñas y para identificar registros importados de forma estable. |
+| **HMAC-SHA256** | Algoritmo de firma basado en una clave secreta y la función SHA-256, utilizado para firmar los tokens JWT. |
+| **HttpClient tipado** | Cliente HTTP configurado e inyectado para un servicio externo específico, con dirección base, tiempo de espera y cabeceras propias. |
+| **Interceptor** | Componente de EF Core que intercepta operaciones de persistencia para aplicar lógica transversal, como auditoría o normalización a UTC. |
+| **JWT Bearer** | Esquema de autenticación en el que el cliente envía un token JWT en la cabecera `Authorization` de cada petición. |
+| **Localización (.resx)** | Mecanismo de .NET para traducir mensajes a varios idiomas mediante archivos de recursos; el proyecto soporta español e inglés. |
+| **ML Kit** | Kit de aprendizaje automático de Google que se ejecuta en el dispositivo móvil; en Healthify se usa para proponer la estimación de porción a partir de una fotografía. |
+| **MySQL** | Sistema gestor de bases de datos relacional utilizado para la persistencia de la plataforma (versión 8). |
+| **Open Food Facts** | Base de datos colaborativa y abierta de productos alimenticios, utilizada como fuente externa del catálogo nutricional. |
+| **ProblemDetails** | Formato estándar (RFC 9457) para describir errores en respuestas HTTP de una API. |
+| **Seeder** | Componente que carga datos iniciales en la base de datos, como el catálogo de 60 alimentos peruanos de referencia. |
+| **snake_case** | Convención de nombres en minúsculas con palabras separadas por guion bajo, aplicada a tablas y columnas de la base de datos. |
+| **Swagger / OpenAPI** | Especificación y conjunto de herramientas para documentar y probar interactivamente una API REST. |
+| **Token** | Cadena firmada que acredita la identidad y los permisos de un usuario durante una sesión. |
+| **USDA FoodData Central** | Base de datos nutricional del Departamento de Agricultura de los Estados Unidos, utilizada como segunda fuente externa del catálogo. |
+| **Value Converter** | Mecanismo de EF Core que transforma un value object en un tipo primitivo al guardar y lo reconstruye al leer. |
+
