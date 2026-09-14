@@ -3132,7 +3132,7 @@ Database:
 | `PendingTargetsVersion`, `LastAcknowledgedVersion` | `int?` | `public get / private set` | Versión pendiente de acuse y última acusada. |
 | `ConsentGranted`, `ConsentScope`, `ConsentGrantedAt`, `ConsentWithdrawnAt` | proyección | `public get / private set` | Proyección persistida del VO `Consent`. |
 | `Consent` | `Consent?` | `public` (computada) | Reconstruido desde las cuatro columnas. |
-| `IsActive` | `bool` | `public` (computada) | Consentimiento vivo, sin revocar y sin alta. **Ésta es la respuesta que el Open Host Service da a los otros cinco contextos.** |
+| `IsActive` | `bool` | `public` (computada) | Consentimiento vivo, sin revocar y sin alta. **Ésta es la respuesta que el Open Host Service da a Nutritional Care, Intake & Body Response, Monitoring & Adherence y a la capa de read models compuestos.** |
 | `IsRevoked` / `IsDischarged` | `bool` | `public` (computadas) | Estados de cierre. |
 
 | Método | Scope | Reglas que aplica |
