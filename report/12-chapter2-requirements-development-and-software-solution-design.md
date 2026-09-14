@@ -2344,7 +2344,7 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 
 **Bounded Contexts:**
 
- - **Identity & Access:** Gestiona las pantallas de inicio de sesión y registro.
+ - **IAM:** Gestiona las pantallas de inicio de sesión y registro.
 
    ![IAM Frontend Diagram](../assets/img/artifacts/healthify-IAMFrontendDiagram.png)
 
@@ -2446,11 +2446,11 @@ Componente transversal utilizado por todos los Bounded Contexts del backend. Es 
 
 **Bounded Contexts:**
 
- - **Identity & Access:** Maneja la autenticación y la emisión del role claim. Es conformist frente al proveedor de identidad.
+ - **IAM:** Maneja la autenticación y la emisión del role claim mediante hashing con BCrypt y tokens JWT propios, sin proveedor de identidad externo.
 
    ![IAM Backend Diagram](../assets/img/artifacts/healthify-IAMBackendDiagram.png)
 
-   La capa Interfaces contiene únicamente endpoints REST para este Bounded Context, ya que el rol viaja embebido en el token de sesión y no requiere fachada ACL. El detalle se presenta a continuación:
+   La capa Interfaces contiene un contrato ACL (`IIamContextFacade`, con el que los demás Bounded Contexts resuelven identidades y roles puntuales) y endpoints REST para este Bounded Context. El detalle de los endpoints REST se presenta a continuación:
 
    - **REST:**
 
