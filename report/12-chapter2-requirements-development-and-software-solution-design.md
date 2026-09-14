@@ -379,6 +379,7 @@ Esta sección presenta el glosario de términos del dominio nutricional que el e
 | `Weight Trend` | Tendencia de peso | Suavizado estadístico de los autopesajes, único formato en que el peso del paciente se presenta como dato |
 | `Evaluation Window` | Ventana de evaluación | Periodo mínimo de siete días sobre el cual se evalúa el tratamiento |
 | `Daily Compliance` | Cumplimiento diario | Resultado de comparar lo registrado en un día contra las metas vigentes de ese día |
+| `Treatment Adherence` | Adherencia al tratamiento | Lectura del seguimiento del plan a escala de la ventana de evaluación o del tratamiento, construida a partir de los cumplimientos diarios. La interpreta el profesional y nunca se deduce de un solo día |
 | `Deviation` | Desviación | Diferencia sostenida entre lo prescrito y lo realmente registrado |
 | `Logging Gap` | Vacío de registro | Días sin ninguna entrada de diario. No constituye desviación ni incumplimiento |
 | `Consistency Index` | Índice de consistencia | Contraste entre la tendencia de peso y la ingesta registrada, utilizado como señal de calidad del dato |
