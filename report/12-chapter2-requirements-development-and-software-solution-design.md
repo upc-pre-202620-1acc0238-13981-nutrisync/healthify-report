@@ -316,7 +316,7 @@ Esta sección presenta los Empathy Maps elaborados en UXPressia para cada uno de
 
 Esta sección presenta el Big Picture EventStorming elaborado por el equipo en Miro. La sesión tuvo una duración aproximada de dos horas y se organizó siguiendo el Step-by-Step Guide de la técnica. El objetivo no fue diseñar el sistema, sino comprender el dominio del negocio tal como ocurre hoy: el recorrido completo de un tratamiento nutricional, desde que el profesional y el paciente establecen su vínculo hasta el alta, incluyendo el periodo entre consultas, que es donde se ubica el problema del proyecto.
 
-El proceso se desarrolló en cuatro momentos. En el primero, el equipo realizó un chaotic exploration en el que cada integrante escribió en notas naranjas los eventos de dominio que reconocía del análisis de entrevistas y del benchmark, redactados siempre como hechos ya ocurridos y en pasado participio. En el segundo momento se ordenó la línea de tiempo de izquierda a derecha, se eliminaron los duplicados y se unificó la redacción de los eventos que describían el mismo hecho con palabras distintas. En el tercer momento se incorporaron los actores humanos en notas amarillas, distinguiendo explícitamente al `Patient` del `Practitioner`, porque ninguno de los dos origina los mismos hechos y esa asimetría resultó ser la regla estructural del producto. En el cuarto momento se marcaron con notas moradas las políticas, es decir, las reacciones automáticas del tipo "cuando ocurre X entonces sucede Y", y con notas rosadas los hotspots, que son las preguntas abiertas que la sesión no logró cerrar y que quedaron registradas como pendientes de validación.
+El proceso se desarrolló en cuatro momentos. En el primero, el equipo realizó un chaotic exploration en el que cada integrante escribió en notas naranjas los eventos de dominio que reconocía del análisis de entrevistas y del benchmark, redactados siempre como hechos ya ocurridos y en pasado participio. En el segundo momento se ordenó la línea de tiempo de izquierda a derecha, se eliminaron los duplicados y se unificó la redacción de los eventos que describían el mismo hecho con palabras distintas. En el tercer momento se incorporaron los actores humanos en notas amarillas, distinguiendo explícitamente al `Patient` del `Practitioner`, porque ninguno de los dos origina los mismos hechos y esa asimetría resultó ser la regla estructural del producto. En el cuarto momento se marcaron con notas moradas las políticas, es decir, las reacciones automáticas del tipo "cuando ocurre X entonces sucede Y", y con notas verde claro los read models que alguien necesita consultar para decidir. Las preguntas abiertas que la sesión no logró cerrar se registraron como hotspots pendientes de validación.
 
 **Convención de notas utilizada en el tablero:**
 
@@ -325,7 +325,7 @@ El proceso se desarrolló en cuatro momentos. En el primero, el equipo realizó 
 | Amarillo claro | Actor | `Patient` o `Practitioner`, nunca un usuario genérico |
 | Naranja | Domain Event | Un hecho que ya ocurrió en el negocio |
 | Morado | Policy | Reacción automática del tipo cuando X entonces Y |
-| Verde claro | Read Model | Vista que alguien consulta para decidir
+| Verde claro | Read Model | Vista que alguien consulta para decidir |
 
 ![Big Picture EventStorming - Tablero completo](../assets/img/artifacts/event-storming/big-picture-eventstorming-completo.png)
 
