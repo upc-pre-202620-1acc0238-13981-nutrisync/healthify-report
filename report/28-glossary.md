@@ -196,6 +196,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Provenance (Procedencia)** | Origen de una entrada de diario: fotografía, registro manual o declaración fuera del plan. |
 | **Review Item (Ítem de revisión)** | Señal de seguimiento que llega a la bandeja del profesional y espera una decisión humana. |
 | **Self Weigh In (Autopesaje)** | Pesaje realizado por el paciente en casa con protocolo declarado; no tiene autoridad clínica por sí solo. |
+| **Treatment Adherence (Adherencia al tratamiento)** | Lectura del seguimiento del plan a escala de la ventana de evaluación o del tratamiento, construida a partir de los cumplimientos diarios; la interpreta el profesional y nunca se deduce de un solo día. |
 | **Weight Trend (Tendencia de peso)** | Suavizado estadístico (media móvil) de los autopesajes; único formato en que el peso del paciente se presenta. |
 
 ## Abreviaturas y acrónimos
