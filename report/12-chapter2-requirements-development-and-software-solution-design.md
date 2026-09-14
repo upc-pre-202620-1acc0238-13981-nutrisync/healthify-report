@@ -2110,9 +2110,9 @@ Esta sección documenta el proceso de diseño estratégico con el que el equipo 
 
 ### 2.5.1. EventStorming
 
-Esta sección documenta la segunda sesión de EventStorming, realizada por el equipo en Miro con una duración aproximada de dos horas, orientada a alcanzar el mayor nivel de detalle posible sobre el dominio ya explorado. Mientras que la sesión de Big Picture se limitó a actores, eventos y políticas, esta sesión incorporó los elementos que permiten pasar del relato del negocio a un modelo accionable.
+Esta sección documenta la segunda sesión de EventStorming, realizada por el equipo en Miro con una duración aproximada de dos horas, orientada a alcanzar el mayor nivel de detalle posible sobre el dominio ya explorado. Mientras que la sesión de Big Picture se limitó a actores, eventos, políticas y algunos read models, esta sesión incorporó los elementos que permiten pasar del relato del negocio a un modelo accionable.
 
-El trabajo consistió en recorrer la línea de tiempo del tablero anterior y, para cada evento de dominio, reconstruir hacia atrás la cadena completa que lo produce. Para cada hecho el equipo se preguntó qué intención humana o automática lo desencadenó, lo que dio origen a los comandos en notas azules; qué pieza del modelo es responsable de aceptarlo o rechazarlo, lo que dio origen a los agregados en notas amarillo intenso; qué regla protege ese agregado, lo que dio origen a las reglas de negocio en notas rojas; y qué vista necesita alguien para tomar la siguiente decisión, lo que dio origen a los read models en notas verdes. Adicionalmente se marcaron en notas rosa claro los servicios externos, que en el modelo resultante son únicamente cuatro: el proveedor de autenticación, ML Kit para la estimación de porción en el dispositivo, y Open Food Facts y USDA Food Data Central como fuentes del catálogo.
+El trabajo consistió en recorrer la línea de tiempo del tablero anterior y, para cada evento de dominio, reconstruir hacia atrás la cadena completa que lo produce. Para cada hecho el equipo se preguntó qué intención humana o automática lo desencadenó, lo que dio origen a los comandos en notas azules; qué pieza del modelo es responsable de aceptarlo o rechazarlo, lo que dio origen a los agregados en notas amarillo intenso; qué regla protege ese agregado, lo que dio origen a las reglas de negocio en notas rojas; y qué vista necesita alguien para tomar la siguiente decisión, lo que dio origen a los read models en notas verdes. Adicionalmente se marcaron en notas rosa claro los servicios externos, que en el tablero fueron cuatro: el proveedor de autenticación, ML Kit para la estimación de porción en el dispositivo, y Open Food Facts y USDA Food Data Central como fuentes del catálogo. En la implementación, el proveedor de autenticación no se integró como un servicio de terceros, sino que quedó resuelto dentro de `IAM` mediante hashing con BCrypt y emisión propia de tokens JWT, por lo que la solución depende únicamente de tres servicios externos.
 
 **Convención de composición.** El equipo acordó una regla de encadenamiento que se respeta en todo el tablero y que facilita después la traducción a código:
 
@@ -2127,17 +2127,17 @@ Enlace del Event-Storming: [https://miro.com/welcomeonboard/MU44Nlk4L2dlOVFveWtD
 
 ![Design Level EventStorming - Tablero completo](../assets/img/artifacts/event-storming/design-level-eventstorming-completo.png)
 
-El modelo resultante quedó organizado en treinta y seis subflujos distribuidos en seis contextos, con cincuenta y cuatro comandos, dieciocho agregados, ciento veinticinco reglas de negocio, sesenta y tres eventos de dominio y treinta y una políticas.
+El modelo resultante quedó organizado en treinta y seis subflujos distribuidos en seis contextos, con cincuenta y cinco comandos, dieciocho agregados, ciento veinticinco reglas de negocio, sesenta y cuatro eventos de dominio y treinta y una políticas.
 
 | Bounded context | Agregados | Comandos | Reglas | Eventos | Políticas |
 |---|---|---:|---:|---:|---:|
-| `Identity & Access Management` | 2 | 4 | 9 | 5 | 1 |
+| `Identity & Access Management (IAM)` | 2 | 4 | 9 | 5 | 1 |
 | `Care Relationship` | 2 | 10 | 19 | 10 | 4 |
 | `Nutritional Care` | 4 | 11 | 28 | 13 | 4 |
 | `Intake & Body Response` | 4 | 10 | 28 | 12 | 4 |
-| `Monitoring & Adherence` | 5 | 15 | 33 | 17 | 16 |
+| `Monitoring & Adherence` | 5 | 16 | 33 | 18 | 16 |
 | `Food Catalog` | 1 | 4 | 8 | 6 | 2 |
-| **Total** | **18** | **54** | **125** | **63** | **31** |
+| **Total** | **18** | **55** | **125** | **64** | **31** |
 
 ![Design Level EventStorming - Detalle de un subflujo](../assets/img/artifacts/event-storming/design-level-eventstorming-detalle-subflujo.png)
 
