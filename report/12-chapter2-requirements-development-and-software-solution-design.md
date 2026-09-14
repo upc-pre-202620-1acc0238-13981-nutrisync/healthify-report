@@ -2254,8 +2254,8 @@ Los patrones de relación seleccionados para cada integración son los siguiente
 
 | Relación | Patrón | Justificación |
 |---|---|---|
-| `Identity & Access` → `Care Relationship` | Conformist | El claim de rol viaja en el token de sesión: es infraestructura y no dominio. `Care Relationship` lo adopta tal cual para hacer cumplir la asimetría entre profesional y paciente |
-| `Identity & Access` → `Nutritional Care` | Conformist | Los comandos clínicos exigen el rol de profesional, que se toma sin traducción del proveedor de identidad. Los contextos del paciente no dependen del rol directamente, sino del vínculo que resuelve `Care Relationship` |
+| `IAM` → `Care Relationship` | Conformist | El claim de rol viaja en el token de sesión: es infraestructura y no dominio. `Care Relationship` lo adopta tal cual para hacer cumplir la asimetría entre profesional y paciente |
+| `IAM` → `Nutritional Care` | Conformist | Los comandos clínicos exigen el rol de profesional, que se toma sin traducción del token JWT emitido por `IAM`. Los contextos del paciente no dependen del rol directamente, sino del vínculo que resuelve `Care Relationship` |
 | `Care Relationship` → `Nutritional Care` | Open Host Service | Publica una sola pregunta, `Is Care Link Active`, que `Nutritional Care` consulta antes de evaluar, diagnosticar o prescribir sobre un paciente |
 | `Care Relationship` → `Intake & Body Response` | Open Host Service | La misma pregunta determina si lo que registra el paciente puede ser leído por un profesional a través del read model |
 | `Care Relationship` → `Monitoring & Adherence` | Open Host Service + eventos | Además de consultar el vínculo, `Monitoring` reacciona a `Care Link Established` abriendo la ventana de evaluación, y deja de evaluar cuando el consentimiento se revoca |
@@ -2269,7 +2269,7 @@ Los patrones de relación seleccionados para cada integración son los siguiente
 
 Dos rasgos del mapa merecen destacarse. El primero es que `Care Relationship` es el único contexto que aparece como upstream de los tres contextos que manejan información del paciente, lo que refleja que el vínculo consentido es condición previa de todo lo demás. El segundo es que el único ciclo aparente, entre `Nutritional Care` y `Monitoring & Adherence`, no es un ciclo de dependencia: en un sentido viajan las metas vigentes y en el otro solo una señal punteada que termina en la bandeja del profesional, de manera que ninguno de los dos contextos puede modificar el estado del otro.
 
-El mapa resultante contiene trece integraciones por evento originadas en nueve eventos distintos, sobre un total de sesenta y tres eventos del modelo. Que el ochenta y seis por ciento del comportamiento permanezca dentro de un solo contexto es la señal que el equipo tomó como confirmación de que las fronteras están bien trazadas; si durante la implementación apareciera la necesidad de un décimo evento de integración, sería indicio de que alguna frontera está filtrando responsabilidades.
+El mapa resultante contiene trece integraciones por evento originadas en nueve eventos distintos, sobre un total de sesenta y cuatro eventos del modelo. Que el ochenta y seis por ciento del comportamiento permanezca dentro de un solo contexto es la señal que el equipo tomó como confirmación de que las fronteras están bien trazadas; si durante la implementación apareciera la necesidad de un décimo evento de integración, sería indicio de que alguna frontera está filtrando responsabilidades.
 
 ### 2.5.3. Software Architecture
 
