@@ -81,7 +81,7 @@ Targets Pending Acknowledgement
 {#
 <b>Suppliers</b> | . | <b>Consumers</b> | .
 <color:gray>Name</color> | <color:gray>Relationship</color> | <color:gray>Name</color> | <color:gray>Relationship</color>
-Identity & Access | Conformist | Nutritional Care | Open Host Service
+IAM | Conformist | Nutritional Care | Open Host Service
 Nutritional Care | Events only | Intake & Body Response | Open Host Service
 . | . | Monitoring & Adherence | Open Host Service + Events
 . | . | Patient Record · BFF | Open Host Service

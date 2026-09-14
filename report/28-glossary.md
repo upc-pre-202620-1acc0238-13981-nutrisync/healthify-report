@@ -58,7 +58,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Downstream / Upstream** | Posiciones en una relación entre contextos: el upstream influye o provee, y el downstream depende o consume. |
 | **Evento pivote (Pivotal Event)** | Evento que cambia el estado del proceso de forma irreversible, de modo que lo que ocurre después obedece a reglas distintas. |
 | **EventStorming** | Técnica colaborativa de modelado basada en notas adhesivas de colores ordenadas en una línea de tiempo, que permite explorar un dominio a partir de sus eventos. |
-| **Generic Subdomain** | Subdominio necesario pero no diferenciador, que puede resolverse con soluciones estándar. En Healthify: `Food Catalog` e `Identity & Access`. |
+| **Generic Subdomain** | Subdominio necesario pero no diferenciador, que puede resolverse con soluciones estándar. En Healthify: `Food Catalog` e `IAM`. |
 | **Hotspot** | Nota de EventStorming que marca una duda, conflicto o pregunta abierta pendiente de validación. |
 | **Open Host Service (OHS)** | Patrón en el que un contexto publica un protocolo o servicio bien definido para que otros contextos lo consuman. |
 | **Policy (Política)** | Reacción automática del tipo "cuando ocurre X, entonces se ejecuta Y", que conecta un evento con un comando. |
@@ -142,7 +142,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **ML Kit** | Kit de aprendizaje automático de Google que se ejecuta en el dispositivo móvil; en Healthify se usa para proponer la estimación de porción a partir de una fotografía. |
 | **MySQL** | Sistema gestor de bases de datos relacional utilizado para la persistencia de la plataforma (versión 8). |
 | **Open Food Facts** | Base de datos colaborativa y abierta de productos alimenticios, utilizada como fuente externa del catálogo nutricional. |
-| **ProblemDetails** | Formato estándar (RFC 9457) para describir errores en respuestas HTTP de una API. |
+| **ProblemDetails** | Formato estándar (RFC 7807, actualizado por RFC 9457) para describir errores en respuestas HTTP de una API. |
 | **Seeder** | Componente que carga datos iniciales en la base de datos, como el catálogo de 60 alimentos peruanos de referencia. |
 | **snake_case** | Convención de nombres en minúsculas con palabras separadas por guion bajo, aplicada a tablas y columnas de la base de datos. |
 | **Swagger / OpenAPI** | Especificación y conjunto de herramientas para documentar y probar interactivamente una API REST. |
@@ -196,6 +196,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Provenance (Procedencia)** | Origen de una entrada de diario: fotografía, registro manual o declaración fuera del plan. |
 | **Review Item (Ítem de revisión)** | Señal de seguimiento que llega a la bandeja del profesional y espera una decisión humana. |
 | **Self Weigh In (Autopesaje)** | Pesaje realizado por el paciente en casa con protocolo declarado; no tiene autoridad clínica por sí solo. |
+| **Treatment Adherence (Adherencia al tratamiento)** | Lectura del seguimiento del plan a escala de la ventana de evaluación o del tratamiento, construida a partir de los cumplimientos diarios; la interpreta el profesional y nunca se deduce de un solo día. |
 | **Weight Trend (Tendencia de peso)** | Suavizado estadístico (media móvil) de los autopesajes; único formato en que el peso del paciente se presenta. |
 
 ## Abreviaturas y acrónimos

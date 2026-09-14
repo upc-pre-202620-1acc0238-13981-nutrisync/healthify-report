@@ -31,7 +31,7 @@ Container_Boundary(api, "Healthify Platform API") {
     Component(referralCmdService, "ReferralCommandService", "C# Application Service (CQRS command side)", "Issues and tracks referrals")
     Component(followUpCmdService, "ScheduledFollowUpCommandService", "C# Application Service (CQRS command side)", "Schedules, completes and misses follow-ups")
     Component(monQryServices, "Monitoring Query Services", "C# Application Services (CQRS query side)", "Read windows, deviations, index, referrals")
-    Component(monHandlers, "Monitoring Event Handlers", "Cortex.Mediator IEventHandler of T", "13 policies: this context mostly reacts")
+    Component(monHandlers, "Monitoring Event Handlers", "Cortex.Mediator IEventHandler of T", "13 event-driven policies (+3 scheduled): this context mostly reacts")
     Component(monFacade, "MonitoringContextFacade", "C# ACL - Open Host Service", "Publishes the panel series and state")
 
     ' ------------------------------------------------------------- Domain
