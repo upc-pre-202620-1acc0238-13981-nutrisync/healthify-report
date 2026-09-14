@@ -2923,7 +2923,7 @@ Database:
 
 **Queries (10)** — Siete alimentan read models (Patient Monitoring Panel, Daily Compliance Indicator, Consistency Card, Practitioner Agenda, entre otros) y tres son entrada de las políticas temporales: `GetOpenEvaluationWindowsQuery`, `GetEscalatableConsistencyIndicesQuery` y `GetOverdueScheduledFollowUpsQuery`.
 
-**Domain Events (17)** — Sólo dos cruzan frontera, ambos hacia Nutritional Care: `SustainedDeviationDetected` y `AlertEscalatedToPractitioner`, y ninguno lleva objetivo, ajuste ni instrucción en el payload, porque lo que espera al otro extremo es una persona decidiendo. `LoggingGapDetected` y `FollowUpMissed` son internos y **ningún otro contexto se suscribe a ellos**: así se mantienen las reglas de que un hueco nunca escala y una visita perdida no cierra el vínculo.
+**Domain Events (18)** — Sólo dos cruzan frontera, ambos hacia Nutritional Care: `SustainedDeviationDetected` y `AlertEscalatedToPractitioner`, y ninguno lleva objetivo, ajuste ni instrucción en el payload, porque lo que espera al otro extremo es una persona decidiendo. `LoggingGapDetected` y `FollowUpMissed` son internos y **ningún otro contexto se suscribe a ellos**: así se mantienen las reglas de que un hueco nunca escala y una visita perdida no cierra el vínculo.
 
 **Errors** — `enum MonitoringError` con 19 valores. Léase por lo que falta: no hay valor para un paciente que "lo hizo mal". Este contexto reporta que no pudo interpretar algo; nunca reporta a una persona.
 
