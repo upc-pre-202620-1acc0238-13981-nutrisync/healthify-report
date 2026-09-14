@@ -78,7 +78,7 @@ Septiembre, 2026
 Repositorio del informe del proyecto en GitHub: [healthify-report](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report)
 
 AV1:<br>
-![Report](./)
+![Report](./assets/img/insights/av1.png)
 
 <div style="page-break-after: always"></div>
 
