@@ -142,7 +142,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **ML Kit** | Kit de aprendizaje automático de Google que se ejecuta en el dispositivo móvil; en Healthify se usa para proponer la estimación de porción a partir de una fotografía. |
 | **MySQL** | Sistema gestor de bases de datos relacional utilizado para la persistencia de la plataforma (versión 8). |
 | **Open Food Facts** | Base de datos colaborativa y abierta de productos alimenticios, utilizada como fuente externa del catálogo nutricional. |
-| **ProblemDetails** | Formato estándar (RFC 9457) para describir errores en respuestas HTTP de una API. |
+| **ProblemDetails** | Formato estándar (RFC 7807, actualizado por RFC 9457) para describir errores en respuestas HTTP de una API. |
 | **Seeder** | Componente que carga datos iniciales en la base de datos, como el catálogo de 60 alimentos peruanos de referencia. |
 | **snake_case** | Convención de nombres en minúsculas con palabras separadas por guion bajo, aplicada a tablas y columnas de la base de datos. |
 | **Swagger / OpenAPI** | Especificación y conjunto de herramientas para documentar y probar interactivamente una API REST. |
