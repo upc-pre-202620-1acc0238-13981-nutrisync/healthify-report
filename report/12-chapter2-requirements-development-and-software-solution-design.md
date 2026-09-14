@@ -3172,7 +3172,7 @@ La asimetría está documentada en los propios métodos: **el profesional explic
 
 #### 2.6.3.2. Interface Layer
 
-La Interface Layer de Care Relationship expone cuatro controllers y, sobre todo, publica el **Open Host Service** de la plataforma: el contrato por el que los otros cinco bounded contexts preguntan si un vínculo está activo antes de servir nada.
+La Interface Layer de Care Relationship expone cuatro controllers y, sobre todo, publica el **Open Host Service** de la plataforma: el contrato por el que los tres bounded contexts que manejan información del paciente (Nutritional Care, Intake & Body Response y Monitoring & Adherence), junto con la capa de read models compuestos, preguntan si un vínculo está activo antes de servir nada.
 
 **Controllers**
 
@@ -3199,7 +3199,7 @@ El token **sólo viaja en la respuesta que crea la invitación**; toda lectura p
 
 **`Revoke Care Link` no tiene endpoint a propósito**: es una política interna disparada por `ConsentWithdrawn`, nunca una decisión separada.
 
-**`PatientCareLinksController`** — `[Route("api/v1/patients")] [Authorize]`. Expone `GET /{patientId:int}/care-links/active` (`GetActiveCareLink(int)`), que sirve el read model **Care Link Status**: la pregunta que los otros cinco contextos hacen antes de servir nada.
+**`PatientCareLinksController`** — `[Route("api/v1/patients")] [Authorize]`. Expone `GET /{patientId:int}/care-links/active` (`GetActiveCareLink(int)`), que sirve el read model **Care Link Status**: la pregunta que los contextos que manejan información del paciente hacen antes de servir nada.
 
 **`PractitionerPatientsController`** — `[Route("api/v1/practitioners")] [Authorize(Roles = "Practitioner")]`. Expone `GET /{practitionerId:int}/patients` (`GetPatientsByPractitionerId(int)`), read model **Practitioner Patient List**, que **incluye vínculos revocados y dados de alta**: el roster es un historial.
 
