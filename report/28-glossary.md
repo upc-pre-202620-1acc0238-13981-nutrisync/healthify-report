@@ -58,7 +58,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Downstream / Upstream** | Posiciones en una relación entre contextos: el upstream influye o provee, y el downstream depende o consume. |
 | **Evento pivote (Pivotal Event)** | Evento que cambia el estado del proceso de forma irreversible, de modo que lo que ocurre después obedece a reglas distintas. |
 | **EventStorming** | Técnica colaborativa de modelado basada en notas adhesivas de colores ordenadas en una línea de tiempo, que permite explorar un dominio a partir de sus eventos. |
-| **Generic Subdomain** | Subdominio necesario pero no diferenciador, que puede resolverse con soluciones estándar. En Healthify: `Food Catalog` e `Identity & Access`. |
+| **Generic Subdomain** | Subdominio necesario pero no diferenciador, que puede resolverse con soluciones estándar. En Healthify: `Food Catalog` e `IAM`. |
 | **Hotspot** | Nota de EventStorming que marca una duda, conflicto o pregunta abierta pendiente de validación. |
 | **Open Host Service (OHS)** | Patrón en el que un contexto publica un protocolo o servicio bien definido para que otros contextos lo consuman. |
 | **Policy (Política)** | Reacción automática del tipo "cuando ocurre X, entonces se ejecuta Y", que conecta un evento con un comando. |
