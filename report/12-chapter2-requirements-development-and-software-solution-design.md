@@ -2285,11 +2285,8 @@ El Diagrama de Contexto (Nivel 1 del modelo C4) representa a Healthify como un s
 - **Patient:** Persona que registra sus comidas y peso entre consultas, y sigue el plan prescrito por su nutricionista.
 - **Practitioner:** Persona que realiza el acto clínico (evaluación, diagnóstico, prescripción) y revisa las señales de adherencia de sus pacientes.
 - **External Systems:**
-	- `Auth Provider:` Gestiona la identidad federada; Healthify actúa como conformist frente a este proveedor.
 	- `ML Kit:` Motor de visión artificial on-device que estima la porción del plato a partir de la foto de la comida, sin salida de red.
 	- `Nutritional Data Providers:` Fuentes externas de catálogo nutricional (Open Food Facts, USDA) consultadas a través del Anticorruption Layer de Food Catalog.
-	- `Push Notification Service:` Entrega recordatorios locales de pesaje y vacíos de registro; conformist, sin dominio propio.
-
 ![Context Diagram](../assets/img/artifacts/healthify-SystemContext.png)
 
 #### 2.5.3.2. Software Architecture Container Level Diagrams
