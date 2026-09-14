@@ -2170,7 +2170,7 @@ El resultado de la sesión fueron seis bounded contexts, clasificados por su apo
 | Supporting | `Nutritional Care` | El acto clínico completo: evaluación, diagnóstico y prescripción | Fuerte, transaccional |
 | Supporting | `Care Relationship` | Quién puede ver a quién y con qué consentimiento | Fuerte, transaccional |
 | Generic | `Food Catalog` | Traducir el catálogo externo al dominio y cachearlo localmente | Eventual, cacheable |
-| Generic | `Identity & Access` | Autenticación y emisión del claim de rol | Delegada al proveedor |
+| Generic | `Identity & Access Management (IAM)` | Autenticación y emisión del claim de rol | Fuerte, transaccional (autenticación propia) |
 
 La clasificación de `Nutritional Care` como Supporting merece justificación explícita, porque es el contexto donde ocurre el acto profesional completo. El criterio de DDD no es la importancia sino la diferenciación: el expediente clínico, el diagnóstico y la prescripción versionada son exactamente el terreno que Nutrimind y Nutrium ya cubren, de modo que allí el objetivo es estar a la altura. Las tres piezas que constituyen la diferencia competitiva de Healthify son el registro por fotografía, el autopesaje expuesto como tendencia y el índice de consistencia; dos viven en `Intake & Body Response` y una en `Monitoring & Adherence`.
 
