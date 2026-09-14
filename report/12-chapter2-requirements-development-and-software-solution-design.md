@@ -67,7 +67,7 @@ MacroFactor es una aplicación de seguimiento nutricional dirigida al consumidor
 </tr>
 <tr>
 <td>Precios &amp; Costos</td>
-<td>No aplica en el alcance actual del proyecto, dado que el equipo decidió que la definición de un modelo de precios queda fuera de esta etapa de trabajo.</td>
+<td>Acceso gratuito para pacientes y nutricionistas en esta etapa, como supuesto de negocio pendiente de validación; el modelo de monetización se definirá tras validar la disposición a pagar del segmento profesional.</td>
 <td>Modelo de pago único por licencia, sin suscripción recurrente, con funciones adicionales disponibles mediante suscripción opcional.</td>
 <td>Modelo de suscripción mensual o anual dirigido al profesional, con periodo de prueba gratuito previo a la contratación del servicio.</td>
 <td>Suscripción de once dólares con noventa y nueve centavos al mes o setenta y un dólares con noventa y nueve centavos al año, sin plan gratuito permanente.</td>
