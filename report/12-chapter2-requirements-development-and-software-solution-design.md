@@ -3564,7 +3564,7 @@ Component:
 
 #### 2.6.4.6. Bounded Context Software Architecture Code Level Diagrams
 
-#### 2.6.4.6.1. Bounded Context Domain Layer Class Diagrams
+##### 2.6.4.6.1. Bounded Context Domain Layer Class Diagrams
 
 **Nutritional Care**
 
@@ -3584,7 +3584,7 @@ Interfaces:
 
 ![Nutritional Care Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/nutritional-care/interfaces.puml)
 
-#### 2.6.4.6.2. Bounded Context Database Design Diagram
+##### 2.6.4.6.2. Bounded Context Database Design Diagram
 
 **Nutritional Care**
 
