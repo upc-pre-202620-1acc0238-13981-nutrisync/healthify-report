@@ -6,11 +6,19 @@ Alsahli, S., Hor, S., & Lam, M. (2023). *Factores que influyeron en la aceptaci�
 
 Bernabel, O., & Huatay, A. (2021). *Plan de negocio para brindar atención de servicios de salud, mediante el uso de una aplicación digital* [Tesis de maestría, Universidad Peruana de Ciencias Aplicadas (UPC)]. Repositorio Académico UPC. http://hdl.handle.net/10757/657980
 
+Brandolini, A. (2021). *Introducing EventStorming: An act of deliberate collective learning*. Leanpub.
+
+Brown, S. (s.f.). *The C4 model for visualising software architecture*. https://c4model.com
+
+DDD Crew. (s.f.). *Bounded context canvas* [Repositorio de GitHub]. https://github.com/ddd-crew/bounded-context-canvas
+
 Evans, E. (2004). *Domain-driven design: Tackling complexity in the heart of software*. Addison-Wesley.
 
 Fowler, M. (2003). *Patterns of enterprise application architecture*. Addison-Wesley.
 
 Gothelf, J., & Seiden, J. (2021). *Lean UX: Designing great products with agile teams* (3rd ed.). O'Reilly Media.
+
+Hofer, S., & Schwentner, H. (2021). *Domain storytelling: A collaborative, visual, and agile way to build domain-driven software*. Addison-Wesley.
 
 Instituto Nacional de Salud. (2026). *Informe de vigilancia de la situación del sobrepeso, obesidad y sus determinantes en el marco del Observatorio de Nutrición y estudio del sobrepeso y obesidad – 2025*. Ministerio de Salud. https://www.gob.pe/institucion/ins/informes-publicaciones/7542864-informe-de-vigilancia-de-la-situacion-del-sobrepeso-obesidad-y-sus-determinantes-en-el-marco-del-observatorio-de-nutricion-y-estudio-del-sobrepeso-y-obesidad-2025
 
