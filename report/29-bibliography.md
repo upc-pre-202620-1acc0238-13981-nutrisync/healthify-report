@@ -1,5 +1,7 @@
 # BIBLIOGRAFÍA
 
+Adzic, G. (2012). *Impact mapping: Making a big impact with software products and projects*. Provoking Thoughts.
+
 Alsahli, S., Hor, S., & Lam, M. (2023). *Factores que influyeron en la aceptación y adopción de aplicaciones de salud móviles por parte de los médicos durante la pandemia de COVID-19: revisión sistemática*. JMIR mHealth y uHealth. https://doi.org/10.2196/50419
 
 Bernabel, O., & Huatay, A. (2021). *Plan de negocio para brindar atención de servicios de salud, mediante el uso de una aplicación digital* [Tesis de maestría, Universidad Peruana de Ciencias Aplicadas (UPC)]. Repositorio Académico UPC. http://hdl.handle.net/10757/657980
@@ -7,6 +9,8 @@ Bernabel, O., & Huatay, A. (2021). *Plan de negocio para brindar atención de se
 Evans, E. (2004). *Domain-driven design: Tackling complexity in the heart of software*. Addison-Wesley.
 
 Fowler, M. (2003). *Patterns of enterprise application architecture*. Addison-Wesley.
+
+Gothelf, J., & Seiden, J. (2021). *Lean UX: Designing great products with agile teams* (3rd ed.). O'Reilly Media.
 
 Instituto Nacional de Salud. (2026). *Informe de vigilancia de la situación del sobrepeso, obesidad y sus determinantes en el marco del Observatorio de Nutrición y estudio del sobrepeso y obesidad – 2025*. Ministerio de Salud. https://www.gob.pe/institucion/ins/informes-publicaciones/7542864-informe-de-vigilancia-de-la-situacion-del-sobrepeso-obesidad-y-sus-determinantes-en-el-marco-del-observatorio-de-nutricion-y-estudio-del-sobrepeso-y-obesidad-2025
 
