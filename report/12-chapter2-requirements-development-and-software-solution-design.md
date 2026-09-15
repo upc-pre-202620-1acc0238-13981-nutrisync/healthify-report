@@ -2045,7 +2045,7 @@ El Impact Mapping del nutricionista se orienta al uso recurrente de la informaci
 
 ### 2.4.3. Product Backlog
 
-| **# Order** | **Uer Story ID** | **Title** | **Story Points** <br>**(1/2/3/5/8)** | **Sprint** |
+| **# Order** | **User Story ID** | **Title** | **Story Points** <br>**(1/2/3/5/8)** | **Sprint** |
 | :--- | :--- | :--- | :--- | :--- |
 | 1 | US08 | Registro de comida por fotografía | 8 | Sprint 1 |
 | 2 | SS01 | Investigación de Google ML Kit para el reconocimiento de alimentos | 3 | Sprint 1 |
@@ -2080,7 +2080,7 @@ El Impact Mapping del nutricionista se orienta al uso recurrente de la informaci
 | 31 | US31 | Registro y sincronización sin conexión | 8 | Sprint 2 |
 | 32 | TS08 | Sincronización de registros offline | 8 | Sprint 2 |
 | 33 | US18 | Acceso al expediente personal unificado | 5 | Sprint 3 |
-| 34 | US24 | Acuse de recibo de metas nutricionales actualizadas | 2 | Sprint 2 |
+| 34 | US24 | Confirmación de recepción de nuevas metas nutricionales | 2 | Sprint 2 |
 | 35 | US19 | Registro de derivación a otro especialista | 2 | Sprint 3 |
 | 36 | US06 | Alta del paciente al finalizar el tratamiento | 2 | Sprint 3 |
 | 37 | US07 | Revocación del vínculo de cuidado | 2 | Sprint 3 |
@@ -2091,7 +2091,7 @@ El Impact Mapping del nutricionista se orienta al uso recurrente de la informaci
 | 42 | TS01 | Servicios de registro, autenticación y autorización | 5 | Sprint 1 |
 | 43 | US32 | Visualización de la propuesta de valor de Healthify | 2 | Sprint 1 |
 | 44 | US33 | Consulta de las principales funcionalidades de Healthify | 2 | Sprint 1 |
-| 45 | US36 | Acceso a la descarga de Healthify | 2 | Sprint 1 |
+| 45 | US36 | Acceso a la descarga de Healthify desde el Landing Page | 2 | Sprint 1 |
 | 46 | US38 | Consulta de términos y políticas de Healthify | 2 | Sprint 1 |
 | 47 | US35 | Cambio de idioma del Landing Page | 3 | Sprint 1 |
 | 48 | US37 | Envío de consulta mediante formulario de contacto | 3 | Sprint 1 |
@@ -2795,7 +2795,7 @@ Component:
 
 #### 2.6.1.6. Bounded Context Software Architecture Code Level Diagrams
 
-#### 2.6.1.6.1. Bounded Context Domain Layer Class Diagrams
+##### 2.6.1.6.1. Bounded Context Domain Layer Class Diagrams
 
 **Intake & Body Response**
 
@@ -2815,7 +2815,7 @@ Interfaces:
 
 ![Intake & Body Response Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/interfaces.puml)
 
-#### 2.6.1.6.2. Bounded Context Database Design Diagram
+##### 2.6.1.6.2. Bounded Context Database Design Diagram
 
 **Intake & Body Response**
 
@@ -3066,7 +3066,7 @@ Component:
 
 #### 2.6.2.6. Bounded Context Software Architecture Code Level Diagrams
 
-#### 2.6.2.6.1. Bounded Context Domain Layer Class Diagrams
+##### 2.6.2.6.1. Bounded Context Domain Layer Class Diagrams
 
 **Monitoring & Adherence**
 
@@ -3086,7 +3086,7 @@ Interfaces:
 
 ![Monitoring & Adherence Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/interfaces.puml)
 
-#### 2.6.2.6.2. Bounded Context Database Design Diagram
+##### 2.6.2.6.2. Bounded Context Database Design Diagram
 
 **Monitoring & Adherence**
 
@@ -3301,7 +3301,7 @@ Component:
 
 #### 2.6.3.6. Bounded Context Software Architecture Code Level Diagrams
 
-#### 2.6.3.6.1. Bounded Context Domain Layer Class Diagrams
+##### 2.6.3.6.1. Bounded Context Domain Layer Class Diagrams
 
 **Care Relationship**
 
@@ -3321,7 +3321,7 @@ Interfaces:
 
 ![Care Relationship Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/care-relationship/interfaces.puml)
 
-#### 2.6.3.6.2. Bounded Context Database Design Diagram
+##### 2.6.3.6.2. Bounded Context Database Design Diagram
 
 **Care Relationship**
 
@@ -3564,7 +3564,7 @@ Component:
 
 #### 2.6.4.6. Bounded Context Software Architecture Code Level Diagrams
 
-#### 2.6.4.6.1. Bounded Context Domain Layer Class Diagrams
+##### 2.6.4.6.1. Bounded Context Domain Layer Class Diagrams
 
 **Nutritional Care**
 
@@ -3584,7 +3584,7 @@ Interfaces:
 
 ![Nutritional Care Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/nutritional-care/interfaces.puml)
 
-#### 2.6.4.6.2. Bounded Context Database Design Diagram
+##### 2.6.4.6.2. Bounded Context Database Design Diagram
 
 **Nutritional Care**
 
@@ -3793,7 +3793,7 @@ Component:
 
 #### 2.6.5.6. Bounded Context Software Architecture Code Level Diagrams
 
-#### 2.6.5.6.1. Bounded Context Domain Layer Class Diagrams
+##### 2.6.5.6.1. Bounded Context Domain Layer Class Diagrams
 
 **IAM**
 
@@ -3813,7 +3813,7 @@ Interfaces:
 
 ![IAM Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/iam/interfaces.puml)
 
-#### 2.6.5.6.2. Bounded Context Database Design Diagram
+##### 2.6.5.6.2. Bounded Context Database Design Diagram
 
 **IAM**
 
@@ -3982,7 +3982,7 @@ Component:
 
 #### 2.6.6.6. Bounded Context Software Architecture Code Level Diagrams
 
-#### 2.6.6.6.1. Bounded Context Domain Layer Class Diagrams
+##### 2.6.6.6.1. Bounded Context Domain Layer Class Diagrams
 
 **Food Catalog**
 
@@ -4002,7 +4002,7 @@ Interfaces:
 
 ![Food Catalog Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/food-catalog/interfaces.puml)
 
-#### 2.6.6.6.2. Bounded Context Database Design Diagram
+##### 2.6.6.6.2. Bounded Context Database Design Diagram
 
 **Food Catalog**
 

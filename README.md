@@ -84,8 +84,6 @@ AV1:<br>
 
 ## CONTENIDO
 
-# CONTENIDO
-
 [STUDENT OUTCOME](report/01-student-outcome.md)
 
 [OBJETIVOS SMART](report/02-smart-objetives.md)
@@ -133,7 +131,8 @@ AV1:<br>
   - [2.5.3. Software Architecture](report/12-chapter2-requirements-development-and-software-solution-design.md#253-software-architecture)
     - [2.5.3.1. Software Architecture Context Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2531-software-architecture-context-level-diagrams)
     - [2.5.3.2. Software Architecture Container Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2532-software-architecture-container-level-diagrams)
-    - [2.5.3.3. Software Architecture Deployment Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2533-software-architecture-deployment-diagrams)
+    - [2.5.3.3. Software Architecture Components Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2533-software-architecture-components-diagrams)
+    - [2.5.3.4. Software Architecture Deployment Diagram](report/12-chapter2-requirements-development-and-software-solution-design.md#2534-software-architecture-deployment-diagram)
 - [2.6. Tactical-Level Domain-Driven Design](report/12-chapter2-requirements-development-and-software-solution-design.md#26-tactical-level-domain-driven-design)
   - [2.6.1. Bounded Context: Intake &amp; Body Response](report/12-chapter2-requirements-development-and-software-solution-design.md#261-bounded-context-intake--body-response)
     - [2.6.1.1. Domain Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2611-domain-layer)
