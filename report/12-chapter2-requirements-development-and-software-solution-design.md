@@ -3066,7 +3066,7 @@ Component:
 
 #### 2.6.2.6. Bounded Context Software Architecture Code Level Diagrams
 
-#### 2.6.2.6.1. Bounded Context Domain Layer Class Diagrams
+##### 2.6.2.6.1. Bounded Context Domain Layer Class Diagrams
 
 **Monitoring & Adherence**
 
@@ -3086,7 +3086,7 @@ Interfaces:
 
 ![Monitoring & Adherence Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/interfaces.puml)
 
-#### 2.6.2.6.2. Bounded Context Database Design Diagram
+##### 2.6.2.6.2. Bounded Context Database Design Diagram
 
 **Monitoring & Adherence**
 
