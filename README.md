@@ -84,8 +84,6 @@ AV1:<br>
 
 ## CONTENIDO
 
-# CONTENIDO
-
 [STUDENT OUTCOME](report/01-student-outcome.md)
 
 [OBJETIVOS SMART](report/02-smart-objetives.md)
