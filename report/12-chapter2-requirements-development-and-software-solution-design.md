@@ -3301,7 +3301,7 @@ Component:
 
 #### 2.6.3.6. Bounded Context Software Architecture Code Level Diagrams
 
-#### 2.6.3.6.1. Bounded Context Domain Layer Class Diagrams
+##### 2.6.3.6.1. Bounded Context Domain Layer Class Diagrams
 
 **Care Relationship**
 
@@ -3321,7 +3321,7 @@ Interfaces:
 
 ![Care Relationship Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/care-relationship/interfaces.puml)
 
-#### 2.6.3.6.2. Bounded Context Database Design Diagram
+##### 2.6.3.6.2. Bounded Context Database Design Diagram
 
 **Care Relationship**
 
