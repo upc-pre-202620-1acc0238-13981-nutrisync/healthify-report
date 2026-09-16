@@ -12,37 +12,36 @@
 
 Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para cada segmento objetivo. Se organizaron en bloques temáticos que van del perfil del entrevistado a su proceso actual y a la reacción frente a las hipótesis de la solución. El entrevistador podía cambiar el orden o reformular preguntas según el curso de la conversación, pero siempre con preguntas abiertas y pidiendo casos concretos en lugar de opiniones generales. Así se buscó reducir el sesgo de respuesta y obtener evidencia de comportamientos reales.
 
-#### Segmento 1 — Nutricionista ( - años)
+#### Segmento 1 — Nutricionista (28 – 55 años)
 
-**Bloque 1: Apertura**
+**Bloque 1: Perfil profesional**
 
-1. Cuéntame tu edad, dónde atiendes y cuántos años llevas ejerciendo. ¿Independiente, en clínica o en centro de salud?
-2. ¿Cuántos pacientes activos manejas hoy y cómo cobras: por consulta suelta o por paquete de seguimiento?
+1. Cuéntame tu edad, dónde atiendes y cuántos años llevas ejerciendo. ¿Trabajas de forma independiente, en una clínica o en un centro de salud?
+2. ¿Cuántos pacientes activos manejas hoy? ¿Cobras por consulta suelta o por paquete de seguimiento?
 
-**Bloque 2: Proceso**
+**Bloque 2: Proceso de atención**
 
 3. Llévame por lo que pasa desde que llega un paciente nuevo que quiere bajar de peso hasta que le entregas su plan.
-4. Y cada cosa que me contaste, ¿dónde queda guardada? Los datos de la evaluación, los análisis de laboratorio, los antecedentes, los ajustes que le mandas después.
+4. Todo lo que me contaste (datos de evaluación, análisis, antecedentes, ajustes posteriores), ¿dónde queda guardado?
 
-**Bloque 3: El vacío entre consultas**
+**Bloque 3: El periodo entre consultas**
 
-5. Cuando el paciente vuelve a las dos semanas, ¿cómo sabes qué comió en ese tiempo? ¿Cuánto de la consulta se te va reconstruyendo eso?
+5. Cuando el paciente vuelve a las dos semanas, ¿cómo sabes qué comió en ese tiempo? ¿Cuánto de la consulta se te va en reconstruirlo?
 6. ¿Te ha pasado sospechar que un paciente no te está contando todo lo que come? Cuéntame de la última vez. ¿Cómo te diste cuenta?
 7. ¿Qué haces cuando alguien no progresa y no encuentras la razón?
 
-**Bloque 4: Herramientas**
+**Bloque 4: Herramientas actuales**
 
-8. ¿Qué usas hoy para todo esto: software, Excel, papel, WhatsApp? ¿Qué es lo que más te cuesta de trabajar así? ¿Conoces Nutrimind o algún otro?
+8. ¿Qué usas hoy para todo esto (software, Excel, papel, WhatsApp)? ¿Qué es lo que más te cuesta de trabajar así?
 
-**Bloque 5: Riesgo del producto**
+**Bloque 5: Validación de hipótesis**
 
-9. Si tu paciente registrara sus comidas con una foto y el sistema propusiera una estimación, ¿tú la corregirías antes de que entre al expediente, o preferirías directamente no tener ese dato?
-10. Si el sistema te avisara que lo que un paciente registra no cuadra con cómo se está moviendo su peso, ¿te sirve o eso ya lo intuyes solo?
+9. Si tu paciente registrara sus comidas con una foto y el sistema propusiera una estimación, ¿la revisarías antes de que entre al expediente o preferirías no tener ese dato?
+10. Si el sistema te avisara que lo que un paciente registra no cuadra con cómo evoluciona su peso, ¿te serviría o eso ya lo intuyes por tu cuenta?
 
 **Bloque 6: Cierre**
 
 11. Si pudieras cambiar una sola cosa de cómo haces el seguimiento hoy, ¿cuál sería?
-12. 
 
 #### Segmento 2 — Paciente en tratamiento nutricional activo ( - años)
 
