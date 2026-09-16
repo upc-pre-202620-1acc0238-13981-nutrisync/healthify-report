@@ -1,57 +1,44 @@
-<div align="center">
+<p align="center"><img src="assets/img/logoUPC.png" alt="Logo UPC" width="65"></p>
 
-![Logo UPC](assets/img/logoUPC.png)
+<p align="center"><strong>Universidad Peruana de Ciencias Aplicadas</strong></p>
+<p align="center"><strong>Carrera de Ingeniería de Software</strong></p>
 
-# Universidad Peruana de Ciencias Aplicadas
+<br>
 
-## Carrera de Ingeniería de Software
+<p align="center"><strong>1ACC0238</strong></p>
+<p align="center"><strong>Aplicaciones para Dispositivos Móviles</strong></p>
+<p align="center">NRC</p>
+<p align="center"><strong>13981</strong></p>
 
-### 1ACC0238
+<h2 align="center">Informe del Avance 1</h2>
 
-### Aplicaciones para Dispositivos Móviles
+<p align="center">Docente</p>
+<p align="center"><strong>Mayta Guillermo, Jorge Luis</strong></p>
 
-**NRC**
+<br>
 
-13981
+<p align="center">Equipo</p>
+<p align="center"><strong>NutriSync</strong></p>
+<p align="center">Proyecto</p>
+<p align="center"><strong>Healthify</strong></p>
 
-**Informe del Avance 1**
+<br>
 
-**Docente**
-
-Mayta Guillermo, Jorge Luis
-
-**Startup**
-
-NutriSync
-
-**Producto**
-
-Healthify
-
-**Integrantes**
+<p align="center"><strong>Integrantes</strong></p>
 
 <table align="center">
-  <thead>
-    <tr>
-      <th>Código</th>
-      <th>Apellidos y Nombres</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr><td>U202411669</td><td>Del Aguila Del Aguila, Olenka Priscilla</td></tr>
-    <tr><td>U202415495</td><td>Espinoza Cruz, Angela Milagros</td></tr>
-    <tr><td>U20241B227</td><td>Mora Rivera, Joel Fernando</td></tr>
-    <tr><td>U20241D159</td><td>Vergaray Calderon, Rose Almendra</td></tr>
-    <tr><td>U202417857</td><td>Villarreal Bazan, Angel Martin</td></tr>
-  </tbody>
+  <tr><th>Código</th><th>Apellidos y nombres</th></tr>
+  <tr><td>U202411669</td><td>Del Aguila Del Aguila, Olenka Priscilla</td></tr>
+  <tr><td>U202415495</td><td>Espinoza Cruz, Angela Milagros</td></tr>
+  <tr><td>U20241B227</td><td>Mora Rivera, Joel Fernando</td></tr>
+  <tr><td>U20241D159</td><td>Vergaray Calderon, Rose Almendra</td></tr>
+  <tr><td>U202417857</td><td>Villarreal Bazan, Angel Martin</td></tr>
 </table>
 
+<br>
 
-**Período 202620**
-
-Septiembre, 2026
-
-</div>
+<p align="center"><strong>Período 202620</strong></p>
+<p align="center"><strong>Septiembre 2026</strong></p>
 
 <div style="page-break-after: always"></div>
 
