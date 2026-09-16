@@ -56,7 +56,7 @@
 | 0.9.0 | 09/09/2026 – 11/09/2026 | Todos los integrantes | Strategic-level DDD: Big Picture y Design Level EventStorming, ubiquitous language, candidate context discovery, domain message flows, bounded context canvases y context mapping (`feature/chapter2-bounded-context`) |
 | 0.10.0 | 12/09/2026 | Todos los integrantes | Integración de ramas a `develop` (PR #3–#7); entradas de los bounded contexts en la tabla de contenidos del README |
 | 0.11.0 | 13/09/2026 | Todos los integrantes | Acciones y conclusiones ABET 7.c.1 y 7.c.2; objetivos SMART de cada integrante; adición de las entrevistas |
-| 1.0.0 | 13/09/2026 | Angel Villarreal | AV1 Report |
+| 1.0.0 | 16/09/2026 | Angel Villarreal | AV1 Report |
 
 <div style="page-break-after: always"></div>
 
