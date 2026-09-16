@@ -12,7 +12,7 @@
 
 Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para cada segmento objetivo. Se organizaron en bloques temáticos que van del perfil del entrevistado a su proceso actual y a la reacción frente a las hipótesis de la solución. El entrevistador podía cambiar el orden o reformular preguntas según el curso de la conversación, pero siempre con preguntas abiertas y pidiendo casos concretos en lugar de opiniones generales. Así se buscó reducir el sesgo de respuesta y obtener evidencia de comportamientos reales.
 
-#### Segmento 1 — Nutricionista (28 – 55 años)
+#### Segmento 1 - Nutricionista (28 - 55 años)
 
 **Bloque 1: Perfil profesional**
 
@@ -43,7 +43,7 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 
 11. Si pudieras cambiar una sola cosa de cómo haces el seguimiento hoy, ¿cuál sería?
 
-#### Segmento 2 — Paciente en tratamiento nutricional activo (18 – 59 años)
+#### Segmento 2 - Paciente en tratamiento nutricional activo (18 - 59 años)
 
 **Bloque 1: Perfil y antecedentes**
 
@@ -90,7 +90,7 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 | Distrito | Barranca, Lima |
 | Ocupación | Nutricionista (Centro de Salud La Rama y atención en clínicas) |
 | Entrevistador | Angel Villarreal |
-| Timing | 0:03 – 5:22 |
+| Timing | 0:03 - 5:22 |
 | Duración | 5:19 minutos |
 | URL | [Video entrevista](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQD9NblIA-faSrv30-7eGre8ATug1LRzIfWImsD2kLDoWS8?e=tHYgYe&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6My4yN319) |
 | Screenshot | ![Entrevista 1 Seg1](../assets/img/chapter2/interviews/Entrevista1-seg1.png) |
@@ -105,7 +105,7 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 | Distrito | Iquitos, Loreto |
 | Ocupación | Nutricionista (Hospital Regional de Loreto y consulta particular) |
 | Entrevistador | Olenka Del Aguila |
-| Timing | 5:23 – 10:40 |
+| Timing | 5:23 - 10:40 |
 | Duración | 5:17 minutos |
 | URL | [Video entrevista](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQD9NblIA-faSrv30-7eGre8ATug1LRzIfWImsD2kLDoWS8?e=qVeikN&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6MzIzLjQ4fX0%3D) |
 | Screenshot | ![Entrevista 2 Seg1](../assets/img/chapter2/interviews/Entrevista2-seg1.png) |
@@ -120,7 +120,7 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 | Distrito | Iquitos, Loreto |
 | Ocupación | Docente universitaria |
 | Entrevistador | Olenka Del Aguila |
-| Timing | 10:44 – 16:16 |
+| Timing | 10:44 - 16:16 |
 | Duración | 5:32 minutos |
 | URL | [Video entrevista](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQD9NblIA-faSrv30-7eGre8ATug1LRzIfWImsD2kLDoWS8?e=dXk5ZP&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6NjQ0LjUzfX0%3D) |
 | Screenshot | ![Entrevista 1 Seg2](../assets/img/chapter2/interviews/Entrevista1-seg2.png) |
@@ -135,7 +135,7 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 | Distrito | San Miguel, Lima |
 | Ocupación | Estudiante de Administración y Marketing (UPC) |
 | Entrevistador | Olenka Del Aguila |
-| Timing | 16:17 – 21:29 |
+| Timing | 16:17 - 21:29 |
 | Duración | 5:12 minutos |
 | URL | [Video entrevista](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQD9NblIA-faSrv30-7eGre8ATug1LRzIfWImsD2kLDoWS8?e=nqCrYT&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6OTc3LjExfX0%3D) |
 | Screenshot | ![Entrevista 2 Seg2](../assets/img/chapter2/interviews/Entrevista2-seg2.png) |
