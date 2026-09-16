@@ -2302,17 +2302,17 @@ Enlace del Event-Storming: [https://miro.com/welcomeonboard/MU44Nlk4L2dlOVFveWtD
 
 ![Design Level EventStorming - Tablero completo](../assets/img/artifacts/event-storming/design-level-eventstorming-completo.png)
 
-El modelo resultante quedó organizado en treinta y seis subflujos distribuidos en seis contextos, con cincuenta y cinco comandos, dieciocho agregados, ciento veinticinco reglas de negocio, sesenta y cuatro eventos de dominio y treinta y una políticas.
+El modelo resultante quedó organizado en treinta y seis subflujos distribuidos en seis contextos, con cincuenta y cinco comandos, dieciocho agregados, ciento veinticinco reglas de negocio, sesenta y cuatro eventos de dominio y treinta políticas.
 
 | Bounded context | Agregados | Comandos | Reglas | Eventos | Políticas |
 |---|---|---:|---:|---:|---:|
 | `Identity & Access Management (IAM)` | 2 | 4 | 9 | 5 | 1 |
 | `Care Relationship` | 2 | 10 | 19 | 10 | 4 |
 | `Nutritional Care` | 4 | 11 | 28 | 13 | 4 |
-| `Intake & Body Response` | 4 | 10 | 28 | 12 | 4 |
+| `Intake & Body Response` | 4 | 10 | 28 | 12 | 3 |
 | `Monitoring & Adherence` | 5 | 16 | 33 | 18 | 16 |
 | `Food Catalog` | 1 | 4 | 8 | 6 | 2 |
-| **Total** | **18** | **55** | **125** | **64** | **31** |
+| **Total** | **18** | **55** | **125** | **64** | **30** |
 
 ![Design Level EventStorming - Detalle de un subflujo](../assets/img/artifacts/event-storming/design-level-eventstorming-detalle-subflujo.png)
 
@@ -2353,7 +2353,7 @@ La sesión también descartó explícitamente siete contextos candidatos, decisi
 
 | Candidato descartado | Razón del descarte |
 |---|---|
-| `Patient Record` | Es un read model compuesto que une tres contextos y se publica vía BFF; confundir una vista con un contexto es uno de los errores más frecuentes en DDD |
+| `Patient Record` | Es un read model compuesto que une tres contextos y se compone en el módulo `ReadModels` de la API; confundir una vista con un contexto es uno de los errores más frecuentes en DDD |
 | `Assessment` como contexto propio | Acoplamiento máximo con diagnóstico e intervención y ninguna ambigüedad lingüística en la frontera |
 | `Portion Estimation / AI` | Es una capacidad técnica, no un lenguaje distinto; vive dentro de `Intake & Body Response` |
 | `Target Calculation` | Es aritmética determinista con parámetros elegidos por un humano; son reglas del agregado `Nutrition Plan` |
@@ -2395,7 +2395,7 @@ Los canvases se elaboraron en el orden de importancia estratégica de cada conte
 
 ![Intake & Body Response Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/intake-body-response.puml)
 
-**`Monitoring & Adherence` (Core).** Su propósito es comparar lo prescrito contra lo realmente registrado e interpretar la diferencia. Es el contexto que concentra dieciséis de las treinta y una políticas del modelo, lo que confirma su naturaleza reactiva: casi nadie lo invoca directamente, sino que actúa a partir de lo que ocurre en los demás contextos. Sus reglas más características son que ningún día se evalúa contra metas distintas de las vigentes ese día, que una ventana menor a siete días nunca produce desviación, y que el vacío de registro se excluye del cálculo de desviación y nunca escala al profesional.
+**`Monitoring & Adherence` (Core).** Su propósito es comparar lo prescrito contra lo realmente registrado e interpretar la diferencia. Es el contexto que concentra dieciséis de las treinta políticas del modelo, lo que confirma su naturaleza reactiva: casi nadie lo invoca directamente, sino que actúa a partir de lo que ocurre en los demás contextos. Sus reglas más características son que ningún día se evalúa contra metas distintas de las vigentes ese día, que una ventana menor a siete días nunca produce desviación, y que el vacío de registro se excluye del cálculo de desviación y nunca escala al profesional.
 
 ![Monitoring & Adherence Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/monitoring-adherence.puml)
 
@@ -2419,7 +2419,7 @@ Los canvases se elaboraron en el orden de importancia estratégica de cada conte
 
 Esta sección documenta la elaboración del Context Map, que representa las relaciones estructurales entre los seis bounded contexts. El equipo revisó la información recolectada en los canvases y, antes de fijar el mapa, evaluó explícitamente cuatro alternativas mediante las preguntas propias de la técnica: si convenía redistribuir capabilities entre contextos, si alguno debía dividirse, si alguna capability debía duplicarse y si hacía falta crear servicios compartidos.
 
-De esa discusión surgieron cuatro decisiones. La primera fue no trasladar el cálculo del índice de consistencia a `Intake & Body Response` pese a que allí están sus dos insumos, porque si el contexto que registra también juzga, el registro deja de ser un lugar seguro para declarar y se incentiva exactamente la omisión selectiva que el producto busca eliminar. La segunda fue mantener la tendencia de peso dentro de `Intake & Body Response`, porque es un suavizado de los datos del propio paciente que no necesita el plan y debe estar disponible sin conexión, a diferencia de la desviación y del índice, que sí requieren el plan y umbrales de interpretación. La tercera fue no crear un contexto compartido de expediente, ya que `Patient Record` es un read model compuesto que se publica vía BFF. La cuarta fue reducir el shared kernel al mínimo deliberado: únicamente los identificadores `PatientId`, `PractitionerId`, `CareLinkId` y `PlanId`, y las unidades de medida, bajo el criterio de que un shared kernel grande es un bounded context que no se llegó a dibujar.
+De esa discusión surgieron cuatro decisiones. La primera fue no trasladar el cálculo del índice de consistencia a `Intake & Body Response` pese a que allí están sus dos insumos, porque si el contexto que registra también juzga, el registro deja de ser un lugar seguro para declarar y se incentiva exactamente la omisión selectiva que el producto busca eliminar. La segunda fue mantener la tendencia de peso dentro de `Intake & Body Response`, porque es un suavizado de los datos del propio paciente que no necesita el plan y debe estar disponible sin conexión, a diferencia de la desviación y del índice, que sí requieren el plan y umbrales de interpretación. La tercera fue no crear un contexto compartido de expediente, ya que `Patient Record` es un read model compuesto que se arma en el módulo `ReadModels` de la API a partir de las fachadas ACL de los contextos involucrados. La cuarta fue reducir el shared kernel al mínimo deliberado: únicamente los identificadores `PatientId`, `PractitionerId`, `CareLinkId` y `PlanId`, y las unidades de medida, bajo el criterio de que un shared kernel grande es un bounded context que no se llegó a dibujar.
 
 ![Context Map de Healthify](../assets/img/artifacts/context-map.png)
 
@@ -2430,7 +2430,7 @@ Los patrones de relación seleccionados para cada integración son los siguiente
 | Relación | Patrón | Justificación |
 |---|---|---|
 | `IAM` → `Care Relationship` | Conformist | El claim de rol viaja en el token de sesión: es infraestructura y no dominio. `Care Relationship` lo adopta tal cual para hacer cumplir la asimetría entre profesional y paciente |
-| `IAM` → `Nutritional Care` | Conformist | Los comandos clínicos exigen el rol de profesional, que se toma sin traducción del token JWT emitido por `IAM`. Los contextos del paciente no dependen del rol directamente, sino del vínculo que resuelve `Care Relationship` |
+| `IAM` → `Nutritional Care` | Conformist | Los comandos clínicos exigen el rol de profesional, que se toma sin traducción del token JWT emitido por `IAM`. Todos los contextos leen el mismo claim de rol del token para autorizar sus endpoints; lo que distingue a los contextos del paciente es que, además del rol, dependen del vínculo que resuelve `Care Relationship` para decidir quién puede ver sus datos |
 | `Care Relationship` → `Nutritional Care` | Open Host Service | Publica una sola pregunta, `Is Care Link Active`, que `Nutritional Care` consulta antes de evaluar, diagnosticar o prescribir sobre un paciente |
 | `Care Relationship` → `Intake & Body Response` | Open Host Service | La misma pregunta determina si lo que registra el paciente puede ser leído por un profesional a través del read model |
 | `Care Relationship` → `Monitoring & Adherence` | Open Host Service + eventos | Además de consultar el vínculo, `Monitoring` reacciona a `Care Link Established` abriendo la ventana de evaluación, y deja de evaluar cuando el consentimiento se revoca |
@@ -2444,7 +2444,7 @@ Los patrones de relación seleccionados para cada integración son los siguiente
 
 Dos rasgos del mapa merecen destacarse. El primero es que `Care Relationship` es el único contexto que aparece como upstream de los tres contextos que manejan información del paciente, lo que refleja que el vínculo consentido es condición previa de todo lo demás. El segundo es que el único ciclo aparente, entre `Nutritional Care` y `Monitoring & Adherence`, no es un ciclo de dependencia: en un sentido viajan las metas vigentes y en el otro solo una señal punteada que termina en la bandeja del profesional, de manera que ninguno de los dos contextos puede modificar el estado del otro.
 
-El mapa resultante contiene trece integraciones por evento originadas en nueve eventos distintos, sobre un total de sesenta y cuatro eventos del modelo. Que el ochenta y seis por ciento del comportamiento permanezca dentro de un solo contexto es la señal que el equipo tomó como confirmación de que las fronteras están bien trazadas; si durante la implementación apareciera la necesidad de un décimo evento de integración, sería indicio de que alguna frontera está filtrando responsabilidades.
+El mapa resultante contiene trece integraciones por evento originadas en once eventos distintos, sobre un total de sesenta y cuatro eventos del modelo. Que cerca del ochenta y tres por ciento de los eventos permanezca dentro de un solo contexto es la señal que el equipo tomó como confirmación de que las fronteras están bien trazadas; si durante la implementación apareciera la necesidad de un duodécimo evento de integración, sería indicio de que alguna frontera está filtrando responsabilidades.
 
 ### 2.5.3. Software Architecture
 
