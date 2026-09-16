@@ -3280,11 +3280,11 @@ Database:
 
 #### 2.6.3.1. Domain Layer
 
-**Care Relationship** (`Healthify.Platform.CareRelationship`) gobierna la relación consentida entre paciente y profesional y es la **única fuente de verdad sobre quién puede ver a quién**. Aquí se hace cumplir técnicamente, y no por convención, el principio de asimetría de la plataforma. Su Domain Layer declara dos aggregate roots, cinco value objects y diez eventos de dominio, de los cuales sólo dos cruzan frontera.
+**Care Relationship** (`Healthify.Platform.CareRelationship`) gobierna la relación consentida entre paciente y profesional y es la única fuente de verdad sobre quién puede ver a quién. Aquí se hace cumplir técnicamente, y no por convención, el principio de asimetría de la plataforma. Su Domain Layer declara dos aggregate roots, cinco value objects y diez eventos de dominio, de los cuales sólo dos cruzan frontera.
 
 **Aggregates (Aggregate Roots)**
 
-**`Invitation`** — El token de un solo uso que el profesional muestra como código QR durante la consulta. Es la única puerta de entrada del paciente a la plataforma: registrarse no otorga acceso a nada.
+**`Invitation`** — El token de un solo uso que el profesional muestra como código QR durante la consulta. Es el único medio por el que un paciente se vincula a un profesional; crear una cuenta no otorga acceso a ninguna información.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -3293,7 +3293,7 @@ Database:
 | `Token` | `InvitationToken` | `public get / private set` | Secreto opaco generado criptográficamente. |
 | `ExpiresAt` | `DateTimeOffset` | `public get / private set` | Fecha en que deja de ser canjeable. |
 | `RedeemedAt` | `DateTimeOffset?` | `public get / private set` | Momento del canje. |
-| `ExpiredAt` | `DateTimeOffset?` | `public get / private set` | Momento en que la política de expiración la retiró; **distinto de `ExpiresAt`**. |
+| `ExpiredAt` | `DateTimeOffset?` | `public get / private set` | Momento en que la política de expiración la retiró; distinto de `ExpiresAt`. |
 | `IsRedeemed` / `IsExpired` | `bool` | `public` (computadas) | Derivadas de las dos fechas anteriores. |
 
 | Método | Scope | Reglas que aplica |
@@ -3303,7 +3303,7 @@ Database:
 | `Redeem(DateTimeOffset)` | `public` | *Invitation Must Be Unused*, *Invitation Must Be Valid*. |
 | `Expire(DateTimeOffset)` | `public` | *Redeemed Invitation Cannot Expire*. Si ya está expirada es un no-op, lo que hace idempotente la política temporal. |
 
-**`CareLink`** — La relación consentida paciente–profesional. El consentimiento se **almacena como cuatro columnas y se reconstruye como value object** mediante la propiedad calculada `Consent`, porque un *owned type* nullable es frágil en EF Core y el consentimiento está genuinamente ausente entre establecer el vínculo y que el paciente lo otorgue.
+**`CareLink`** — La relación consentida paciente–profesional. El consentimiento se almacena como cuatro columnas y se reconstruye como value object mediante la propiedad calculada `Consent`, porque un *owned type* nullable es frágil en EF Core y el consentimiento está genuinamente ausente entre establecer el vínculo y que el paciente lo otorgue.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -3314,47 +3314,47 @@ Database:
 | `PendingTargetsVersion`, `LastAcknowledgedVersion` | `int?` | `public get / private set` | Versión pendiente de acuse y última acusada. |
 | `ConsentGranted`, `ConsentScope`, `ConsentGrantedAt`, `ConsentWithdrawnAt` | proyección | `public get / private set` | Proyección persistida del VO `Consent`. |
 | `Consent` | `Consent?` | `public` (computada) | Reconstruido desde las cuatro columnas. |
-| `IsActive` | `bool` | `public` (computada) | Consentimiento vivo, sin revocar y sin alta. **Ésta es la respuesta que el Open Host Service da a Nutritional Care, Intake & Body Response, Monitoring & Adherence y a la capa de read models compuestos.** |
+| `IsActive` | `bool` | `public` (computada) | Consentimiento vigente, sin revocar y sin alta. Es el valor que el Open Host Service devuelve a Nutritional Care, Intake & Body Response, Monitoring & Adherence y a la capa de read models compuestos. |
 | `IsRevoked` / `IsDischarged` | `bool` | `public` (computadas) | Estados de cierre. |
 
 | Método | Scope | Reglas que aplica |
 |---|---|---|
 | `CareLink(EstablishCareLinkCommand)` | `public` | *Patient Cannot Self Link*, *Link Starts Inactive Until Consent*. |
 | `GrantConsent(GrantConsentCommand)` | `public` | *Discharged Link Never Reactivated*, *Consent Scope Recorded*; rechaza el doble consentimiento. |
-| `WithdrawConsent()` | `public` | *Consent Always Revocable*, *No Justification Required*. **Deliberadamente no recibe argumento de motivo.** |
+| `WithdrawConsent()` | `public` | *Consent Always Revocable*, *No Justification Required*. Deliberadamente no recibe argumento de motivo. |
 | `Revoke()` | `public` | *Revoked Link Kept With Revocation Date*: la fila nunca se borra. |
 | `Discharge(ClinicalReason)` | `public` | *Clinical Reason Required*, *Discharged Link Never Reactivated*. |
 | `MarkTargetsPending(int)` | `public` | *One Pending Version At A Time*: una publicación más nueva reemplaza a la pendiente, no se encola. |
 | `AcknowledgeActiveTargets(int)` | `public` | *Acknowledgement Does Not Change The Plan*: sólo mueve `LastAcknowledgedVersion` y limpia la pendiente. |
 
-La asimetría está documentada en los propios métodos: **el profesional explica el alta; el paciente nunca explica su retiro**.
+Los métodos reflejan la asimetría entre roles: el alta exige una razón clínica del profesional, mientras que el retiro del consentimiento no exige justificación del paciente.
 
 **Value Objects**
 
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
-| `Consent` | El permiso que el paciente da y puede retirar en cualquier momento sin explicar por qué. | `IsGranted`, `Scope` (máx. 200), `GrantedAt`, `WithdrawnAt?`. `Withdraw(DateTimeOffset)` devuelve una **nueva instancia**, preservando la inmutabilidad. |
+| `Consent` | El permiso que el paciente da y puede retirar en cualquier momento sin explicar por qué. | `IsGranted`, `Scope` (máx. 200), `GrantedAt`, `WithdrawnAt?`. `Withdraw(DateTimeOffset)` devuelve una nueva instancia, preservando la inmutabilidad. |
 | `ClinicalReason` | Justificación clínica registrada al dar de alta. | `Value : string`, máximo 500; rechaza vacío. |
 | `InvitationToken` | Secreto opaco de un solo uso del QR. | 32 bytes de `RandomNumberGenerator`, codificados en Base64 URL-safe; sólo acepta `[A-Za-z0-9-_]`; factory `Generate()`. |
 | `CareLinkId`, `InvitationId` | Identidades tipadas. | `Value : int > 0`, `internal static FromRaw(int)`, operadores de conversión. |
 
-**Commands (10)** — `IssueInvitationCommand`, `ExpireInvitationCommand`, `RedeemInvitationCommand`, `EstablishCareLinkCommand`, `GrantConsentCommand`, `MarkTargetsPendingAcknowledgementCommand`, `AcknowledgeActiveTargetsCommand`, `WithdrawConsentCommand`, `RevokeCareLinkCommand` y `DischargePatientCommand`. Cuatro de ellos **no tienen endpoint**: son emitidos exclusivamente por políticas.
+**Commands (10)** — `IssueInvitationCommand`, `ExpireInvitationCommand`, `RedeemInvitationCommand`, `EstablishCareLinkCommand`, `GrantConsentCommand`, `MarkTargetsPendingAcknowledgementCommand`, `AcknowledgeActiveTargetsCommand`, `WithdrawConsentCommand`, `RevokeCareLinkCommand` y `DischargePatientCommand`. Cuatro de ellos no tienen endpoint: son emitidos exclusivamente por políticas.
 
 **Queries (6)** — `GetInvitationByIdQuery`, `GetInvitationByTokenQuery`, `GetExpirableInvitationsQuery`, `GetCareLinkByIdQuery`, `GetActiveCareLinkByPatientIdQuery` (que respalda el Open Host Service) y `GetCareLinksByPractitionerIdQuery`.
 
-**Domain Events (10)** — Todos heredan de `DomainEventBase`. Sólo dos cruzan frontera, ambos hacia Monitoring & Adherence: **`CareLinkEstablished`**, que abre la ventana de evaluación, y **`CareLinkRevoked`**, que la cierra. `ConsentGranted` es interno **a propósito**: preguntar si un vínculo está activo no es reaccionar a un hecho pasado, y por eso Care Link Status se consulta de forma síncrona por el OHS. Los restantes —`InvitationIssued`, `InvitationExpired`, `InvitationRedeemed`, `ConsentWithdrawn`, `TreatmentDischarged`, `TargetsPendingAcknowledgement` y `ActiveTargetsAcknowledged`— son internos.
+**Domain Events (10)** — Todos heredan de `DomainEventBase`. Sólo dos cruzan frontera, ambos hacia Monitoring & Adherence: `CareLinkEstablished`, que abre la ventana de evaluación, y `CareLinkRevoked`, que la cierra. `ConsentGranted` es interno a propósito: preguntar si un vínculo está activo no es reaccionar a un hecho pasado, y por eso Care Link Status se consulta de forma síncrona por el OHS. Los restantes —`InvitationIssued`, `InvitationExpired`, `InvitationRedeemed`, `ConsentWithdrawn`, `TreatmentDischarged`, `TargetsPendingAcknowledgement` y `ActiveTargetsAcknowledged`— son internos.
 
 **Errors** — `enum CareRelationshipError` con 21 valores, entre ellos `PatientCannotSelfLink`, `PatientAlreadyHasActiveLink`, `ConsentScopeRequired`, `DischargedLinkCannotBeReactivated` y `AcknowledgedVersionNewerThanActive`.
 
 **Repositories (abstracciones)** — `IInvitationRepository` (con `FindByTokenAsync` y `ListExpirableAsync`) e `ICareLinkRepository` (con `FindActiveByPatientIdAsync`, `ExistsUnclosedByPatientIdAsync`, `FindUnclosedByPatientIdAsync` y `ListByPractitionerIdAsync`). La distinción semántica es clave: *active* significa con consentimiento vivo y sin cerrar; *unclosed* significa que ocupa el único cupo del paciente, con o sin consentimiento todavía.
 
-**Domain Services** — Este bounded context **no declara interfaces de domain service propias**; consume el ACL de IAM (`IIamContextFacade`) desde la capa de aplicación.
+**Domain Services** — Este bounded context no declara interfaces de domain service propias; consume el ACL de IAM (`IIamContextFacade`) desde la capa de aplicación.
 
-**Relaciones entre clases:** `Invitation` compone `InvitationId` e `InvitationToken`. `CareLink` compone `CareLinkId`, agrega de forma reconstruida 0..1 `Consent` y depende de `ClinicalReason` como parámetro de `Discharge`. Entre `Invitation` y `CareLink` existe una asociación **por identificador y a través de una política** (1 → 0..1, `redeemedInto`): no hay navegación EF ni columna `invitation_id` en el vínculo. Ambas raíces realizan `IAuditableEntity`, y los diez eventos generalizan `DomainEventBase`, que a su vez realiza `IEvent`.
+**Relaciones entre clases:** `Invitation` compone `InvitationId` e `InvitationToken`. `CareLink` compone `CareLinkId`, agrega de forma reconstruida 0..1 `Consent` y depende de `ClinicalReason` como parámetro de `Discharge`. Entre `Invitation` y `CareLink` existe una asociación por identificador y a través de una política (1 → 0..1, `redeemedInto`): no hay navegación EF ni columna `invitation_id` en el vínculo. Ambas raíces realizan `IAuditableEntity`, y los diez eventos generalizan `DomainEventBase`, que a su vez realiza `IEvent`.
 
 #### 2.6.3.2. Interface Layer
 
-La Interface Layer de Care Relationship expone cuatro controllers y, sobre todo, publica el **Open Host Service** de la plataforma: el contrato por el que los tres bounded contexts que manejan información del paciente (Nutritional Care, Intake & Body Response y Monitoring & Adherence), junto con la capa de read models compuestos, preguntan si un vínculo está activo antes de servir nada.
+La Interface Layer de Care Relationship expone cuatro controllers y, sobre todo, publica el Open Host Service de la plataforma: el contrato por el que los tres bounded contexts que manejan información del paciente (Nutritional Care, Intake & Body Response y Monitoring & Adherence), junto con la capa de read models compuestos, preguntan si un vínculo está activo antes de servir nada.
 
 **Controllers**
 
@@ -3366,7 +3366,7 @@ La Interface Layer de Care Relationship expone cuatro controllers y, sobre todo,
 | `GET /api/v1/invitations/{invitationId:int}` | `GetInvitationById(int)` | Sólo el emisor | Invitation Status | 200 · 401 · 403 · 404 |
 | `POST /api/v1/invitations/redemption` | `RedeemInvitation(RedeemInvitationResource)` | `Patient` | — | 201 `CareLinkResource` · 400 · 401 · 403 · 404 · 409 · 422 |
 
-El token **sólo viaja en la respuesta que crea la invitación**; toda lectura posterior lo reporta como `null`.
+El token sólo viaja en la respuesta que crea la invitación; toda lectura posterior lo reporta como `null`.
 
 **`CareLinksController`** — `[Route("api/v1/care-links")] [Authorize] [Tags("Care Links")]`.
 
@@ -3379,15 +3379,15 @@ El token **sólo viaja en la respuesta que crea la invitación**; toda lectura p
 | `POST /{careLinkId:int}/targets-acknowledgement` | `AcknowledgeActiveTargets` | `Patient` | 200 · 401 · 403 · 404 · 422 |
 | `POST /{careLinkId:int}/discharge` | `DischargePatient` | `Practitioner` | 200 · 400 · 401 · 403 · 404 · 409 |
 
-**`Revoke Care Link` no tiene endpoint a propósito**: es una política interna disparada por `ConsentWithdrawn`, nunca una decisión separada.
+`Revoke Care Link` no tiene endpoint: se ejecuta mediante una política interna disparada por `ConsentWithdrawn`.
 
-**`PatientCareLinksController`** — `[Route("api/v1/patients")] [Authorize]`. Expone `GET /{patientId:int}/care-links/active` (`GetActiveCareLink(int)`), que sirve el read model **Care Link Status**: la pregunta que los contextos que manejan información del paciente hacen antes de servir nada.
+**`PatientCareLinksController`** — `[Route("api/v1/patients")] [Authorize]`. Expone `GET /{patientId:int}/care-links/active` (`GetActiveCareLink(int)`), que sirve el read model Care Link Status: la pregunta que los contextos que manejan información del paciente hacen antes de servir nada.
 
-**`PractitionerPatientsController`** — `[Route("api/v1/practitioners")] [Authorize(Roles = "Practitioner")]`. Expone `GET /{practitionerId:int}/patients` (`GetPatientsByPractitionerId(int)`), read model **Practitioner Patient List**, que **incluye vínculos revocados y dados de alta**: el roster es un historial.
+**`PractitionerPatientsController`** — `[Route("api/v1/practitioners")] [Authorize(Roles = "Practitioner")]`. Expone `GET /{practitionerId:int}/patients` (`GetPatientsByPractitionerId(int)`), read model Practitioner Patient List, que incluye vínculos revocados y dados de alta para conservar el historial.
 
 **Resources** — `IssueInvitationResource`, `RedeemInvitationResource`, `InvitationResource` (con `Token?` y un `Status` derivado: `Pending`, `Redeemed` o `Expired`), `GrantConsentResource`, `DischargePatientResource`, `AcknowledgeActiveTargetsResource`, `CareLinkResource` y `TargetsReadStatusResource`.
 
-**Transform / Assemblers** — Los command assemblers son `IssueInvitationCommandAssembler`, `RedeemInvitationCommandAssembler` (el `patientId` sale del token, nunca del payload), `GrantConsentCommandAssembler`, `WithdrawConsentCommandAssembler` (que **no acepta motivo**), `AcknowledgeActiveTargetsCommandAssembler` y `DischargePatientCommandAssembler`. Entre los resource assemblers destaca `InvitationResourceAssembler`, con dos métodos deliberadamente distintos: `ToResource(...)`, **sin token**, y `ToResourceWithToken(...)`, usado sólo en la respuesta de creación; su método privado `Build` deriva el `Status`.
+**Transform / Assemblers** — Los command assemblers son `IssueInvitationCommandAssembler`, `RedeemInvitationCommandAssembler` (el `patientId` sale del token, nunca del payload), `GrantConsentCommandAssembler`, `WithdrawConsentCommandAssembler` (que no acepta motivo), `AcknowledgeActiveTargetsCommandAssembler` y `DischargePatientCommandAssembler`. Entre los resource assemblers destaca `InvitationResourceAssembler`, con dos métodos deliberadamente distintos: `ToResource(...)`, sin token, y `ToResourceWithToken(...)`, usado sólo en la respuesta de creación; su método privado `Build` deriva el `Status`.
 
 `CareRelationshipActionResultAssembler` es el único lugar donde el error de dominio se convierte en HTTP, mediante `ToIssueInvitationResult`, `ToRedeemInvitationResult`, `ToCareLinkResult`, `ToWithdrawConsentResult`, `ToNotFoundResult` y el privado `FailureResult`:
 
@@ -3400,7 +3400,7 @@ El token **sólo viaja en la respuesta que crea la invitación**; toda lectura p
 | `InvitationExpired`, `NoPendingTargetsVersion`, `AcknowledgedVersionNewerThanActive` | **422** |
 | `UnexpectedError` (por defecto) | **500** |
 
-**ACL Contract / Open Host Service** — `ICareRelationshipContextFacade` declara el DTO `CareLinkStatusItem(int, int, int, bool, bool, int?)` y dos operaciones: `IsCareLinkActive(int, int)` y `GetActiveCareLinkByPatientId(int)`. **Éste es el Open Host Service de la plataforma**, y un OHS es un patrón de consulta, no de publicación: preguntar si un vínculo está activo no es reaccionar a un hecho pasado, razón por la cual `ConsentGranted` no dispara ninguna política externa.
+**ACL Contract / Open Host Service** — `ICareRelationshipContextFacade` declara el DTO `CareLinkStatusItem(int, int, int, bool, bool, int?)` y dos operaciones: `IsCareLinkActive(int, int)` y `GetActiveCareLinkByPatientId(int)`. Es el Open Host Service de la plataforma y funciona por consulta síncrona: los demás contextos preguntan si el vínculo está activo en el momento en que lo necesitan, por lo que `ConsentGranted` no dispara políticas en otros contextos.
 
 **Localización** — `CareRelationship/Resources/CareRelationshipMessages.cs`, clase marcador de los recursos `.resx`.
 
@@ -3410,27 +3410,27 @@ La Application Layer maneja los cinco subflujos del contexto (2.1 a 2.5) y evide
 
 **Command Services**
 
-**`InvitationCommandService`** (implementa `IInvitationCommandService`) — Depende de `IInvitationRepository`, `ICareLinkRepository`, `IUnitOfWork`, **`IIamContextFacade`**, `ILogger<...>` e `IMediator`.
+**`InvitationCommandService`** (implementa `IInvitationCommandService`) — Depende de `IInvitationRepository`, `ICareLinkRepository`, `IUnitOfWork`, `IIamContextFacade`, `ILogger<...>` e `IMediator`.
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
-| `Handle(IssueInvitationCommand)` | 2.1 | Verifica *Practitioner Only* contra el ACL de IAM **además** del atributo de rol del endpoint; como la fachada degrada a `false`, un fallo de identidad **rechaza** la invitación. Publica `InvitationIssued`. |
+| `Handle(IssueInvitationCommand)` | 2.1 | Verifica *Practitioner Only* contra el ACL de IAM además del atributo de rol del endpoint; como la fachada degrada a `false`, un fallo de identidad rechaza la invitación. Publica `InvitationIssued`. |
 | `Handle(ExpireInvitationCommand)` | 2.1 | Sólo desde la política temporal. Una invitación ya expirada devuelve éxito sin segundo evento, lo que hace idempotente la política. Publica `InvitationExpired`. |
-| `Handle(RedeemInvitationCommand)` | 2.2 | Guardas en orden: token válido, invitación existente, no usada, aún vigente, *Patient Cannot Self Link* (**antes** de quemar el token) y *One Active Link Per Patient*. Publica `InvitationRedeemed` y **relee** el `CareLink` que creó la política para responder al llamador. |
+| `Handle(RedeemInvitationCommand)` | 2.2 | Guardas en orden: token válido, invitación existente, no usada, aún vigente, *Patient Cannot Self Link* (antes de quemar el token) y *One Active Link Per Patient*. Publica `InvitationRedeemed` y relee el `CareLink` que creó la política para responder al llamador. |
 
-Nota arquitectónica: el `CareLink` **no se crea aquí**. Canjear publica `InvitationRedeemed`, y la política que reacciona emite `EstablishCareLinkCommand` —el único camino hacia un vínculo—. Como la publicación de eventos espera a sus handlers, el vínculo ya existe cuando el método lo relee.
+Nota arquitectónica: el `CareLink` no se crea aquí. Canjear publica `InvitationRedeemed`, y la política que reacciona emite `EstablishCareLinkCommand` —el único camino hacia un vínculo—. Como la publicación de eventos espera a sus handlers, el vínculo ya existe cuando el método lo relee.
 
 **`CareLinkCommandService`** (implementa `ICareLinkCommandService`) — Depende de `ICareLinkRepository`, `IUnitOfWork`, `IIamContextFacade`, `ILogger<...>` e `IMediator`.
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
-| `Handle(EstablishCareLinkCommand)` | 2.2 | Sólo desde la política *When Invitation Redeemed*. Verifica *One Active Link Per Patient*, construye el vínculo y publica **`CareLinkEstablished`** (evento de integración). |
+| `Handle(EstablishCareLinkCommand)` | 2.2 | Sólo desde la política *When Invitation Redeemed*. Verifica *One Active Link Per Patient*, construye el vínculo y publica `CareLinkEstablished` (evento de integración). |
 | `Handle(GrantConsentCommand)` | 2.3 | Valida el scope antes de cargar nada; descarta vínculos dados de alta o revocados y el consentimiento ya otorgado. Publica `ConsentGranted` (interno). |
 | `Handle(WithdrawConsentCommand)` | 2.5 | Sin justificación. Publica `ConsentWithdrawn`, que consume la política propia. |
-| `Handle(RevokeCareLinkCommand)` | 2.5 | Sólo desde la política *When Consent Withdrawn*. Idempotente. Publica **`CareLinkRevoked`** (evento de integración). |
-| `Handle(DischargePatientCommand)` | 2.5 | Valida la razón clínica, comprueba `IsPractitioner` vía ACL y verifica que sea **el profesional vinculado**. Publica `TreatmentDischarged`. |
+| `Handle(RevokeCareLinkCommand)` | 2.5 | Sólo desde la política *When Consent Withdrawn*. Idempotente. Publica `CareLinkRevoked` (evento de integración). |
+| `Handle(DischargePatientCommand)` | 2.5 | Valida la razón clínica, comprueba `IsPractitioner` vía ACL y verifica que sea el profesional vinculado. Publica `TreatmentDischarged`. |
 | `Handle(MarkTargetsPendingAcknowledgementCommand)` | 2.4 | Sólo desde la política que reacciona a `ActiveTargetsUpdated`; idempotente si la versión pendiente ya es igual o mayor. Publica `TargetsPendingAcknowledgement`. |
-| `Handle(AcknowledgeActiveTargetsCommand)` | 2.4 | Exige `IsActive` (*No Access Without Consent*) y una versión pendiente. Publica `ActiveTargetsAcknowledged`; **nada de esto alcanza a Nutritional Care**. |
+| `Handle(AcknowledgeActiveTargetsCommand)` | 2.4 | Exige `IsActive` (*No Access Without Consent*) y una versión pendiente. Publica `ActiveTargetsAcknowledged`; nada de esto alcanza a Nutritional Care. |
 
 **Query Services** — `InvitationQueryService` (con resolución del QR escaneado, donde un token malformado devuelve `null` en lugar de fallar) y `CareLinkQueryService`, que respalda el read model Care Link Status.
 
@@ -3438,38 +3438,38 @@ Nota arquitectónica: el `CareLink` **no se crea aquí**. Canjear publica `Invit
 
 | Handler | Escucha | Política | Emite |
 |---|---|---|---|
-| `OnInvitationRedeemedHandler` | `InvitationRedeemed` (propio) | *When Invitation Redeemed* (2.2). **El único camino hacia un `CareLink`**, lo que vuelve estructural la regla de que el paciente no puede auto-vincularse. | `EstablishCareLinkCommand` |
+| `OnInvitationRedeemedHandler` | `InvitationRedeemed` (propio) | *When Invitation Redeemed* (2.2). El único camino hacia un `CareLink`, lo que vuelve estructural la regla de que el paciente no puede auto-vincularse. | `EstablishCareLinkCommand` |
 | `OnConsentWithdrawnHandler` | `ConsentWithdrawn` (propio) | *When Consent Withdrawn* (2.5). Retirar el consentimiento revoca el vínculo; por eso revocar no tiene endpoint. | `RevokeCareLinkCommand` |
-| `OnActiveTargetsUpdatedCareRelationshipHandler` | `ActiveTargetsUpdated` (Nutritional Care) | *When Active Targets Updated* (2.4). Acusar recibo es un acto de la **relación**, no del acto clínico; por eso la bandera de pendiente vive en el `CareLink` y no en el plan. | `MarkTargetsPendingAcknowledgementCommand` |
+| `OnActiveTargetsUpdatedCareRelationshipHandler` | `ActiveTargetsUpdated` (Nutritional Care) | *When Active Targets Updated* (2.4). Acusar recibo es un acto de la relación, no del acto clínico; por eso la bandera de pendiente vive en el `CareLink` y no en el plan. | `MarkTargetsPendingAcknowledgementCommand` |
 
 **DTO de aplicación** — `InvitationRedemptionOutcome(Invitation, CareLink?)`, que permite responder al canje con el vínculo recién creado.
 
-**ACL Facade** — `CareRelationshipContextFacade` implementa `ICareRelationshipContextFacade` apoyándose en `ICareLinkQueryService` y **nunca en un repositorio**, para no puentear la capa de aplicación. Su degradación es deliberadamente conservadora: `IsCareLinkActive` devuelve `false` ante cualquier fallo, bajo el principio de que **sin respuesta significa sin acceso**.
+**ACL Facade** — `CareRelationshipContextFacade` implementa `ICareRelationshipContextFacade` apoyándose en `ICareLinkQueryService` y nunca en un repositorio, para no puentear la capa de aplicación. Ante cualquier fallo, `IsCareLinkActive` devuelve `false`, de modo que un error se traduce en denegación de acceso.
 
 #### 2.6.3.4. Infrastructure Layer
 
-La Infrastructure Layer de Care Relationship comprende la persistencia sobre MySQL 8 y un único `BackgroundService`. **Este bounded context no consume APIs de terceros.**
+La Infrastructure Layer de Care Relationship comprende la persistencia sobre MySQL 8.4 y un único `BackgroundService`. Este bounded context no consume APIs de terceros.
 
 **Configuraciones de EF Core**
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
-| `InvitationEntityTypeConfiguration` | `invitations` | PK con converter `InvitationId.FromRaw` y `ValueGeneratedOnAdd()`. `issued_by` requerido con índice `ix_invitations_issued_by`, **sin navegación y sin restricción de clave foránea**, porque es una referencia cross-context. `token` como `VARCHAR(64)` con converter e **índice único `ix_invitations_token`**, segunda línea de defensa de *Single Use Token*. `expires_at` requerido; `redeemed_at` y `expired_at` opcionales. `Ignore(IsRedeemed)`, `Ignore(IsExpired)`. |
-| `CareLinkEntityTypeConfiguration` | `care_links` | PK con converter `CareLinkId.FromRaw`. `patient_id` y `practitioner_id` requeridos con sus índices y **sin FK**. Cierre mediante `revoked_at`, `discharged_at` y `discharge_reason` (`VARCHAR(500)`). Acuse mediante `pending_targets_version` y `last_acknowledged_version`. **Proyección del VO `Consent` en cuatro columnas**: `consent_granted` (requerida), `consent_scope` (`VARCHAR(200)`), `consent_granted_at` y `consent_withdrawn_at`. `Ignore` sobre `Consent`, `IsActive`, `IsRevoked` e `IsDischarged`. |
+| `InvitationEntityTypeConfiguration` | `invitations` | PK con converter `InvitationId.FromRaw` y `ValueGeneratedOnAdd()`. `issued_by` requerido con índice `ix_invitations_issued_by`, sin navegación y sin restricción de clave foránea, porque es una referencia cross-context. `token` como `VARCHAR(64)` con converter e índice único `ix_invitations_token`, segunda línea de defensa de *Single Use Token*. `expires_at` requerido; `redeemed_at` y `expired_at` opcionales. `Ignore(IsRedeemed)`, `Ignore(IsExpired)`. |
+| `CareLinkEntityTypeConfiguration` | `care_links` | PK con converter `CareLinkId.FromRaw`. `patient_id` y `practitioner_id` requeridos con sus índices y sin FK. Cierre mediante `revoked_at`, `discharged_at` y `discharge_reason` (`VARCHAR(500)`). Acuse mediante `pending_targets_version` y `last_acknowledged_version`. Proyección del VO `Consent` en cuatro columnas: `consent_granted` (requerida), `consent_scope` (`VARCHAR(200)`), `consent_granted_at` y `consent_withdrawn_at`. `Ignore` sobre `Consent`, `IsActive`, `IsRevoked` e `IsDischarged`. |
 
 **Repositorios (implementaciones)**
 
 | Clase | Detalles de implementación |
 |---|---|
 | `InvitationRepository(AppDbContext)` | Sobrescribe `FindByIdAsync` con la identidad tipada; `FindByTokenAsync` compara contra una instancia del value object; `ListExpirableAsync` filtra invitaciones ni canjeadas ni expiradas cuya fecha ya venció, ordena por vencimiento y aplica `Take(maxResults)`. Reimplementa explícitamente `IBaseRepository<Invitation>.FindByIdAsync`. |
-| `CareLinkRepository(AppDbContext)` | `FindActiveByPatientIdAsync` combina el helper privado `Unclosed()` con el consentimiento otorgado; `FindUnclosedByPatientIdAsync` y `ExistsUnclosedByPatientIdAsync` respaldan *One Active Link Per Patient*; `ListByPractitionerIdAsync` devuelve **todo el historial**, incluidos los vínculos revocados y dados de alta, porque el roster del profesional es un registro y no una lista de activos. |
+| `CareLinkRepository(AppDbContext)` | `FindActiveByPatientIdAsync` combina el helper privado `Unclosed()` con el consentimiento otorgado; `FindUnclosedByPatientIdAsync` y `ExistsUnclosedByPatientIdAsync` respaldan *One Active Link Per Patient*; `ListByPractitionerIdAsync` devuelve todo el historial, incluidos los vínculos revocados y dados de alta, porque el roster del profesional es un registro y no una lista de activos. |
 
-**Scheduling — `InvitationExpiryHostedService`** — `BackgroundService` que implementa la política temporal *When Expiration Date Reached* (subflujo 2.1). Nadie la dispara: ni un usuario ni un evento, sólo el paso del tiempo, y por eso es un hosted service y no un event handler.
+**Scheduling — `InvitationExpiryHostedService`** — `BackgroundService` que implementa la política temporal *When Expiration Date Reached* (subflujo 2.1). Como no la dispara un usuario ni un evento, sino el vencimiento de la fecha, se implementa como hosted service y no como event handler.
 
 - Dependencias: `IServiceScopeFactory`, `IConfiguration`, `ILogger<...>`.
 - Constante `BatchSize = 200`; intervalo desde `Scheduling:InvitationExpiryIntervalMinutes` (60 minutos por defecto, mínimo 1), con `PeriodicTimer`.
-- Cumple las **cinco guardas obligatorias del proyecto**: todo el cuerpo del ciclo dentro de `try/catch` para que un ciclo fallido nunca tumbe el host; los servicios *scoped* resueltos en un scope propio; el `stoppingToken` propagado a cada llamada; el ciclo idempotente, porque expirar algo ya expirado es un no-op sin segundo evento; y las migraciones de EF ya aplicadas en el composition root antes de arrancar el host.
-- Método privado `SafeWaitAsync(PeriodicTimer, CancellationToken)`, que traga la excepción de cancelación.
+- Cumple las cinco guardas obligatorias del proyecto: todo el cuerpo del ciclo dentro de `try/catch` para que un ciclo fallido nunca tumbe el host; los servicios *scoped* resueltos en un scope propio; el `stoppingToken` propagado a cada llamada; el ciclo idempotente, porque expirar algo ya expirado es un no-op sin segundo evento; y las migraciones de EF ya aplicadas en el composition root antes de arrancar el host.
+- Método privado `SafeWaitAsync(PeriodicTimer, CancellationToken)`, que controla la excepción de cancelación al detener el servicio.
 
 **Servicios externos** — Ninguno. El generador criptográfico del token de invitación es la biblioteca estándar de .NET, no un proveedor externo.
 
@@ -3515,11 +3515,11 @@ Database:
 
 #### 2.6.4.1. Domain Layer
 
-**Nutritional Care** (`Healthify.Platform.NutritionalCare`) modela el acto clínico completo en tres fases —valoración, diagnóstico y plan nutricional— más la bandeja de entrada donde mueren las señales de Monitoring. Dos ideas rigen su Domain Layer: **cero caja negra** (todo objetivo es auditable y recalculable a mano desde la base de cálculo almacenada) y **aquí termina la automatización** (una señal notifica y nunca modifica).
+**Nutritional Care** (`Healthify.Platform.NutritionalCare`) modela el acto clínico completo en tres fases —evaluación, diagnóstico y plan nutricional— más la bandeja de revisión que recibe las señales de Monitoring. Dos principios rigen su Domain Layer: trazabilidad del cálculo (todo objetivo puede auditarse y recalcularse desde la base de cálculo almacenada) y decisión humana (una señal genera un ítem de revisión, pero nunca modifica el plan).
 
 **Aggregates (Aggregate Roots)**
 
-**`NutritionalAssessment`** — Fase clínica 1: hábitos, historia, actividad física, antropometría y bioquímica, registrados dentro de la consulta. Una vez cerrada es inmutable; una corrección no la edita, crea una nueva valoración que la referencia.
+**`NutritionalAssessment`** — Fase clínica 1: hábitos, historia, actividad física, antropometría y bioquímica, registrados dentro de la consulta. Una vez cerrada es inmutable; una corrección no la edita, crea una nueva evaluación que la referencia.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -3536,9 +3536,9 @@ Database:
 
 Métodos: `NutritionalAssessment(RecordAssessmentCommand)` (*Habits History And Activity Required*), `TakeClinicalMeasurement(TakeClinicalMeasurementCommand) : ClinicalMeasurement` (*No Measurement On Closed Assessment*, *Measurement Protocol Recorded*) y `Close()` (*Closed Assessment Is Immutable*).
 
-**`NutritionalDiagnosis`** — Fase clínica 2: la afirmación que fundamenta todo plan, y el razonamiento detrás. Atributos: `Id : DiagnosisId`, `PatientId`, `PractitionerId`, `AssessmentId`, `Statement`, `Rationale : ClinicalRationale`, `IssuedAt`, `SupersededAt?` y la computada `IsActive` (*One Active Diagnosis Per Patient*). Métodos: el constructor, que exige statement y razonamiento clínico, y `Supersede()`, que retira el diagnóstico para que otro ocupe su lugar **conservando la fila**.
+**`NutritionalDiagnosis`** — Fase clínica 2: la afirmación que fundamenta todo plan, y el razonamiento detrás. Atributos: `Id : DiagnosisId`, `PatientId`, `PractitionerId`, `AssessmentId`, `Statement`, `Rationale : ClinicalRationale`, `IssuedAt`, `SupersededAt?` y la computada `IsActive` (*One Active Diagnosis Per Patient*). Métodos: el constructor, que exige statement y razonamiento clínico, y `Supersede()`, que retira el diagnóstico para que otro ocupe su lugar conservando la fila.
 
-**`NutritionPlan`** — Fase clínica 3 y raíz del versionado. Un plan atraviesa tres estados dentro de una consulta: los objetivos son **propuestos** por aritmética, **prescritos** por una persona y sólo entonces **publicados**. Sus tres value objects compuestos se almacenan como columnas planas y se reconstruyen mediante propiedades calculadas.
+**`NutritionPlan`** — Fase clínica 3 y raíz del versionado. Un plan atraviesa tres estados dentro de una consulta: los objetivos se proponen mediante cálculo, los prescribe el profesional y recién entonces se publican. Sus tres value objects compuestos se almacenan como columnas planas y se reconstruyen mediante propiedades calculadas.
 
 | Grupo de atributos | Miembros | Scope |
 |---|---|---|
@@ -3551,18 +3551,18 @@ Métodos: `NutritionalAssessment(RecordAssessmentCommand)` (*Habits History And 
 
 | Método | Scope | Reglas que aplica |
 |---|---|---|
-| `NutritionPlan(int, int, int, int, CalculationBasis, TargetProposal)` | `public` | *No Plan Without Diagnosis* (la referencia es obligatoria en el constructor) y *Calculation Basis Always Recorded*. El plan **nunca nace vacío**: viene con su propuesta. |
+| `NutritionPlan(int, int, int, int, CalculationBasis, TargetProposal)` | `public` | *No Plan Without Diagnosis* (la referencia es obligatoria en el constructor) y *Calculation Basis Always Recorded*. El plan se crea siempre con su propuesta de objetivos. |
 | `StoreCalculationBasis(...)` / `StoreProposal(...)` | `private` | Aplanan los value objects en columnas. |
 | `PrescribeTargets(PrescribedTargets)` | `public` | *Previous Proposal Required*, *Override Requires Reason*. |
 | `Publish(IEnumerable<string>, IEnumerable<string>)` | `public` | Requiere prescripción previa; normaliza las listas y marca el plan activo. |
 | `Supersede()` | `public` | *Previous Version Superseded Never Deleted*. |
-| `CreateAdjustedVersion(AdjustNutritionPlanCommand, ChangeReason) : NutritionPlan` | `public` | **Factory Method** que produce la siguiente versión arrastrando la base de cálculo anterior. |
+| `CreateAdjustedVersion(AdjustNutritionPlanCommand, ChangeReason) : NutritionPlan` | `public` | Factory Method que produce la siguiente versión arrastrando la base de cálculo anterior. |
 
-**`ReviewItem`** — Una señal recibida de Monitoring esperando una decisión humana. Atributos: `Id : ReviewItemId`, `PatientId`, `PractitionerId` (resuelto desde el `CareLink` al abrir el ítem, porque la bandeja se lee por profesional), `SignalType`, `Evidence` (**evidencia, no veredicto**), `State : ReviewItemState`, `ResolvedWithAdjustment?`, `ResolvedAt?`, `ResolutionNote?` y la computada `IsOpen`. Métodos: el constructor y `Resolve(bool, string?)`, que aplica *Resolution States Whether The Plan Was Adjusted*.
+**`ReviewItem`** — Señal recibida de Monitoring que queda pendiente de la decisión del profesional. Atributos: `Id : ReviewItemId`, `PatientId`, `PractitionerId` (resuelto desde el `CareLink` al abrir el ítem, porque la bandeja se lee por profesional), `SignalType`, `Evidence` (evidencia, no veredicto), `State : ReviewItemState`, `ResolvedWithAdjustment?`, `ResolvedAt?`, `ResolutionNote?` y la computada `IsOpen`. Métodos: el constructor y `Resolve(bool, string?)`, que aplica *Resolution States Whether The Plan Was Adjusted*.
 
 **Entity (no raíz)**
 
-**`ClinicalMeasurement`** — Una lectura antropométrica tomada por el profesional, con el protocolo seguido; vive dentro del agregado `NutritionalAssessment`. Atributos: `Id : int` (PK simple), `AssessmentId : AssessmentId` (tipada igual que la clave principal porque EF Core exige que ambos extremos compartan el tipo CLR), `WeightKg` (20–400), `HeightCm` (80–250), `Protocol : MeasurementProtocol`, `BodyFatPercentage?` (1–70), `WaistCircumferenceCm?` (30–250) y `TakenAt`. Su constructor es `internal`: **sólo el agregado puede crearla**. Un `ClinicalMeasurement` y un `SelfWeighIn` son cosas **diferentes** —éste lo toma un profesional bajo protocolo registrado y tiene autoridad clínica—, y **las dos series nunca se fusionan**.
+**`ClinicalMeasurement`** — Una lectura antropométrica tomada por el profesional, con el protocolo seguido; vive dentro del agregado `NutritionalAssessment`. Atributos: `Id : int` (PK simple), `AssessmentId : AssessmentId` (tipada igual que la clave principal porque EF Core exige que ambos extremos compartan el tipo CLR), `WeightKg` (20–400), `HeightCm` (80–250), `Protocol : MeasurementProtocol`, `BodyFatPercentage?` (1–70), `WaistCircumferenceCm?` (30–250) y `TakenAt`. Su constructor es `internal`: sólo el agregado puede crearla. Un `ClinicalMeasurement` y un `SelfWeighIn` son cosas diferentes —éste lo toma un profesional bajo protocolo registrado y tiene autoridad clínica—, y las dos series nunca se fusionan.
 
 **Value Objects (16)**
 
@@ -3571,33 +3571,33 @@ Métodos: `NutritionalAssessment(RecordAssessmentCommand)` (*Habits History And 
 | `Equation` | Ecuación publicada de metabolismo basal elegida por el profesional. | `MifflinStJeor`, `HarrisBenedict`, `FaoWhoUnu`, `KatchMcArdle`; `RequiresBodyFatPercentage`. |
 | `ReferenceWeight` | Sobre qué peso corre el cálculo. | Kinds `Actual`, `Ideal`, `Adjusted`; `ValueKg` 20–400. |
 | `DeficitStrategy` | Cuánta energía se resta del gasto total. | `FixedKcal` (0–1500) o `PercentOfTdee` (0–40); método `DeficitKcalFor(decimal)`. |
-| `CalculationBasis` | **Todo aquello sobre lo que corrió el cálculo, guardado con el plan para siempre.** Es lo que hace auditable un objetivo. | Ocho componentes planos; valida factor de actividad 1.0–2.5 y BMR/TDEE positivos; factory `From(...)`. |
-| `TargetProposal` | Lo que produjo la aritmética antes de que nadie firme. | `EnergyKcal > 0`, macros ≥ 0. |
+| `CalculationBasis` | Todo aquello sobre lo que corrió el cálculo, guardado con el plan para siempre. Es lo que hace auditable un objetivo. | Ocho componentes planos; valida factor de actividad 1.0–2.5 y BMR/TDEE positivos; factory `From(...)`. |
+| `TargetProposal` | Resultado del cálculo antes de la prescripción. | `EnergyKcal > 0`, macros ≥ 0. |
 | `PrescriptionOutcome` | Si el profesional firmó la propuesta o la reemplazó. | `AcceptedAsProposed`, `Overridden`. |
-| `PrescribedTargets` | **Lo que el profesional efectivamente firmó**; todo objetivo es trazable a una persona por este VO. | Exige `OverrideReason` cuando el resultado es un reemplazo. |
+| `PrescribedTargets` | Objetivos que el profesional confirma; permite saber quién prescribió cada objetivo. | Exige `OverrideReason` cuando el resultado es un reemplazo. |
 | `OverrideReason`, `ChangeReason`, `ClinicalRationale`, `MeasurementProtocol` | Justificaciones obligatorias en cada punto de decisión. | 500, 500, 2000 y 300 caracteres respectivamente. |
 | `BiologicalSex` | Sexo biológico por el que se estratifican las ecuaciones. | `Female`, `Male`. |
-| `SignalType` | Qué clase de señal de Monitoring abrió un ítem. | `SustainedDeviation`, `ConsistencyEscalation`. **Sólo existen dos, y ninguna puede cambiar un plan.** |
+| `SignalType` | Qué clase de señal de Monitoring abrió un ítem. | `SustainedDeviation`, `ConsistencyEscalation`; ninguno modifica el plan. |
 | `ReviewItemState` | Dónde está un ítem en la bandeja. | `Open`, `Resolved`. |
 | `AssessmentId`, `DiagnosisId`, `PlanId`, `ReviewItemId` | Identidades tipadas. | `Value : int > 0`, `internal static FromRaw(int)`. |
 
-**Commands (11)** — Desde `RecordAssessmentCommand` hasta `ResolveReviewItemCommand`. Sólo `PublishActiveTargetsCommand` y `OpenReviewItemCommand` carecen de endpoint: los emiten políticas. Nótese que en `ProposeTargetsCommand` **el profesional actúa antes del cálculo**: la ecuación, el peso de referencia, el factor de actividad, el déficit y el objetivo proteico llegan como parámetros y el agregado no elige ninguno.
+**Commands (11)** — Desde `RecordAssessmentCommand` hasta `ResolveReviewItemCommand`. Sólo `PublishActiveTargetsCommand` y `OpenReviewItemCommand` carecen de endpoint: los emiten políticas. En `ProposeTargetsCommand`, la ecuación, el peso de referencia, el factor de actividad, el déficit y el objetivo proteico los elige el profesional y llegan como parámetros; el agregado no los selecciona.
 
-**Queries (7)** — `GetAssessmentByIdQuery`, `GetAssessmentsByPatientIdQuery`, `GetActiveDiagnosisByPatientIdQuery`, `GetPlanByIdQuery`, `GetActivePlanByPatientIdQuery`, `GetPlansByPatientIdQuery` y las dos de la bandeja (`GetOpenReviewItemsByPractitionerIdQuery`, `GetReviewItemByIdQuery`).
+**Queries (8)** — `GetAssessmentByIdQuery`, `GetAssessmentsByPatientIdQuery`, `GetActiveDiagnosisByPatientIdQuery`, `GetPlanByIdQuery`, `GetActivePlanByPatientIdQuery`, `GetPlansByPatientIdQuery` y las dos de la bandeja (`GetOpenReviewItemsByPractitionerIdQuery`, `GetReviewItemByIdQuery`).
 
-**Domain Events (12 + 1 record auxiliar)** — Cruzan frontera `ClinicalMeasurementTaken` (hacia Monitoring) y **`ActiveTargetsUpdated`** (hacia Intake, Monitoring y Care Relationship simultáneamente). Este último es el **Published Language** del contexto: lleva paciente, versión, vigencia, objetivos diarios, pautas y restricciones —y **ni diagnóstico, ni razonamiento, ni ecuación, ni peso de referencia, ni factor de actividad, ni déficit**—, cumpliendo *Diagnosis And Basis Never Leave The Context*. Se apoya en el record auxiliar `DailyTargets(decimal, decimal, decimal, decimal)`. Los demás eventos son internos, incluidos `NutritionalDiagnosisIssued` (el paciente no lee su diagnóstico en la app) y `ReviewItemCreated`, que **muere en la bandeja**.
+**Domain Events (13)** — `NutritionalAssessmentRecorded`, `ClinicalMeasurementTaken`, `AssessmentClosed`, `NutritionalDiagnosisIssued`, `TargetsProposed`, `TargetsAcceptedAsProposed`, `TargetsOverridden`, `NutritionPlanPublished`, `ActiveTargetsUpdated`, `NutritionPlanAdjusted`, `PlanVersionSuperseded`, `ReviewItemCreated` y `ReviewItemResolved`. Dos cruzan frontera: `ClinicalMeasurementTaken` (hacia Monitoring) y `ActiveTargetsUpdated` (hacia Intake, Monitoring y Care Relationship). `ActiveTargetsUpdated` es el Published Language del contexto: lleva paciente, versión, vigencia, objetivos diarios, pautas y restricciones, pero no incluye diagnóstico, razonamiento clínico ni base de cálculo, conforme a la regla *Diagnosis And Basis Never Leave The Context*. Los objetivos diarios viajan en el record `DailyTargets(decimal, decimal, decimal, decimal)`, que no es un evento. Los demás eventos son internos; entre ellos, `NutritionalDiagnosisIssued` no se publica porque el paciente no consulta su diagnóstico en la app, y `ReviewItemCreated` solo alimenta la bandeja del profesional.
 
 **Errors** — `enum NutritionalCareError` con 30 valores, uno por cada regla que el contexto hace cumplir.
 
 **Repositories (abstracciones)** — `INutritionalAssessmentRepository`, `INutritionalDiagnosisRepository` (con `FindActiveByPatientIdAsync`), `INutritionPlanRepository` (con `FindActiveByPatientIdAsync`, `ListByPatientIdAsync` y `GetLatestVersionAsync`) e `IReviewItemRepository` (con `ExistsOpenForPatientAndSignalTypeAsync`, `ListOpenByPractitionerIdAsync` y `CountOpenByPractitionerIdAsync`).
 
-**Domain Services** — `IBmrCalculator`, con el record de entrada `BmrInputs` y el método `ComputeBmr(Equation, BmrInputs) : decimal`. **No es un servicio externo y no es un modelo**: es aritmética determinista con ecuaciones publicadas; está detrás de una interfaz sólo para que las cuatro ecuaciones se puedan probar y cambiar independientemente del agregado.
+**Domain Services** — `IBmrCalculator`, con el record de entrada `BmrInputs` y el método `ComputeBmr(Equation, BmrInputs) : decimal`. No es un servicio externo ni un modelo de aprendizaje automático, sino un cálculo determinista con ecuaciones publicadas; se define como interfaz para que las cuatro ecuaciones se puedan probar y cambiar independientemente del agregado.
 
-**Relaciones entre clases:** `NutritionalAssessment` **compone** 0..* `ClinicalMeasurement` (única relación de composición entre entidades del contexto, con cascada) y compone `AssessmentId` y `BiologicalSex`. `NutritionalDiagnosis` referencia la valoración por identificador y compone `ClinicalRationale`. `NutritionPlan` referencia el diagnóstico por identificador, agrega de forma reconstruida `CalculationBasis`, `TargetProposal` y 0..1 `PrescribedTargets`, y depende de `ChangeReason`; entre versiones existe una asociación reflexiva `supersedes` (1 → 0..1) resuelta por `Version` y `SupersededAt`. `ReviewItem` compone `SignalType` y `ReviewItemState`, y **no tiene relación alguna con `NutritionPlan`**: esa ausencia es la regla.
+**Relaciones entre clases:** `NutritionalAssessment` compone 0..* `ClinicalMeasurement` (única relación de composición entre entidades del contexto, con cascada) y compone `AssessmentId` y `BiologicalSex`. `NutritionalDiagnosis` referencia la evaluación por identificador y compone `ClinicalRationale`. `NutritionPlan` referencia el diagnóstico por identificador, agrega de forma reconstruida `CalculationBasis`, `TargetProposal` y 0..1 `PrescribedTargets`, y depende de `ChangeReason`; entre versiones existe una asociación reflexiva `supersedes` (1 → 0..1) resuelta por `Version` y `SupersededAt`. `ReviewItem` compone `SignalType` y `ReviewItemState`, y no tiene relación alguna con `NutritionPlan`: esa ausencia es la regla.
 
 #### 2.6.4.2. Interface Layer
 
-La Interface Layer de Nutritional Care expone cinco controllers y **todos están anotados con `[Authorize(Roles = "Practitioner")]`**: no hay ni una ruta orientada al paciente. Lo que el paciente recibe es el contrato publicado, y eso viaja como evento hacia Intake & Body Response, no como endpoint.
+La Interface Layer de Nutritional Care expone cinco controllers y todos están anotados con `[Authorize(Roles = "Practitioner")]`: no hay ni una ruta orientada al paciente. Lo que el paciente recibe es el contrato publicado, y eso viaja como evento hacia Intake & Body Response, no como endpoint.
 
 **Controllers**
 
@@ -3621,9 +3621,9 @@ La Interface Layer de Nutritional Care expone cinco controllers y **todos están
 | `POST /{planId:int}/publication` | `PublishNutritionPlan(int, PublishNutritionPlanResource)` | 200 · 401 · 403 · 404 · 409 · 422 |
 | `POST /{planId:int}/adjustments` | `AdjustNutritionPlan(int, AdjustNutritionPlanResource)` | 201 · 400 · 401 · 403 · 404 · 409 |
 
-**`Publish Active Targets` no tiene endpoint a propósito**: es una política que dispara al publicar o ajustar, y es lo único de un plan que cruza hacia el paciente.
+`Publish Active Targets` no tiene endpoint: lo ejecuta una política al publicar o ajustar un plan, y es la única información del plan que llega al paciente.
 
-**`PatientClinicalRecordController`** — `[Route("api/v1/patients")] [Tags("Nutritional Care")]`. Depende adicionalmente de `ICareRelationshipContextFacade` y usa el método privado `IsLinkedToAsync(int)`, que consulta el Open Host Service y **degrada a `false`**, denegando el acceso ante cualquier fallo.
+**`PatientClinicalRecordController`** — `[Route("api/v1/patients")] [Tags("Nutritional Care")]`. Depende adicionalmente de `ICareRelationshipContextFacade` y usa el método privado `IsLinkedToAsync(int)`, que consulta el Open Host Service y degrada a `false`, denegando el acceso ante cualquier fallo.
 
 | Verbo / Ruta | Acción | Read Model |
 |---|---|---|
@@ -3632,7 +3632,7 @@ La Interface Layer de Nutritional Care expone cinco controllers y **todos están
 | `GET /{patientId:int}/nutrition-plans` | `GetPlans(int)` | Plan Version History |
 | `GET /{patientId:int}/nutrition-plans/active` | `GetActivePlan(int)` | Active Plan, con base de cálculo |
 
-**`ReviewItemsController`** — `[Route("api/v1/review-items")] [Tags("Review Inbox")]`. Expone `GET /` (`GetOpenReviewItems()`, read model Practitioner Review Inbox) y `POST /{reviewItemId:int}/resolution` (`ResolveReviewItem(int, ResolveReviewItemResource)`). **`Open Review Item` no tiene endpoint**: los ítems llegan por las políticas que reaccionan a señales de Monitoring, y aquí es donde la automatización se detiene.
+**`ReviewItemsController`** — `[Route("api/v1/review-items")] [Tags("Review Inbox")]`. Expone `GET /` (`GetOpenReviewItems()`, read model Practitioner Review Inbox) y `POST /{reviewItemId:int}/resolution` (`ResolveReviewItem(int, ResolveReviewItemResource)`). `Open Review Item` no tiene endpoint: los ítems llegan por las políticas que reaccionan a señales de Monitoring, y aquí es donde la automatización se detiene.
 
 **Resources** — Las de entrada viven en `NutritionalCareResources.cs` (`RecordAssessmentResource`, `TakeClinicalMeasurementResource`, `IssueDiagnosisResource`, `ProposeTargetsResource`, `PrescribeTargetsResource`, `PublishNutritionPlanResource`, `AdjustNutritionPlanResource`, `ResolveReviewItemResource`) y las de salida en `NutritionalCareReadResources.cs` (`ClinicalMeasurementResource`, `NutritionalAssessmentResource`, `NutritionalDiagnosisResource`, `CalculationBasisResource`, `TargetsResource`, `NutritionPlanResource`, `ReviewItemResource`). `CalculationBasisResource` existe precisamente porque el profesional debe poder auditar el número: expone ecuación, peso de referencia, factor de actividad, déficit, BMR y TDEE calculados.
 
@@ -3649,39 +3649,39 @@ La Interface Layer de Nutritional Care expone cinco controllers y **todos están
 | `ClosedAssessmentRequired`, `ActiveDiagnosisRequired`, `PreviousProposalRequired`, `PlanRequiresDiagnosis`, `CalculationBasisRequired`, `ClinicalMeasurementRequired` | **422** |
 | `UnexpectedError` (por defecto) | **500** |
 
-**ACL Contract** — `INutritionalCareContextFacade` declara el DTO `ActiveTargetsItem` y dos operaciones: `GetActiveTargetsByPatientId(int)` y `GetOpenReviewItemCount(int)`. **Nunca expone un diagnóstico, un razonamiento clínico ni una base de cálculo**: espeja exactamente el contrato publicado.
+**ACL Contract** — `INutritionalCareContextFacade` declara el DTO `ActiveTargetsItem` y dos operaciones: `GetActiveTargetsByPatientId(int)` y `GetOpenReviewItemCount(int)`. Nunca expone un diagnóstico, un razonamiento clínico ni una base de cálculo: espeja exactamente el contrato publicado.
 
 **Localización** — `NutritionalCare/Resources/NutritionalCareMessages.cs`.
 
 #### 2.6.4.3. Application Layer
 
-La Application Layer de Nutritional Care orquesta los siete subflujos del acto clínico (3.1 a 3.7). Sus capabilities son registrar y cerrar valoraciones, emitir diagnósticos, proponer, prescribir, publicar y ajustar objetivos, y gestionar la bandeja de revisión.
+La Application Layer de Nutritional Care orquesta los siete subflujos del acto clínico (3.1 a 3.7). Sus capabilities son registrar y cerrar evaluaciones, emitir diagnósticos, proponer, prescribir, publicar y ajustar objetivos, y gestionar la bandeja de revisión.
 
 **Command Services**
 
-**`NutritionalAssessmentCommandService`** — Depende de `INutritionalAssessmentRepository`, `IUnitOfWork`, **`IIamContextFacade`**, **`ICareRelationshipContextFacade`**, `ILogger<...>` e `IMediator`.
+**`NutritionalAssessmentCommandService`** — Depende de `INutritionalAssessmentRepository`, `IUnitOfWork`, `IIamContextFacade`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`.
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
 | `Handle(RecordAssessmentCommand)` | 3.1 | *Practitioner Only Measures* vía el ACL de IAM y *Active Care Link Required* vía el OHS de Care Relationship, que degrada a `false`. Publica `NutritionalAssessmentRecorded`. |
-| `Handle(TakeClinicalMeasurementCommand)` | 3.1 | Valida el protocolo antes de cargar nada, verifica propiedad y rechaza valoraciones cerradas. Publica **`ClinicalMeasurementTaken`** (evento de integración). |
+| `Handle(TakeClinicalMeasurementCommand)` | 3.1 | Valida el protocolo antes de cargar nada, verifica propiedad y rechaza evaluaciones cerradas. Publica `ClinicalMeasurementTaken` (evento de integración). |
 | `Handle(CloseAssessmentCommand)` | 3.1 | Publica `AssessmentClosed`; tras esto el agregado es inmutable. |
 
-**`NutritionalDiagnosisCommandService`** — Depende de los repositorios de diagnóstico y valoración, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. Su método `Handle(IssueDiagnosisCommand)` (3.2) aplica las guardas en orden: razonamiento no vacío, vínculo activo, valoración existente y del paciente, **valoración cerrada** —un diagnóstico lee una foto terminada, no una que aún se edita— y *One Active Diagnosis Per Patient*.
+**`NutritionalDiagnosisCommandService`** — Depende de los repositorios de diagnóstico y evaluación, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. Su método `Handle(IssueDiagnosisCommand)` (3.2) aplica las guardas en orden: razonamiento no vacío, vínculo activo, evaluación existente y del paciente, evaluación cerrada —un diagnóstico lee una foto terminada, no una que aún se edita— y *One Active Diagnosis Per Patient*.
 
-**`NutritionPlanCommandService`** — Depende de los tres repositorios clínicos, `IUnitOfWork`, **`IBmrCalculator`**, `ILogger<...>` e `IMediator`; declara las constantes privadas `KcalPerGramProtein = 4m`, `KcalPerGramCarbohydrate = 4m` y `KcalPerGramFat = 9m`.
+**`NutritionPlanCommandService`** — Depende de los tres repositorios clínicos, `IUnitOfWork`, `IBmrCalculator`, `ILogger<...>` e `IMediator`; declara las constantes privadas `KcalPerGramProtein = 4m`, `KcalPerGramCarbohydrate = 4m` y `KcalPerGramFat = 9m`.
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
-| `Handle(ProposeTargetsCommand)` | 3.3 | Valida cada value object reportando **su propio error**; exige diagnóstico activo y propiedad; toma la última medición y, si la ecuación requiere porcentaje de grasa y falta, responde `ClinicalMeasurementRequired`; ejecuta la aritmética y calcula la siguiente versión. Publica `TargetsProposed` (interno). |
-| `Handle(PrescribeTargetsCommand)` | 3.4 | Valida el resultado de prescripción y *Override Requires Reason*. Publica **exactamente uno** de `TargetsOverridden` o `TargetsAcceptedAsProposed`, nunca ambos. |
+| `Handle(ProposeTargetsCommand)` | 3.3 | Valida cada value object reportando su propio error; exige diagnóstico activo y propiedad; toma la última medición y, si la ecuación requiere porcentaje de grasa y falta, responde `ClinicalMeasurementRequired`; ejecuta la aritmética y calcula la siguiente versión. Publica `TargetsProposed` (interno). |
+| `Handle(PrescribeTargetsCommand)` | 3.4 | Valida el resultado de prescripción y *Override Requires Reason*. Publica exactamente uno de `TargetsOverridden` o `TargetsAcceptedAsProposed`, nunca ambos. |
 | `Handle(PublishNutritionPlanCommand)` | 3.5 | Requiere plan prescrito y no publicado; aplica *No Plan Without Diagnosis* y *One Active Version Per Patient*. Publica `NutritionPlanPublished`. |
-| `Handle(PublishActiveTargetsCommand)` | 3.5 / 3.6 | Sólo desde política. **El único lugar donde algo de un plan sale del bounded context**, y sólo lleva el contrato reducido. Publica **`ActiveTargetsUpdated`**. |
+| `Handle(PublishActiveTargetsCommand)` | 3.5 / 3.6 | Sólo desde política. El único lugar donde algo de un plan sale del bounded context, y sólo lleva el contrato reducido. Publica `ActiveTargetsUpdated`. |
 | `Handle(AdjustNutritionPlanCommand)` | 3.6 | *Change Reason Required*; crea la versión ajustada y marca la anterior como superseded. Publica `NutritionPlanAdjusted` y `PlanVersionSuperseded`. |
 
-La aritmética de la propuesta, en el orden en que las reglas la enuncian: el BMR sale de la ecuación elegida; el TDEE es el BMR por el factor de actividad; el objetivo energético es el TDEE menos el déficit; la proteína son los gramos por kilo por el peso de referencia; la grasa es el porcentaje de energía dividido entre nueve; y los hidratos salen **por diferencia**. Todo resultado se redondea a dos decimales y es recalculable con una calculadora de bolsillo.
+La aritmética de la propuesta, en el orden en que las reglas la enuncian: el BMR sale de la ecuación elegida; el TDEE es el BMR por el factor de actividad; el objetivo energético es el TDEE menos el déficit; la proteína son los gramos por kilo por el peso de referencia; la grasa es el porcentaje de energía dividido entre nueve; y los hidratos salen por diferencia. Todo resultado se redondea a dos decimales y es recalculable con una calculadora de bolsillo.
 
-**`ReviewItemCommandService`** — la bandeja de entrada. Depende de `IReviewItemRepository`, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. **Nada en esta clase toca un `NutritionPlan`, y no depende en absoluto del plan command service**: esa ausencia de dependencia es lo que hace estructural la regla *Signal Notifies Never Modifies The Plan*. `Handle(OpenReviewItemCommand)` aplica *One Open Item Per Patient And Signal Type* y resuelve el profesional desde el vínculo activo; `Handle(ResolveReviewItemCommand)` exige que la resolución declare si el plan fue ajustado.
+**`ReviewItemCommandService`** — la bandeja de entrada. Depende de `IReviewItemRepository`, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. La clase no accede a `NutritionPlan` ni depende del servicio de comandos del plan, lo que garantiza la regla *Signal Notifies Never Modifies The Plan*. `Handle(OpenReviewItemCommand)` aplica *One Open Item Per Patient And Signal Type* y resuelve el profesional desde el vínculo activo; `Handle(ResolveReviewItemCommand)` exige que la resolución declare si el plan fue ajustado.
 
 **Query Services** — `NutritionalAssessmentQueryService`, `NutritionalDiagnosisQueryService`, `NutritionPlanQueryService` y `ReviewItemQueryService`; este último añade `CountOpen(int)`, usado por el ACL.
 
@@ -3694,33 +3694,33 @@ La aritmética de la propuesta, en el orden en que las reglas la enuncian: el BM
 | `OnSustainedDeviationDetectedHandler` | `SustainedDeviationDetected` (Monitoring) | *When Sustained Deviation Detected* (3.7) | `OpenReviewItemCommand` con `SignalType.SustainedDeviation` |
 | `OnAlertEscalatedToPractitionerHandler` | `AlertEscalatedToPractitioner` (Monitoring) | *When Alert Escalated To Practitioner* (3.7) | `OpenReviewItemCommand` con `SignalType.ConsistencyEscalation` |
 
-Los dos últimos resuelven **exactamente un servicio** y emiten **exactamente un comando**, y ese comando abre un ítem en una bandeja: no resuelven el plan command service, no importan nada sobre planes y no existe rama que pueda alcanzar uno. Que una persona dé el siguiente paso no es un detalle de experiencia de usuario, es lo que impide que un algoritmo cambie un plan clínico basándose en una estimación hecha a partir de una foto.
+Los dos últimos handlers solo emiten el comando que abre un ítem de revisión y no tienen acceso al servicio de planes. De esta forma, un ajuste del plan siempre requiere la decisión del profesional y nunca se produce automáticamente a partir de una estimación por fotografía.
 
-**ACL Facade** — `NutritionalCareContextFacade` depende de `INutritionPlanQueryService` e `IReviewItemQueryService`. `GetActiveTargetsByPatientId` sólo devuelve datos si el plan está publicado y tiene objetivos prescritos, y **sólo cruza el contrato publicado**: sin diagnóstico y sin base de cálculo.
+**ACL Facade** — `NutritionalCareContextFacade` depende de `INutritionPlanQueryService` e `IReviewItemQueryService`. `GetActiveTargetsByPatientId` sólo devuelve datos si el plan está publicado y tiene objetivos prescritos, y sólo cruza el contrato publicado: sin diagnóstico y sin base de cálculo.
 
 #### 2.6.4.4. Infrastructure Layer
 
-La Infrastructure Layer de Nutritional Care contiene la implementación del único domain service del contexto y la persistencia de sus cinco tablas. **No consume APIs de terceros ni aloja hosted services.**
+La Infrastructure Layer de Nutritional Care contiene la implementación del único domain service del contexto y la persistencia de sus cinco tablas. No consume APIs de terceros ni aloja hosted services.
 
 **Calculators — `BmrCalculator`**
 
-Implementa `IBmrCalculator` seleccionando la ecuación con un `switch` y redondeando el resultado a dos decimales. **Cada constante proviene de la literatura publicada y todo resultado es reproducible con una calculadora de bolsillo**, que es lo que sostiene el principio de cero caja negra.
+Implementa `IBmrCalculator` seleccionando la ecuación con un `switch` y redondeando el resultado a dos decimales. Cada constante proviene de la literatura publicada y todo resultado puede reproducirse manualmente, lo que sostiene el principio de trazabilidad del cálculo.
 
 | Método privado | Ecuación | Nota |
 |---|---|---|
 | `MifflinStJeor(BmrInputs)` | Mifflin-St Jeor (1990) | Lineal en peso, talla y edad, con constante por sexo. |
 | `HarrisBenedict(BmrInputs)` | Harris-Benedict revisada por Roza y Shizgal (1984) | Coeficientes distintos por sexo. |
-| `FaoWhoUnu(BmrInputs)` | FAO/WHO/UNU (1985) | Bandas por sexo y edad, **sólo en función del peso**. |
-| `KatchMcArdle(BmrInputs)` | Katch-McArdle | Basada en masa magra; **la única que ignora edad y sexo, y la única que exige una lectura de composición corporal**. |
+| `FaoWhoUnu(BmrInputs)` | FAO/WHO/UNU (1985) | Bandas por sexo y edad, sólo en función del peso. |
+| `KatchMcArdle(BmrInputs)` | Katch-McArdle | Basada en masa magra; la única que ignora edad y sexo, y la única que exige una lectura de composición corporal. |
 
 **Configuraciones de EF Core**
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
-| `NutritionalAssessmentEntityTypeConfiguration` | `nutritional_assessments` | PK con converter `AssessmentId.FromRaw`; campos narrativos con longitudes amplias; `biological_sex` con converter. **Configura la relación de composición** con `HasMany(a => a.Measurements).WithOne().HasForeignKey(m => m.AssessmentId).IsRequired().OnDelete(DeleteBehavior.Cascade)` más el acceso por campo a la navegación. |
+| `NutritionalAssessmentEntityTypeConfiguration` | `nutritional_assessments` | PK con converter `AssessmentId.FromRaw`; campos narrativos con longitudes amplias; `biological_sex` con converter. Configura la relación de composición con `HasMany(a => a.Measurements).WithOne().HasForeignKey(m => m.AssessmentId).IsRequired().OnDelete(DeleteBehavior.Cascade)` más el acceso por campo a la navegación. |
 | `ClinicalMeasurementEntityTypeConfiguration` | `clinical_measurements` | PK `id` como `int` simple; `assessment_id` con converter, requerido e indexado; las cuatro medidas como `decimal(10,2)`; `protocol` con converter. |
 | `NutritionalDiagnosisEntityTypeConfiguration` | `nutritional_diagnoses` | PK con converter `DiagnosisId.FromRaw`; `statement` (1000) y `rationale` (2000, con converter); índice sobre `patient_id`. |
-| `NutritionPlanEntityTypeConfiguration` | `nutrition_plans` | PK con converter `PlanId.FromRaw`; **ocho columnas de base de cálculo, cuatro de propuesta (requeridas) y seis de prescripción (nullables)**; `change_reason` con un `ValueConverter` explícito; `guidelines` y `restrictions` como columnas `json` mapeadas desde sus backing fields con `JsonSerializer` y un `ValueComparer<List<string>>` estático que **no es opcional**: sin él EF nunca detecta un cambio y las actualizaciones se pierden silenciosamente. Ocho `Ignore` sobre las propiedades calculadas. |
+| `NutritionPlanEntityTypeConfiguration` | `nutrition_plans` | PK con converter `PlanId.FromRaw`; ocho columnas de base de cálculo, cuatro de propuesta (requeridas) y seis de prescripción (nullables); `change_reason` con un `ValueConverter` explícito; `guidelines` y `restrictions` como columnas `json` mapeadas desde sus backing fields con `JsonSerializer` y un `ValueComparer<List<string>>` estático, necesario para que EF Core detecte los cambios en esas listas. Ocho `Ignore` sobre las propiedades calculadas. |
 | `ReviewItemEntityTypeConfiguration` | `review_items` | PK con converter `ReviewItemId.FromRaw`; índices sobre `patient_id` y `practitioner_id`; `signal_type` (40), `evidence` (2000) y `state` (20) con sus converters. |
 
 La razón por la que los tres value objects compuestos del plan se aplanan en columnas en lugar de usarse como *owned types* es concreta: un owned type necesitaría mapear su propia clave sobre una clave primaria tipada, algo que EF Core no puede reconciliar.
@@ -3731,8 +3731,8 @@ La razón por la que los tres value objects compuestos del plan se aplanan en co
 |---|---|
 | `NutritionalAssessmentRepository` | Helper privado `WithRelations()` que aplica `.Include(a => a.Measurements)`, porque el cálculo necesita la antropometría. |
 | `NutritionalDiagnosisRepository` | `FindActiveByPatientIdAsync` filtra por diagnóstico no superseded y ordena por fecha de emisión descendente. |
-| `NutritionPlanRepository` | `FindActiveByPatientIdAsync` filtra activo y no superseded; `ListByPatientIdAsync` **incluye las versiones superseded**, porque el historial de versiones es un read model; `GetLatestVersionAsync` proyecta versiones y devuelve el máximo. |
-| `ReviewItemRepository` | Campo estático con la instancia del estado `Open` y helper privado `OpenFor(int)`; la comparación se hace contra la instancia del value object porque **EF no puede traducir un miembro de un tipo convertido**. |
+| `NutritionPlanRepository` | `FindActiveByPatientIdAsync` filtra activo y no superseded; `ListByPatientIdAsync` incluye las versiones superseded, porque el historial de versiones es un read model; `GetLatestVersionAsync` proyecta versiones y devuelve el máximo. |
+| `ReviewItemRepository` | Campo estático con la instancia del estado `Open` y helper privado `OpenFor(int)`; la comparación se hace contra la instancia del value object porque EF no puede traducir un miembro de un tipo convertido. |
 
 **Servicios externos** — Ninguno. El `BmrCalculator` es aritmética local, no una API de terceros, y ninguna decisión clínica de este contexto sale de la aplicación.
 
