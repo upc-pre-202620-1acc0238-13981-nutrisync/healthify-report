@@ -2448,7 +2448,7 @@ El mapa resultante contiene trece integraciones por evento originadas en once ev
 
 ### 2.5.3. Software Architecture
 
-La arquitectura de software de Healthify se representa mediante el modelo C4, aplicando tres de sus niveles de abstracción — Contexto, Contenedores y Componentes — sobre la solución completa: la aplicación móvil Flutter, el backend ASP\.NET Core, el Landing Page estático y la base de datos MySQL 8. El diseño sigue los seis Bounded Contexts identificados en el proceso estratégico de Domain-Driven Design (2.5.1 y 2.5.2), materializados aquí como módulos concretos tanto en el cliente como en el servidor. Estos tres niveles se detallan en las secciones 2.5.3.1 a 2.5.3.3; adicionalmente, se presenta en la sección 2.5.3.4 el Deployment Diagram, diagrama suplementario del modelo C4 que describe la distribución física de la solución sobre la infraestructura.
+La arquitectura de software de Healthify se representa mediante el modelo C4, aplicando tres de sus niveles de abstracción — Contexto, Contenedores y Componentes — sobre la solución completa: la aplicación móvil Flutter, el backend ASP\.NET Core 10, el Landing Page estático y la base de datos MySQL 8.4. El diseño sigue los seis Bounded Contexts identificados en el proceso estratégico de Domain-Driven Design (2.5.1 y 2.5.2), materializados aquí como módulos concretos tanto en el cliente como en el servidor. Estos tres niveles se detallan en las secciones 2.5.3.1 a 2.5.3.3; adicionalmente, se presenta en la sección 2.5.3.4 el Deployment Diagram, diagrama suplementario del modelo C4 que describe la distribución física de la solución sobre la infraestructura.
 
 #### 2.5.3.1. Software Architecture Context Level Diagrams
 
@@ -2475,9 +2475,9 @@ El Diagrama de Contenedores (Nivel 2 del modelo C4) desglosa el sistema Healthif
 - **Mobile Application:** Frontend donde Patient y Practitioner interactúan con la plataforma. Aplicación Flutter única con dos navigation shells seleccionados según el claim de rol, que agrupa internamente los seis Bounded Contexts del cliente. Programa además los recordatorios locales de pesaje y de vacíos de registro mediante la API de notificaciones del sistema operativo, sin depender de un servicio externo.
    - **Tecnología:** `Flutter`.
 - **API Application:** Backend que maneja la lógica de negocio de los seis Bounded Contexts, expuesta vía una API RESTful.
-   - **Tecnología:** `ASP.NET Core (C#)`.
+   - **Tecnología:** `ASP.NET Core 10 (C#)`.
 - **Database:** Almacena usuarios, vínculos de cuidado, evaluaciones, diagnósticos, planes, entradas del diario y ventanas de monitoreo.
-   - **Tecnología:** `MySQL 8`.
+   - **Tecnología:** `MySQL 8.4`.
 - **External Systems:** APIs de terceros que se integran con el backend y con el cliente para extender las capacidades del sistema.
    - **Tecnología:** `JSON/HTTPS (REST)` para el backend; llamada on-device sin red para ML Kit.
 
@@ -2601,7 +2601,7 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 
 **B. API Application Components (Backend)**
 
-El backend se organiza en 6 Bounded Contexts y un Shared Kernel, cada uno siguiendo el patrón de arquitectura del Domain-Driven Design. Todos los Bounded Contexts comparten una única base de datos MySQL 8, accedida a través de los repositorios de Entity Framework Core en la capa de Infrastructure de cada uno.
+El backend se organiza en 6 Bounded Contexts y un Shared Kernel, cada uno siguiendo el patrón de arquitectura del Domain-Driven Design. Todos los Bounded Contexts comparten una única base de datos MySQL 8.4, accedida a través de los repositorios de Entity Framework Core 10 en la capa de Infrastructure de cada uno.
 
 El diagrama a continuación muestra todos los componentes de la arquitectura en un único bloque.
 
@@ -2618,6 +2618,13 @@ El detalle individual se acota a la capa de Interfaces porque es la única que e
 Componente transversal utilizado por todos los Bounded Contexts del backend. Es mínimo y deliberado: solo agrupa identificadores (PatientId, PractitionerId, CareLinkId, PlanId) y unidades de medida. No contiene lógica de negocio propia ni acceso a base de datos.
 
 ![Shared Kernel Diagram](../assets/img/artifacts/healthify-SharedKernelDiagram.png)
+
+**Read Models compuestos (`ReadModels`):**
+
+Módulo de la API que arma las vistas que necesitan datos de más de un Bounded Context. No es un contenedor aparte ni un Bounded Context: no tiene dominio, comandos ni tablas propias, y solo lee a través de las fachadas ACL de los contextos. Se organiza en dos capas:
+
+- **Interfaces:** `PatientRecordController` expone `GET /api/v1/patients/{patientId}/record` (read model Patient Record, para el paciente y su nutricionista vinculado) y `PatientMonitoringPanelController` expone `GET /api/v1/patients/{patientId}/monitoring-panel` (read model Patient Monitoring Panel, solo para el rol `Practitioner`). Ambos verifican el vínculo activo con `ICareRelationshipContextFacade` antes de responder.
+- **Application:** `PatientRecordComposer` combina las fachadas de IAM, Care Relationship, Nutritional Care, Intake & Body Response y Monitoring & Adherence; `PatientMonitoringPanelComposer` combina las de Nutritional Care, Intake & Body Response y Monitoring & Adherence.
 
 **Bounded Contexts:**
 
@@ -2712,14 +2719,14 @@ El Deployment Diagram (diagrama suplementario del modelo C4, elaborado en notaci
 - **Oracle Cloud Infrastructure:** Nodo de nube (`<<cloud>>`) que agrupa toda la infraestructura del backend.
    - **Compute Instance:** Máquina virtual que hospeda el `Docker Engine`.
    - **Docker Engine:** Entorno de ejecución de contenedores, dentro del cual corren dos contenedores aislados entre sí:
-      - **API Container:** Contenedor que aloja el artefacto `API Application (ASP.NET Core)`.
-      - **Database Container:** Contenedor que aloja la base de datos `MySQL 8`.
+      - **API Container:** Contenedor que aloja el artefacto `API Application (ASP.NET Core 10)`.
+      - **Database Container:** Contenedor que aloja la base de datos `MySQL 8.4`.
 
 **Relaciones:**
 
 - `Mobile Device → Oracle Cloud Infrastructure` (`JSON/HTTPS`): la aplicación móvil consume la API RESTful del backend.
 - `Mobile Device → GitHub Pages` (`HTTPS`): el dispositivo accede al Landing Page como contenido estático.
-- `API Application → Database` (`SQL/TCP`): la API se conecta a MySQL 8 a través de la red interna de Docker, pese a correr en contenedores independientes.
+- `API Application → Database` (`SQL/TCP`): la API se conecta a MySQL 8.4 a través de la red interna de Docker, pese a correr en contenedores independientes.
 
 ![Deployment Diagram](../assets/img/artifacts/healthify-DeploymentDiagram.png)
 
