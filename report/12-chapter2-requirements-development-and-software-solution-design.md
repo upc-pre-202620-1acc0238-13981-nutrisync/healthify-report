@@ -130,15 +130,16 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 
 | Segmento: Paciente en tratamiento nutricional activo | Entrevista #2 |
 | --- | --- |
-| Nombres y Apellidos | Larisa Ramirez |
-| Edad | 20 años |
-| Distrito | San Miguel |
+| Nombres y Apellidos | Larisa Ramírez |
+| Edad | 19 años |
+| Distrito | San Miguel, Lima |
 | Ocupación | Estudiante de Administración y Marketing (UPC) |
-| Timming inicio |0:00 - 0:00|
-| Duración |0:00 minutos|
-| URL | [Video entrevista]()|
-| Screenshot |![Entrevista 2 Seg2](../assets/img/chapter2/interviews/Entrevista2-seg2.png)|
-| Resumen | Larisa Ramirez tiene 20 años, vive en San Miguel en un departamento junto a su prima y una persona que ayuda con las labores del hogar, quien es la encargada de cocinar diariamente. Comenzó a ir a un nutricionista para mejorar su alimentación y sentirse mejor con su cuerpo, tras haber intentado antes por su cuenta reducir comidas sin lograr constancia. Su plan nutricional lo recibe y guarda en WhatsApp, complementado con capturas de pantalla de indicaciones puntuales, mientras que sus medidas y resultados de análisis están dispersos entre su nutricionista y fotos en su celular, sin un orden centralizado. No lleva ningún registro formal de sus comidas: se guía comparando mentalmente lo que come con las indicaciones recibidas. Reconoció que la noche anterior comió pizza fuera del plan, algo que no reportó a su nutricionista porque considera que es una excepción autorizada dentro de un margen de flexibilidad que su nutricionista le permite los fines de semana. El contacto con su nutricionista es esporádico y ocurre principalmente cuando ella tiene dudas, no de forma constante. Se pesa una vez por semana según frecuencia establecida por su nutricionista para comparar avances entre consultas. Probó la aplicación Fitia para registrar comidas, pero la abandonó por la fricción de buscar cada alimento y registrar cantidades manualmente después de cada comida. Se mostró muy receptiva a las hipótesis de producto planteadas: usaría a diario un registro por foto con confirmación automática del sistema, siempre que este no falle demasiado ni exija ingresar datos manualmente, y también valoraría un botón de "hoy comí fuera de mi plan" que le permitiera notificar sin justificarse, de forma que su nutricionista pueda tenerlo en cuenta en la siguiente consulta. Finalmente, identificó como el cambio que más le gustaría tener el poder centralizar todo en un solo lugar, ya que actualmente su plan está en WhatsApp, sus medidas en un bloc de notas y su alimentación diaria solo la recuerda mentalmente.|
+| Entrevistador | Olenka Del Aguila |
+| Timing | 0:00 – 0:00 |
+| Duración | 0:00 minutos |
+| URL | [Video entrevista]() |
+| Screenshot | ![Entrevista 2 Seg2](../assets/img/chapter2/interviews/Entrevista2-seg2.png) |
+| Resumen | Larisa tiene 19 años y vive con su prima y una persona que las ayuda en casa, quien prepara las comidas. Acudió al nutricionista para mejorar su alimentación y sentirse mejor con su cuerpo, después de intentar reducir comidas por su cuenta sin lograr constancia. Tiene su plan en WhatsApp, junto con capturas de pantalla de indicaciones puntuales. Sus medidas y resultados están repartidos entre la nutricionista, fotos en su celular y un bloc de notas, y reconoce que no tiene nada ordenado en un solo lugar. **No registra lo que come**: solo intenta recordarlo y compararlo mentalmente con el plan. La noche anterior a la entrevista comió pizza y no se lo comunicó a su nutricionista porque tiene permitido "darse un gusto" algún fin de semana y lo consideró algo puntual. El contacto con su nutricionista es por WhatsApp, esporádico y solo cuando ella tiene dudas. Se pesa una vez por semana, frecuencia indicada por su nutricionista. Probó Fitia, pero la abandonó por la flojera de buscar cada alimento e ingresar cantidades después de cada comida. Aseguró que usaría a diario el registro por foto por ser mucho más fácil, y que solo lo dejaría si el sistema se equivocara mucho o le pidiera demasiados datos manuales. Usaría el botón de "comí fuera del plan" porque es rápido y no sentiría que tiene que justificarse, y su nutricionista podría tenerlo en cuenta en la siguiente consulta. Lo que más le gustaría cambiar es tener todo en un solo lugar, con una forma fácil de registrar su alimentación y que su nutricionista pueda ver su progreso. |
 
 <div style="page-break-after: always"></div>
 
