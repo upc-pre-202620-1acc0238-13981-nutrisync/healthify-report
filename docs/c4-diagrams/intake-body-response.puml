@@ -1,9 +1,4 @@
 @startuml IntakeBodyResponse_Component_Diagram
-' =============================================================================
-'  Healthify Platform - Bounded Context: Intake and Body Response
-'  C4 Model - Level 3: Component Diagram
-'  Container decomposed: Healthify Platform API (ASP.NET Core 10 Web API)
-' =============================================================================
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 
 LAYOUT_TOP_DOWN()
@@ -18,13 +13,11 @@ Container(mobile, "Mobile Application", "Flutter / MAUI", "Offline-first diary. 
 
 Container_Boundary(api, "Healthify Platform API") {
 
-    ' ------------------------------------------------------------- Interfaces
     Component(diaryController, "DiaryEntriesController", "ASP.NET Core REST Controller", "api/v1/diary-entries. Log and synchronise")
     Component(weighInsController, "SelfWeighInsController", "ASP.NET Core REST Controller", "api/v1/self-weigh-ins. Record a weigh-in")
     Component(patientIntakeController, "PatientIntakeController", "ASP.NET Core REST Controller", "api/v1/patients. Daily summary and trend")
     Component(intakeAssemblers, "Intake Transform Assemblers", "C# static assemblers", "Maps resources, commands and responses")
 
-    ' ------------------------------------------------------------- Application
     Component(diaryCmdService, "DiaryEntryCommandService", "C# Application Service (CQRS command side)", "Logs, confirms and synchronises entries")
     Component(weighInCmdService, "SelfWeighInCommandService", "C# Application Service (CQRS command side)", "Records the self weigh-in")
     Component(targetsCacheCmdService, "ActiveTargetsCacheCommandService", "C# Application Service (CQRS command side)", "Refreshes the local targets copy")
@@ -34,14 +27,12 @@ Container_Boundary(api, "Healthify Platform API") {
     Component(onWeighIn, "OnSelfWeighInRecordedHandler", "Cortex.Mediator IEventHandler of SelfWeighInRecorded", "Recalculates the weight trend")
     Component(intakeFacade, "IntakeContextFacade", "C# ACL - Open Host Service", "Publishes daily summaries and trend")
 
-    ' ------------------------------------------------------------- Domain
     Component(diaryAggregate, "DiaryEntry", "C# Aggregate Root", "A meal with provenance and estimate")
     Component(weighInAggregate, "SelfWeighIn", "C# Aggregate Root", "Weight measured by the patient")
     Component(trendAggregate, "WeightTrend", "C# Aggregate Root", "Smoothed series of the weigh-ins")
     Component(targetsCacheAggregate, "ActiveTargetsCache", "C# Aggregate Root", "Read-only copy of the published targets")
     Component(intakeValueObjects, "Value Objects and Errors", "C# records and enums", "Estimates, Provenance, LocalTimestamp, errors")
 
-    ' ------------------------------------------------------------- Infrastructure
     Component(intakeRepos, "Intake Repositories", "C# Repositories over EF Core 10", "Persist diary, weigh-ins, trend, cache")
     Component(intakeEfcConfig, "Intake EntityTypeConfigurations", "EF Core 10 Fluent API", "Maps tables, sync index and audit")
 }
@@ -53,7 +44,6 @@ Container_Ext(foodCatalogCtx, "Food Catalog", "Sibling bounded context", "Consul
 Container_Ext(nutritionalCareCtx, "Nutritional Care", "Sibling bounded context", "Publishes ActiveTargetsUpdated")
 Container_Ext(monitoringCtx, "Monitoring and Adherence", "Sibling bounded context", "Subscribes to MealLogged, EstimateConfirmedByPatient, OffPlanEntryLogged, EntrySynchronized and WeightTrendRecalculated, and reads the summaries through the Open Host Service")
 
-' ------------------------------------------------------------------ Relations
 Rel(patient, mobile, "Logs meals, confirms estimates and weighs in", "Touch, works offline")
 Rel(practitioner, mobile, "Reads the diary and the trend", "Touch")
 Rel(mobile, diaryController, "Logs and synchronises diary entries", "JSON/HTTPS, Bearer JWT")

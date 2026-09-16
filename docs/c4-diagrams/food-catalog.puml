@@ -1,9 +1,4 @@
 @startuml FoodCatalog_Component_Diagram
-' =============================================================================
-'  Healthify Platform - Bounded Context: Food Catalog
-'  C4 Model - Level 3: Component Diagram
-'  Container decomposed: Healthify Platform API (ASP.NET Core 10 Web API)
-' =============================================================================
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 
 LAYOUT_TOP_DOWN()
@@ -18,23 +13,19 @@ Container(mobile, "Mobile Application", "Flutter / MAUI", "Search box of the dia
 
 Container_Boundary(api, "Healthify Platform API") {
 
-    ' ------------------------------------------------------------- Interfaces
     Component(referenceFoodsController, "ReferenceFoodsController", "ASP.NET Core REST Controller", "api/v1/reference-foods. Search and read")
     Component(localCatalogController, "LocalFoodCatalogController", "ASP.NET Core REST Controller", "api/v1/patients. Local catalog and overrides")
     Component(fcAssemblers, "Food Catalog Transform Assemblers", "C# static assemblers", "Maps resources, commands and responses")
 
-    ' ------------------------------------------------------------- Application
     Component(foodCmdService, "ReferenceFoodCommandService", "C# Application Service (CQRS command side)", "Searches, caches, overrides and imports")
     Component(foodQryService, "ReferenceFoodQueryService", "C# Application Service (CQRS query side)", "Local-first search of the catalog")
     Component(onTranslated, "OnReferenceFoodTranslatedHandler", "Cortex.Mediator IEventHandler of ReferenceFoodTranslated", "Policy 6.2: the only writer on import")
     Component(fcFacade, "FoodCatalogContextFacade", "C# ACL - Open Host Service", "Publishes food resolution and search")
 
-    ' ------------------------------------------------------------- Domain
     Component(foodAggregate, "ReferenceFood", "C# Aggregate Root", "A food with nutrients and provenance")
     Component(fcValueObjects, "Value Objects and Errors", "C# records and enums", "LocalName, NutrientsPer100g, SourceHash, errors")
     Component(providerPort, "IExternalFoodCatalogProvider", "C# Domain Service interface (port)", "External catalog port of the domain")
 
-    ' ------------------------------------------------------------- Infrastructure
     Component(usdaProvider, "UsdaFoodDataProvider", "C# ACL adapter, HttpClient, 10 s timeout", "Translates USDA records into the port")
     Component(offProvider, "OpenFoodFactsProvider", "C# ACL adapter, HttpClient, 10 s timeout", "Translates Open Food Facts records")
     Component(fcRepo, "ReferenceFoodRepository", "C# Repository over EF Core 10", "Persists the reference foods")
@@ -50,7 +41,6 @@ System_Ext(off, "Open Food Facts", "Open collaborative database of packaged food
 
 Container_Ext(intakeCtx, "Intake and Body Response", "Sibling bounded context", "Resolves the food of a diary entry against the local catalog through the Open Host Service")
 
-' ------------------------------------------------------------------ Relations
 Rel(patient, mobile, "Searches a food", "Touch")
 Rel(practitioner, mobile, "Creates a local override", "Touch")
 Rel(mobile, referenceFoodsController, "Searches and reads reference foods", "JSON/HTTPS, Bearer JWT")

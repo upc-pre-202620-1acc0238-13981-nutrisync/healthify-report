@@ -8,9 +8,6 @@ hide empty members
 package "Healthify.Platform.NutritionalCare.Infrastructure" {
 
   package "Calculators" {
-    ' The four published equations. Every constant comes from the literature
-    ' and every result is reproducible with a pocket calculator: no black box,
-    ' no external service, no model.
     class BmrCalculator {
       +ComputeBmr(equation: Equation, inputs: BmrInputs): decimal
       -{static} MifflinStJeor(i: BmrInputs): decimal
@@ -102,13 +99,11 @@ package "Shared.Infrastructure / EF Core" <<external>> {
   class JsonSerializer
 }
 
-' --- Domain service implementation (port to adapter) ---
 BmrCalculator ..|> IBmrCalculator
 BmrCalculator ..> Equation : selects the formula by
 BmrCalculator ..> BmrInputs : reads
 BmrCalculator ..> BiologicalSex : stratifies by
 
-' --- EF Core entity configurations ---
 NutritionalAssessmentEntityTypeConfiguration ..|> IEntityTypeConfiguration
 ClinicalMeasurementEntityTypeConfiguration ..|> IEntityTypeConfiguration
 NutritionalDiagnosisEntityTypeConfiguration ..|> IEntityTypeConfiguration
@@ -121,7 +116,6 @@ NutritionPlanEntityTypeConfiguration ..> NutritionPlan : maps to nutrition_plans
 ReviewItemEntityTypeConfiguration ..> ReviewItem : maps to review_items
 NutritionalAssessmentEntityTypeConfiguration ..> AssessmentId : converts
 NutritionalAssessmentEntityTypeConfiguration ..> BiologicalSex : converts
-' The only EF navigation of this context: inside the aggregate, cascade delete.
 NutritionalAssessmentEntityTypeConfiguration ..> ClinicalMeasurementEntityTypeConfiguration : owns via HasMany
 ClinicalMeasurementEntityTypeConfiguration ..> MeasurementProtocol : converts
 ClinicalMeasurementEntityTypeConfiguration ..> AssessmentId : converts the FK
@@ -131,7 +125,6 @@ NutritionPlanEntityTypeConfiguration ..> PlanId : converts
 NutritionPlanEntityTypeConfiguration ..> Equation : converts
 NutritionPlanEntityTypeConfiguration ..> ChangeReason : converts (nullable VO)
 NutritionPlanEntityTypeConfiguration --> ValueConverter : uses for nullable VO
-' Without the comparer EF never notices a list change and updates are lost.
 NutritionPlanEntityTypeConfiguration --> ValueComparer : compares the JSON lists with
 NutritionPlanEntityTypeConfiguration --> JsonSerializer : stores guidelines / restrictions as JSON
 ReviewItemEntityTypeConfiguration ..> ReviewItemId : converts
@@ -144,7 +137,6 @@ AppDbContext ..> NutritionPlanEntityTypeConfiguration : applies
 AppDbContext ..> ReviewItemEntityTypeConfiguration : applies
 AppDbContext --> AuditableEntityInterceptor : stamps created_at / updated_at
 
-' --- Repositories ---
 NutritionalAssessmentRepository --|> BaseRepository
 NutritionalDiagnosisRepository --|> BaseRepository
 NutritionPlanRepository --|> BaseRepository
@@ -158,7 +150,6 @@ NutritionalAssessmentRepository --> AppDbContext : queries
 NutritionalDiagnosisRepository --> AppDbContext : queries
 NutritionPlanRepository --> AppDbContext : queries
 ReviewItemRepository --> AppDbContext : queries
-' Loads the anthropometry with the assessment: the calculation reads it.
 NutritionalAssessmentRepository ..> NutritionalAssessment : persists
 NutritionalAssessmentRepository ..> ClinicalMeasurement : includes
 NutritionalAssessmentRepository ..> AssessmentId : rebuilds typed id
@@ -168,8 +159,6 @@ NutritionPlanRepository ..> NutritionPlan : persists
 NutritionPlanRepository ..> PlanId : rebuilds typed id
 ReviewItemRepository ..> ReviewItem : persists
 ReviewItemRepository ..> ReviewItemId : rebuilds typed id
-' Compared through the value converter: EF cannot translate a member of a
-' converted type, so the state is compared as a whole value object.
 ReviewItemRepository ..> ReviewItemState : filters by
 ReviewItemRepository ..> SignalType : filters by
 

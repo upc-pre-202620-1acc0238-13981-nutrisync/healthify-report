@@ -25,12 +25,9 @@ package "Healthify.Platform.IntakeBodyResponse.Infrastructure" {
   }
 
   package "Persistence.EFC.Repositories" {
-    ' The patient is the key, so finding by identifier and finding by patient
-    ' are the same operation.
     class ActiveTargetsCacheRepository {
       +FindByPatientIdAsync(patientId: int, ct): Task<ActiveTargetsCache?>
     }
-    ' Nothing here overrides or calls the inherited Remove: Entry Never Deleted.
     class DiaryEntryRepository {
       -{static} PendingState: SyncState
       -{static} ConflictedState: SyncState
@@ -72,18 +69,14 @@ package "Shared.Infrastructure / EF Core" <<external>> {
   interface "IEntityTypeConfiguration<T>" as IEntityTypeConfiguration
   class "ValueComparer<T>" as ValueComparer
   class AuditableEntityInterceptor
-  ' It excludes properties literally named LocalTimestamp, which is why the
-  ' declared wall clock keeps that exact name on both aggregates.
   class UtcDateTimeInterceptor
   class JsonSerializer
 }
 
-' --- EF Core entity configurations ---
 ActiveTargetsCacheEntityTypeConfiguration ..|> IEntityTypeConfiguration
 DiaryEntryEntityTypeConfiguration ..|> IEntityTypeConfiguration
 SelfWeighInEntityTypeConfiguration ..|> IEntityTypeConfiguration
 WeightTrendEntityTypeConfiguration ..|> IEntityTypeConfiguration
-' The patient identifier is the primary key of both patient-rooted tables.
 ActiveTargetsCacheEntityTypeConfiguration ..> ActiveTargetsCache : maps to active_targets_caches
 DiaryEntryEntityTypeConfiguration ..> DiaryEntry : maps to diary_entries
 SelfWeighInEntityTypeConfiguration ..> SelfWeighIn : maps to self_weigh_ins
@@ -93,7 +86,6 @@ DiaryEntryEntityTypeConfiguration ..> Provenance : converts
 DiaryEntryEntityTypeConfiguration ..> SyncState : converts
 SelfWeighInEntityTypeConfiguration ..> SelfWeighInId : converts
 WeightTrendEntityTypeConfiguration ..> WeightTrendPoint : serializes the series
-' Without the comparer EF never notices a list change and updates are lost.
 ActiveTargetsCacheEntityTypeConfiguration --> ValueComparer : compares the JSON lists with
 ActiveTargetsCacheEntityTypeConfiguration --> JsonSerializer : stores guidelines / restrictions as JSON
 WeightTrendEntityTypeConfiguration --> ValueComparer : compares the JSON series with
@@ -105,7 +97,6 @@ AppDbContext ..> WeightTrendEntityTypeConfiguration : applies
 AppDbContext --> AuditableEntityInterceptor : stamps created_at / updated_at
 AppDbContext --> UtcDateTimeInterceptor : normalises every date except LocalTimestamp
 
-' --- Repositories ---
 ActiveTargetsCacheRepository --|> BaseRepository
 DiaryEntryRepository --|> BaseRepository
 SelfWeighInRepository --|> BaseRepository
@@ -120,12 +111,8 @@ DiaryEntryRepository --> AppDbContext : queries
 SelfWeighInRepository --> AppDbContext : queries
 WeightTrendRepository --> AppDbContext : queries
 ActiveTargetsCacheRepository ..> ActiveTargetsCache : persists
-' Filtered on the wall clock the patient was reading, so a meal logged at nine
-' in the evening in Lima belongs to that evening and not to the next UTC day.
 DiaryEntryRepository ..> DiaryEntry : persists
 DiaryEntryRepository ..> DiaryEntryId : rebuilds typed id
-' Compared through the value converter: EF cannot translate a member of a
-' converted type, so the state is compared as a whole value object.
 DiaryEntryRepository ..> SyncState : filters the pending queue by
 SelfWeighInRepository ..> SelfWeighIn : persists (every reading, none excluded)
 SelfWeighInRepository ..> SelfWeighInId : rebuilds typed id

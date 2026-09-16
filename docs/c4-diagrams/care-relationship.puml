@@ -1,9 +1,4 @@
 @startuml CareRelationship_Component_Diagram
-' =============================================================================
-'  Healthify Platform - Bounded Context: Care Relationship
-'  C4 Model - Level 3: Component Diagram
-'  Container decomposed: Healthify Platform API (ASP.NET Core 10 Web API)
-' =============================================================================
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 
 LAYOUT_TOP_DOWN()
@@ -18,14 +13,12 @@ Container(mobile, "Mobile Application", "Flutter / MAUI", "Scans and renders the
 
 Container_Boundary(api, "Healthify Platform API") {
 
-    ' ------------------------------------------------------------- Interfaces
     Component(invitationsController, "InvitationsController", "ASP.NET Core REST Controller", "api/v1/invitations. Issue and redeem")
     Component(careLinksController, "CareLinksController", "ASP.NET Core REST Controller", "api/v1/care-links. Consent and discharge")
     Component(patientCareLinksController, "PatientCareLinksController", "ASP.NET Core REST Controller", "api/v1/patients. Active link and acknowledgement")
     Component(practitionerPatientsController, "PractitionerPatientsController", "ASP.NET Core REST Controller", "api/v1/practitioners. Patient list")
     Component(crAssemblers, "Care Relationship Transform Assemblers", "C# static assemblers", "Maps resources, commands and responses")
 
-    ' ------------------------------------------------------------- Application
     Component(invitationCmdService, "InvitationCommandService", "C# Application Service (CQRS command side)", "Issues, redeems and expires invitations")
     Component(careLinkCmdService, "CareLinkCommandService", "C# Application Service (CQRS command side)", "Establishes, consents, revokes and discharges")
     Component(invitationQryService, "InvitationQueryService", "C# Application Service (CQRS query side)", "Reads invitations by id or token")
@@ -35,12 +28,10 @@ Container_Boundary(api, "Healthify Platform API") {
     Component(onTargetsUpdated, "OnActiveTargetsUpdatedCareRelationshipHandler", "Cortex.Mediator IEventHandler of ActiveTargetsUpdated", "Policy 2.4: flags targets as pending")
     Component(crFacade, "CareRelationshipContextFacade", "C# ACL - Open Host Service", "Publishes the active link authorisation")
 
-    ' ------------------------------------------------------------- Domain
     Component(careLinkAggregate, "CareLink", "C# Aggregate Root", "Guards consent, revocation and discharge")
     Component(invitationAggregate, "Invitation", "C# Aggregate Root", "Single-use token with an expiry")
     Component(crValueObjects, "Value Objects and Errors", "C# records and enums", "InvitationToken, Consent, ClinicalReason, errors")
 
-    ' ------------------------------------------------------------- Infrastructure
     Component(crRepos, "CareLinkRepository / InvitationRepository", "C# Repositories over EF Core 10", "Persist care links and invitations")
     Component(crEfcConfig, "CareLink / Invitation EntityTypeConfiguration", "EF Core 10 Fluent API", "Maps tables, token index and audit")
     Component(expiryHostedService, "InvitationExpiryHostedService", "ASP.NET Core BackgroundService", "Sweeps and expires stale invitations")
@@ -52,7 +43,6 @@ Container_Ext(iamCtx, "IAM", "Sibling bounded context", "Consulted through IIamC
 Container_Ext(nutritionalCareCtx, "Nutritional Care", "Sibling bounded context", "Publishes ActiveTargetsUpdated; nothing here reaches back into it")
 Container_Ext(downstreamCtx, "Nutritional Care, Intake and Body Response, Monitoring and Adherence, Read Models", "Sibling bounded contexts", "Ask the Open Host Service whether the link is active before touching patient data")
 
-' ------------------------------------------------------------------ Relations
 Rel(practitioner, mobile, "Issues an invitation, discharges a patient", "Touch")
 Rel(patient, mobile, "Scans the QR, grants or withdraws consent, acknowledges targets", "Touch")
 Rel(mobile, invitationsController, "Issues and redeems invitations", "JSON/HTTPS, Bearer JWT")

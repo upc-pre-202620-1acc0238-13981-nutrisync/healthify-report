@@ -8,8 +8,6 @@ hide empty members
 package "Healthify.Platform.MonitoringAdherence.Application" {
 
   package "CommandServices" {
-    ' Subflows 5.1 to 5.5, 5.9 and 5.11. Every one is driven by a policy: none
-    ' of these commands has an endpoint.
     interface IEvaluationWindowCommandService {
       +Handle(command: OpenEvaluationWindowCommand, ct): Task<Result<EvaluationWindow, MonitoringError>>
       +Handle(command: SnapshotActiveTargetsCommand, ct): Task<Result<EvaluationWindow, MonitoringError>>
@@ -63,9 +61,6 @@ package "Healthify.Platform.MonitoringAdherence.Application" {
 
   package "Internal" {
     package "Internal.CommandServices" {
-      ' The only class in the platform that sets what was prescribed beside
-      ' what was recorded. It reads the recorded side through the published
-      ' contract of the context that owns it; neither side is written here.
       class EvaluationWindowCommandService {
         +Handle(command: OpenEvaluationWindowCommand, ct): Task<Result<...>>
         +Handle(command: SnapshotActiveTargetsCommand, ct): Task<Result<...>>
@@ -83,9 +78,6 @@ package "Healthify.Platform.MonitoringAdherence.Application" {
         +Handle(command: FlagSustainedDeviationCommand, ct): Task<Result<...>>
         -PublishDetected(deviation: Deviation, ct): Task
       }
-      ' TODO UNCALIBRATED: Monitoring:ConsistencyAlertThreshold ships at 1.5
-      ' kg/week, derived rather than validated. At zero the key reads as unset:
-      ' the index is computed and shown, and nothing escalates.
       class ConsistencyIndexCommandService {
         -{static} TrendDays: int = 90
         +Handle(command: RecomputeConsistencyIndexCommand, ct): Task<Result<...>>
@@ -96,7 +88,6 @@ package "Healthify.Platform.MonitoringAdherence.Application" {
       class ReferralCommandService {
         +Handle(command: RecordReferralCommand, ct): Task<Result<...>>
       }
-      ' It injects nothing that could revoke a link or discharge a patient.
       class ScheduledFollowUpCommandService {
         +Handle(command: ScheduleFollowUpCommand, ct): Task<Result<...>>
         +Handle(command: FlagMissedFollowUpCommand, ct): Task<Result<...>>
@@ -112,21 +103,15 @@ package "Healthify.Platform.MonitoringAdherence.Application" {
     }
 
     package "Internal.EventHandlers" {
-      ' Integration event 1 of 13. Interpretation starts when the relationship
-      ' does.
       class OnCareLinkEstablishedHandler {
         +Handle(notification: CareLinkEstablished, ct): Task
       }
-      ' Integration event 5 of 13: the one that freezes the contract.
       class OnActiveTargetsUpdatedMonitoringHandler {
         +Handle(notification: ActiveTargetsUpdated, ct): Task
       }
-      ' Integration event 3 of 13.
       class OnClinicalMeasurementTakenHandler {
         +Handle(notification: ClinicalMeasurementTaken, ct): Task
       }
-      ' Integration events 7, 8 and 9 of 13. Three separate policies in the
-      ' model, so three separate handlers.
       class OnMealLoggedHandler {
         +Handle(notification: MealLogged, ct): Task
       }
@@ -136,36 +121,27 @@ package "Healthify.Platform.MonitoringAdherence.Application" {
       class OnOffPlanEntryLoggedHandler {
         +Handle(notification: OffPlanEntryLogged, ct): Task
       }
-      ' Integration event 11 of 13. Re-evaluates one day, and only that day.
       class OnEntrySynchronizedHandler {
         +Handle(notification: EntrySynchronized, ct): Task
       }
       class OnDayEvaluatedHandler {
         +Handle(notification: DayEvaluated, ct): Task
       }
-      ' The gate between an observation and a signal.
       class OnDeviationDetectedHandler {
         +Handle(notification: DeviationDetected, ct): Task
       }
-      ' Integration event 10 of 13.
       class OnWeightTrendRecalculatedHandler {
         +Handle(notification: WeightTrendRecalculated, ct): Task
       }
-      ' The only handler of the alert: no path by which a practitioner learns
-      ' about one the patient has not been asked about first.
       class OnConsistencyAlertRaisedHandler {
         +Handle(notification: ConsistencyAlertRaised, ct): Task
       }
-      ' The only handler of a logging gap in the whole platform, and all it
-      ' does is remind the patient.
       class OnLoggingGapDetectedHandler {
         +Handle(notification: LoggingGapDetected, ct): Task
       }
-      ' Integration event 2 of 13.
       class OnCareLinkRevokedHandler {
         +Handle(notification: CareLinkRevoked, ct): Task
       }
-      ' The body the three Subflow 5.4 policies share.
       class MonitoringDayEvaluation <<static>> {
         +{static} Evaluate(scopeFactory, logger, patientId, localTimestamp, ct): Task
       }
@@ -173,8 +149,6 @@ package "Healthify.Platform.MonitoringAdherence.Application" {
   }
 
   package "Acl" {
-    ' A composite read model that asks a question this context cannot answer
-    ' gets an empty section rather than a failed page.
     class MonitoringContextFacade {
       +GetDailyComplianceSeries(patientId: int, days: int, ct): Task<IReadOnlyList<DailyComplianceItem>>
       +GetConsistencyState(patientId: int, ct): Task<ConsistencyStateItem?>
@@ -284,7 +258,6 @@ package "Shared / Cortex" <<external>> {
   interface "ILogger<T>" as ILogger
 }
 
-' --- Service interface realizations ---
 EvaluationWindowCommandService ..|> IEvaluationWindowCommandService
 DeviationCommandService ..|> IDeviationCommandService
 ConsistencyIndexCommandService ..|> IConsistencyIndexCommandService
@@ -310,7 +283,6 @@ OnConsistencyAlertRaisedHandler ..|> IEventHandler
 OnLoggingGapDetectedHandler ..|> IEventHandler
 OnCareLinkRevokedHandler ..|> IEventHandler
 
-' --- EvaluationWindowCommandService (Subflows 5.1 to 5.5, 5.9, 5.11) ---
 EvaluationWindowCommandService --> IEvaluationWindowRepository : uses
 EvaluationWindowCommandService --> IIntakeContextFacade : reads the recorded side through
 EvaluationWindowCommandService --> IUnitOfWork : commits with
@@ -340,7 +312,6 @@ EvaluationWindowCommandService ..> PatientReminded : publishes
 EvaluationWindowCommandService ..> EvaluationWindowClosed : publishes
 EvaluationWindowCommandService ..> MonitoringError : returns
 
-' --- DeviationCommandService (Subflow 5.6) ---
 DeviationCommandService --> IDeviationRepository : uses
 DeviationCommandService --> IEvaluationWindowRepository : reads the horizon from
 DeviationCommandService --> IUnitOfWork : commits with
@@ -356,7 +327,6 @@ DeviationCommandService ..> DeviationDetected : publishes
 DeviationCommandService ..> SustainedDeviationDetected : publishes once
 DeviationCommandService ..> MonitoringError : returns
 
-' --- ConsistencyIndexCommandService (Subflows 5.7 and 5.8) ---
 ConsistencyIndexCommandService --> IConsistencyIndexRepository : uses
 ConsistencyIndexCommandService --> IEvaluationWindowRepository : reads the intake series from
 ConsistencyIndexCommandService --> IIntakeContextFacade : reads the weight trend through
@@ -376,7 +346,6 @@ ConsistencyIndexCommandService ..> PatientPromptedAboutConsistency : publishes
 ConsistencyIndexCommandService ..> AlertEscalatedToPractitioner : publishes
 ConsistencyIndexCommandService ..> MonitoringError : returns
 
-' --- ReferralCommandService and ScheduledFollowUpCommandService (5.10) ---
 ReferralCommandService --> IReferralRepository : uses
 ReferralCommandService --> ICareRelationshipContextFacade : requires a live link
 ReferralCommandService --> IUnitOfWork : commits with
@@ -398,7 +367,6 @@ ScheduledFollowUpCommandService ..> FollowUpScheduled : publishes
 ScheduledFollowUpCommandService ..> FollowUpMissed : publishes
 ScheduledFollowUpCommandService ..> MonitoringError : returns
 
-' --- Policies from other contexts ---
 OnCareLinkEstablishedHandler ..> CareLinkEstablished : subscribes to
 OnCareLinkEstablishedHandler --> IEvaluationWindowCommandService : delegates to
 OnCareLinkEstablishedHandler ..> OpenEvaluationWindowCommand : issues
@@ -426,7 +394,6 @@ OnCareLinkRevokedHandler ..> CareLinkRevoked : subscribes to
 OnCareLinkRevokedHandler --> IEvaluationWindowCommandService : delegates to
 OnCareLinkRevokedHandler ..> CloseEvaluationWindowCommand : issues
 
-' --- Internal policies ---
 OnDayEvaluatedHandler ..> DayEvaluated : subscribes to
 OnDayEvaluatedHandler --> IDeviationCommandService : delegates to
 OnDayEvaluatedHandler ..> DetectDeviationCommand : issues
@@ -440,7 +407,6 @@ OnLoggingGapDetectedHandler ..> LoggingGapDetected : subscribes to
 OnLoggingGapDetectedHandler --> IEvaluationWindowCommandService : delegates to
 OnLoggingGapDetectedHandler ..> RemindPatientCommand : issues
 
-' --- Every handler opens its own DI scope and logs ---
 OnCareLinkEstablishedHandler --> IServiceScopeFactory : opens scope with
 OnActiveTargetsUpdatedMonitoringHandler --> IServiceScopeFactory : opens scope with
 OnClinicalMeasurementTakenHandler --> IServiceScopeFactory : opens scope with
@@ -458,7 +424,6 @@ OnEstimateConfirmedByPatientHandler --> ILogger : logs to
 OnOffPlanEntryLoggedHandler --> ILogger : logs to
 OnCareLinkEstablishedHandler --> ILogger : logs to
 
-' --- Query services ---
 EvaluationWindowQueryService --> IEvaluationWindowRepository : uses
 EvaluationWindowQueryService ..> GetEvaluationWindowsByPatientIdQuery : handles
 EvaluationWindowQueryService ..> GetCurrentEvaluationWindowByPatientIdQuery : handles
@@ -481,7 +446,6 @@ ScheduledFollowUpQueryService ..> GetScheduledFollowUpsByPractitionerIdQuery : h
 ScheduledFollowUpQueryService ..> GetOverdueScheduledFollowUpsQuery : handles
 ScheduledFollowUpQueryService ..> ScheduledFollowUp : returns
 
-' --- ACL facade ---
 MonitoringContextFacade --> IEvaluationWindowQueryService : uses
 MonitoringContextFacade --> IConsistencyIndexQueryService : uses
 MonitoringContextFacade --> IReferralQueryService : uses
@@ -496,7 +460,6 @@ MonitoringContextFacade ..> ConsistencyStateItem : returns
 MonitoringContextFacade ..> AnthropometryPointItem : returns
 MonitoringContextFacade ..> ReferralItem : returns
 
-' --- Result wrapper across command services ---
 IEvaluationWindowCommandService ..> Result
 IDeviationCommandService ..> Result
 IConsistencyIndexCommandService ..> Result

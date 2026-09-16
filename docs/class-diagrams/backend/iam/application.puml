@@ -30,8 +30,6 @@ package "Healthify.Platform.Iam.Application" {
   }
 
   package "Internal" {
-    ' Application DTO carrying what a successful sign-in produced.
-    ' Read model: Session Context. Not a domain type and not an HTTP resource.
     class SignInOutcome <<record>> {
       -User: User
       -Session: UserSession
@@ -61,9 +59,6 @@ package "Healthify.Platform.Iam.Application" {
     }
 
     package "Internal.EventHandlers" {
-      ' The only policy of this bounded context, and it does not cross a
-      ' boundary: producer and subscriber are both Iam. Runs in its own DI
-      ' scope, because notifications are handled in parallel.
       class OnRoleClaimIssuedHandler {
         +Handle(notification: RoleClaimIssued, ct): Task
       }
@@ -71,8 +66,6 @@ package "Healthify.Platform.Iam.Application" {
   }
 
   package "Acl" {
-    ' Delegates to the query service of its own context, never to a repository.
-    ' Every method degrades gracefully: null or false instead of throwing.
     class IamContextFacade {
       +GetUserById(userId: int, ct): Task<UserIdentityItem?>
       +IsPractitioner(userId: int, ct): Task<bool>
@@ -121,7 +114,6 @@ package "Shared / Cortex" <<external>> {
   interface "ILogger<T>" as ILogger
 }
 
-' --- Service interface realizations ---
 UserCommandService ..|> IUserCommandService
 UserSessionCommandService ..|> IUserSessionCommandService
 UserQueryService ..|> IUserQueryService
@@ -129,7 +121,6 @@ UserSessionQueryService ..|> IUserSessionQueryService
 IamContextFacade ..|> IIamContextFacade
 OnRoleClaimIssuedHandler ..|> IEventHandler
 
-' --- UserCommandService (Subflow 1.1 - Account Registration) ---
 UserCommandService --> IUserRepository : uses
 UserCommandService --> IUnitOfWork : commits with
 UserCommandService --> IHashingService : hashes with
@@ -142,7 +133,6 @@ UserCommandService ..> Role : validates
 UserCommandService ..> AccountCreated : publishes
 UserCommandService ..> IamError : returns
 
-' --- UserSessionCommandService (Subflows 1.2 and 1.3) ---
 UserSessionCommandService --> IUserRepository : uses
 UserSessionCommandService --> IUserSessionRepository : uses
 UserSessionCommandService --> IUnitOfWork : commits with
@@ -162,7 +152,6 @@ UserSessionCommandService ..> NavigationShellSelected : publishes
 UserSessionCommandService ..> SessionTerminated : publishes
 UserSessionCommandService ..> IamError : returns
 
-' --- Policy "When Role Claim Issued" (stays inside Iam) ---
 OnRoleClaimIssuedHandler ..> RoleClaimIssued : subscribes to
 OnRoleClaimIssuedHandler --> IServiceScopeFactory : opens scope with
 OnRoleClaimIssuedHandler --> ILogger : logs to
@@ -170,7 +159,6 @@ OnRoleClaimIssuedHandler --> IUserSessionCommandService : delegates to
 OnRoleClaimIssuedHandler ..> NavigationShell : resolves ForRole
 OnRoleClaimIssuedHandler ..> SelectNavigationShellCommand : issues
 
-' --- Query services ---
 UserQueryService --> IUserRepository : uses
 UserQueryService ..> GetUserByIdQuery : handles
 UserQueryService ..> GetUserByEmailQuery : handles
@@ -181,17 +169,14 @@ UserSessionQueryService ..> GetUserSessionByIdQuery : handles
 UserSessionQueryService ..> GetUserSessionsByUserIdQuery : handles
 UserSessionQueryService ..> UserSession : returns
 
-' --- ACL facade orchestration ---
 IamContextFacade --> IUserQueryService : uses
 IamContextFacade ..> GetUserByIdQuery : issues
 IamContextFacade ..> UserIdentityItem : returns
 IamContextFacade ..> Role : reads
 
-' --- Application DTO composition ---
 SignInOutcome o--> "1" User : carries
 SignInOutcome o--> "1" UserSession : carries
 
-' --- Result wrapper across command services ---
 IUserCommandService ..> Result
 IUserSessionCommandService ..> Result
 IUserCommandService ..> IamError : returns

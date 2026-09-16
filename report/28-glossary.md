@@ -102,7 +102,6 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 |---|---|
 | **Application Layer** | Capa que orquesta los casos de uso: recibe comandos y consultas, coordina agregados y repositorios, y publica eventos. No contiene reglas de negocio. |
 | **Arquitectura en capas** | Organización del código en capas con responsabilidades separadas (Interface, Application, Domain e Infrastructure) y dependencias dirigidas hacia el dominio. |
-| **Backend for Frontend (BFF)** | Patrón en el que un servicio intermedio compone datos de varios contextos para satisfacer las necesidades de una interfaz concreta. |
 | **C4 Model** | Modelo de diagramación de arquitectura en cuatro niveles de abstracción: Context, Container, Component y Code. |
 | **Class Diagram (Diagrama de clases)** | Diagrama UML que muestra clases, atributos, métodos y sus relaciones (asociación, composición, dependencia, generalización). |
 | **Component Diagram** | Nivel 3 del modelo C4: muestra los componentes internos de un contenedor y sus interacciones. |
@@ -118,6 +117,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Microservicio** | Estilo arquitectónico en el que el sistema se compone de servicios pequeños, autónomos y desplegables de forma independiente. |
 | **Monolito modular** | Aplicación desplegada como una sola unidad, pero organizada internamente en módulos con fronteras claras, como los bounded contexts de Healthify. |
 | **PlantUML** | Herramienta que genera diagramas UML y C4 a partir de descripciones en texto; se utiliza para los canvases, diagramas de clases, de componentes y de base de datos del informe. |
+| **Read model compuesto** | Vista de consulta que combina datos de varios bounded contexts leyendo sus fachadas ACL; en Healthify se arma en el módulo `ReadModels` de la API (por ejemplo, Patient Record). |
 | **UML** | Lenguaje Unificado de Modelado, estándar para visualizar y documentar el diseño de sistemas de software. |
 
 ## Tecnologías, backend y seguridad
@@ -140,7 +140,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **JWT Bearer** | Esquema de autenticación en el que el cliente envía un token JWT en la cabecera `Authorization` de cada petición. |
 | **Localización (.resx)** | Mecanismo de .NET para traducir mensajes a varios idiomas mediante archivos de recursos; el proyecto soporta español e inglés. |
 | **ML Kit** | Kit de aprendizaje automático de Google que se ejecuta en el dispositivo móvil; en Healthify se usa para proponer la estimación de porción a partir de una fotografía. |
-| **MySQL** | Sistema gestor de bases de datos relacional utilizado para la persistencia de la plataforma (versión 8). |
+| **MySQL** | Sistema gestor de bases de datos relacional utilizado para la persistencia de la plataforma (versión 8.4). |
 | **Open Food Facts** | Base de datos colaborativa y abierta de productos alimenticios, utilizada como fuente externa del catálogo nutricional. |
 | **ProblemDetails** | Formato estándar (RFC 7807, actualizado por RFC 9457) para describir errores en respuestas HTTP de una API. |
 | **Seeder** | Componente que carga datos iniciales en la base de datos, como el catálogo de 60 alimentos peruanos de referencia. |
@@ -206,7 +206,6 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **ACL** | Anticorruption Layer | Capa de traducción entre un modelo propio y uno externo. |
 | **API** | Application Programming Interface | Contrato que permite la comunicación entre sistemas de software. |
 | **BC** | Bounded Context | Frontera explícita de un modelo de dominio. |
-| **BFF** | Backend for Frontend | Servicio que compone datos para una interfaz específica. |
 | **C4** | Context, Containers, Components, Code | Modelo de diagramación de arquitectura en cuatro niveles. |
 | **CQRS** | Command Query Responsibility Segregation | Separación de operaciones de escritura y lectura. |
 | **CRUD** | Create, Read, Update, Delete | Operaciones básicas sobre datos persistentes. |

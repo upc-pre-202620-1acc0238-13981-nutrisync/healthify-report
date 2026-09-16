@@ -33,9 +33,6 @@ package "Healthify.Platform.CareRelationship.Infrastructure" {
   }
 
   package "Scheduling" {
-    ' Background worker for the time-driven policy "When Expiration Date
-    ' Reached" (Subflow 2.1). Nobody triggers it: only the passage of time,
-    ' which is why it is a hosted service and not an event handler.
     class InvitationExpiryHostedService {
       -{static} BatchSize: int = 200
       #ExecuteAsync(stoppingToken: CancellationToken): Task
@@ -79,7 +76,6 @@ package "ASP.NET hosting" <<external>> {
   class PeriodicTimer
 }
 
-' --- EF Core entity configurations ---
 InvitationEntityTypeConfiguration ..|> IEntityTypeConfiguration
 CareLinkEntityTypeConfiguration ..|> IEntityTypeConfiguration
 InvitationEntityTypeConfiguration ..> Invitation : maps to table invitations
@@ -87,13 +83,11 @@ CareLinkEntityTypeConfiguration ..> CareLink : maps to table care_links
 InvitationEntityTypeConfiguration ..> InvitationId : converts
 InvitationEntityTypeConfiguration ..> InvitationToken : converts (unique index)
 CareLinkEntityTypeConfiguration ..> CareLinkId : converts
-' Consent is persisted as four columns and ignored as a navigation.
 CareLinkEntityTypeConfiguration ..> Consent : flattens into four columns
 AppDbContext ..> InvitationEntityTypeConfiguration : applies
 AppDbContext ..> CareLinkEntityTypeConfiguration : applies
 AppDbContext --> AuditableEntityInterceptor : stamps created_at / updated_at
 
-' --- Repositories ---
 InvitationRepository --|> BaseRepository
 CareLinkRepository --|> BaseRepository
 BaseRepository ..|> IBaseRepository
@@ -107,7 +101,6 @@ InvitationRepository ..> InvitationId : rebuilds typed id
 CareLinkRepository ..> CareLink : persists
 CareLinkRepository ..> CareLinkId : rebuilds typed id
 
-' --- Time-driven policy ---
 InvitationExpiryHostedService --|> BackgroundService
 InvitationExpiryHostedService --> IServiceScopeFactory : opens its own scope with
 InvitationExpiryHostedService --> IConfiguration : reads the interval from
