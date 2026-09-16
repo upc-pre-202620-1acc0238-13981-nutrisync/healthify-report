@@ -3778,19 +3778,19 @@ Database:
 
 #### 2.6.5.1. Domain Layer
 
-**IAM** (`Healthify.Platform.Iam`) responde una sola pregunta: *quién eres*. Gestiona cuentas, autenticación, el *role claim* inmutable por sesión y la selección del *navigation shell* del cliente. Su Domain Layer declara dos aggregate roots, seis value objects y dos interfaces de domain service. Una nota de diseño la atraviesa: **registrarse no otorga acceso a nada**; un paciente sin `CareLink` no ve objetivos, no tiene diario y no puede registrar comidas.
+**IAM** (`Healthify.Platform.Iam`) se encarga de la identidad de los usuarios. Gestiona cuentas, autenticación, el *role claim* inmutable por sesión y la selección del *navigation shell* del cliente. Su Domain Layer declara dos aggregate roots, seis value objects y dos interfaces de domain service. Crear una cuenta no otorga acceso a información clínica: un paciente sin `CareLink` no ve objetivos, no tiene diario y no puede registrar comidas.
 
 **Aggregates (Aggregate Roots)**
 
-**`User`** — Una cuenta en la plataforma. Es la raíz que responde "quién eres" y nada más: la relación con un profesional es responsabilidad de Care Relationship. Está implementada como `partial class` dividida en `User.cs` (dominio) y `UserAudit.cs` (implementación de `IAuditableEntity`), para que el modelo de dominio no quede contaminado por preocupaciones de persistencia.
+**`User`** — Una cuenta en la plataforma. Solo representa la identidad del usuario; la relación con un profesional es responsabilidad de Care Relationship. Está implementada como `partial class` dividida en `User.cs` (dominio) y `UserAudit.cs` (implementación de `IAuditableEntity`), para separar el modelo de dominio de los campos de auditoría.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `MaxFailedSignInAttempts` | `const int = 5` | `private` | Umbral de la regla *Lockout After Five Failed Attempts*. |
 | `Id` | `UserId` | `public get / private set` | Identidad tipada del agregado. |
 | `Email` | `Email` | `public get / private set` | Dirección de correo normalizada a minúsculas. |
-| `PasswordHash` | `string` | `public get / private set` | Hash BCrypt; **la contraseña en claro nunca se persiste**. |
-| `Role` | `Role` | `public get / private set` | Rol declarado en el registro; **nunca se muta**. |
+| `PasswordHash` | `string` | `public get / private set` | Hash BCrypt; la contraseña en claro nunca se persiste. |
+| `Role` | `Role` | `public get / private set` | Rol declarado en el registro; nunca se muta. |
 | `FailedSignInAttempts` | `int` | `public get / private set` | Intentos fallidos consecutivos. |
 | `LockedOutAt` | `DateTimeOffset?` | `public get / private set` | Momento del bloqueo. |
 | `IsLockedOut` | `bool` | `public` (computada) | Derivada de `LockedOutAt`; no es columna. |
@@ -3800,23 +3800,23 @@ Database:
 | `User(RegisterAccountCommand, string passwordHash)` | `public` | Valida *Role Declared At Registration* y la presencia del hash; construye los VO `Email` y `Role`. |
 | `RegisterFailedSignInAttempt()` | `public` | Incrementa el contador y bloquea al alcanzar el umbral. |
 | `RegisterSuccessfulSignIn()` | `public` | Resetea el contador y desbloquea. |
-| `StartSession() : UserSession` | `public` | **Factory Method**: abre una sesión copiando el role claim. Es el **único camino de creación** de `UserSession`. |
+| `StartSession() : UserSession` | `public` | Factory Method: abre una sesión copiando el role claim. Es el único camino de creación de `UserSession`. |
 
-**`UserSession`** — Una sesión autenticada. Transporta el role claim que el resto de la plataforma lee del token y el navigation shell que el cliente monta a raíz de ese rol. Es un **aggregate root independiente dentro del mismo bounded context**: referencia a `User` con un `int` plano, sin navegación EF, respetando la regla de no navegar entre agregados.
+**`UserSession`** — Una sesión autenticada. Transporta el role claim que el resto de la plataforma lee del token y el navigation shell que el cliente monta a raíz de ese rol. Es un aggregate root independiente dentro del mismo bounded context: referencia a `User` con un `int` plano, sin navegación EF, respetando la regla de no navegar entre agregados.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `Id` | `SessionId` | `public get / private set` | Identidad tipada. |
 | `UserId` | `int` | `public get / private set` | Referencia por identificador, no por navegación. |
-| `RoleClaim` | `Role` | `public get / private set` | Rol congelado al inicio de sesión. **No hay mutador.** |
+| `RoleClaim` | `Role` | `public get / private set` | Rol congelado al inicio de sesión. No hay mutador. |
 | `NavigationShell` | `NavigationShell?` | `public get / private set` | Shell seleccionado, `null` hasta que la política lo asigna. |
 | `StartedAt` / `TerminatedAt` | `DateTimeOffset` / `DateTimeOffset?` | `public get / private set` | Ciclo de vida de la sesión. |
 | `IsActive` | `bool` | `public` (computada) | La sesión no ha terminado. |
-| `ActiveRoleClaim` | `Role?` | `public` (computada) | El rol que la sesión **todavía** otorga: `null` si está terminada. |
+| `ActiveRoleClaim` | `Role?` | `public` (computada) | El rol que la sesión todavía otorga: `null` si está terminada. |
 
 | Método | Scope | Descripción |
 |---|---|---|
-| `UserSession(int, Role)` | `internal` | **Deliberadamente `internal`**: sólo `User.StartSession()` puede crearla. |
+| `UserSession(int, Role)` | `internal` | Deliberadamente `internal`: sólo `User.StartSession()` puede crearla. |
 | `SelectNavigationShell(NavigationShell)` | `public` | Aplica *Role Claim Discarded On Sign Out*, *One Shell Per Session* y *Role Change Requires Re Authentication*. |
 | `Terminate()` | `public` | Cierra la sesión; lanza si ya estaba terminada. |
 
@@ -3824,25 +3824,25 @@ Database:
 
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
-| `Email` | Dirección de correo de la cuenta. | Valida no vacío, 255 caracteres máximo y expresión regular generada; **normaliza a minúsculas** para que la unicidad sea *case insensitive*. |
-| `Password` | Contraseña en claro que ya pasó la política de fortaleza. Existe sólo el tiempo necesario para ser hasheada; **nunca se persiste ni se loguea**. | Longitud 8–128; exige mayúscula, minúscula, dígito y carácter especial. Implementa *Strong Password Required*. |
+| `Email` | Dirección de correo de la cuenta. | Valida no vacío, 255 caracteres máximo y expresión regular generada; normaliza a minúsculas para que la unicidad sea *case insensitive*. |
+| `Password` | Contraseña en claro que ya pasó la política de fortaleza. Existe sólo el tiempo necesario para ser hasheada; nunca se persiste ni se loguea. | Longitud 8–128; exige mayúscula, minúscula, dígito y carácter especial. Implementa *Strong Password Required*. |
 | `Role` | Rol de la persona en la plataforma. | Constantes `Patient` y `Practitioner`; conjunto permitido case-insensitive; propiedades `IsPatient` e `IsPractitioner`. Se asume una cuenta igual a un rol, inmutable. |
 | `NavigationShell` | Shell que la app cliente monta para una sesión. | Constantes `PatientShell` y `PractitionerShell`; factory `ForRole(Role)`; método `MatchesRole(Role)`. |
 | `UserId`, `SessionId` | Identidades tipadas. | `Value : int > 0`, `internal static FromRaw(int)` reservada a los value converters de EF, y operadores de conversión. |
 
-**Commands (4)** — `RegisterAccountCommand`, `SignInCommand`, `SelectNavigationShellCommand` (**sin endpoint REST**, emitido sólo por la política) y `SignOutCommand`.
+**Commands (4)** — `RegisterAccountCommand`, `SignInCommand`, `SelectNavigationShellCommand` (sin endpoint REST, emitido sólo por la política) y `SignOutCommand`.
 
 **Queries (4)** — `GetUserByIdQuery` (read model Welcome Screen), `GetUserByEmailQuery` (resolución de cuenta previa a la verificación de credenciales), `GetUserSessionByIdQuery` (App Shell) y `GetUserSessionsByUserIdQuery` (Session Context).
 
-**Domain Events (5)** — `AccountCreated`, `SessionStarted`, `RoleClaimIssued`, `NavigationShellSelected` y `SessionTerminated`. **Ninguno cruza frontera de bounded context**, y ningún otro contexto puede declarar un handler para ellos: la infraestructura de cuentas y sesiones no tiene significado de dominio fuera de IAM. El role claim viaja hacia los demás contextos dentro del token JWT, que es infraestructura, no un evento de dominio.
+**Domain Events (5)** — `AccountCreated`, `SessionStarted`, `RoleClaimIssued`, `NavigationShellSelected` y `SessionTerminated`. Ninguno cruza frontera de bounded context, y ningún otro contexto puede declarar un handler para ellos: la infraestructura de cuentas y sesiones no tiene significado de dominio fuera de IAM. El role claim viaja hacia los demás contextos dentro del token JWT, que es infraestructura, no un evento de dominio.
 
 **Errors** — `enum IamError` con 14 valores, uno por regla que el contexto hace cumplir: `EmailAlreadyTaken`, `InvalidEmail`, `WeakPassword`, `RoleNotDeclared`, `InvalidRole`, `UserNotFound`, `InvalidCredentials`, `AccountLocked`, `SessionNotFound`, `SessionAlreadyTerminated`, `ShellAlreadySelectedForSession`, `RoleChangeRequiresReAuthentication`, `RoleImmutablePerSession` y `UnexpectedError`.
 
-**Repositories (abstracciones)** — `IUserRepository`, con `FindByEmailAsync(Email)` y `ExistsByEmailAsync(Email)` que respalda *Unique Email Required*, e `IUserSessionRepository`, con `ListByUserIdAsync(int)`. Ambas derivan de `IBaseRepository<TEntity>`, que declara `AddAsync`, `FindByIdAsync`, `Update`, `Remove` y `ListAsync` y **nunca expone `IQueryable`**.
+**Repositories (abstracciones)** — `IUserRepository`, con `FindByEmailAsync(Email)` y `ExistsByEmailAsync(Email)` que respalda *Unique Email Required*, e `IUserSessionRepository`, con `ListByUserIdAsync(int)`. Ambas derivan de `IBaseRepository<TEntity>`, que declara `AddAsync`, `FindByIdAsync`, `Update`, `Remove` y `ListAsync` y nunca expone `IQueryable`.
 
-**Domain Services (interfaces)** — `IHashingService`, con `Hash(Password) : string` y `Verify(string, string) : bool`, e `ITokenService`, con `GenerateToken(User, UserSession) : string`, que emite el token firmado con el subject, el email, el role claim inmutable y el identificador de sesión. El *auth provider* que dibuja el event storming está implementado **dentro** de la plataforma: no hay proveedor de identidad de terceros.
+**Domain Services (interfaces)** — `IHashingService`, con `Hash(Password) : string` y `Verify(string, string) : bool`, e `ITokenService`, con `GenerateToken(User, UserSession) : string`, que emite el token firmado con el subject, el email, el role claim inmutable y el identificador de sesión. El *auth provider* que dibuja el event storming está implementado dentro de la plataforma: no hay proveedor de identidad de terceros.
 
-**Relaciones entre clases:** `User` compone `UserId`, `Email` y `Role`, y **depende** de `UserSession` como creador a través de `StartSession()` (1 → 0..*), sin navegación de EF. `UserSession` compone `SessionId` y `Role` (como role claim congelado) y 0..1 `NavigationShell`, que a su vez **depende** de `Role` mediante `ForRole` y `MatchesRole`. `IHashingService` depende de `Password`; `ITokenService` depende de `User` y `UserSession`. Ambos agregados realizan `IAuditableEntity`, y los cinco eventos generalizan `DomainEventBase`.
+**Relaciones entre clases:** `User` compone `UserId`, `Email` y `Role`, y depende de `UserSession` como creador a través de `StartSession()` (1 → 0..*), sin navegación de EF. `UserSession` compone `SessionId` y `Role` (como role claim congelado) y 0..1 `NavigationShell`, que a su vez depende de `Role` mediante `ForRole` y `MatchesRole`. `IHashingService` depende de `Password`; `ITokenService` depende de `User` y `UserSession`. Ambos agregados realizan `IAuditableEntity`, y los cinco eventos generalizan `DomainEventBase`.
 
 #### 2.6.5.2. Interface Layer
 
@@ -3858,7 +3858,7 @@ La Interface Layer de IAM expone tres controllers y el contrato ACL por el que l
 | `POST /api/v1/authentication/sign-in` | `SignIn(SignInResource)` | `[AllowAnonymous]` | 200 `SignInResponseResource` · 401 · 500 |
 | `POST /api/v1/authentication/sign-out` | `SignOutSession()` | Bearer | 204 · 401 · 404 · 409 |
 
-`sign-out` **no recibe body**: toma el identificador de sesión y el de usuario **del token**, lo que elimina una comprobación de propiedad falsificable.
+`sign-out` no recibe body: toma el identificador de sesión y el de usuario del token, por lo que un usuario no puede cerrar la sesión de otro enviando un identificador ajeno.
 
 **`UsersController`** — `[Route("api/v1/users")] [Authorize] [Tags("Users")]`.
 
@@ -3869,7 +3869,7 @@ La Interface Layer de IAM expone tres controllers y el contrato ACL por el que l
 
 Ambos comparan el identificador de la ruta contra el del token autenticado y devuelven `Forbid()` si no coinciden.
 
-**`SessionsController`** — `[Route("api/v1/sessions")] [Authorize] [Tags("Sessions")]`. Expone `GET /{sessionId:int}/navigation-shell` (`GetNavigationShell(int)`), que sirve el read model **App Shell** con respuestas 200 · 401 · 403 · 404.
+**`SessionsController`** — `[Route("api/v1/sessions")] [Authorize] [Tags("Sessions")]`. Expone `GET /{sessionId:int}/navigation-shell` (`GetNavigationShell(int)`), que sirve el read model App Shell con respuestas 200 · 401 · 403 · 404.
 
 **Resources**
 
@@ -3878,7 +3878,7 @@ Ambos comparan el identificador de la ruta contra el del token autenticado y dev
 | `SignUpResource` | `Email`, `Password`, `Role` | Request de registro. |
 | `SignInResource` | `Email`, `Password` | Request de autenticación. |
 | `SignInResponseResource` | `UserId`, `Email`, `Role`, `SessionId`, `Token`, `StartedAt` | Response de sign-in (Session Context). |
-| `UserResource` | `UserId`, `Email`, `Role`, `CreatedAt` | Welcome Screen. **El hash y el contador de bloqueo nunca salen del contexto.** |
+| `UserResource` | `UserId`, `Email`, `Role`, `CreatedAt` | Welcome Screen. El hash y el contador de bloqueo nunca salen del contexto. |
 | `UserSessionResource` | `SessionId`, `UserId`, `RoleClaim`, `NavigationShell?`, `StartedAt`, `TerminatedAt?`, `IsActive` | Session Context. |
 | `NavigationShellResource` | `SessionId`, `RoleClaim?`, `NavigationShell?`, `IsActive` | App Shell. |
 
@@ -3891,10 +3891,10 @@ Ambos comparan el identificador de la ruta contra el del token autenticado y dev
 | `SignOutCommandAssembler` | Claims → Command | `ToCommand(int sessionId, int userId)` |
 | `UserResourceAssembler`, `UserSessionResourceAssembler` | Aggregate → Resource | `ToResource(...)` |
 | `SignInResponseResourceAssembler` | DTO → Resource | `ToResource(SignInOutcome)` |
-| `NavigationShellResourceAssembler` | Aggregate → Resource | Usa `ActiveRoleClaim` para que **una sesión terminada no reporte rol**. |
+| `NavigationShellResourceAssembler` | Aggregate → Resource | Usa `ActiveRoleClaim` para que una sesión terminada no reporte rol. |
 | `IamActionResultAssembler` | `Result<T, IamError>` → `IActionResult` | `ToRegisterAccountResult`, `ToSignInResult`, `ToSignOutResult`, `ToNotFoundResult` y el privado `FailureResult` |
 
-El mapeo de errores a HTTP ocurre en un **único lugar**, para que una misma regla no reporte dos códigos distintos:
+El mapeo de errores a HTTP ocurre en un único lugar, para que una misma regla no reporte dos códigos distintos:
 
 | Errores | Status |
 |---|---|
@@ -3905,7 +3905,7 @@ El mapeo de errores a HTTP ocurre en un **único lugar**, para que una misma reg
 | `RoleChangeRequiresReAuthentication`, `RoleImmutablePerSession` | **422** |
 | `UnexpectedError` (por defecto) | **500** |
 
-**ACL Contract** — `IIamContextFacade` declara el DTO `UserIdentityItem(int UserId, string Email, string Role)` y tres operaciones: `GetUserById(int)`, `IsPractitioner(int)` e `IsPatient(int)`. Todo parámetro y retorno es un primitivo o un DTO sólo-de-primitivos declarado aquí; **nunca un command, un aggregate o una entity**.
+**ACL Contract** — `IIamContextFacade` declara el DTO `UserIdentityItem(int UserId, string Email, string Role)` y tres operaciones: `GetUserById(int)`, `IsPractitioner(int)` e `IsPatient(int)`. Todo parámetro y retorno es un primitivo o un DTO sólo-de-primitivos declarado aquí; nunca un command, un aggregate o una entity.
 
 **Localización** — `Iam/Resources/IamMessages.cs`, clase marcador de los archivos `.resx` en inglés y español.
 
@@ -3917,51 +3917,51 @@ La Application Layer de IAM maneja los tres subflujos del contexto (1.1 registro
 
 **`UserCommandService`** (implementa `IUserCommandService`) — Depende de `IUserRepository`, `IUnitOfWork`, `IHashingService`, `ILogger<UserCommandService>` e `IMediator`.
 
-Su método `Handle(RegisterAccountCommand, CancellationToken) : Task<Result<User, IamError>>` implementa el subflujo 1.1 con las guardas en un orden deliberado: valida el value object `Email` (`InvalidEmail`), comprueba que el rol venga declarado (`RoleNotDeclared`) y sea válido (`InvalidRole`), construye el `Password` aplicando la política de fortaleza (`WeakPassword`), verifica la unicidad del correo (`EmailAlreadyTaken`), construye el agregado con el hash producido por el servicio de hashing, persiste y hace commit, y **publica `AccountCreated` siempre después del commit**. Como red de seguridad, loguea el correo pero **nunca la contraseña**.
+Su método `Handle(RegisterAccountCommand, CancellationToken) : Task<Result<User, IamError>>` implementa el subflujo 1.1 con las guardas en un orden deliberado: valida el value object `Email` (`InvalidEmail`), comprueba que el rol venga declarado (`RoleNotDeclared`) y sea válido (`InvalidRole`), construye el `Password` aplicando la política de fortaleza (`WeakPassword`), verifica la unicidad del correo (`EmailAlreadyTaken`), construye el agregado con el hash producido por el servicio de hashing, persiste y hace commit, y publica `AccountCreated` siempre después del commit. En los logs registra el correo, pero nunca la contraseña.
 
 **`UserSessionCommandService`** (implementa `IUserSessionCommandService`) — Depende de `IUserRepository`, `IUserSessionRepository`, `IUnitOfWork`, `IHashingService`, `ITokenService`, `ILogger<...>` e `IMediator`.
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
-| `Handle(SignInCommand)` | 1.2 | Un correo malformado se reporta como `InvalidCredentials`, **no como correo inválido**, para no revelar qué direcciones existen. Comprueba el bloqueo de la cuenta; ante credenciales incorrectas registra el intento fallido y hace commit; ante credenciales válidas resetea el contador, abre la sesión con `user.StartSession()`, persiste, genera el token y publica `SessionStarted` y `RoleClaimIssued` tras el commit. Devuelve `SignInOutcome`. |
-| `Handle(SelectNavigationShellCommand)` | 1.2 | **Invocado sólo por la política, nunca por un endpoint.** Distingue `SessionAlreadyTerminated`, `ShellAlreadySelectedForSession` y `RoleChangeRequiresReAuthentication`. Publica `NavigationShellSelected`. |
-| `Handle(SignOutCommand)` | 1.3 | Una sesión ajena se reporta como **inexistente**, no como prohibida. Termina la sesión, hace commit y publica `SessionTerminated`. |
+| `Handle(SignInCommand)` | 1.2 | Un correo malformado se reporta como `InvalidCredentials`, no como correo inválido, para no revelar qué direcciones existen. Comprueba el bloqueo de la cuenta; ante credenciales incorrectas registra el intento fallido y hace commit; ante credenciales válidas resetea el contador, abre la sesión con `user.StartSession()`, persiste, genera el token y publica `SessionStarted` y `RoleClaimIssued` tras el commit. Devuelve `SignInOutcome`. |
+| `Handle(SelectNavigationShellCommand)` | 1.2 | Invocado sólo por la política, nunca por un endpoint. Distingue `SessionAlreadyTerminated`, `ShellAlreadySelectedForSession` y `RoleChangeRequiresReAuthentication`. Publica `NavigationShellSelected`. |
+| `Handle(SignOutCommand)` | 1.3 | Una sesión ajena se reporta como inexistente, no como prohibida. Termina la sesión, hace commit y publica `SessionTerminated`. |
 
-**Query Services** — `UserQueryService(IUserRepository)` resuelve `GetUserByIdQuery` y `GetUserByEmailQuery`, donde un correo malformado devuelve `null` porque **las queries reportan ausencia, no fallo**. `UserSessionQueryService(IUserSessionRepository)` resuelve `GetUserSessionByIdQuery` y `GetUserSessionsByUserIdQuery`.
+**Query Services** — `UserQueryService(IUserRepository)` resuelve `GetUserByIdQuery` y `GetUserByEmailQuery`, donde un correo malformado devuelve `null` porque las queries reportan ausencia, no fallo. `UserSessionQueryService(IUserSessionRepository)` resuelve `GetUserSessionByIdQuery` y `GetUserSessionsByUserIdQuery`.
 
 **Event Handlers (políticas)**
 
-**`OnRoleClaimIssuedHandler`** implementa la política *When Role Claim Issued* del subflujo 1.2. Escucha `RoleClaimIssued` a través de `IEventHandler<T>` —alias tipado sobre el `INotificationHandler<T>` de Cortex.Mediator— y depende de `IServiceScopeFactory` y `ILogger<...>`. Crea un **scope de DI aislado con su propio `DbContext`**, porque las notificaciones se manejan en paralelo y compartir el contexto del request produciría un error de concurrencia; deriva el shell con `NavigationShell.ForRole(...)` y emite `SelectNavigationShellCommand`. Si falla, sólo registra una advertencia: el usuario ya está autenticado y el shell puede resolverse después.
+**`OnRoleClaimIssuedHandler`** implementa la política *When Role Claim Issued* del subflujo 1.2. Escucha `RoleClaimIssued` a través de `IEventHandler<T>` —alias tipado sobre el `INotificationHandler<T>` de Cortex.Mediator— y depende de `IServiceScopeFactory` y `ILogger<...>`. Crea un scope de DI aislado con su propio `DbContext`, porque las notificaciones se manejan en paralelo y compartir el contexto del request produciría un error de concurrencia; deriva el shell con `NavigationShell.ForRole(...)` y emite `SelectNavigationShellCommand`. Si falla, sólo registra una advertencia: el usuario ya está autenticado y el shell puede resolverse después.
 
-Es la **única política del bounded context y no cruza frontera**: productor y suscriptor son ambos IAM.
+Es la única política del bounded context y no cruza frontera: productor y suscriptor son ambos IAM.
 
 **DTO de aplicación** — `SignInOutcome(User User, UserSession Session, string Token)`, que respalda el read model *Session Context*. No es un tipo de dominio ni un recurso HTTP: existe para que el controller pueda componer la respuesta de sign-in sin que la capa de aplicación conozca la forma del payload.
 
-**ACL Facade** — `IamContextFacade` implementa `IIamContextFacade` delegando en `IUserQueryService` y **nunca en un repositorio**, para no puentear la capa de aplicación. Sus tres métodos degradan con elegancia mediante `try/catch` hacia `null` o `false`, y **nunca propagan excepciones**, de modo que un fallo de identidad se traduce en denegación de acceso en el contexto que pregunta.
+**ACL Facade** — `IamContextFacade` implementa `IIamContextFacade` delegando en `IUserQueryService` y nunca en un repositorio, para no puentear la capa de aplicación. Sus tres métodos capturan los errores con `try/catch` y devuelven `null` o `false` sin propagar excepciones, de modo que un fallo de identidad se traduce en denegación de acceso en el contexto que pregunta.
 
 #### 2.6.5.4. Infrastructure Layer
 
-La Infrastructure Layer de IAM implementa la persistencia de cuentas y sesiones y las dos interfaces de domain service declaradas en el dominio. **Este bounded context no registra ningún `IHostedService`** y no consume proveedores de identidad de terceros.
+La Infrastructure Layer de IAM implementa la persistencia de cuentas y sesiones y las dos interfaces de domain service declaradas en el dominio. Este bounded context no registra ningún `IHostedService` y no consume proveedores de identidad de terceros.
 
 **Configuraciones de EF Core**
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
-| `UserEntityTypeConfiguration` | `users` | PK `id` con conversión `UserId.FromRaw` y `ValueGeneratedOnAdd()`. `email` con converter, 255 caracteres, requerido y con **índice único `ix_users_email`**, segunda línea de defensa de *Unique Email Required*. `password_hash` (255), `role` (20, con converter), `failed_sign_in_attempts` y `locked_out_at`. `Ignore(u => u.IsLockedOut)`, por ser propiedad calculada. |
-| `UserSessionEntityTypeConfiguration` | `user_sessions` | PK con converter `SessionId.FromRaw`. `user_id` como `int` plano **sin navegación EF**, con índice `ix_user_sessions_user_id`. `role_claim` (20) con converter. `navigation_shell` (30, opcional) con un **`ValueConverter<NavigationShell?, string?>` explícito**, en lugar de un `OwnsOne` nullable frágil. `started_at` requerido y `terminated_at` opcional. `Ignore` sobre `IsActive` y `ActiveRoleClaim`. |
+| `UserEntityTypeConfiguration` | `users` | PK `id` con conversión `UserId.FromRaw` y `ValueGeneratedOnAdd()`. `email` con converter, 255 caracteres, requerido y con índice único `ix_users_email`, segunda línea de defensa de *Unique Email Required*. `password_hash` (255), `role` (20, con converter), `failed_sign_in_attempts` y `locked_out_at`. `Ignore(u => u.IsLockedOut)`, por ser propiedad calculada. |
+| `UserSessionEntityTypeConfiguration` | `user_sessions` | PK con converter `SessionId.FromRaw`. `user_id` como `int` plano sin navegación EF, con índice `ix_user_sessions_user_id`. `role_claim` (20) con converter. `navigation_shell` (30, opcional) con un `ValueConverter<NavigationShell?, string?>` explícito, en lugar de un `OwnsOne` nullable frágil. `started_at` requerido y `terminated_at` opcional. `Ignore` sobre `IsActive` y `ActiveRoleClaim`. |
 
 **Repositorios (implementaciones)**
 
 | Clase | Base | Detalles de implementación |
 |---|---|---|
-| `UserRepository(AppDbContext)` | `BaseRepository<User>`, `IUserRepository` | Sobrescribe `FindByIdAsync` validando el identificador y comparando por `UserId`; implementa `FindByEmailAsync` y `ExistsByEmailAsync` con `AnyAsync`. **Reimplementa explícitamente `IBaseRepository<User>.FindByIdAsync`** para que las llamadas por interfaz alcancen la versión especializada. |
+| `UserRepository(AppDbContext)` | `BaseRepository<User>`, `IUserRepository` | Sobrescribe `FindByIdAsync` validando el identificador y comparando por `UserId`; implementa `FindByEmailAsync` y `ExistsByEmailAsync` con `AnyAsync`. Reimplementa explícitamente `IBaseRepository<User>.FindByIdAsync` para que las llamadas por interfaz alcancen la versión especializada. |
 | `UserSessionRepository(AppDbContext)` | `BaseRepository<UserSession>`, `IUserSessionRepository` | Sobrescribe `FindByIdAsync` y ofrece `ListByUserIdAsync`, que filtra por usuario y ordena por inicio de sesión descendente. Misma reimplementación explícita. |
 
-**Hashing — `BCryptHashingService`** — Implementa `IHashingService` con la biblioteca BCrypt.Net. `Hash(Password)` delega en el algoritmo de la biblioteca sobre el valor en claro, que existe sólo el tiempo necesario para ser hasheado. `Verify(plain, hash)` devuelve `false` ante entradas vacías y envuelve la verificación en `try/catch`, de modo que un hash almacenado malformado se lea como **verificación fallida** y nunca como una excepción que filtre el estado de la cuenta.
+**Hashing — `BCryptHashingService`** — Implementa `IHashingService` con la biblioteca BCrypt.Net. `Hash(Password)` delega en el algoritmo de la biblioteca sobre el valor en claro, que existe sólo el tiempo necesario para ser hasheado. `Verify(plain, hash)` devuelve `false` ante entradas vacías y envuelve la verificación en `try/catch`, de modo que un hash almacenado malformado se lea como verificación fallida y nunca como una excepción que filtre el estado de la cuenta.
 
-**Tokens — `JwtTokenService`** — Implementa `ITokenService` y depende de `IConfiguration`, leyendo la sección `TokenSettings` (`Secret`, `Issuer` con valor por defecto `healthify-platform`, `Audience` con valor por defecto `healthify-clients` y `ExpiresInMinutes` con 1440 por defecto). Firma con **HMAC-SHA256** sobre una `SymmetricSecurityKey` y emite los claims `sub`, `NameIdentifier`, `email` (bajo el nombre registrado y bajo la clave simple), `Role` con el valor del role claim de la sesión, `sessionId` y `jti`. Sus parámetros reflejan exactamente lo que el *bearer handler* del composition root valida.
+**Tokens — `JwtTokenService`** — Implementa `ITokenService` y depende de `IConfiguration`, leyendo la sección `TokenSettings` (`Secret`, `Issuer` con valor por defecto `healthify-platform`, `Audience` con valor por defecto `healthify-clients` y `ExpiresInMinutes` con 1440 por defecto). Firma con HMAC-SHA256 sobre una `SymmetricSecurityKey` y emite los claims `sub`, `NameIdentifier`, `email` (bajo el nombre registrado y bajo la clave simple), `Role` con el valor del role claim de la sesión, `sessionId` y `jti`. Sus parámetros reflejan exactamente lo que el *bearer handler* del composition root valida.
 
-**Configuración del pipeline** — Además de sus propios registros de repositorios, servicios de dominio, command/query services y fachada ACL, IAM configura la autenticación **JWT Bearer** de toda la aplicación: validación de issuer, audience, firma y lifetime con una tolerancia de reloj de dos minutos, y una personalización de `OnChallenge` que devuelve un `ProblemDetails` localizado en lugar del 401 vacío por defecto. El role claim que emite este servicio es lo que los demás bounded contexts leen para autorizar por rol.
+**Configuración del pipeline** — Además de sus propios registros de repositorios, servicios de dominio, command/query services y fachada ACL, IAM configura la autenticación JWT Bearer de toda la aplicación: validación de issuer, audience, firma y lifetime con una tolerancia de reloj de dos minutos, y una personalización de `OnChallenge` que devuelve un `ProblemDetails` localizado en lugar del 401 vacío por defecto. El role claim que emite este servicio es lo que los demás bounded contexts leen para autorizar por rol.
 
 **Servicios externos** — Ninguno. El *auth provider* que aparece en el event storming está implementado dentro del contenedor: no hay proveedor de identidad externo.
 
@@ -4007,7 +4007,7 @@ Database:
 
 #### 2.6.6.1. Domain Layer
 
-**Food Catalog** (`Healthify.Platform.FoodCatalog`) mantiene el catálogo local de alimentos de referencia: nombre y nutrientes **por 100 gramos**. Es un subdominio genérico y deliberadamente delgado: todo lo interesante ocurre **en su borde**, en la capa anticorrupción. Su Domain Layer declara un único aggregate root y cuatro value objects, y tres decisiones de diseño lo definen: la importación traduce y anuncia pero no escribe; ningún identificador externo entra al dominio; y la búsqueda es local-first.
+**Food Catalog** (`Healthify.Platform.FoodCatalog`) mantiene el catálogo local de alimentos de referencia: nombre y nutrientes por 100 gramos. Es un subdominio genérico con un modelo simple; la mayor parte de su lógica está en la capa anticorrupción que traduce las fuentes externas. Su Domain Layer declara un único aggregate root y cuatro value objects, y tres decisiones de diseño lo definen: la importación traduce y anuncia pero no escribe; ningún identificador externo entra al dominio; y la búsqueda es local-first.
 
 **Aggregate Root**
 
@@ -4016,10 +4016,10 @@ Database:
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `Id` | `ReferenceFoodId` | `public get / private set` | Identidad tipada. |
-| `LocalNameText` | `string` | `public get / private set` | **Proyección persistida del VO `LocalName`**, guardada como `string` plano porque la búsqueda hace *match* sobre él y EF Core no puede traducir a SQL un acceso a miembro de un tipo convertido. |
+| `LocalNameText` | `string` | `public get / private set` | Proyección persistida del VO `LocalName`, guardada como `string` plano porque la búsqueda hace *match* sobre él y EF Core no puede traducir a SQL un acceso a miembro de un tipo convertido. |
 | `EnergyKcalPer100g`, `ProteinGPer100g`, `CarbGPer100g`, `FatGPer100g` | `decimal` | `public get / private set` | Proyección de `NutrientsPer100g`. |
-| `SourceHash` | `SourceHash` | `public get / private set` | Huella del registro upstream: **almacenada, comparada y nunca expuesta en un resource**. |
-| `IsLocalOverride` | `bool` | `public get / private set` | Marca de entrada creada localmente por un profesional. **No existe método que la limpie.** |
+| `SourceHash` | `SourceHash` | `public get / private set` | Huella del registro upstream: almacenada, comparada y nunca expuesta en un resource. |
+| `IsLocalOverride` | `bool` | `public get / private set` | Marca de entrada creada localmente por un profesional. No existe método que la limpie. |
 | `LocalName` | `LocalName` | `public` (computada) | Reconstruido desde `LocalNameText`. |
 | `NutrientsPer100g` | `NutrientsPer100g` | `public` (computada) | Reconstruido desde las cuatro columnas. |
 
@@ -4027,52 +4027,52 @@ Database:
 |---|---|---|
 | `ReferenceFood(LocalName, NutrientsPer100g, SourceHash)` | `public` | Constructor de importación; deja `IsLocalOverride` en falso. |
 | `ReferenceFood(CreateLocalOverrideCommand)` | `public` | Constructor de override local; genera el hash con `SourceHash.ForLocalOverride(...)` y marca la entrada como override. |
-| `RefreshFromUpstream(LocalName, NutrientsPer100g)` | `public` | **Lanza si la entrada es un override local**: un override existe precisamente porque el catálogo externo estaba equivocado o callado sobre ese alimento, así que una importación **nunca toca uno**. |
+| `RefreshFromUpstream(LocalName, NutrientsPer100g)` | `public` | Lanza si la entrada es un override local: un override existe precisamente porque el catálogo externo estaba equivocado o callado sobre ese alimento, así que una importación nunca toca uno. |
 | `StoreNutrients(NutrientsPer100g)` | `private` | Aplana el value object en columnas. |
 
 **Value Objects**
 
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
-| `LocalName` | El nombre que un alimento lleva **dentro de esta plataforma**. Es el resultado de la traducción, nunca la etiqueta del proveedor. | `MaxLength = 200`; rechaza vacío y recorta. Implementa *Taxonomy Translation Mandatory*. |
-| `NutrientsPer100g` | Contenido nutricional, **siempre por 100 gramos y nunca por porción**: la porción la declara quien registra la comida. | Energía máxima de 950 kcal (nada comestible alcanza esa densidad); macros entre 0 y 100 g; redondeo a dos decimales. |
-| `SourceHash` | **Huella digital del registro upstream** del que se tradujo un alimento. | `Length = 64` (SHA-256 en hexadecimal minúscula); factories estáticas `Of(params string[])` y `ForLocalOverride(string)`. |
+| `LocalName` | El nombre que un alimento lleva dentro de esta plataforma. Es el resultado de la traducción, nunca la etiqueta del proveedor. | `MaxLength = 200`; rechaza vacío y recorta. Implementa *Taxonomy Translation Mandatory*. |
+| `NutrientsPer100g` | Contenido nutricional, siempre por 100 gramos y nunca por porción: la porción la declara quien registra la comida. | Energía máxima de 950 kcal por 100 g; macros entre 0 y 100 g; redondeo a dos decimales. |
+| `SourceHash` | Huella digital del registro upstream del que se tradujo un alimento. | `Length = 64` (SHA-256 en hexadecimal minúscula); factories estáticas `Of(params string[])` y `ForLocalOverride(string)`. |
 | `ReferenceFoodId` | Identidad tipada. | `Value : int > 0`, `internal static FromRaw(int)`, operadores de conversión. |
 
-La razón de usar un digest y no un identificador es concreta: un identificador externo sería un concepto ajeno viviendo dentro del dominio, y tarde o temprano algo lo leería de vuelta y lo usaría como tal. **Un digest no puede.**
+Se usa un digest en lugar del identificador del proveedor para que ningún concepto externo forme parte del dominio: el digest permite reconocer un registro ya importado, pero no puede usarse para consultar al proveedor.
 
-**Commands (4)** — `ImportCatalogSnapshotCommand`, `CacheFoodLocallyCommand` (sin endpoint; lleva el payload traducido como primitivos, **sin identificador externo, por construcción**), `SearchFoodCommand` y `CreateLocalOverrideCommand`.
+**Commands (4)** — `ImportCatalogSnapshotCommand`, `CacheFoodLocallyCommand` (sin endpoint; lleva el payload traducido como primitivos, sin identificador externo, por construcción), `SearchFoodCommand` y `CreateLocalOverrideCommand`.
 
 **Queries (3)** — `GetReferenceFoodByIdQuery`, `SearchReferenceFoodsQuery` (read model Food Results List) y `GetLocalFoodCatalogQuery` (read model Local Food Catalog, que llena la copia offline del dispositivo).
 
-**Domain Events (6)** — `ExternalCatalogSnapshotImported`, `ReferenceFoodTranslated`, `TranslationFailed`, `ReferenceFoodCached`, `FoodSearchPerformed` y `LocalFoodOverrideCreated`. **Ninguno cruza frontera de bounded context**: Intake & Body Response lee el catálogo de forma **síncrona** por el ACL, porque registrar una comida necesita el alimento en ese momento. `TranslationFailed` no es una excepción sino una **rama negativa**: descartar el registro es el resultado correcto, porque la alternativa es dejar entrar un registro a medio traducir que luego se contaría como ingesta.
+**Domain Events (6)** — `ExternalCatalogSnapshotImported`, `ReferenceFoodTranslated`, `TranslationFailed`, `ReferenceFoodCached`, `FoodSearchPerformed` y `LocalFoodOverrideCreated`. Ninguno cruza frontera de bounded context: Intake & Body Response lee el catálogo de forma síncrona por el ACL, porque registrar una comida necesita el alimento en ese momento. `TranslationFailed` no representa una excepción sino un resultado esperado: el registro se descarta para evitar que un alimento incompleto se use luego en el cálculo de la ingesta.
 
 **Errors** — `enum FoodCatalogError` con nueve valores: `ExternalCatalogUnavailable`, `TaxonomyTranslationFailed`, `ExternalIdNotAllowed`, `SourceHashRequired`, `ReferenceFoodNotFound`, `PractitionerOnly`, `LocalNameAndNutrientsRequired`, `DuplicatedLocalOverride` y `UnexpectedError`.
 
-**Repositories (abstracción)** — `IReferenceFoodRepository : IBaseRepository<ReferenceFood>` declara `FindBySourceHashAsync(SourceHash)` —la huella upstream es lo que hace **idempotentes** la importación y el sembrado—, `SearchByLocalNameAsync(string, int)` —que hace *match* sobre el nombre local y **nunca sobre una etiqueta de proveedor**—, `ListLocalCatalogAsync(int)`, `ExistsLocalOverrideWithNameAsync(string)` y `CountAsync()`.
+**Repositories (abstracción)** — `IReferenceFoodRepository : IBaseRepository<ReferenceFood>` declara `FindBySourceHashAsync(SourceHash)` —la huella upstream es lo que hace idempotentes la importación y el sembrado—, `SearchByLocalNameAsync(string, int)` —que hace *match* sobre el nombre local y nunca sobre una etiqueta de proveedor—, `ListLocalCatalogAsync(int)`, `ExistsLocalOverrideWithNameAsync(string)` y `CountAsync()`.
 
-**Domain Services** — `IExternalFoodCatalogProvider`, con la propiedad `ProviderName` y el método `FetchSnapshotAsync(string term, int max, CancellationToken)`, más los records `ExternalFoodRecord(LocalName, NutrientsPer100g, SourceHash)` y `ExternalCatalogSnapshot(string, IReadOnlyList<ExternalFoodRecord>, IReadOnlyList<string>)`. **Ésta es la capa anticorrupción vista desde dentro**: el dominio sabe que llegan snapshots y que algunos registros no traducen, pero **no sabe que alguien habla HTTP**. La ausencia de un campo identificador en `ExternalFoodRecord` es la regla, compilada: un adaptador no tiene dónde poner uno aunque quisiera. Un registro **o traduce completamente o se reporta como fallo y se descarta**, sin un tercer estado parcial, porque un alimento con nombre y sin nutrientes se registraría como una comida que no vale nada.
+**Domain Services** — `IExternalFoodCatalogProvider`, con la propiedad `ProviderName` y el método `FetchSnapshotAsync(string term, int max, CancellationToken)`, más los records `ExternalFoodRecord(LocalName, NutrientsPer100g, SourceHash)` y `ExternalCatalogSnapshot(string, IReadOnlyList<ExternalFoodRecord>, IReadOnlyList<string>)`. Esta interfaz es la parte de la capa anticorrupción visible desde el dominio: el dominio recibe snapshots y fallos de traducción, pero desconoce los detalles de comunicación HTTP. `ExternalFoodRecord` no tiene campo para un identificador externo, por lo que los adaptadores no pueden introducirlo. Un registro se traduce completo o se reporta como fallo y se descarta; no existe un estado parcial, porque un alimento sin nutrientes produciría registros de ingesta incorrectos.
 
-**Relaciones entre clases:** `ReferenceFood` compone `ReferenceFoodId` y `SourceHash`, y agrega de forma reconstruida `LocalName` y `NutrientsPer100g`, derivados respectivamente de `LocalNameText` y de las cuatro columnas de nutrientes. `ExternalFoodRecord` compone los mismos tres value objects, y `ExternalCatalogSnapshot` agrega 0..* `ExternalFoodRecord`. `IExternalFoodCatalogProvider` **depende** de `ExternalCatalogSnapshot` (`fetches`) e `IReferenceFoodRepository` depende de `SourceHash` (`findsBy`). No hay ninguna relación entre agregados dentro del contexto, porque sólo existe uno.
+**Relaciones entre clases:** `ReferenceFood` compone `ReferenceFoodId` y `SourceHash`, y agrega de forma reconstruida `LocalName` y `NutrientsPer100g`, derivados respectivamente de `LocalNameText` y de las cuatro columnas de nutrientes. `ExternalFoodRecord` compone los mismos tres value objects, y `ExternalCatalogSnapshot` agrega 0..* `ExternalFoodRecord`. `IExternalFoodCatalogProvider` depende de `ExternalCatalogSnapshot` (`fetches`) e `IReferenceFoodRepository` depende de `SourceHash` (`findsBy`). No hay ninguna relación entre agregados dentro del contexto, porque sólo existe uno.
 
 #### 2.6.6.2. Interface Layer
 
-La Interface Layer de Food Catalog expone dos controllers con una asimetría deliberada de autorización: **buscar es abierto, escribir no lo es**.
+La Interface Layer de Food Catalog expone dos controllers con una asimetría deliberada de autorización: buscar es abierto, escribir no lo es.
 
 **Controllers**
 
-**`ReferenceFoodsController`** — `[Route("api/v1/reference-foods")] [Tags("Food Catalog")]`, **sin `[Authorize]` a nivel de clase** porque la lectura del catálogo es pública.
+**`ReferenceFoodsController`** — `[Route("api/v1/reference-foods")] [Tags("Food Catalog")]`, sin `[Authorize]` a nivel de clase porque la lectura del catálogo es pública.
 
 | Verbo / Ruta | Acción | Autorización | Respuestas |
 |---|---|---|---|
 | `GET /api/v1/reference-foods?query=&max=25` | `SearchReferenceFoods(string?, int)` | `[AllowAnonymous]` | 200 `IEnumerable<ReferenceFoodResource>` · 500 |
 | `GET /api/v1/reference-foods/{referenceFoodId:int}` | `GetReferenceFoodById(int)` | `[AllowAnonymous]` | 200 · 404 |
 | `POST /api/v1/reference-foods/local-overrides` | `CreateLocalOverride(CreateLocalOverrideResource)` | `[Authorize(Roles = "Practitioner")]` | 201 · 400 · 401 · 403 · 409 |
-| `POST /api/v1/reference-foods/catalog-imports` | `ImportCatalogSnapshot(ImportCatalogSnapshotResource)` | `[Authorize(Roles = "Practitioner")]` | **202** · 401 · 403 · 422 · **503** |
+| `POST /api/v1/reference-foods/catalog-imports` | `ImportCatalogSnapshot(ImportCatalogSnapshotResource)` | `[Authorize(Roles = "Practitioner")]` | **202** · 401 · 403 · 422 · 503 |
 
-Un alimento y sus nutrientes por 100 g son datos de referencia públicos: no dicen nada de ningún paciente, y exigir una sesión sólo haría más difícil construir el cliente. **`Cache Food Locally` no tiene endpoint**: las entradas llegan exclusivamente por la política de caching.
+Los alimentos y sus nutrientes por 100 g son datos de referencia públicos que no contienen información de pacientes, por lo que su consulta no requiere sesión. `Cache Food Locally` no tiene endpoint: las entradas llegan exclusivamente por la política de caching.
 
-**`LocalFoodCatalogController`** — `[Route("api/v1/patients")] [Authorize(Roles = "Patient")] [Tags("Food Catalog")]`, con la constante privada `MaxEntries = 500`. Expone `GET /{patientId:int}/local-food-catalog` (`GetLocalFoodCatalog(int)`), read model **Local Food Catalog**, con respuestas 200 · 401 · 403. El dispositivo del paciente mantiene su propia copia de esta lista para poder registrar una comida **sin conectividad**, y este endpoint es cómo se llena esa copia; la ruta lleva el `patientId` por la forma del read model, pero la identidad que se confía es la del token.
+**`LocalFoodCatalogController`** — `[Route("api/v1/patients")] [Authorize(Roles = "Patient")] [Tags("Food Catalog")]`, con la constante privada `MaxEntries = 500`. Expone `GET /{patientId:int}/local-food-catalog` (`GetLocalFoodCatalog(int)`), read model Local Food Catalog, con respuestas 200 · 401 · 403. El dispositivo del paciente mantiene su propia copia de esta lista para poder registrar una comida sin conectividad, y este endpoint es cómo se llena esa copia; la ruta lleva el `patientId` por la forma del read model, pero la identidad que se confía es la del token.
 
 **Resources**
 
@@ -4083,9 +4083,9 @@ Un alimento y sus nutrientes por 100 g son datos de referencia públicos: no dic
 | `ReferenceFoodResource` | response | `ReferenceFoodId`, `LocalName`, los cuatro nutrientes e `IsLocalOverride` |
 | `CatalogImportSummaryResource` | response | `Term`, `ProvidersConsulted`, `TranslatedCount`, `FailedCount` |
 
-**`ReferenceFoodResource` no lleva `SourceHash` y nunca lo llevará**: exponerlo lo convertiría de vuelta en el identificador externo que fue diseñado para reemplazar.
+`ReferenceFoodResource` no incluye `SourceHash`, para que no se use como identificador externo fuera del contexto.
 
-**Transform / Assemblers** — `FoodCatalogAssemblers.cs` reúne `CreateLocalOverrideCommandAssembler`, `ImportCatalogSnapshotCommandAssembler`, `ReferenceFoodResourceAssembler` y `CatalogImportSummaryResourceAssembler`. `FoodCatalogActionResultAssembler.cs` expone `ToReferenceFoodResult` (con estado parametrizable), `ToReferenceFoodListResult`, `ToCatalogImportResult` (**202 Accepted por defecto**), `ToNotFoundResult` y el privado `FailureResult`:
+**Transform / Assemblers** — `FoodCatalogAssemblers.cs` reúne `CreateLocalOverrideCommandAssembler`, `ImportCatalogSnapshotCommandAssembler`, `ReferenceFoodResourceAssembler` y `CatalogImportSummaryResourceAssembler`. `FoodCatalogActionResultAssembler.cs` expone `ToReferenceFoodResult` (con estado parametrizable), `ToReferenceFoodListResult`, `ToCatalogImportResult` (202 Accepted por defecto), `ToNotFoundResult` y el privado `FailureResult`:
 
 | Error | Status | Razonamiento |
 |---|---|---|
@@ -4097,62 +4097,62 @@ Un alimento y sus nutrientes por 100 g son datos de referencia públicos: no dic
 | `ExternalCatalogUnavailable` | **503** | Nada está mal en la petición ni en este servicio: el catálogo externo no responde y el llamador puede reintentar más tarde. |
 | `UnexpectedError` (por defecto) | **500** | — |
 
-La importación responde **202 Accepted** porque una importación se *acepta*, no se *completa*: el trabajo real ocurre después, en la política de caching.
+La importación responde 202 Accepted porque una importación se *acepta*, no se *completa*: el trabajo real ocurre después, en la política de caching.
 
-**ACL Contract** — `IFoodCatalogContextFacade` declara el DTO `ReferenceFoodItem(int, string, decimal, decimal, decimal, decimal, bool)` y dos operaciones: `GetReferenceFoodById(int)` y `SearchReferenceFoods(string, int)`. **Sin `SourceHash`.** Es un contrato de **consulta**, no de publicación: Intake & Body Response resuelve un alimento mientras el paciente registra una comida, así que necesita la respuesta en ese momento, y por eso ningún evento de este contexto cruza frontera.
+**ACL Contract** — `IFoodCatalogContextFacade` declara el DTO `ReferenceFoodItem(int, string, decimal, decimal, decimal, decimal, bool)` y dos operaciones: `GetReferenceFoodById(int)` y `SearchReferenceFoods(string, int)`. Sin `SourceHash`. Es un contrato de consulta, no de publicación: Intake & Body Response resuelve un alimento mientras el paciente registra una comida, así que necesita la respuesta en ese momento, y por eso ningún evento de este contexto cruza frontera.
 
 **Localización** — `FoodCatalog/Resources/FoodCatalogMessages.cs`.
 
 #### 2.6.6.3. Application Layer
 
-La Application Layer de Food Catalog orquesta los cuatro subflujos del contexto (6.1 importar snapshot, 6.2 cachear alimento, 6.3 buscar y 6.4 crear override local). Su decisión estructural más importante es que **la importación no escribe**: la única puerta al catálogo es la política de caching, de modo que toda fila almacenada demostrablemente pasó por la traducción.
+La Application Layer de Food Catalog orquesta los cuatro subflujos del contexto (6.1 importar snapshot, 6.2 cachear alimento, 6.3 buscar y 6.4 crear override local). Su decisión principal es que la importación no escribe en el catálogo: solo la política de caching lo hace, de modo que toda fila almacenada pasó por la traducción.
 
 **Command Service**
 
-**`ReferenceFoodCommandService`** (implementa `IReferenceFoodCommandService`) — Depende de `IReferenceFoodRepository`, `IUnitOfWork`, **`IEnumerable<IExternalFoodCatalogProvider>`** (todas las implementaciones registradas), `ILogger<...>` e `IMediator`; declara la constante privada `MaxRecordsPerProvider = 100`.
+**`ReferenceFoodCommandService`** (implementa `IReferenceFoodCommandService`) — Depende de `IReferenceFoodRepository`, `IUnitOfWork`, `IEnumerable<IExternalFoodCatalogProvider>` (todas las implementaciones registradas), `ILogger<...>` e `IMediator`; declara la constante privada `MaxRecordsPerProvider = 100`.
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
-| `Handle(ImportCatalogSnapshotCommand)` | 6.1 | Rechaza el término vacío; si no hay proveedores registrados responde `ExternalCatalogUnavailable`. Por cada proveedor pide el snapshot y publica un `TranslationFailed` por cada fallo y un `ReferenceFoodTranslated` por cada traducción, cerrando con `ExternalCatalogSnapshotImported`. Si **todos** los proveedores respondieron sólo con fallos devuelve `ExternalCatalogUnavailable`, porque el catálogo es inalcanzable —no está vacío— y el llamador merece saber la diferencia. **No escribe nada en la base de datos.** |
-| `Handle(CacheFoodLocallyCommand)` | 6.2 | **La única puerta al catálogo.** Rechaza candidatos que parezcan identificadores externos, valida el nombre local y los nutrientes, exige la huella de origen y aplica **idempotencia** buscando por `SourceHash`: si existe y es override no toca nada; si existe y no lo es lo refresca desde upstream; si no existe lo crea y publica `ReferenceFoodCached`. |
-| `Handle(SearchFoodCommand)` | 6.3 | Busca primero en el catálogo local y, sólo si el término tiene al menos tres caracteres y hay menos resultados de los pedidos, completa desde los proveedores externos y **relee** el catálogo local. Publica `FoodSearchPerformed`. |
+| `Handle(ImportCatalogSnapshotCommand)` | 6.1 | Rechaza el término vacío; si no hay proveedores registrados responde `ExternalCatalogUnavailable`. Por cada proveedor pide el snapshot y publica un `TranslationFailed` por cada fallo y un `ReferenceFoodTranslated` por cada traducción, cerrando con `ExternalCatalogSnapshotImported`. Si todos los proveedores respondieron sólo con fallos devuelve `ExternalCatalogUnavailable`, porque el catálogo es inalcanzable —no está vacío— y el llamador merece saber la diferencia. No escribe nada en la base de datos. |
+| `Handle(CacheFoodLocallyCommand)` | 6.2 | Único punto de escritura del catálogo. Rechaza candidatos que parezcan identificadores externos, valida el nombre local y los nutrientes, exige la huella de origen y aplica idempotencia buscando por `SourceHash`: si existe y es override no toca nada; si existe y no lo es lo refresca desde upstream; si no existe lo crea y publica `ReferenceFoodCached`. |
+| `Handle(SearchFoodCommand)` | 6.3 | Busca primero en el catálogo local y, sólo si el término tiene al menos tres caracteres y hay menos resultados de los pedidos, completa desde los proveedores externos y relee el catálogo local. Publica `FoodSearchPerformed`. |
 | `Handle(CreateLocalOverrideCommand)` | 6.4 | Exige un profesional, valida ambos value objects y rechaza un override duplicado por nombre. Publica `LocalFoodOverrideCreated`. |
 
-Sus métodos privados son `TopUpFromExternalProvidersAsync(string, int, CT) : Task<bool>` —que envuelve **cada proveedor en su propio `try/catch`**, porque un proveedor inalcanzable es el caso ordinario para el que existe la regla de fallback y no un error que el llamador deba ver—, `ToTranslatedEvent(ExternalFoodRecord)` y `LooksLikeAnExternalIdentifier(string?) : bool`, que devuelve `true` cuando el candidato **no contiene ninguna letra**: un nombre que son sólo dígitos es un código de barras o una clave de proveedor que sobrevivió a una mala traducción, y no debe convertirse en el nombre de un alimento que alguien registre como comida.
+Sus métodos privados son `TopUpFromExternalProvidersAsync(string, int, CT) : Task<bool>` —que envuelve cada proveedor en su propio `try/catch`, porque un proveedor no disponible es un caso previsto por la regla de fallback y no debe mostrarse como error—, `ToTranslatedEvent(ExternalFoodRecord)` y `LooksLikeAnExternalIdentifier(string?) : bool`, que devuelve `true` cuando el candidato no contiene letras, ya que un nombre formado solo por dígitos suele ser un código de barras o una clave de proveedor mal traducida.
 
 **Query Service** — `ReferenceFoodQueryService(IReferenceFoodRepository)` resuelve las tres queries del dominio: por identificador, por búsqueda y para el catálogo local completo.
 
 **Event Handler (política)**
 
-**`OnReferenceFoodTranslatedHandler`** implementa la política *When Reference Food Translated* del subflujo 6.2. Escucha `ReferenceFoodTranslated` mediante `IEventHandler<T>`, crea un scope de DI aislado y emite un `CacheFoodLocallyCommand` con el payload del evento. **Es el único escritor del catálogo que reacciona a una importación**: mantener la escritura aquí, y no dentro del comando de importación, es lo que garantiza que toda fila almacenada pasó por la traducción, porque no hay otra vía de entrada.
+**`OnReferenceFoodTranslatedHandler`** implementa la política *When Reference Food Translated* del subflujo 6.2. Escucha `ReferenceFoodTranslated` mediante `IEventHandler<T>`, crea un scope de DI aislado y emite un `CacheFoodLocallyCommand` con el payload del evento. Es el único escritor del catálogo que reacciona a una importación: mantener la escritura aquí, y no dentro del comando de importación, es lo que garantiza que toda fila almacenada pasó por la traducción, porque no hay otra vía de entrada.
 
 **DTO de aplicación** — `CatalogImportSummary(string Term, int ProvidersConsulted, int TranslatedCount, int FailedCount)`, que resume el resultado de una importación y respalda la respuesta 202 Accepted del endpoint.
 
-**ACL Facade** — `FoodCatalogContextFacade` implementa `IFoodCatalogContextFacade` apoyándose en `IReferenceFoodQueryService`, con el método privado estático `ToItem(ReferenceFood) : ReferenceFoodItem` y degradación elegante hacia `null` o lista vacía. Es el contrato que Intake & Body Response consulta de forma síncrona para resolver el alimento que el paciente está registrando.
+**ACL Facade** — `FoodCatalogContextFacade` implementa `IFoodCatalogContextFacade` apoyándose en `IReferenceFoodQueryService`, con el método privado estático `ToItem(ReferenceFood) : ReferenceFoodItem` y ante un fallo devuelve `null` o una lista vacía. Es el contrato que Intake & Body Response consulta de forma síncrona para resolver el alimento que el paciente está registrando.
 
 #### 2.6.6.4. Infrastructure Layer
 
-La Infrastructure Layer de Food Catalog es la más rica de la plataforma en integración externa: aquí viven los dos adaptadores de la **capa anticorrupción**, la persistencia de la única tabla del contexto, un seeder y un hosted service.
+La Infrastructure Layer de Food Catalog es la más rica de la plataforma en integración externa: aquí viven los dos adaptadores de la capa anticorrupción, la persistencia de la única tabla del contexto, un seeder y un hosted service.
 
 **External — Capa anticorrupción**
 
-**`OpenFoodFactsProvider`** — Implementa `IExternalFoodCatalogProvider` sobre un `HttpClient` tipado, con `IConfiguration` e `ILogger<...>`. Consulta el endpoint de búsqueda del proveedor filtrando por país (`OpenFoodFacts:Country`, `peru` por defecto). Su método privado `Translate(JsonDocument)` recorre los productos devueltos, toma la clave y la etiqueta upstream —**la clave se lee aquí, se pliega en el digest y nunca se vuelve a nombrar**— y extrae los cuatro nutrientes por 100 g; si falta cualquiera de ellos añade una razón de fallo y continúa. Cuenta con los helpers privados estáticos `ReadString`, `ReadDecimal` y `Unavailable(string)`, y **nunca lanza** salvo una cancelación explícita: un proveedor inalcanzable devuelve un snapshot vacío con una razón.
+**`OpenFoodFactsProvider`** — Implementa `IExternalFoodCatalogProvider` sobre un `HttpClient` tipado, con `IConfiguration` e `ILogger<...>`. Consulta el endpoint de búsqueda del proveedor filtrando por país (`OpenFoodFacts:Country`, `peru` por defecto). Su método privado `Translate(JsonDocument)` recorre los productos devueltos, toma la clave y la etiqueta upstream —la clave se lee aquí, se pliega en el digest y nunca se vuelve a nombrar— y extrae los cuatro nutrientes por 100 g; si falta cualquiera de ellos añade una razón de fallo y continúa. Cuenta con los helpers privados estáticos `ReadString`, `ReadDecimal` y `Unavailable(string)`, y nunca lanza salvo una cancelación explícita: un proveedor inalcanzable devuelve un snapshot vacío con una razón.
 
-**`UsdaFoodDataProvider`** — Mismo contrato sobre la API de USDA FoodData Central. Declara como constantes privadas los números de nutriente estándar de energía, proteína, carbohidrato y grasa, y requiere `Usda:ApiKey`; sin ella se reporta como no configurado en lugar de fallar. **USDA reporta los nutrientes como una lista indexada por número en vez de campos con nombre, así que la traducción aquí es una búsqueda en vez de un renombrado**, resuelta por el método privado estático `ReadNutrients(JsonElement)`.
+**`UsdaFoodDataProvider`** — Mismo contrato sobre la API de USDA FoodData Central. Declara como constantes privadas los números de nutriente estándar de energía, proteína, carbohidrato y grasa, y requiere `Usda:ApiKey`; sin ella se reporta como no configurado en lugar de fallar. USDA reporta los nutrientes como una lista indexada por número en vez de campos con nombre, así que la traducción aquí es una búsqueda en vez de un renombrado, resuelta por el método privado estático `ReadNutrients(JsonElement)`.
 
-Estos dos archivos son **los únicos dos lugares de la plataforma donde el vocabulario upstream puede aparecer**.
+Estos dos adaptadores son los únicos lugares de la plataforma que usan el vocabulario de los proveedores externos.
 
 **Persistencia — EF Core**
 
-`ReferenceFoodEntityTypeConfiguration` mapea la tabla `reference_foods`: PK con converter `ReferenceFoodId.FromRaw` y `ValueGeneratedOnAdd()`; `local_name` con la longitud máxima declarada en el propio value object, requerido y con **índice `ix_reference_foods_local_name`**; las cuatro columnas de nutrientes como `decimal(10,2)` requeridas; `source_hash` con converter, 64 caracteres y **índice único `ix_reference_foods_source_hash`**, que es la identidad que convierte una importación repetida en un no-op en vez de una fila duplicada; `is_local_override` requerido; e `Ignore` sobre `LocalName` y `NutrientsPer100g`.
+`ReferenceFoodEntityTypeConfiguration` mapea la tabla `reference_foods`: PK con converter `ReferenceFoodId.FromRaw` y `ValueGeneratedOnAdd()`; `local_name` con la longitud máxima declarada en el propio value object, requerido y con índice `ix_reference_foods_local_name`; las cuatro columnas de nutrientes como `decimal(10,2)` requeridas; `source_hash` con converter, 64 caracteres y índice único `ix_reference_foods_source_hash`, que es la identidad que convierte una importación repetida en un no-op en vez de una fila duplicada; `is_local_override` requerido; e `Ignore` sobre `LocalName` y `NutrientsPer100g`.
 
-`ReferenceFoodRepository(AppDbContext)` sobrescribe `FindByIdAsync`, implementa `FindBySourceHashAsync` comparando contra una **instancia de value object** (EF no puede traducir un miembro de un tipo convertido), y en `SearchByLocalNameAsync` y `ListLocalCatalogAsync` ordena **poniendo primero los overrides locales** y luego alfabéticamente, porque un profesional añadió un override precisamente porque el catálogo genérico no era suficiente para esta población. Ambos métodos acotan el tamaño del resultado con `Math.Clamp`. Reimplementa explícitamente `IBaseRepository<ReferenceFood>.FindByIdAsync`.
+`ReferenceFoodRepository(AppDbContext)` sobrescribe `FindByIdAsync`, implementa `FindBySourceHashAsync` comparando contra una instancia de value object (EF no puede traducir un miembro de un tipo convertido), y en `SearchByLocalNameAsync` y `ListLocalCatalogAsync` ordena poniendo primero los overrides locales y luego alfabéticamente, porque un profesional añadió un override precisamente porque el catálogo genérico no era suficiente para esta población. Ambos métodos acotan el tamaño del resultado con `Math.Clamp`. Reimplementa explícitamente `IBaseRepository<ReferenceFood>.FindByIdAsync`.
 
-**Seeders — `ReferenceFoodSeeder`** — Depende de `IReferenceFoodRepository`, `IReferenceFoodCommandService`, `IConfiguration` e `ILogger<...>`, y declara la constante de procedencia del sembrado. **Escribe a través del comando de caching y no del repositorio**, para que las filas sembradas entren al catálogo por la misma puerta única que las importadas y queden sujetas a los mismos controles. Es **idempotente por construcción**, porque cada entrada lleva un digest estable derivado de su procedencia y su nombre. Está condicionado por `Seeder:Enabled` (falso por defecto) y por un umbral mínimo de entradas, y su arreglo estático `StartingCatalog` contiene **60 alimentos peruanos** por 100 g: cereales y tubérculos andinos, legumbres, carnes, pescados y mariscos, lácteos y huevo, frutas, verduras y grasas. Son datos de referencia para desarrollo, **no una fuente clínica**.
+**Seeders — `ReferenceFoodSeeder`** — Depende de `IReferenceFoodRepository`, `IReferenceFoodCommandService`, `IConfiguration` e `ILogger<...>`, y declara la constante de procedencia del sembrado. Escribe a través del comando de caching y no del repositorio, para que las filas sembradas pasen por las mismas validaciones que las importadas. Es idempotente, porque cada entrada lleva un digest estable derivado de su procedencia y su nombre. Está condicionado por `Seeder:Enabled` (falso por defecto) y por un umbral mínimo de entradas, y su arreglo estático `StartingCatalog` contiene 60 alimentos peruanos por 100 g: cereales y tubérculos andinos, legumbres, carnes, pescados y mariscos, lácteos y huevo, frutas, verduras y grasas. Son datos de referencia para desarrollo, no una fuente clínica.
 
-**Scheduling — `CatalogImportHostedService`** — `BackgroundService` que implementa la política temporal *When Scheduled Import Due* del subflujo 6.1. Depende de `IServiceScopeFactory`, `IConfiguration` e `ILogger<...>`; importa 50 registros por proveedor con un intervalo configurable en `Scheduling:CatalogImportIntervalHours` (24 h por defecto, mínimo 1) mediante `PeriodicTimer`, usando como término el país configurado. Cumple las **cinco guardas obligatorias del proyecto**, con la nota particular de que aquí un proveedor externo inalcanzable es el caso esperado y no un incidente. Su método privado `SafeWaitAsync` traga la excepción de cancelación.
+**Scheduling — `CatalogImportHostedService`** — `BackgroundService` que implementa la política temporal *When Scheduled Import Due* del subflujo 6.1. Depende de `IServiceScopeFactory`, `IConfiguration` e `ILogger<...>`; importa 50 registros por proveedor con un intervalo configurable en `Scheduling:CatalogImportIntervalHours` (24 h por defecto, mínimo 1) mediante `PeriodicTimer`, usando como término el país configurado. Cumple las cinco guardas obligatorias del proyecto y trata la indisponibilidad de un proveedor externo como un caso previsto. Su método privado `SafeWaitAsync` controla la excepción de cancelación al detener el servicio.
 
-**Servicios externos** — Open Food Facts (`https://world.openfoodfacts.org`) y USDA FoodData Central (`https://api.nal.usda.gov/fdc/v1`), ambos con `HttpClient` tipado, timeout de 10 segundos y `User-Agent` propio. Ambas implementaciones se registran contra el **mismo contrato** a propósito: la importación consulta cada proveedor que se le entrega, así que añadir un tercero es un registro y nada más. Cada registro lleva un **nombre explícito**, sin el cual ambos proveedores compartirían un único cliente configurado y la segunda dirección base ganaría silenciosamente para los dos.
+**Servicios externos** — Open Food Facts (`https://world.openfoodfacts.org`) y USDA FoodData Central (`https://api.nal.usda.gov/fdc/v1`), ambos con `HttpClient` tipado, timeout de 10 segundos y `User-Agent` propio. Ambas implementaciones se registran contra el mismo contrato, por lo que agregar un tercer proveedor solo requiere registrarlo. Cada cliente HTTP tiene un nombre explícito para que cada proveedor conserve su propia dirección base.
 
 #### 2.6.6.5. Bounded Context Software Architecture Component Level Diagrams
 
