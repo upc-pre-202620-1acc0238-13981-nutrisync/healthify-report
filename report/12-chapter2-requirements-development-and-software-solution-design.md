@@ -43,17 +43,17 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 
 11. Si pudieras cambiar una sola cosa de cómo haces el seguimiento hoy, ¿cuál sería?
 
-#### Segmento 2 — Paciente en tratamiento nutricional activo ( - años)
+#### Segmento 2 — Paciente en tratamiento nutricional activo (18 – 59 años)
 
 **Bloque 1: Perfil y antecedentes**
 
 1. Cuéntame tu edad, en qué distrito vives, a qué te dedicas y con quién vives. ¿Quién cocina en tu casa?
 2. ¿Cómo llegaste a ir donde un nutricionista y desde cuándo? ¿Lo habías intentado antes por tu cuenta? ¿Qué pasó esa vez?
 
-**Bloque 2: Dispersión, desde el otro lado**
+**Bloque 2: Ubicación de la información**
 
 3. ¿Dónde tienes tu plan nutricional ahora mismo?
-4. Cuando te toman medidas o te mandan análisis, ¿dónde termina eso? ¿Lo tienes tú o solo lo tiene tu nutricionista?
+4. Cuando te toman medidas o te mandan análisis, ¿dónde termina eso? ¿Lo tienes tú o solo tu nutricionista?
 
 **Bloque 3: Comportamiento actual**
 
@@ -70,7 +70,7 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 
 10. ¿Qué apps has probado para registrar comidas? ¿Cuánto tiempo las usaste y por qué las dejaste?
 
-**Bloque 6: Reacción a las hipótesis**
+**Bloque 6: Validación de hipótesis**
 
 11. Si registrar una comida fuera solo tomarle una foto y confirmar lo que el sistema propone, ¿lo harías a diario? ¿Qué te haría dejar de hacerlo?
 12. Si hubiera un botón para decir "hoy comí fuera del plan" sin tener que explicar qué comiste, y tu nutricionista lo viera, ¿lo usarías?
@@ -78,6 +78,8 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 **Bloque 7: Cierre**
 
 13. Si pudieras cambiar una sola cosa de cómo llevas esto hoy, ¿cuál sería?
+
+<div style="page-break-after: always"></div>
 
 ### 2.2.2. Registro de entrevistas
 
