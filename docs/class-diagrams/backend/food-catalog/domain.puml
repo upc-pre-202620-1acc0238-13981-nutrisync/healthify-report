@@ -8,10 +8,6 @@ hide empty members
 package "Healthify.Platform.FoodCatalog.Domain" {
 
   package "Model.Aggregates" {
-    ' ReferenceFood is a partial class: ReferenceFood.cs + ReferenceFoodAudit.cs.
-    ' A Generic context, deliberately thin: everything interesting happens at
-    ' its edge. Nothing from a provider reaches this class untranslated, and
-    ' what the provider called the record survives only as an opaque digest.
     class ReferenceFood {
       -Id: ReferenceFoodId
       -LocalNameText: string
@@ -39,15 +35,12 @@ package "Healthify.Platform.FoodCatalog.Domain" {
       +ReferenceFoodId(value: int)
       +{static} FromRaw(value: int): ReferenceFoodId
     }
-    ' The result of the translation, never the provider's own label.
     class LocalName <<record>> {
       +{static} MaxLength: int = 200
       -Value: string
       +LocalName(value: string)
       +ToString(): string
     }
-    ' Per 100 g and never per portion: the portion is declared by whoever logs
-    ' the meal, so one reference food serves every portion size.
     class NutrientsPer100g <<record>> {
       -{static} MaxEnergyKcal: decimal = 950
       -EnergyKcal: decimal
@@ -56,8 +49,6 @@ package "Healthify.Platform.FoodCatalog.Domain" {
       -FatG: decimal
       +NutrientsPer100g(energyKcal, proteinG, carbG, fatG)
     }
-    ' A one-way digest rather than the provider identifier: an identifier would
-    ' be an external concept living inside the domain. A digest cannot be.
     class SourceHash <<record>> {
       +{static} Length: int = 64
       -{static} PartSeparator: string = "::"
@@ -74,8 +65,6 @@ package "Healthify.Platform.FoodCatalog.Domain" {
       -Term: string
       -Max: int
     }
-    ' Issued by the policy reacting to ReferenceFoodTranslated, never by an
-    ' endpoint: nothing enters the catalog that has not been translated first.
     class CacheFoodLocallyCommand <<record>> {
       -LocalName: string
       -EnergyKcalPer100g: decimal
@@ -112,16 +101,12 @@ package "Healthify.Platform.FoodCatalog.Domain" {
   }
 
   package "Model.Events" {
-    ' Every Food Catalog event stays inside Food Catalog: Intake reads the
-    ' catalog synchronously through the ACL facade instead of subscribing.
     class ExternalCatalogSnapshotImported <<record>> {
       -ProviderName: string
       -Term: string
       -TranslatedCount: int
       -FailedCount: int
     }
-    ' One upstream record crossed the anti-corruption layer. No external
-    ' identifier in the payload, only the opaque digest.
     class ReferenceFoodTranslated <<record>> {
       -LocalName: string
       -EnergyKcalPer100g: decimal
@@ -130,8 +115,6 @@ package "Healthify.Platform.FoodCatalog.Domain" {
       -FatGPer100g: decimal
       -SourceHash: string
     }
-    ' Negative branch: a record that could not be expressed in this vocabulary
-    ' is dropped and announced. Nothing is retried, nothing propagates.
     class TranslationFailed <<record>> {
       -ProviderName: string
       -Reason: string
@@ -177,24 +160,16 @@ package "Healthify.Platform.FoodCatalog.Domain" {
   }
 
   package "Services" {
-    ' One upstream record, already expressed in this platform's vocabulary.
-    ' The absence of an identifier field is the rule, compiled: an adapter has
-    ' nowhere to put one even if it wanted to.
     class ExternalFoodRecord <<record>> {
       -LocalName: LocalName
       -Nutrients: NutrientsPer100g
       -SourceHash: SourceHash
     }
-    ' A record either translates completely or it is reported and dropped.
-    ' There is no partial third state.
     class ExternalCatalogSnapshot <<record>> {
       -ProviderName: string
       -TranslatedFoods: IReadOnlyList<ExternalFoodRecord>
       -TranslationFailures: IReadOnlyList<string>
     }
-    ' The anti-corruption layer, seen from the inside. The domain knows that
-    ' snapshots arrive and that some records do not translate; it does not know
-    ' that anyone speaks HTTP.
     interface IExternalFoodCatalogProvider {
       +ProviderName: string
       +FetchSnapshotAsync(term: string, max: int, ct): Task<ExternalCatalogSnapshot>
@@ -208,31 +183,24 @@ package "Shared.Domain" <<external>> {
   abstract DomainEventBase
 }
 
-' --- Aggregate root & auditing ---
 ReferenceFood ..|> IAuditableEntity
 
-' --- Identity & value objects held by the aggregate ---
 ReferenceFood *--> "1" ReferenceFoodId : identified by
 ReferenceFood *--> "1" SourceHash : fingerprinted by (unique)
 ReferenceFood ..> LocalName : rebuilt from local_name
 ReferenceFood ..> NutrientsPer100g : rebuilt from four columns
-' A local override still needs a digest, because the hash is what makes
-' importing and seeding idempotent.
 SourceHash ..> LocalName : ForLocalOverride derives from
 
-' --- Aggregate construction & invariants ---
 ReferenceFood ..> CacheFoodLocallyCommand : cached from
 ReferenceFood ..> CreateLocalOverrideCommand : built from
 ReferenceFood ..> ImportCatalogSnapshotCommand : refreshed by an import of
 SearchFoodCommand ..> ReferenceFood : searches
 
-' --- Repository ---
 IReferenceFoodRepository --|> IBaseRepository
 IReferenceFoodRepository ..> ReferenceFood : manages
 IReferenceFoodRepository ..> SourceHash : idempotency key
 IReferenceFoodRepository ..> LocalName : matches on
 
-' --- Anti-corruption layer contract ---
 IExternalFoodCatalogProvider ..> ExternalCatalogSnapshot : returns
 ExternalCatalogSnapshot o--> "0..*" ExternalFoodRecord : TranslatedFoods
 ExternalFoodRecord *--> "1" LocalName : translated name
@@ -240,12 +208,10 @@ ExternalFoodRecord *--> "1" NutrientsPer100g : translated nutrients
 ExternalFoodRecord *--> "1" SourceHash : upstream fingerprint
 ExternalFoodRecord ..> ReferenceFood : becomes, once cached
 
-' --- Queries target their read models ---
 GetReferenceFoodByIdQuery ..> ReferenceFood : queries
 SearchReferenceFoodsQuery ..> ReferenceFood : queries
 GetLocalFoodCatalogQuery ..> ReferenceFood : queries
 
-' --- Domain events ---
 ExternalCatalogSnapshotImported --|> DomainEventBase
 ReferenceFoodTranslated --|> DomainEventBase
 TranslationFailed --|> DomainEventBase
@@ -260,10 +226,8 @@ ReferenceFood ..> ReferenceFoodCached : raises
 ReferenceFood ..> FoodSearchPerformed : searching raises
 ReferenceFood ..> LocalFoodOverrideCreated : raises
 
-' --- The one door into the catalog, expressed as a policy chain ---
 ReferenceFoodTranslated ..> CacheFoodLocallyCommand : policy issues
 
-' --- Errors: one value per business rule this context enforces ---
 FoodCatalogError ..> ReferenceFood : reports failures of
 FoodCatalogError ..> ExternalCatalogSnapshot : reports failures of
 

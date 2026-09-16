@@ -3,7 +3,7 @@
 {#
 {
 <size:22><b>Name</b></size>
-<size:14>Identity & Access</size>
+<size:14>Identity & Access Management (IAM)</size>
 } | {
 <size:22><b>Model Traits</b></size>
 <color:gray>draft, execute, audit, enforcer, interchange, gateway, etc.</color>

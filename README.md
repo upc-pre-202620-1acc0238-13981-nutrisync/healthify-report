@@ -1,57 +1,44 @@
-<div align="center">
+<p align="center"><img src="assets/img/logoUPC.png" alt="Logo UPC" width="65"></p>
 
-![Logo UPC](assets/img/logoUPC.png)
+<p align="center"><strong>Universidad Peruana de Ciencias Aplicadas</strong></p>
+<p align="center"><strong>Carrera de Ingeniería de Software</strong></p>
 
-# Universidad Peruana de Ciencias Aplicadas
+<br>
 
-## Carrera de Ingeniería de Software
+<p align="center"><strong>1ACC0238</strong></p>
+<p align="center"><strong>Aplicaciones para Dispositivos Móviles</strong></p>
+<p align="center">NRC</p>
+<p align="center"><strong>13981</strong></p>
 
-### 1ACC0238
+<h2 align="center">Informe del Avance 1</h2>
 
-### Aplicaciones para Dispositivos Móviles
+<p align="center">Docente</p>
+<p align="center"><strong>Mayta Guillermo, Jorge Luis</strong></p>
 
-**NRC**
+<br>
 
-13981
+<p align="center">Equipo</p>
+<p align="center"><strong>NutriSync</strong></p>
+<p align="center">Proyecto</p>
+<p align="center"><strong>Healthify</strong></p>
 
-**Informe del Avance 1**
+<br>
 
-**Docente**
-
-Mayta Guillermo, Jorge Luis
-
-**Startup**
-
-NutriSync
-
-**Producto**
-
-Healthify
-
-**Integrantes**
+<p align="center"><strong>Integrantes</strong></p>
 
 <table align="center">
-  <thead>
-    <tr>
-      <th>Código</th>
-      <th>Apellidos y Nombres</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr><td>U202411669</td><td>Del Aguila Del Aguila, Olenka Priscilla</td></tr>
-    <tr><td>U202415495</td><td>Espinoza Cruz, Angela Milagros</td></tr>
-    <tr><td>U20241B227</td><td>Mora Rivera, Joel Fernando</td></tr>
-    <tr><td>U20241D159</td><td>Vergaray Calderon, Rose Almendra</td></tr>
-    <tr><td>U202417857</td><td>Villarreal Bazan, Angel Martin</td></tr>
-  </tbody>
+  <tr><th>Código</th><th>Apellidos y nombres</th></tr>
+  <tr><td>U202411669</td><td>Del Aguila Del Aguila, Olenka Priscilla</td></tr>
+  <tr><td>U202415495</td><td>Espinoza Cruz, Angela Milagros</td></tr>
+  <tr><td>U20241B227</td><td>Mora Rivera, Joel Fernando</td></tr>
+  <tr><td>U20241D159</td><td>Vergaray Calderon, Rose Almendra</td></tr>
+  <tr><td>U202417857</td><td>Villarreal Bazan, Angel Martin</td></tr>
 </table>
 
+<br>
 
-**Período 202620**
-
-Septiembre, 2026
-
-</div>
+<p align="center"><strong>Período 202620</strong></p>
+<p align="center"><strong>Septiembre 2026</strong></p>
 
 <div style="page-break-after: always"></div>
 
@@ -69,7 +56,7 @@ Septiembre, 2026
 | 0.9.0 | 09/09/2026 – 11/09/2026 | Todos los integrantes | Strategic-level DDD: Big Picture y Design Level EventStorming, ubiquitous language, candidate context discovery, domain message flows, bounded context canvases y context mapping (`feature/chapter2-bounded-context`) |
 | 0.10.0 | 12/09/2026 | Todos los integrantes | Integración de ramas a `develop` (PR #3–#7); entradas de los bounded contexts en la tabla de contenidos del README |
 | 0.11.0 | 13/09/2026 | Todos los integrantes | Acciones y conclusiones ABET 7.c.1 y 7.c.2; objetivos SMART de cada integrante; adición de las entrevistas |
-| 1.0.0 | 13/09/2026 | Angel Villarreal | AV1 Report |
+| 1.0.0 | 16/09/2026 | Angel Villarreal | AV1 Report |
 
 <div style="page-break-after: always"></div>
 
@@ -78,13 +65,11 @@ Septiembre, 2026
 Repositorio del informe del proyecto en GitHub: [healthify-report](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report)
 
 AV1:<br>
-![Report](./)
+![Report](./assets/img/insights/av1.png)
 
 <div style="page-break-after: always"></div>
 
 ## CONTENIDO
-
-# CONTENIDO
 
 [STUDENT OUTCOME](report/01-student-outcome.md)
 
@@ -133,7 +118,8 @@ AV1:<br>
   - [2.5.3. Software Architecture](report/12-chapter2-requirements-development-and-software-solution-design.md#253-software-architecture)
     - [2.5.3.1. Software Architecture Context Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2531-software-architecture-context-level-diagrams)
     - [2.5.3.2. Software Architecture Container Level Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2532-software-architecture-container-level-diagrams)
-    - [2.5.3.3. Software Architecture Deployment Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2533-software-architecture-deployment-diagrams)
+    - [2.5.3.3. Software Architecture Components Diagrams](report/12-chapter2-requirements-development-and-software-solution-design.md#2533-software-architecture-components-diagrams)
+    - [2.5.3.4. Software Architecture Deployment Diagram](report/12-chapter2-requirements-development-and-software-solution-design.md#2534-software-architecture-deployment-diagram)
 - [2.6. Tactical-Level Domain-Driven Design](report/12-chapter2-requirements-development-and-software-solution-design.md#26-tactical-level-domain-driven-design)
   - [2.6.1. Bounded Context: Intake &amp; Body Response](report/12-chapter2-requirements-development-and-software-solution-design.md#261-bounded-context-intake--body-response)
     - [2.6.1.1. Domain Layer](report/12-chapter2-requirements-development-and-software-solution-design.md#2611-domain-layer)

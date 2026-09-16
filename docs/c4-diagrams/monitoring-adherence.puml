@@ -1,9 +1,4 @@
 @startuml MonitoringAdherence_Component_Diagram
-' =============================================================================
-'  Healthify Platform - Bounded Context: Monitoring and Adherence
-'  C4 Model - Level 3: Component Diagram
-'  Container decomposed: Healthify Platform API (ASP.NET Core 10 Web API)
-' =============================================================================
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 
 LAYOUT_TOP_DOWN()
@@ -18,30 +13,26 @@ Container(mobile, "Mobile Application", "Flutter / MAUI", "Monitoring panel of t
 
 Container_Boundary(api, "Healthify Platform API") {
 
-    ' ------------------------------------------------------------- Interfaces
     Component(patientMonitoringController, "PatientMonitoringController", "ASP.NET Core REST Controller", "api/v1/patients. Compliance and deviations")
     Component(referralsController, "ReferralsController", "ASP.NET Core REST Controller", "api/v1/referrals. Issue and read referrals")
     Component(followUpsController, "ScheduledFollowUpsController", "ASP.NET Core REST Controller", "api/v1/scheduled-follow-ups. Schedule and complete")
     Component(monAssemblers, "Monitoring Transform Assemblers", "C# static assemblers", "Maps resources, commands and responses")
 
-    ' ------------------------------------------------------------- Application
     Component(windowCmdService, "EvaluationWindowCommandService", "C# Application Service (CQRS command side)", "Opens windows and evaluates each day")
     Component(deviationCmdService, "DeviationCommandService", "C# Application Service (CQRS command side)", "Detects and escalates deviations")
     Component(consistencyCmdService, "ConsistencyIndexCommandService", "C# Application Service (CQRS command side)", "Maintains the index and raises alerts")
     Component(referralCmdService, "ReferralCommandService", "C# Application Service (CQRS command side)", "Issues and tracks referrals")
     Component(followUpCmdService, "ScheduledFollowUpCommandService", "C# Application Service (CQRS command side)", "Schedules, completes and misses follow-ups")
     Component(monQryServices, "Monitoring Query Services", "C# Application Services (CQRS query side)", "Read windows, deviations, index, referrals")
-    Component(monHandlers, "Monitoring Event Handlers", "Cortex.Mediator IEventHandler of T", "13 policies: this context mostly reacts")
+    Component(monHandlers, "Monitoring Event Handlers", "Cortex.Mediator IEventHandler of T", "13 event-driven policies (+3 scheduled): this context mostly reacts")
     Component(monFacade, "MonitoringContextFacade", "C# ACL - Open Host Service", "Publishes the panel series and state")
 
-    ' ------------------------------------------------------------- Domain
     Component(windowAggregate, "EvaluationWindow", "C# Aggregate Root", "Frozen targets and daily compliance")
     Component(deviationAggregate, "Deviation", "C# Aggregate Root", "Distance from targets over a period")
     Component(consistencyAggregate, "ConsistencyIndex", "C# Aggregate Root", "Logging consistency and its alerts")
     Component(referralAggregate, "Referral / ScheduledFollowUp", "C# Aggregate Roots", "Referral and follow-up appointment")
     Component(monValueObjects, "Value Objects and Errors", "C# records and enums", "TargetsSnapshot, DailyCompliance, states, errors")
 
-    ' ------------------------------------------------------------- Infrastructure
     Component(monRepos, "Monitoring Repositories", "C# Repositories over EF Core 10", "Persist windows, deviations, referrals")
     Component(monEfcConfig, "Monitoring EntityTypeConfigurations", "EF Core 10 Fluent API", "Maps tables, series and audit")
     Component(consistencyHostedService, "ConsistencyEscalationHostedService", "ASP.NET Core BackgroundService", "Escalates alerts already shown")
@@ -56,7 +47,6 @@ Container_Ext(intakeCtx, "Intake and Body Response", "Sibling bounded context", 
 Container_Ext(nutritionalCareCtx, "Nutritional Care", "Sibling bounded context", "Publishes ActiveTargetsUpdated and ClinicalMeasurementTaken; receives SustainedDeviationDetected and AlertEscalatedToPractitioner as review items")
 Container_Ext(readModelsCtx, "Read Models", "Composition layer of the same container", "Composes the patient monitoring panel from this and the sibling facades")
 
-' ------------------------------------------------------------------ Relations
 Rel(practitioner, mobile, "Reads the panel, refers and schedules follow-ups", "Touch")
 Rel(patient, mobile, "Sees the consistency alert and answers it", "Touch")
 Rel(mobile, patientMonitoringController, "Reads compliance, consistency and deviations", "JSON/HTTPS, Bearer JWT")

@@ -58,7 +58,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Downstream / Upstream** | Posiciones en una relación entre contextos: el upstream influye o provee, y el downstream depende o consume. |
 | **Evento pivote (Pivotal Event)** | Evento que cambia el estado del proceso de forma irreversible, de modo que lo que ocurre después obedece a reglas distintas. |
 | **EventStorming** | Técnica colaborativa de modelado basada en notas adhesivas de colores ordenadas en una línea de tiempo, que permite explorar un dominio a partir de sus eventos. |
-| **Generic Subdomain** | Subdominio necesario pero no diferenciador, que puede resolverse con soluciones estándar. En Healthify: `Food Catalog` e `Identity & Access`. |
+| **Generic Subdomain** | Subdominio necesario pero no diferenciador, que puede resolverse con soluciones estándar. En Healthify: `Food Catalog` e `IAM`. |
 | **Hotspot** | Nota de EventStorming que marca una duda, conflicto o pregunta abierta pendiente de validación. |
 | **Open Host Service (OHS)** | Patrón en el que un contexto publica un protocolo o servicio bien definido para que otros contextos lo consuman. |
 | **Policy (Política)** | Reacción automática del tipo "cuando ocurre X, entonces se ejecuta Y", que conecta un evento con un comando. |
@@ -102,7 +102,6 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 |---|---|
 | **Application Layer** | Capa que orquesta los casos de uso: recibe comandos y consultas, coordina agregados y repositorios, y publica eventos. No contiene reglas de negocio. |
 | **Arquitectura en capas** | Organización del código en capas con responsabilidades separadas (Interface, Application, Domain e Infrastructure) y dependencias dirigidas hacia el dominio. |
-| **Backend for Frontend (BFF)** | Patrón en el que un servicio intermedio compone datos de varios contextos para satisfacer las necesidades de una interfaz concreta. |
 | **C4 Model** | Modelo de diagramación de arquitectura en cuatro niveles de abstracción: Context, Container, Component y Code. |
 | **Class Diagram (Diagrama de clases)** | Diagrama UML que muestra clases, atributos, métodos y sus relaciones (asociación, composición, dependencia, generalización). |
 | **Component Diagram** | Nivel 3 del modelo C4: muestra los componentes internos de un contenedor y sus interacciones. |
@@ -118,6 +117,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Microservicio** | Estilo arquitectónico en el que el sistema se compone de servicios pequeños, autónomos y desplegables de forma independiente. |
 | **Monolito modular** | Aplicación desplegada como una sola unidad, pero organizada internamente en módulos con fronteras claras, como los bounded contexts de Healthify. |
 | **PlantUML** | Herramienta que genera diagramas UML y C4 a partir de descripciones en texto; se utiliza para los canvases, diagramas de clases, de componentes y de base de datos del informe. |
+| **Read model compuesto** | Vista de consulta que combina datos de varios bounded contexts leyendo sus fachadas ACL; en Healthify se arma en el módulo `ReadModels` de la API (por ejemplo, Patient Record). |
 | **UML** | Lenguaje Unificado de Modelado, estándar para visualizar y documentar el diseño de sistemas de software. |
 
 ## Tecnologías, backend y seguridad
@@ -140,9 +140,9 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **JWT Bearer** | Esquema de autenticación en el que el cliente envía un token JWT en la cabecera `Authorization` de cada petición. |
 | **Localización (.resx)** | Mecanismo de .NET para traducir mensajes a varios idiomas mediante archivos de recursos; el proyecto soporta español e inglés. |
 | **ML Kit** | Kit de aprendizaje automático de Google que se ejecuta en el dispositivo móvil; en Healthify se usa para proponer la estimación de porción a partir de una fotografía. |
-| **MySQL** | Sistema gestor de bases de datos relacional utilizado para la persistencia de la plataforma (versión 8). |
+| **MySQL** | Sistema gestor de bases de datos relacional utilizado para la persistencia de la plataforma (versión 8.4). |
 | **Open Food Facts** | Base de datos colaborativa y abierta de productos alimenticios, utilizada como fuente externa del catálogo nutricional. |
-| **ProblemDetails** | Formato estándar (RFC 9457) para describir errores en respuestas HTTP de una API. |
+| **ProblemDetails** | Formato estándar (RFC 7807, actualizado por RFC 9457) para describir errores en respuestas HTTP de una API. |
 | **Seeder** | Componente que carga datos iniciales en la base de datos, como el catálogo de 60 alimentos peruanos de referencia. |
 | **snake_case** | Convención de nombres en minúsculas con palabras separadas por guion bajo, aplicada a tablas y columnas de la base de datos. |
 | **Swagger / OpenAPI** | Especificación y conjunto de herramientas para documentar y probar interactivamente una API REST. |
@@ -196,6 +196,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Provenance (Procedencia)** | Origen de una entrada de diario: fotografía, registro manual o declaración fuera del plan. |
 | **Review Item (Ítem de revisión)** | Señal de seguimiento que llega a la bandeja del profesional y espera una decisión humana. |
 | **Self Weigh In (Autopesaje)** | Pesaje realizado por el paciente en casa con protocolo declarado; no tiene autoridad clínica por sí solo. |
+| **Treatment Adherence (Adherencia al tratamiento)** | Lectura del seguimiento del plan a escala de la ventana de evaluación o del tratamiento, construida a partir de los cumplimientos diarios; la interpreta el profesional y nunca se deduce de un solo día. |
 | **Weight Trend (Tendencia de peso)** | Suavizado estadístico (media móvil) de los autopesajes; único formato en que el peso del paciente se presenta. |
 
 ## Abreviaturas y acrónimos
@@ -205,7 +206,6 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **ACL** | Anticorruption Layer | Capa de traducción entre un modelo propio y uno externo. |
 | **API** | Application Programming Interface | Contrato que permite la comunicación entre sistemas de software. |
 | **BC** | Bounded Context | Frontera explícita de un modelo de dominio. |
-| **BFF** | Backend for Frontend | Servicio que compone datos para una interfaz específica. |
 | **C4** | Context, Containers, Components, Code | Modelo de diagramación de arquitectura en cuatro niveles. |
 | **CQRS** | Command Query Responsibility Segregation | Separación de operaciones de escritura y lectura. |
 | **CRUD** | Create, Read, Update, Delete | Operaciones básicas sobre datos persistentes. |

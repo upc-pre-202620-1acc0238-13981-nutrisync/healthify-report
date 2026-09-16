@@ -17,7 +17,6 @@ package "Healthify.Platform.FoodCatalog.Application" {
   }
 
   package "QueryServices" {
-    ' Read models Food Results List and Local Food Catalog.
     interface IReferenceFoodQueryService {
       +Handle(query: GetReferenceFoodByIdQuery, ct): Task<ReferenceFood?>
       +Handle(query: SearchReferenceFoodsQuery, ct): Task<IEnumerable<ReferenceFood>>
@@ -26,9 +25,6 @@ package "Healthify.Platform.FoodCatalog.Application" {
   }
 
   package "Internal" {
-    ' An import is accepted rather than completed: records are translated and
-    ' announced here, and the policy of Subflow 6.2 is what writes them. That is
-    ' why the endpoint answers 202.
     class CatalogImportSummary <<record>> {
       -Term: string
       -ProvidersConsulted: int
@@ -37,9 +33,6 @@ package "Healthify.Platform.FoodCatalog.Application" {
     }
 
     package "Internal.CommandServices" {
-      ' Import translates and announces but writes nothing, so the only path
-      ' into the catalog is the caching policy. Search reads local first and
-      ' treats the external providers as a top-up that is allowed to fail.
       class ReferenceFoodCommandService {
         -{static} MaxRecordsPerProvider: int = 100
         +Handle(command: ImportCatalogSnapshotCommand, ct): Task<Result<...>>
@@ -59,9 +52,6 @@ package "Healthify.Platform.FoodCatalog.Application" {
     }
 
     package "Internal.EventHandlers" {
-      ' The only writer of the catalog that reacts to an import. Keeping the
-      ' write here is what guarantees every stored row went through the
-      ' translation: there is no other way in.
       class OnReferenceFoodTranslatedHandler {
         +Handle(notification: ReferenceFoodTranslated, ct): Task
       }
@@ -116,16 +106,13 @@ package "Shared / Cortex" <<external>> {
   interface "ILogger<T>" as ILogger
 }
 
-' --- Service interface realizations ---
 ReferenceFoodCommandService ..|> IReferenceFoodCommandService
 ReferenceFoodQueryService ..|> IReferenceFoodQueryService
 FoodCatalogContextFacade ..|> IFoodCatalogContextFacade
 OnReferenceFoodTranslatedHandler ..|> IEventHandler
 
-' --- ReferenceFoodCommandService (Subflows 6.1 to 6.4) ---
 ReferenceFoodCommandService --> IReferenceFoodRepository : uses
 ReferenceFoodCommandService --> IUnitOfWork : commits with
-' Injected as IEnumerable: every registered adapter is consulted in turn.
 ReferenceFoodCommandService --> "0..*" IExternalFoodCatalogProvider : consults
 ReferenceFoodCommandService --> IMediator : publishes via
 ReferenceFoodCommandService --> ILogger : logs to
@@ -148,29 +135,24 @@ ReferenceFoodCommandService ..> FoodSearchPerformed : publishes
 ReferenceFoodCommandService ..> LocalFoodOverrideCreated : publishes
 ReferenceFoodCommandService ..> FoodCatalogError : returns
 
-' --- The caching policy: the single door into the catalog ---
 OnReferenceFoodTranslatedHandler ..> ReferenceFoodTranslated : subscribes to
 OnReferenceFoodTranslatedHandler --> IServiceScopeFactory : opens scope with
 OnReferenceFoodTranslatedHandler --> ILogger : logs to
 OnReferenceFoodTranslatedHandler --> IReferenceFoodCommandService : delegates to
 OnReferenceFoodTranslatedHandler ..> CacheFoodLocallyCommand : issues
 
-' --- Query service ---
 ReferenceFoodQueryService --> IReferenceFoodRepository : uses
 ReferenceFoodQueryService ..> GetReferenceFoodByIdQuery : handles
 ReferenceFoodQueryService ..> SearchReferenceFoodsQuery : handles
 ReferenceFoodQueryService ..> GetLocalFoodCatalogQuery : handles
 ReferenceFoodQueryService ..> ReferenceFood : returns
 
-' --- ACL facade: a query contract, because Intake needs the food right now ---
 FoodCatalogContextFacade --> IReferenceFoodQueryService : uses
 FoodCatalogContextFacade ..> GetReferenceFoodByIdQuery : issues
 FoodCatalogContextFacade ..> SearchReferenceFoodsQuery : issues
 FoodCatalogContextFacade ..> ReferenceFood : maps from
-' No source hash on the DTO: the fingerprint is of no use outside this context.
 FoodCatalogContextFacade ..> ReferenceFoodItem : returns
 
-' --- Result wrapper ---
 IReferenceFoodCommandService ..> Result
 IReferenceFoodCommandService ..> CatalogImportSummary : returns
 IReferenceFoodCommandService ..> FoodCatalogError : returns

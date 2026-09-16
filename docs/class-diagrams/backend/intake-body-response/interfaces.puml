@@ -8,15 +8,11 @@ hide empty members
 package "Healthify.Platform.IntakeBodyResponse.Interfaces" {
 
   package "Acl" {
-    ' Read only, without exception. This context is written by the patient and
-    ' by nobody else, so there is no method here another context could use to
-    ' write into it - and the absence is the enforcement.
     interface IIntakeContextFacade {
       +GetDailyIntakeSummary(patientId: int, date: DateOnly, ct): Task<DailyIntakeSummaryItem?>
       +GetWeightTrendPoints(patientId: int, days: int, ct): Task<IReadOnlyList<WeightTrendPointItem>>
       +GetDiaryEntries(patientId: int, date: DateOnly, ct): Task<IReadOnlyList<DiaryEntryItem>>
     }
-    ' No compliance, no deviation, no verdict: totals and counts only.
     class DailyIntakeSummaryItem <<record>> {
       -PatientId: int
       -Date: DateOnly
@@ -32,8 +28,6 @@ package "Healthify.Platform.IntakeBodyResponse.Interfaces" {
       -Date: DateOnly
       -SmoothedValueKg: decimal
     }
-    ' Confidence and provenance are not optional decoration, and the proposed
-    ' and confirmed halves travel side by side rather than collapsed into one.
     class DiaryEntryItem <<record>> {
       -DiaryEntryId: int
       -LocalTimestamp: DateTimeOffset
@@ -51,9 +45,6 @@ package "Healthify.Platform.IntakeBodyResponse.Interfaces" {
   }
 
   package "REST" {
-    ' Patient only, without exception, and that is a design decision rather
-    ' than a permission setting. There is no DELETE here, and Estimate Portion
-    ' has no endpoint: it is reached only from the photo estimation policy.
     class DiaryEntriesController {
       +LogMealByPhoto(resource: LogMealByPhotoResource): Task<IActionResult>
       +LogMealManually(resource: LogMealManuallyResource): Task<IActionResult>
@@ -103,7 +94,6 @@ package "Healthify.Platform.IntakeBodyResponse.Interfaces" {
     class SelfWeighInResourceAssembler <<static>>
     class WeightTrendResourceAssembler <<static>>
     class SyncOutcomeResourceAssembler <<static>>
-    ' The single place where an IntakeError becomes an HTTP status.
     class IntakeActionResultAssembler <<static>>
   }
 }
@@ -148,12 +138,10 @@ package "IntakeBodyResponse.Resources" {
   class IntakeMessages
 }
 
-' Resolved generic: the controllers depend on IStringLocalizer<IntakeMessages>.
 interface "IStringLocalizer<IntakeMessages>" as IStringLocalizer
 IStringLocalizer ..|> IStringLocalizerGeneric
 IStringLocalizer ..> IntakeMessages : parameterized by
 
-' --- Controllers ---
 DiaryEntriesController --|> ControllerBase
 SelfWeighInsController --|> ControllerBase
 PatientIntakeController --|> ControllerBase
@@ -166,12 +154,10 @@ PatientIntakeController --> IDiaryEntryQueryService : uses
 PatientIntakeController --> IWeightTrendQueryService : uses
 PatientIntakeController --> IStringLocalizer : uses
 
-' --- The patient in the payload must match the one in the token ---
 DiaryEntriesController ..> ControllerBaseExtensions : reads patient id
 SelfWeighInsController ..> ControllerBaseExtensions : reads patient id
 PatientIntakeController ..> ControllerBaseExtensions : authorizes the owner
 
-' --- Controllers to assemblers and queries ---
 DiaryEntriesController ..> LogMealByPhotoCommandAssembler : uses
 DiaryEntriesController ..> LogMealManuallyCommandAssembler : uses
 DiaryEntriesController ..> LogOffPlanMealCommandAssembler : uses
@@ -190,14 +176,12 @@ PatientIntakeController ..> GetDiaryEntriesByPatientIdQuery : builds
 PatientIntakeController ..> GetPendingSyncQueueByPatientIdQuery : builds
 PatientIntakeController ..> GetWeightTrendByPatientIdQuery : builds
 
-' --- Request resource to command assemblers ---
 LogMealByPhotoCommandAssembler ..> LogMealByPhotoResource : from
 LogMealByPhotoCommandAssembler ..> LogMealByPhotoCommand : to
 LogMealManuallyCommandAssembler ..> LogMealManuallyResource : from
 LogMealManuallyCommandAssembler ..> LogMealManuallyCommand : to
 LogOffPlanMealCommandAssembler ..> LogOffPlanMealResource : from
 LogOffPlanMealCommandAssembler ..> LogOffPlanMealCommand : to
-' Both identifiers come from the route and the token: there is no payload.
 ConfirmEstimateCommandAssembler ..> ConfirmEstimateCommand : to
 AdjustEstimateCommandAssembler ..> AdjustEstimateResource : from
 AdjustEstimateCommandAssembler ..> AdjustEstimateCommand : to
@@ -206,7 +190,6 @@ RecordSelfWeighInCommandAssembler ..> RecordSelfWeighInCommand : to
 SyncPendingEntriesCommandAssembler ..> SyncPendingEntriesResource : from
 SyncPendingEntriesCommandAssembler ..> SyncPendingEntriesCommand : to
 
-' --- Entity to response resource assemblers ---
 ActiveTargetsResourceAssembler ..> ActiveTargetsCache : from
 ActiveTargetsResourceAssembler ..> ActiveTargetsResource : to
 DiaryEntryResourceAssembler ..> DiaryEntry : from
@@ -218,12 +201,10 @@ WeightTrendResourceAssembler ..> WeightTrendResource : to
 SyncOutcomeResourceAssembler ..> SyncOutcome : from
 SyncOutcomeResourceAssembler ..> SyncOutcomeResource : to
 
-' --- Read resource composition ---
 SyncPendingEntriesResource o--> "0..*" PendingDiaryEntryResource : batch of
 WeightTrendResource o--> "0..*" WeightTrendPointResource : series
 SyncOutcomeResource o--> "0..*" SyncedEntryOutcomeResource : one per item
 
-' --- Result to IActionResult assembler ---
 IntakeActionResultAssembler ..> Result : maps
 IntakeActionResultAssembler ..> IntakeError : maps
 IntakeActionResultAssembler ..> DiaryEntryResourceAssembler : uses
@@ -232,7 +213,6 @@ IntakeActionResultAssembler ..> SyncOutcomeResourceAssembler : uses
 IntakeActionResultAssembler ..> ProblemDetailsFactory : builds problem details with
 IntakeActionResultAssembler ..> IStringLocalizer : localizes with
 
-' --- ACL facade contract & its DTOs ---
 IIntakeContextFacade ..> DailyIntakeSummaryItem : returns
 IIntakeContextFacade ..> WeightTrendPointItem : returns
 IIntakeContextFacade ..> DiaryEntryItem : returns

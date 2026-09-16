@@ -59,9 +59,6 @@ package "Healthify.Platform.NutritionalCare.Application" {
       class NutritionalDiagnosisCommandService {
         +Handle(command: IssueDiagnosisCommand, ct): Task<Result<...>>
       }
-      ' The arithmetic lives here, in the order the rules state it:
-      ' BMR, TDEE = BMR x activity factor, target = TDEE - deficit,
-      ' protein by g/kg, fat by share of energy, carbohydrate by difference.
       class NutritionPlanCommandService {
         -{static} KcalPerGramProtein: decimal = 4
         -{static} KcalPerGramCarbohydrate: decimal = 4
@@ -73,9 +70,6 @@ package "Healthify.Platform.NutritionalCare.Application" {
         +Handle(command: AdjustNutritionPlanCommand, ct): Task<Result<...>>
         -{static} Failure(error: NutritionalCareError): Result<NutritionPlan, NutritionalCareError>
       }
-      ' The inbox. Signals from Monitoring enter here and stop. It deliberately
-      ' does not depend on INutritionPlanCommandService: the absence of that
-      ' dependency is what makes "notifies, never modifies" structural.
       class ReviewItemCommandService {
         +Handle(command: OpenReviewItemCommand, ct): Task<Result<...>>
         +Handle(command: ResolveReviewItemCommand, ct): Task<Result<...>>
@@ -97,12 +91,9 @@ package "Healthify.Platform.NutritionalCare.Application" {
       class OnNutritionPlanAdjustedHandler {
         +Handle(notification: NutritionPlanAdjusted, ct): Task
       }
-      ' Integration event 12 of 13. One of the two places where the automation
-      ' of this platform ends on purpose.
       class OnSustainedDeviationDetectedHandler {
         +Handle(notification: SustainedDeviationDetected, ct): Task
       }
-      ' Integration event 13 of 13, and the second such place.
       class OnAlertEscalatedToPractitionerHandler {
         +Handle(notification: AlertEscalatedToPractitioner, ct): Task
       }
@@ -199,7 +190,6 @@ package "Shared / Cortex" <<external>> {
   interface "ILogger<T>" as ILogger
 }
 
-' --- Service interface realizations ---
 NutritionalAssessmentCommandService ..|> INutritionalAssessmentCommandService
 NutritionalDiagnosisCommandService ..|> INutritionalDiagnosisCommandService
 NutritionPlanCommandService ..|> INutritionPlanCommandService
@@ -214,7 +204,6 @@ OnNutritionPlanAdjustedHandler ..|> IEventHandler
 OnSustainedDeviationDetectedHandler ..|> IEventHandler
 OnAlertEscalatedToPractitionerHandler ..|> IEventHandler
 
-' --- NutritionalAssessmentCommandService (Subflow 3.1) ---
 NutritionalAssessmentCommandService --> INutritionalAssessmentRepository : uses
 NutritionalAssessmentCommandService --> IUnitOfWork : commits with
 NutritionalAssessmentCommandService --> IIamContextFacade : checks Practitioner Only with
@@ -231,7 +220,6 @@ NutritionalAssessmentCommandService ..> ClinicalMeasurementTaken : publishes
 NutritionalAssessmentCommandService ..> AssessmentClosed : publishes
 NutritionalAssessmentCommandService ..> NutritionalCareError : returns
 
-' --- NutritionalDiagnosisCommandService (Subflow 3.2) ---
 NutritionalDiagnosisCommandService --> INutritionalDiagnosisRepository : uses
 NutritionalDiagnosisCommandService --> INutritionalAssessmentRepository : requires a closed one
 NutritionalDiagnosisCommandService --> IUnitOfWork : commits with
@@ -243,7 +231,6 @@ NutritionalDiagnosisCommandService ..> NutritionalDiagnosis : creates
 NutritionalDiagnosisCommandService ..> NutritionalDiagnosisIssued : publishes
 NutritionalDiagnosisCommandService ..> NutritionalCareError : returns
 
-' --- NutritionPlanCommandService (Subflows 3.3 to 3.6) ---
 NutritionPlanCommandService --> INutritionPlanRepository : uses
 NutritionPlanCommandService --> INutritionalDiagnosisRepository : requires an active diagnosis
 NutritionPlanCommandService --> INutritionalAssessmentRepository : reads the anthropometry from
@@ -277,7 +264,6 @@ NutritionPlanCommandService ..> DailyTargets : builds
 NutritionPlanCommandService ..> ActiveTargetsUpdated : publishes the reduced contract
 NutritionPlanCommandService ..> NutritionalCareError : returns
 
-' --- ReviewItemCommandService (Subflow 3.7). No plan dependency, on purpose ---
 ReviewItemCommandService --> IReviewItemRepository : uses
 ReviewItemCommandService --> IUnitOfWork : commits with
 ReviewItemCommandService --> ICareRelationshipContextFacade : resolves the practitioner with
@@ -291,7 +277,6 @@ ReviewItemCommandService ..> ReviewItemCreated : publishes
 ReviewItemCommandService ..> ReviewItemResolved : publishes
 ReviewItemCommandService ..> NutritionalCareError : returns
 
-' --- Policies inside this context: publishing republishes the contract ---
 OnNutritionPlanPublishedHandler ..> NutritionPlanPublished : subscribes to
 OnNutritionPlanPublishedHandler --> IServiceScopeFactory : opens scope with
 OnNutritionPlanPublishedHandler --> ILogger : logs to
@@ -303,7 +288,6 @@ OnNutritionPlanAdjustedHandler --> ILogger : logs to
 OnNutritionPlanAdjustedHandler --> INutritionPlanCommandService : delegates to
 OnNutritionPlanAdjustedHandler ..> PublishActiveTargetsCommand : issues
 
-' --- Policies from Monitoring: a signal opens an inbox item and stops there ---
 OnSustainedDeviationDetectedHandler ..> SustainedDeviationDetected : subscribes to
 OnSustainedDeviationDetectedHandler --> IServiceScopeFactory : opens scope with
 OnSustainedDeviationDetectedHandler --> ILogger : logs to
@@ -317,7 +301,6 @@ OnAlertEscalatedToPractitionerHandler --> IReviewItemCommandService : delegates 
 OnAlertEscalatedToPractitionerHandler ..> OpenReviewItemCommand : issues
 OnAlertEscalatedToPractitionerHandler ..> SignalType : ConsistencyEscalation
 
-' --- Query services ---
 NutritionalAssessmentQueryService --> INutritionalAssessmentRepository : uses
 NutritionalAssessmentQueryService ..> GetAssessmentByIdQuery : handles
 NutritionalAssessmentQueryService ..> GetAssessmentsByPatientIdQuery : handles
@@ -335,13 +318,11 @@ ReviewItemQueryService ..> GetReviewItemByIdQuery : handles
 ReviewItemQueryService ..> GetOpenReviewItemsByPractitionerIdQuery : handles
 ReviewItemQueryService ..> ReviewItem : returns
 
-' --- ACL facade: never exposes diagnosis, rationale or calculation basis ---
 NutritionalCareContextFacade --> INutritionPlanQueryService : uses
 NutritionalCareContextFacade --> IReviewItemQueryService : uses
 NutritionalCareContextFacade ..> GetActivePlanByPatientIdQuery : issues
 NutritionalCareContextFacade ..> ActiveTargetsItem : returns
 
-' --- Result wrapper across command services ---
 INutritionalAssessmentCommandService ..> Result
 INutritionalDiagnosisCommandService ..> Result
 INutritionPlanCommandService ..> Result

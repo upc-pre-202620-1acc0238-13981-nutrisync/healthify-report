@@ -1,9 +1,4 @@
 @startuml Iam_Component_Diagram
-' =============================================================================
-'  Healthify Platform - Bounded Context: IAM (Identity and Access Management)
-'  C4 Model - Level 3: Component Diagram
-'  Container decomposed: Healthify Platform API (ASP.NET Core 10 Web API)
-' =============================================================================
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 
 LAYOUT_TOP_DOWN()
@@ -18,13 +13,11 @@ Container(mobile, "Mobile Application", "Flutter / MAUI", "Two navigation shells
 
 Container_Boundary(api, "Healthify Platform API") {
 
-    ' ------------------------------------------------------------- Interfaces
     Component(authController, "AuthenticationController", "ASP.NET Core REST Controller", "api/v1/authentication. Register and sign in")
     Component(sessionsController, "SessionsController", "ASP.NET Core REST Controller", "api/v1/sessions. Sign out and shell")
     Component(usersController, "UsersController", "ASP.NET Core REST Controller", "api/v1/users. Reads a user identity")
     Component(iamAssemblers, "IAM Transform Assemblers", "C# static assemblers", "Maps resources, commands and responses")
 
-    ' ------------------------------------------------------------- Application
     Component(userCmdService, "UserCommandService", "C# Application Service (CQRS command side)", "Registers accounts and hashes passwords")
     Component(sessionCmdService, "UserSessionCommandService", "C# Application Service (CQRS command side)", "Opens, terminates and shells sessions")
     Component(userQryService, "UserQueryService", "C# Application Service (CQRS query side)", "Reads users by id or e-mail")
@@ -32,12 +25,10 @@ Container_Boundary(api, "Healthify Platform API") {
     Component(roleClaimHandler, "OnRoleClaimIssuedHandler", "Cortex.Mediator IEventHandler of RoleClaimIssued", "Policy 1.2: mounts the navigation shell")
     Component(iamFacade, "IamContextFacade", "C# ACL - Open Host Service", "Publishes identity and role questions")
 
-    ' ------------------------------------------------------------- Domain
     Component(userAggregate, "User / UserSession", "C# Aggregate Roots", "Guard identity and session invariants")
     Component(valueObjects, "Value Objects and Errors", "C# records and enums", "Email, Password, Role, NavigationShell, IamError")
     Component(domainServices, "IHashingService / ITokenService", "C# Domain Service interfaces (ports)", "Hashing and token ports of the domain")
 
-    ' ------------------------------------------------------------- Infrastructure
     Component(bcrypt, "BCryptHashingService", "C# adapter, BCrypt.Net-Next 4.0.3", "Hashes and verifies passwords")
     Component(jwt, "JwtTokenService", "C# adapter, JwtBearer 10", "Issues and validates the bearer token")
     Component(userRepos, "UserRepository / UserSessionRepository", "C# Repositories over EF Core 10", "Persist users and sessions")
@@ -48,7 +39,6 @@ ContainerDb(db, "Healthify Database", "MySQL 8.4", "Single schema, one migration
 
 Container_Ext(otherContexts, "Care Relationship / Nutritional Care", "Sibling bounded contexts in the same container", "The only consumers of the IAM Open Host Service")
 
-' ------------------------------------------------------------------ Relations
 Rel(patient, mobile, "Registers, signs in and signs out", "Touch")
 Rel(practitioner, mobile, "Registers, signs in and signs out", "Touch")
 Rel(mobile, authController, "Registers an account and signs in", "JSON/HTTPS")
