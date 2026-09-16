@@ -140,6 +140,28 @@ Las entrevistas fueron diseñadas con preguntas diferenciadas según cada segmen
 
 ### 2.2.3. Análisis de entrevistas
 
+#### Segmento 1: Nutricionistas
+
+**Características objetivas**
+
+Los dos entrevistados de este segmento son nutricionistas colegiados que ejercen en la región de Loreto, aunque con trayectorias y modalidades de trabajo distintas: Willyan Guerrero (30 años, Barranca) lleva cuatro años ejerciendo, actualmente en el Centro de Salud La Rama, tras haber trabajado antes en EsSalud en Huaraz, mientras que Tatiana Mozombite (28 años, Iquitos) lleva tres años ejerciendo, combinando el Hospital Regional de Loreto con atención particular los fines de semana. En cuanto al volumen y modelo de cobro, Willyan atiende entre cinco y seis pacientes en clínicas privadas sin especificar un esquema de pago fijo, mientras que Tatiana maneja entre 8 y 10 pacientes activos en su consulta particular bajo un modelo de paquetes mensuales de dos o tres controles, en lugar de consultas sueltas, precisamente para poder llevar un seguimiento más cercano.
+
+Ambos siguen un proceso similar con un paciente nuevo: una entrevista inicial sobre hábitos alimentarios y antecedentes médicos, la toma de medidas antropométricas (peso, talla, perímetro abdominal, pliegues en el caso de Willyan) y la revisión de análisis clínicos (perfil lipídico y glucosa para Willyan, análisis generales para Tatiana), para luego elaborar un diagnóstico y diseñar un plan de alimentación personalizado. Tatiana añade un componente adicional: prioriza productos accesibles según la zona del paciente (pescado, plátano, frutas locales). En ambos casos, la información generada durante este proceso queda dispersa en distintos soportes sin un sistema centralizado: Willyan trabaja con Nutrimind, un software instalado en su celular que reúne diseño de plan, datos y seguimiento, mientras que Tatiana combina la historia clínica física y el sistema institucional del hospital (con registro limitado) con carpetas en Excel en su laptop para el seguimiento real, y WhatsApp para los ajustes, que quedan atrapados únicamente en el chat sin trasladarse a ningún otro lugar.
+
+**Características subjetivas**
+
+Respecto a la reconstrucción de lo que el paciente comió entre consultas, ambos coinciden en que es un proceso costoso en tiempo: Willyan lo resuelve mediante una nueva entrevista y ofreciendo equivalencias de intercambio de alimentos por calorías cuando el paciente reporta antojos, mientras que Tatiana estima que le consume aproximadamente un tercio de la consulta, y señala que mejora solo cuando el paciente lleva un cuadernito propio o envía fotos, algo que "la mayoría no hace". Tatiana relató además un caso concreto de subregistro involuntario: una paciente que decía seguir el plan al pie de la letra, pero no consideraba como "comida" las salidas familiares de los sábados, lo que explicaba su falta de progreso.
+
+Frente a un paciente que no progresa sin razón aparente, ambos comparten el mismo protocolo de dos pasos: primero revisan la adherencia real al plan mediante ajustes y nuevas preguntas, y si el estancamiento persiste, derivan al paciente a un especialista médico (endocrino para Willyan, evaluación hormonal y de tiroides para Tatiana), reconociendo ambos que los factores hormonales pueden estar interfiriendo. En cuanto a las herramientas tecnológicas, Willyan ya cuenta con un software dedicado (Nutrimind) que centraliza gran parte de su trabajo, mientras que Tatiana identifica justamente la ausencia de esa centralización como su mayor fricción diaria, señalando que la información "está regada en distintos lados" y se desordena cuando necesita ver el panorama completo de un paciente antes de una cita.
+
+Ante las hipótesis de producto planteadas, Tatiana se mostró muy receptiva: preferiría que las estimaciones de comidas por foto lleguen ya correctas al expediente sin tener que revisarlas o corregirlas manualmente, ya que eso le ahorraría tiempo valioso, y valoró especialmente una alerta automática cuando el registro de un paciente no cuadra con la evolución de su peso, sobre todo con los pacientes que ve con poca frecuencia (cada mes o cada tres meses), donde no puede intuir fácilmente si algo no cuadra. Finalmente, ambos coincidieron, desde ángulos distintos, en que el cambio más deseado sería tener toda la información del paciente en un solo lugar: Willyan ya se apoya en Nutrimind para esto, mientras que Tatiana señaló explícitamente que hoy debe juntar manualmente el Excel, el WhatsApp y los datos del hospital, lo cual le resta tiempo que preferiría dedicar a la consulta.
+
+**Conclusión**
+
+En conclusión, este grupo revela que la centralización de la información del paciente es la necesidad más crítica en la práctica nutricional, incluso cuando ya existe una herramienta digital de por medio (como en el caso de Willyan con Nutrimind). Ambos profesionales destinan una parte significativa de sus consultas a reconstruir manualmente lo que el paciente comió, un proceso vulnerable al subregistro involuntario o intencional por parte del paciente. Esto sugiere una alta disposición hacia soluciones que automaticen el registro de comidas con estimaciones confiables y que generen alertas tempranas ante desviaciones, reduciendo así el tiempo dedicado a tareas administrativas y permitiendo enfocar la consulta en el seguimiento clínico real.
+
+<div style="page-break-after: always"></div>
+
 #### Segmento 2: Paciente en tratamiento nutricional activo
 
 **Características objetivas**
