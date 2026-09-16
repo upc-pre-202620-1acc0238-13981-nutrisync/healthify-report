@@ -187,6 +187,10 @@ Frente a las hipótesis, ambas afirmaron que usarían a diario el registro por f
 
 Las pacientes ya están dispuestas a compartir su alimentación con su nutricionista, pero los medios disponibles las obligan a elegir entre un registro manual que se abandona (Fitia) y un envío diario por chat que consume tiempo y no genera información ordenada (WhatsApp). Ambas buscan un registro rápido, basado en fotos y con mínima escritura, que les permita comunicar también las desviaciones sin sentirse juzgadas. Esto confirma que la adopción depende menos de la motivación del paciente que de reducir al mínimo el esfuerzo de cada registro.
 
+#### Conclusión general
+
+Los dos segmentos describen la misma brecha desde lados opuestos: el paciente no tiene una forma sencilla de registrar y comunicar lo que come, y el nutricionista no tiene una forma confiable de conocerlo sin reconstruirlo en consulta. Las entrevistas coinciden en tres necesidades: **centralizar** la información hoy repartida entre WhatsApp, Excel, notas y la memoria; **capturar** el consumo entre consultas con el mínimo esfuerzo para el paciente; y **detectar a tiempo** las inconsistencias entre lo registrado y la evolución del peso, siempre con las decisiones clínicas en manos del nutricionista.
+
 ## 2.3. Needfinding
 
 ### 2.3.1. User Personas
