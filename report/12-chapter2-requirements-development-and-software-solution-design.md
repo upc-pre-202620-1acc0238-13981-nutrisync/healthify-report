@@ -85,15 +85,16 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 
 | Segmento: Nutricionista | Entrevista #1 |
 | --- | --- |
-| Nombres y Apellidos | Willyan Guerrero |
-| Edad | 30 |
-| Distrito | Barranca |
-| Ocupación | Nutricionista (Centro de Salud La Rama) |
-| Timming inicio |0:00 - 0:00|
-| Duración |0:00 minutos|
-| URL | [Video entrevista]()|
-| Screenshot |![Entrevista 1 Seg1](../assets/img/chapter2/interviews/Entrevista1-seg1.png)|
-| Resumen | Willyan Guerrero tiene 30 años y ejerce como nutricionista desde hace cuatro años, actualmente en el Centro de Salud La Rama, habiendo trabajado antes en EsSalud en Huaraz. En clínicas privadas atiende aproximadamente entre cinco y seis pacientes. Su proceso con un paciente nuevo sigue fases estructuradas: primero una evaluación nutricional (hábitos alimentarios, antecedentes médicos, actividad física, mediciones antropométricas como peso, talla y pliegues, y análisis bioquímicos como perfil lipídico y glucosa), luego el diagnóstico nutricional a partir de esos datos, después la intervención con un plan de alimentación personalizado según las metas del paciente, y finalmente el monitoreo y seguimiento con citas programadas para evaluar avances corporales y hacer ajustes. Entre consultas mantiene contacto virtual con los pacientes, con una frecuencia de seguimiento variable (semanal, diaria o cada dos semanas) según el caso. Cuando el paciente regresa, reconstruye lo que consumió mediante una nueva entrevista, y maneja las desviaciones ofreciendo equivalencias de intercambio de alimentos por calorías (por ejemplo, sustituir papa por camote, yuca u olluco en cantidades equivalentes). Cuando un paciente no progresa sin razón aparente, hace ajustes y nuevas preguntas, y en algunos casos deriva al paciente a un endocrino, reconociendo que los problemas hormonales pueden influir. Considera que su trabajo no es repetitivo porque cada plan se individualiza según las metas del paciente. Como herramienta tecnológica, utiliza Nutrimind, un software instalado en su celular que le permite diseñar el régimen de alimentación, registrar datos y medidas del paciente, y hacerle seguimiento.|
+| Nombres y Apellidos | Willyan Guerrero Ortega |
+| Edad | 30 años |
+| Distrito | Barranca, Lima |
+| Ocupación | Nutricionista (Centro de Salud La Rama y atención en clínicas) |
+| Entrevistador | Angel Villarreal |
+| Timing | 0:00 – 0:00 |
+| Duración | 0:00 minutos |
+| URL | [Video entrevista]() |
+| Screenshot | ![Entrevista 1 Seg1](../assets/img/chapter2/interviews/Entrevista1-seg1.png) |
+| Resumen | Willyan tiene 30 años y cuatro de ejercicio profesional. Trabaja en el Centro de Salud La Rama y antes trabajó en EsSalud en Huaraz. En clínicas atiende entre cinco y seis pacientes activos. Con un paciente nuevo sigue las fases de la consulta nutricional: evaluación (hábitos alimentarios, antecedentes médicos, actividad física, peso, talla, perímetro abdominal, pliegues y análisis bioquímicos como perfil lipídico y glucosa), diagnóstico, intervención con un plan de alimentación personalizado y, por último, monitoreo y seguimiento. Entre consultas hace el monitoreo de forma virtual, con una frecuencia que ajusta a cada paciente, y en algunos casos lo sigue día por día. Cuando el paciente regresa, para saber qué consumió debe hacerle **nuevamente una entrevista sobre sus hábitos**. En ese periodo los pacientes también le consultan sustituciones por antojos, y él les responde con equivalencias en gramos y calorías (por ejemplo, cambiar camote por papa, yuca u olluco). Si un paciente no progresa, hace ajustes, vuelve a preguntar y, según la evaluación, lo deriva a un endocrinólogo, porque los factores hormonales pueden influir. No considera repetitivo su trabajo, ya que cada plan es individualizado. Usa Nutrimind, un software con app en su celular, para diseñar el régimen alimentario y registrar datos y medidas del paciente. Sin embargo, lo que el paciente come entre consultas lo sigue obteniendo mediante entrevista y contacto virtual. |
 
 <div style="page-break-after: always"></div>
 
