@@ -98,15 +98,15 @@ Las entrevistas fueron diseñadas con preguntas diferenciadas según cada segmen
 
 | Segmento: Nutricionista | Entrevista #2 |
 | --- | --- |
-| Nombres y Apellidos | |
-| Edad | |
-| Distrito | |
-| Ocupación | |
+| Nombres y Apellidos | Tatiana Mozombite |
+| Edad | 28 |
+| Distrito |Loreto - Iquitos|
+| Ocupación | Nutricionista |
 | Timming inicio |0:00 - 0:00|
 | Duración |0:00 minutos|
 | URL | [Video entrevista]()|
-| Screenshot |![Entrevista 2 Seg1](../assets/img/interviews/Entrevista2-seg1.png)|
-| Resumen | ...|
+| Screenshot |![Entrevista 2 Seg1](../assets/img/chapter2/interviews/Entrevista2-seg1.png)|
+| Resumen |  Tatiana Mozombite tiene 28 años y ejerce como nutricionista desde hace tres años, trabajando en el Hospital Regional de Loreto en Iquitos y de forma particular los fines de semana. En su consulta particular maneja entre 8 y 10 pacientes activos, cobrando por paquetes de seguimiento de un mes con dos o tres controles, en lugar de consultas sueltas, para poder armar un seguimiento más cercano. Su proceso con un paciente nuevo inicia con una entrevista sobre hábitos, trabajo y enfermedades de base, seguida del registro de peso, talla y perímetro abdominal, y la revisión de análisis clínicos, con lo cual arma un diagnóstico y diseña un plan basado en productos accesibles para el paciente según su zona (pescado, plátano, frutas locales). Sin embargo, toda esta información queda dispersa: en el hospital existe una historia clínica física y un registro limitado en el sistema institucional, mientras que su seguimiento real lo lleva en carpetas por paciente en Excel en su laptop, y los ajustes que envía por WhatsApp se quedan solo en el chat, sin pasar a ningún otro lugar, lo que en ocasiones le hace perder el hilo de las indicaciones previas. Reconstruir lo que el paciente comió entre consultas le consume aproximadamente un tercio del tiempo de la cita, ya que depende de preguntar día por día, y solo mejora cuando el paciente lleva un registro propio o envía fotos, algo que la mayoría no hace. Relató un caso reciente donde una paciente no progresaba pese a decir que seguía el plan al pie de la letra, hasta que se descubrió que no consideraba como "comida" las salidas familiares de los sábados. Cuando un paciente no avanza y no encuentra la causa, revisa primero la adherencia real al plan y, de persistir el estancamiento, deriva a un médico para descartar temas hormonales, especialmente de tiroides. Sus herramientas actuales son Excel para medidas, WhatsApp para el contacto diario y el sistema institucional del hospital, siendo su mayor dificultad que la información está repartida en distintos lugares, generando desorden al querer tener una visión completa del paciente antes de una cita. Frente a las hipótesis de producto, se mostró muy receptiva: preferiría que el sistema entregue estimaciones de comidas por foto ya correctas, sin tener que revisarlas o corregirlas manualmente, ya que eso le ahorraría tiempo valioso; asimismo, consideró que una alerta automática cuando el registro de un paciente no cuadra con la evolución de su peso le sería muy útil, sobre todo con pacientes que ve con poca frecuencia (cada mes o cada tres meses), donde no puede intuir tan fácilmente si algo no cuadra. Finalmente, identificó como el cambio que más le gustaría tener la centralización de toda la información en un solo lugar, ya que hoy debe juntar manualmente el Excel, el WhatsApp y los datos del hospital para armar el panorama completo de un paciente, lo cual le resta tiempo que preferiría dedicar a la consulta. |
 
 <div style="page-break-after: always"></div>
 
