@@ -197,7 +197,7 @@ Nuestro primer segmento objetivo está conformado por personas adultas que se en
 
 - Nacionalidad: Peruana
 - Zona geográfica: Urbana
-- Departamentos: Lima
+- Departamentos: Lima - Loreto
 
 ***Aspectos psicográficos:***
 
@@ -221,7 +221,7 @@ Nuestro segundo segmento objetivo está conformado por profesionales de la nutri
 
 - Nacionalidad: Peruana
 - Zona geográfica: Urbana
-- Departamentos: Lima
+- Departamentos: Lima - Loreto
 
 ***Aspectos psicográficos:***
 
