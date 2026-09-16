@@ -4,7 +4,7 @@
 
 El mercado de plataformas digitales de nutrición presenta una oferta consolidada tanto a nivel global como regional, con actores que abordan el seguimiento nutricional desde distintos ángulos, ya sea el expediente clínico, la gestión integral de la práctica profesional o el ajuste automático de metas para el consumidor final. Sin embargo, ninguno de los productos existentes combina el registro fotográfico del consumo con el contraste entre lo declarado por el paciente y su respuesta corporal dentro de un vínculo clínico supervisado, que es precisamente el espacio que Healthify busca ocupar. Tras un proceso de investigación del landscape competitivo, se identificaron tres competidores cuyas propuestas de valor se solapan parcial o totalmente con la de Healthify.
 
-Nutrimind es un software de nutrición clínica en línea con fuerte penetración en Latinoamérica, incluido el Perú. Su propuesta central es el expediente clínico completo, la evaluación antropométrica y el diseño de planes alimentarios, complementado con una aplicación que permite al paciente registrar actividad física y adjuntar fotografías de sus comidas. Es la herramienta que el profesional entrevistado declara utilizar actualmente en su práctica, lo que confirma su adopción real dentro del segmento objetivo de Healthify.
+Nutrimind es un software de nutrición clínica en línea con fuerte penetración en Latinoamérica, incluido el Perú. Su propuesta central es el expediente clínico completo, la evaluación antropométrica y el diseño de planes alimentarios, complementado con una aplicación que permite al paciente registrar actividad física y adjuntar fotografías de sus comidas. Es la herramienta que uno de los nutricionistas entrevistados declara utilizar actualmente en su práctica, lo que confirma su adopción real dentro del segmento objetivo de Healthify.
 
 Nutrium es una plataforma de gestión de la práctica nutricional con presencia internacional, dirigida a dietistas y nutricionistas. Integra la evaluación del paciente, la planificación de menús, la agenda de citas y la mensajería directa dentro de una aplicación móvil de seguimiento, ofreciendo así una solución integral para la administración diaria de la consulta profesional.
 
@@ -74,7 +74,7 @@ MacroFactor es una aplicación de seguimiento nutricional dirigida al consumidor
 </tr>
 <tr>
 <td>Canales de distribución<br><em>(Web y/o Móvil)</em></td>
-<td>Aplicación móvil nativa como canal principal para ambos roles, dado que las funcionalidades diferenciales dependen de la cámara y del funcionamiento sin conexión.</td>
+<td>Aplicación móvil multiplataforma desarrollada en Flutter como canal principal para ambos roles, dado que las funcionalidades diferenciales dependen de la cámara y del funcionamiento sin conexión.</td>
 <td>Plataforma en línea accesible desde navegador, complementada con una aplicación móvil de seguimiento para el paciente.</td>
 <td>Plataforma web para el profesional y aplicación móvil para el paciente, disponible en las principales tiendas de aplicaciones.</td>
 <td>Aplicación móvil disponible en las tiendas de iOS y Android como canal exclusivo de distribución.</td>
@@ -86,7 +86,7 @@ MacroFactor es una aplicación de seguimiento nutricional dirigida al consumidor
 <tr>
 <td>Fortalezas</td>
 <td>La captura entre consultas es el núcleo del producto y no un módulo accesorio. El registro por fotografía reduce el costo de reportar frente al relato verbal actual, y el funcionamiento sin conexión permite registrar en el momento del consumo.</td>
-<td>Base instalada muy amplia entre profesionales latinoamericanos y familiaridad consolidada con la herramienta, confirmada por el propio profesional entrevistado. Profundidad del cálculo dietético y de la evaluación antropométrica.</td>
+<td>Base instalada muy amplia entre profesionales latinoamericanos y familiaridad consolidada con la herramienta, confirmada por uno de los nutricionistas entrevistados. Profundidad del cálculo dietético y de la evaluación antropométrica.</td>
 <td>Integración completa de la gestión profesional en una sola plataforma, con alcance internacional y una aplicación móvil que reduce la dispersión de la comunicación con el paciente.</td>
 <td>Precisión superior en el ajuste de metas energéticas gracias al aprendizaje sobre datos reales del usuario, con una interfaz depurada y libre de elementos de gamificación.</td>
 </tr>
@@ -119,7 +119,7 @@ El análisis competitivo revela que los actores establecidos poseen ventajas cla
 
 **Frente a Nutrimind: convivir antes que desplazar**
 
-Nutrimind es la herramienta que el profesional entrevistado utiliza actualmente y respecto de la cual no manifiesta insatisfacción. Desplazarla exigiría igualar años de desarrollo de expediente clínico y cálculo dietético, esfuerzo que no resulta viable ni necesario en esta etapa. El posicionamiento apunta a que Healthify se integre como la pieza que resuelve el periodo que Nutrimind no cubre. Como táctica concreta, la comunicación dirigida al profesional se construirá alrededor de una pregunta que su herramienta actual no puede responder, referida a qué comió realmente el paciente durante las semanas previas a la consulta. El contenido en redes sociales ilustrará escenarios donde un paciente no progresa sin causa aparente, mostrando de qué manera un índice de consistencia ofrece una señal previa a esa situación. Paralelamente, el proceso de vinculación mediante código QR se diseñará para integrarse al flujo de trabajo existente sin exigir la migración de información histórica.
+Nutrimind es la herramienta que uno de los nutricionistas entrevistados utiliza actualmente y respecto de la cual no manifiesta insatisfacción. Desplazarla exigiría igualar años de desarrollo de expediente clínico y cálculo dietético, esfuerzo que no resulta viable ni necesario en esta etapa. El posicionamiento apunta a que Healthify se integre como la pieza que resuelve el periodo que Nutrimind no cubre. Para los profesionales que no usan software clínico, como la segunda nutricionista entrevistada, que reparte la información entre la historia clínica, Excel y WhatsApp, Healthify ofrece además un lugar único donde ordenar el seguimiento que hoy está disperso. Como táctica concreta, la comunicación dirigida al profesional se construirá alrededor de una pregunta que su herramienta actual no puede responder, referida a qué comió realmente el paciente durante las semanas previas a la consulta. El contenido en redes sociales ilustrará escenarios donde un paciente no progresa sin causa aparente, mostrando de qué manera un índice de consistencia ofrece una señal previa a esa situación. Paralelamente, el proceso de vinculación mediante código QR se diseñará para integrarse al flujo de trabajo existente sin exigir la migración de información histórica.
 
 **Frente a Nutrium: competir en profundidad y no en amplitud**
 
@@ -127,7 +127,7 @@ Igualar la amplitud de Nutrium en gestión de agenda, planificación y comunicac
 
 **Frente a MacroFactor: reubicar el algoritmo dentro del vínculo clínico**
 
-MacroFactor demuestra que el contraste entre ingesta declarada y tendencia de peso es técnicamente viable, pero lo aplica prescindiendo por completo del profesional. Healthify no compite por el mismo usuario, dado que su segmento se define por la existencia de un tratamiento supervisado vigente. La estrategia consiste en apropiarse del mecanismo sin apropiarse de su filosofía, comunicando con claridad la distinción entre automatizar lo mecánico y automatizar el juicio clínico. El sistema propone metas mediante un cálculo determinista y auditable, mientras que el profesional acepta o sobrescribe con una razón que queda registrada, en línea con la afirmación del propio nutricionista entrevistado de que cada plan debe ser individualizado.
+MacroFactor demuestra que el contraste entre ingesta declarada y tendencia de peso es técnicamente viable, pero lo aplica prescindiendo por completo del profesional. Healthify no compite por el mismo usuario, dado que su segmento se define por la existencia de un tratamiento supervisado vigente. La estrategia consiste en apropiarse del mecanismo sin apropiarse de su filosofía, comunicando con claridad la distinción entre automatizar lo mecánico y automatizar el juicio clínico. El sistema propone metas mediante un cálculo determinista y auditable, mientras que el profesional acepta o sobrescribe con una razón que queda registrada, en línea con la afirmación de los nutricionistas entrevistados de que cada plan debe ser individualizado.
 
 **Estrategia transversal en redes sociales**
 
@@ -242,7 +242,7 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 
 | Segmento: Paciente en tratamiento nutricional activo | Entrevista #1 |
 | --- | --- |
-| Nombres y Apellidos | Evelyn Diaz |
+| Nombres y Apellidos | Evelyn Del Aguila |
 | Edad | 52 años |
 | Distrito | Iquitos, Loreto |
 | Ocupación | Docente universitaria |
@@ -336,7 +336,7 @@ Esta sección presenta las fichas de User Persona elaboradas en UXPressia, una p
 
 ### 2.3.2. User Task Matrix
 
-Esta sección presenta el User Task Matrix correspondiente a los dos segmentos objetivo de Healthify, representados respectivamente por Willyan Guerrero, en su condición de nutricionista de centro de salud, y por Evelyn del Águila, en su condición de paciente en tratamiento nutricional activo. La matriz concentra las tareas que ambos arquetipos realizan actualmente para cumplir sus objetivos, con independencia de la existencia de la solución propuesta. Para cada tarea se consigna la frecuencia con que se ejecuta y la importancia que reviste para el usuario correspondiente.
+Esta sección presenta el User Task Matrix de los dos segmentos objetivo de Healthify, construido a partir de las cuatro entrevistas realizadas: Willyan Guerrero y Tatiana Mozombite, nutricionistas, y Evelyn Del Aguila y Larisa Ramírez, pacientes en tratamiento nutricional activo. La matriz concentra las tareas que cada entrevistado realiza actualmente para cumplir sus objetivos, con independencia de la existencia de la solución propuesta. Para cada tarea se consigna la frecuencia con que se ejecuta y la importancia que reviste para el usuario correspondiente.
 
 #### Segmento 1: Nutricionista
 
@@ -344,59 +344,58 @@ Esta sección presenta el User Task Matrix correspondiente a los dos segmentos o
 <tr>
 <th rowspan="2">Task</th>
 <th colspan="2">Willyan Guerrero</th>
-<th colspan="2">Entrevistado 2</th>
-<th colspan="2">Entrevistado 3</th>
+<th colspan="2">Tatiana Mozombite</th>
 </tr>
 <tr>
-<th>Frequency</th><th>Importance</th><th>Frequency</th><th>Importance</th><th>Frequency</th><th>Importance</th>
+<th>Frequency</th><th>Importance</th><th>Frequency</th><th>Importance</th>
 </tr>
 <tr>
 <td>Evaluar nutricionalmente al paciente mediante entrevista y mediciones</td>
-<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>Siempre</td><td>Alta</td><td>Siempre</td><td>Alta</td>
 </tr>
 <tr>
 <td>Establecer el diagnóstico nutricional</td>
-<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>Siempre</td><td>Alta</td><td>Siempre</td><td>Alta</td>
 </tr>
 <tr>
 <td>Diseñar el plan de alimentación individualizado</td>
-<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>Siempre</td><td>Alta</td><td>Siempre</td><td>Alta</td>
 </tr>
 <tr>
 <td>Realizar el monitoreo del paciente entre consultas</td>
-<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>Siempre</td><td>Alta</td><td>Normalmente</td><td>Alta</td>
 </tr>
 <tr>
 <td>Reconstruir los hábitos de consumo del periodo transcurrido</td>
-<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>Siempre</td><td>Alta</td><td>Siempre</td><td>Alta</td>
 </tr>
 <tr>
 <td>Ajustar el plan alimentario sin cita presencial</td>
-<td>Normalmente</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>Normalmente</td><td>Alta</td><td>Normalmente</td><td>Alta</td>
 </tr>
 <tr>
 <td>Solicitar u otorgar equivalencias o reemplazos de alimentos</td>
-<td>Normalmente</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>Normalmente</td><td>Alta</td><td>A veces</td><td>Media</td>
 </tr>
 <tr>
 <td>Verificar el grado de cumplimiento del plan alimentario</td>
-<td>Normalmente</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>Normalmente</td><td>Alta</td><td>Siempre</td><td>Alta</td>
 </tr>
 <tr>
 <td>Programar la siguiente consulta de seguimiento</td>
-<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>Siempre</td><td>Alta</td><td>Siempre</td><td>Alta</td>
 </tr>
 <tr>
 <td>Derivar al paciente a otra especialidad ante ausencia de progreso</td>
-<td>A veces</td><td>Media</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>A veces</td><td>Media</td><td>A veces</td><td>Media</td>
 </tr>
 <tr>
 <td>Compartir o revisar los resultados de análisis bioquímicos</td>
-<td>A veces</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>A veces</td><td>Alta</td><td>Normalmente</td><td>Alta</td>
 </tr>
 <tr>
 <td>Controlar el peso corporal del paciente de forma periódica</td>
-<td>A veces</td><td>Media</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>A veces</td><td>Media</td><td>Normalmente</td><td>Alta</td>
 </tr>
 </table>
 
@@ -405,48 +404,47 @@ Esta sección presenta el User Task Matrix correspondiente a los dos segmentos o
 <table>
 <tr>
 <th rowspan="2">Task</th>
-<th colspan="2">Evelyn del Águila</th>
-<th colspan="2">Entrevistado 2</th>
-<th colspan="2">Entrevistado 3</th>
+<th colspan="2">Evelyn Del Aguila</th>
+<th colspan="2">Larisa Ramírez</th>
 </tr>
 <tr>
-<th>Frequency</th><th>Importance</th><th>Frequency</th><th>Importance</th><th>Frequency</th><th>Importance</th>
+<th>Frequency</th><th>Importance</th><th>Frequency</th><th>Importance</th>
 </tr>
 <tr>
 <td>Registrar y comunicar lo consumido en cada comida</td>
-<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>Siempre</td><td>Alta</td><td>Nunca</td><td>Media</td>
 </tr>
 <tr>
 <td>Consultar el plan alimentario prescrito antes de preparar los alimentos</td>
-<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>Siempre</td><td>Alta</td><td>Normalmente</td><td>Alta</td>
 </tr>
 <tr>
 <td>Verificar el grado de cumplimiento del plan alimentario</td>
-<td>Siempre</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>Siempre</td><td>Alta</td><td>Normalmente</td><td>Media</td>
 </tr>
 <tr>
 <td>Reportar el consumo de alimentos ajenos al plan</td>
-<td>A veces</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>A veces</td><td>Alta</td><td>Nunca</td><td>Baja</td>
 </tr>
 <tr>
 <td>Controlar el peso corporal de forma periódica</td>
-<td>Normalmente</td><td>Media</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>Normalmente</td><td>Media</td><td>Normalmente</td><td>Media</td>
 </tr>
 <tr>
 <td>Solicitar equivalencias o reemplazos de alimentos</td>
-<td>A veces</td><td>Media</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>A veces</td><td>Media</td><td>A veces</td><td>Media</td>
 </tr>
 <tr>
 <td>Compartir los resultados de análisis bioquímicos</td>
-<td>A veces</td><td>Alta</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>A veces</td><td>Alta</td><td>A veces</td><td>Media</td>
 </tr>
 <tr>
 <td>Reconstruir los hábitos de consumo del periodo transcurrido en la consulta de seguimiento</td>
-<td>A veces</td><td>Media</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>A veces</td><td>Media</td><td>Siempre</td><td>Media</td>
 </tr>
 <tr>
 <td>Programar la siguiente consulta de seguimiento</td>
-<td>A veces</td><td>Media</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td><td>Pendiente</td>
+<td>A veces</td><td>Media</td><td>A veces</td><td>Media</td>
 </tr>
 </table>
 
@@ -454,15 +452,15 @@ Esta sección presenta el User Task Matrix correspondiente a los dos segmentos o
 
 El análisis de la matriz permite identificar patrones diferenciados en el comportamiento de ambos segmentos y extraer conclusiones directamente aplicables al diseño de la solución.
 
-En el segmento profesional, las tareas críticas se concentran en las cuatro fases del proceso de atención nutricional, con particular intensidad en el monitoreo entre consultas y en la reconstrucción de los hábitos de consumo del periodo transcurrido. Esta última tarea reviste especial interés analítico, ya que el profesional la ejecuta siempre y le atribuye importancia alta, pero la realiza mediante una entrevista retrospectiva que depende por completo de lo que el paciente recuerda y decide contar. La matriz expone así, en términos de tareas observables, la limitación estructural que el análisis competitivo identificó en las plataformas existentes.
+En el segmento profesional, las tareas críticas se concentran en las cuatro fases del proceso de atención nutricional, con particular intensidad en la reconstrucción de los hábitos de consumo del periodo transcurrido. Ambos nutricionistas ejecutan esta tarea siempre y le asignan importancia alta, pero la resuelven mediante una entrevista retrospectiva que depende de lo que el paciente recuerda y decide contar: Willyan vuelve a entrevistar al paciente sobre sus hábitos en cada cita, y Tatiana dedica cerca de un tercio de la consulta a preguntar día por día. Las diferencias aparecen en el monitoreo entre consultas y en el control del peso. Willyan hace un seguimiento virtual que en algunos casos es diario, mientras que Tatiana trabaja con paquetes de dos o tres controles mensuales y le da más peso a la verificación del cumplimiento y a la evolución del peso para detectar un estancamiento. La matriz expone así, en términos de tareas observables, la limitación que el análisis competitivo identificó en las plataformas existentes.
 
-En el segmento de pacientes, las tareas de mayor frecuencia e importancia se concentran en el registro y la comunicación de lo consumido, en la consulta del plan prescrito y en la verificación del cumplimiento. La entrevista evidencia que estas tres tareas se ejecutan de forma diaria y que la paciente les asigna una relevancia alta, dado que constituyen la evidencia sobre la cual su nutricionista evalúa la intervención. Resulta especialmente significativo que el reporte de consumos ajenos al plan, aun cuando presenta una frecuencia menor, mantenga una importancia alta, lo que revela que la paciente no busca ocultar dichos episodios sino disponer de un medio ágil para comunicarlos.
+En el segmento de pacientes, las dos entrevistadas muestran comportamientos opuestos frente a la misma tarea. Evelyn registra y comunica cada comida todos los días, porque su nutricionista le pide las fotos del desayuno, almuerzo y cena, y también reporta las comidas fuera del plan con foto y explicación. Larisa no registra lo que come: consulta su plan y lo compara mentalmente con lo que recuerda, y no reportó la pizza de la noche anterior porque la consideró un gusto permitido. En su caso, la reconstrucción de hábitos ocurre siempre en la consulta y depende solo de su memoria. En ambas, el control del peso tiene una frecuencia semanal o quincenal y una importancia media, por debajo del registro de comidas.
 
-Al comparar ambos segmentos, se identifican similitudes relevantes. En ambos casos existe una alta importancia asignada a la verificación del cumplimiento del plan y al intercambio de información derivada de análisis bioquímicos, aunque cada arquetipo la aborde con una granularidad distinta, ya que el profesional la valora sobre la escala del tratamiento mientras que la paciente la evalúa día a día. Asimismo, el otorgamiento y la solicitud de equivalencias constituye una tarea genuinamente compartida que hoy se resuelve mediante intercambios de mensajería sin registro estructurado. Sin embargo, ambos segmentos difieren en su enfoque predominante, ya que el profesional concentra su comportamiento en tareas de interpretación y decisión clínica, mientras que la paciente concentra el suyo en tareas de captura y comunicación del dato. Esta separación no constituye una limitación del análisis sino un principio de diseño explícito del proyecto, según el cual el paciente registra la realidad y el nutricionista la interpreta.
+Al comparar ambos segmentos, se identifican similitudes relevantes. Nutricionistas y pacientes asignan importancia a la verificación del cumplimiento del plan, aunque el profesional la valora sobre la escala del tratamiento y la paciente la evalúa día a día. La solicitud y el otorgamiento de equivalencias es una tarea compartida que hoy se resuelve por mensajería sin registro estructurado. Sin embargo, ambos segmentos difieren en su enfoque predominante: los nutricionistas concentran su comportamiento en tareas de interpretación y decisión clínica, mientras que las pacientes concentran el suyo en tareas de captura y comunicación del dato. Esta separación es un principio de diseño explícito del proyecto, según el cual el paciente registra la realidad y el nutricionista la interpreta.
 
-A partir de ello se derivan insights clave para el diseño de Healthify. En primer lugar, la reconstrucción retrospectiva de hábitos que hoy realiza el profesional debe ser sustituida por información capturada en el momento del consumo, dado que constituye la tarea de mayor importancia con menor confiabilidad actual. En segundo lugar, la tarea de registrar debe resultar menos costosa que la de omitir, dado que su frecuencia diaria la convierte en el principal punto de fricción del segmento de pacientes. En tercer lugar, las tareas compartidas entre ambos segmentos, como el otorgamiento de equivalencias y el intercambio de resultados bioquímicos, requieren un espacio común de registro que hoy no existe, dado que ambos arquetipos las resuelven mediante canales de comunicación que no fueron concebidos para conservar información clínica.
+A partir de ello se derivan insights clave para el diseño de Healthify. En primer lugar, la reconstrucción retrospectiva de hábitos que hoy realizan ambos nutricionistas debe ser sustituida por información capturada en el momento del consumo, dado que es una tarea de importancia alta y de baja confiabilidad. En segundo lugar, registrar debe costar menos que omitir: el caso de Evelyn muestra que el registro diario es posible cuando el nutricionista lo exige, y el de Larisa, que sin esa exigencia y con una herramienta tediosa el registro no ocurre. En tercer lugar, el reporte de comidas fuera del plan necesita un mecanismo rápido y sin juicio, porque una paciente lo hace con esfuerzo y la otra lo omite. Por último, las tareas compartidas, como las equivalencias y el intercambio de resultados bioquímicos, requieren un espacio común de registro que hoy no existe.
 
-En conjunto, estos hallazgos orientan el desarrollo de Healthify hacia una solución que capture el consumo en tiempo real desde el segmento de pacientes y que traduzca esa captura en información interpretable para el segmento profesional, sustituyendo así la dependencia actual del relato y la memoria por evidencia verificable a lo largo de todo el periodo de tratamiento.
+En conjunto, estos hallazgos orientan el desarrollo de Healthify hacia una solución que capture el consumo en el momento en que ocurre desde el segmento de pacientes y que traduzca esa captura en información interpretable para el segmento profesional, sustituyendo la dependencia actual del relato y la memoria por evidencia registrada a lo largo del tratamiento.
 
 
 ### 2.3.3. User Journey Mapping
@@ -512,7 +510,7 @@ El tablero resultante quedó organizado en cinco fases narrativas, que se descri
 
 ![Fase 1 - Vinculación y consentimiento](../assets/img/artifacts/event-storming/big-picture-fase1-vinculacion.png)
 
-**Fase 2 — El acto clínico, dentro de la consulta.** Ocurre con un solo actor presente, el profesional, y reproduce las tres primeras fases que el nutricionista entrevistado describió como su proceso de trabajo: evaluación, diagnóstico e intervención. La cadena de hechos va de `Nutritional Assessment Recorded` y `Clinical Measurement Taken` hasta `Nutritional Diagnosis Issued`, `Targets Proposed`, `Targets Accepted As Proposed` o `Targets Overridden`, y culmina en `Nutrition Plan Published` y `Active Targets Updated`. Este último hecho es el que más consecuencias tiene en el resto del tablero, porque desencadena tres políticas simultáneas en zonas distintas del dominio.
+**Fase 2 — El acto clínico, dentro de la consulta.** Ocurre con un solo actor presente, el profesional, y reproduce las tres primeras fases que los nutricionistas entrevistados describieron como su proceso de trabajo: evaluación, diagnóstico e intervención. La cadena de hechos va de `Nutritional Assessment Recorded` y `Clinical Measurement Taken` hasta `Nutritional Diagnosis Issued`, `Targets Proposed`, `Targets Accepted As Proposed` o `Targets Overridden`, y culmina en `Nutrition Plan Published` y `Active Targets Updated`. Este último hecho es el que más consecuencias tiene en el resto del tablero, porque desencadena tres políticas simultáneas en zonas distintas del dominio.
 
 ![Fase 2 - Acto clínico](../assets/img/artifacts/event-storming/big-picture-fase2-acto-clinico.png)
 
