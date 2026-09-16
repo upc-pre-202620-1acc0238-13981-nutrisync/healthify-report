@@ -115,15 +115,16 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 
 | Segmento: Paciente en tratamiento nutricional activo | Entrevista #1 |
 | --- | --- |
-| Nombres y Apellidos |Evelyn Diaz|
-| Edad |52|
-| Distrito |Loreto - Iquitos|
-| Ocupación |Docente universitaria de idiomas|
-| Timming inicio |0:00 - 0:00|
-| Duración |0:00 minutos|
-| URL | [Video entrevista]()|
-| Screenshot |![Entrevista 1 Seg2](../assets/img/chapter2/interviews/Entrevista1-seg2.png)|
-| Resumen |Evelyn llegó a terapia nutricional tras un examen ocupacional de su trabajo que reveló triglicéridos y azúcar elevados, por lo que fue derivada a un nutricionista y no por iniciativa propia. Su plan nutricional le llega de forma virtual por WhatsApp, organizado en un cronograma semanal con las tres comidas principales, que ella mantiene tanto impreso como en su celular. El mecanismo central de seguimiento es el envío diario y sin excepción de fotos de cada comida (desayuno, almuerzo y cena) a su nutricionista, quedando ese historial disperso dentro del propio chat, sin usar ninguna app dedicada para ello. Ella misma es la custodia de sus resultados de análisis y medidas, y es quien los comparte con el especialista en sus citas para que él los interprete. Cuando se sale del plan por compromisos sociales o laborales (como una reunión con colegas donde comió makis), igual envía la foto y comenta la situación, tratando de no excederse. Esto muestra que su relación con el nutricionista es de comunicación constante y detallada, no solo limitada a las consultas. Se pesa cada dos semanas por decisión propia, ya que siente que se mantiene estable, y ha usado apps de delivery con información nutricional, pero no de registro dedicado. Finalmente, se mostró muy receptiva a las hipótesis de producto planteadas. Afirmó que usaría a diario una función de registro por foto con confirmación automática, siempre que sea eficiente, y que valoraría mucho un botón de "comí fuera del plan" con mensaje predefinido, ya que le ahorraría tiempo en su rutina laboral. Esto fue justamente lo que identificó como el cambio que más le gustaría tener en su proceso actual.|
+| Nombres y Apellidos | Evelyn Diaz |
+| Edad | 52 años |
+| Distrito | Iquitos, Loreto |
+| Ocupación | Docente universitaria |
+| Entrevistador | Olenka Del Aguila |
+| Timing | 0:00 – 0:00 |
+| Duración | 0:00 minutos |
+| URL | [Video entrevista]() |
+| Screenshot | ![Entrevista 1 Seg2](../assets/img/chapter2/interviews/Entrevista1-seg2.png) |
+| Resumen | Evelyn tiene 52 años, vive con su madre, quien suele cocinar, y en ocasiones piden comida por delivery. Llegó al nutricionista por recomendación tras un examen de salud ocupacional que mostró triglicéridos y glucosa elevados. Recibe su plan por WhatsApp como un cronograma semanal de tres comidas diarias, que mantiene impreso y en el celular. Su nutricionista le pide **enviar todos los días, de lunes a domingo, la foto de su desayuno, almuerzo y cena** para evaluar lo que consume. Ese chat de WhatsApp es el único registro de su alimentación y el lugar donde ella misma revisa su nivel de cumplimiento. Recibe sus análisis y medidas y se los lleva al nutricionista en la cita para que los interprete. Cuando come fuera del plan por compromisos laborales o familiares (por ejemplo, makis en una reunión con colegas), igual envía la foto y explica la situación por escrito. Se pesa cada dos semanas por decisión propia. Ha usado apps de delivery con información nutricional, pero ninguna dedicada al registro de comidas. Afirmó que usaría a diario el registro por foto, "porque igual a diario tengo que enviar el reporte", siempre que la app sea eficiente. También usaría el botón de "comí fuera del plan", ya que por el trabajo le cuesta tomarse tiempo para escribirle detalles al nutricionista. Lo que más le gustaría cambiar es poder enviar sus fotos con un mensaje ya predefinido. |
 
 <div style="page-break-after: always"></div>
 
