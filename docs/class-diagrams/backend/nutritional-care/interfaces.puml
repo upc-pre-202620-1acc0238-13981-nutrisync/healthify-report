@@ -8,8 +8,6 @@ hide empty members
 package "Healthify.Platform.NutritionalCare.Interfaces" {
 
   package "Acl" {
-    ' Never exposes a diagnosis, a clinical rationale or a calculation basis:
-    ' the same rule that keeps them out of the published event.
     interface INutritionalCareContextFacade {
       +GetActiveTargetsByPatientId(patientId: int, ct): Task<ActiveTargetsItem?>
       +GetOpenReviewItemCount(practitionerId: int, ct): Task<int>
@@ -28,8 +26,6 @@ package "Healthify.Platform.NutritionalCare.Interfaces" {
   }
 
   package "REST" {
-    ' Every controller of this context is [Authorize(Roles = "Practitioner")]:
-    ' the patient never measures, diagnoses, prescribes or resolves.
     class NutritionalAssessmentsController {
       +RecordAssessment(resource: RecordAssessmentResource): Task<IActionResult>
       +TakeClinicalMeasurement(assessmentId: int, resource: TakeClinicalMeasurementResource): Task<IActionResult>
@@ -89,7 +85,6 @@ package "Healthify.Platform.NutritionalCare.Interfaces" {
     class NutritionalDiagnosisResourceAssembler <<static>>
     class NutritionPlanResourceAssembler <<static>>
     class ReviewItemResourceAssembler <<static>>
-    ' The single place where a NutritionalCareError becomes an HTTP status.
     class NutritionalCareActionResultAssembler <<static>>
   }
 }
@@ -141,12 +136,10 @@ package "NutritionalCare.Resources" {
   class NutritionalCareMessages
 }
 
-' Resolved generic: the controllers depend on IStringLocalizer<NutritionalCareMessages>.
 interface "IStringLocalizer<NutritionalCareMessages>" as IStringLocalizer
 IStringLocalizer ..|> IStringLocalizerGeneric
 IStringLocalizer ..> NutritionalCareMessages : parameterized by
 
-' --- Controllers ---
 NutritionalAssessmentsController --|> ControllerBase
 NutritionalDiagnosesController --|> ControllerBase
 NutritionPlansController --|> ControllerBase
@@ -167,14 +160,12 @@ ReviewItemsController --> IReviewItemCommandService : uses
 ReviewItemsController --> IReviewItemQueryService : uses
 ReviewItemsController --> IStringLocalizer : uses
 
-' --- The practitioner identifier always comes from the session token ---
 NutritionalAssessmentsController ..> ControllerBaseExtensions : reads practitioner id
 NutritionalDiagnosesController ..> ControllerBaseExtensions : reads practitioner id
 NutritionPlansController ..> ControllerBaseExtensions : reads practitioner id
 PatientClinicalRecordController ..> ControllerBaseExtensions : reads practitioner id
 ReviewItemsController ..> ControllerBaseExtensions : reads practitioner id
 
-' --- Controllers to assemblers and queries ---
 NutritionalAssessmentsController ..> RecordAssessmentCommandAssembler : uses
 NutritionalAssessmentsController ..> TakeClinicalMeasurementCommandAssembler : uses
 NutritionalAssessmentsController ..> CloseAssessmentCommandAssembler : uses
@@ -201,12 +192,10 @@ ReviewItemsController ..> ReviewItemResourceAssembler : uses
 ReviewItemsController ..> NutritionalCareActionResultAssembler : uses
 ReviewItemsController ..> GetOpenReviewItemsByPractitionerIdQuery : builds
 
-' --- Request resource to command assemblers ---
 RecordAssessmentCommandAssembler ..> RecordAssessmentResource : from
 RecordAssessmentCommandAssembler ..> RecordAssessmentCommand : to
 TakeClinicalMeasurementCommandAssembler ..> TakeClinicalMeasurementResource : from
 TakeClinicalMeasurementCommandAssembler ..> TakeClinicalMeasurementCommand : to
-' Both identifiers come from the route and the token: there is no payload.
 CloseAssessmentCommandAssembler ..> CloseAssessmentCommand : to
 IssueDiagnosisCommandAssembler ..> IssueDiagnosisResource : from
 IssueDiagnosisCommandAssembler ..> IssueDiagnosisCommand : to
@@ -221,7 +210,6 @@ AdjustNutritionPlanCommandAssembler ..> AdjustNutritionPlanCommand : to
 ResolveReviewItemCommandAssembler ..> ResolveReviewItemResource : from
 ResolveReviewItemCommandAssembler ..> ResolveReviewItemCommand : to
 
-' --- Entity to response resource assemblers ---
 NutritionalAssessmentResourceAssembler ..> NutritionalAssessment : from
 NutritionalAssessmentResourceAssembler ..> NutritionalAssessmentResource : to
 NutritionalAssessmentResourceAssembler ..> ClinicalMeasurement : from
@@ -233,14 +221,11 @@ NutritionPlanResourceAssembler ..> NutritionPlanResource : to
 ReviewItemResourceAssembler ..> ReviewItem : from
 ReviewItemResourceAssembler ..> ReviewItemResource : to
 
-' --- Read resource composition ---
 NutritionalAssessmentResource o--> "0..*" ClinicalMeasurementResource : Anthropometry
-' The basis is on the plan resource, which is why it is practitioner only.
 NutritionPlanResource *--> "1" CalculationBasisResource : contains
 NutritionPlanResource *--> "1" TargetsResource : Proposal
 NutritionPlanResource *--> "0..1" TargetsResource : Prescribed
 
-' --- Result to IActionResult assembler ---
 NutritionalCareActionResultAssembler ..> Result : maps
 NutritionalCareActionResultAssembler ..> NutritionalCareError : maps
 NutritionalCareActionResultAssembler ..> NutritionalAssessmentResourceAssembler : uses
@@ -250,7 +235,6 @@ NutritionalCareActionResultAssembler ..> ReviewItemResourceAssembler : uses
 NutritionalCareActionResultAssembler ..> ProblemDetailsFactory : builds problem details with
 NutritionalCareActionResultAssembler ..> IStringLocalizer : localizes with
 
-' --- ACL facade contract & its DTO ---
 INutritionalCareContextFacade ..> ActiveTargetsItem : returns
 
 @enduml

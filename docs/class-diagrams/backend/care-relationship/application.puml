@@ -38,8 +38,6 @@ package "Healthify.Platform.CareRelationship.Application" {
   }
 
   package "Internal" {
-    ' The care link is created by the policy reacting to InvitationRedeemed, in
-    ' its own scope, so the command service reads it back to answer the caller.
     class InvitationRedemptionOutcome <<record>> {
       -Invitation: Invitation
       -CareLink: CareLink?
@@ -68,16 +66,12 @@ package "Healthify.Platform.CareRelationship.Application" {
     }
 
     package "Internal.EventHandlers" {
-      ' Redeeming the QR code is what creates the care link. This is the only
-      ' path into one, which is how "a patient cannot self link" is structural.
       class OnInvitationRedeemedHandler {
         +Handle(notification: InvitationRedeemed, ct): Task
       }
-      ' Withdrawing consent revokes the link; it is never a separate decision.
       class OnConsentWithdrawnHandler {
         +Handle(notification: ConsentWithdrawn, ct): Task
       }
-      ' Integration event 6 of 13. Subscribes to an event Nutritional Care owns.
       class OnActiveTargetsUpdatedCareRelationshipHandler {
         +Handle(notification: ActiveTargetsUpdated, ct): Task
       }
@@ -150,7 +144,6 @@ package "Shared / Cortex" <<external>> {
   interface "ILogger<T>" as ILogger
 }
 
-' --- Service interface realizations ---
 InvitationCommandService ..|> IInvitationCommandService
 CareLinkCommandService ..|> ICareLinkCommandService
 InvitationQueryService ..|> IInvitationQueryService
@@ -160,7 +153,6 @@ OnInvitationRedeemedHandler ..|> IEventHandler
 OnConsentWithdrawnHandler ..|> IEventHandler
 OnActiveTargetsUpdatedCareRelationshipHandler ..|> IEventHandler
 
-' --- InvitationCommandService (Subflows 2.1 and 2.2) ---
 InvitationCommandService --> IInvitationRepository : uses
 InvitationCommandService --> ICareLinkRepository : guards the one-link slot with
 InvitationCommandService --> IUnitOfWork : commits with
@@ -178,7 +170,6 @@ InvitationCommandService ..> InvitationExpired : publishes
 InvitationCommandService ..> InvitationRedeemed : publishes
 InvitationCommandService ..> CareRelationshipError : returns
 
-' --- CareLinkCommandService (Subflows 2.2 to 2.5) ---
 CareLinkCommandService --> ICareLinkRepository : uses
 CareLinkCommandService --> IUnitOfWork : commits with
 CareLinkCommandService --> IIamContextFacade : checks Practitioner Only with
@@ -202,7 +193,6 @@ CareLinkCommandService ..> TargetsPendingAcknowledgement : publishes
 CareLinkCommandService ..> ActiveTargetsAcknowledged : publishes
 CareLinkCommandService ..> CareRelationshipError : returns
 
-' --- Policies. Each opens its own DI scope: handlers run in parallel ---
 OnInvitationRedeemedHandler ..> InvitationRedeemed : subscribes to
 OnInvitationRedeemedHandler --> IServiceScopeFactory : opens scope with
 OnInvitationRedeemedHandler --> ILogger : logs to
@@ -221,7 +211,6 @@ OnActiveTargetsUpdatedCareRelationshipHandler --> ILogger : logs to
 OnActiveTargetsUpdatedCareRelationshipHandler --> ICareLinkCommandService : delegates to
 OnActiveTargetsUpdatedCareRelationshipHandler ..> MarkTargetsPendingAcknowledgementCommand : issues
 
-' --- Query services ---
 InvitationQueryService --> IInvitationRepository : uses
 InvitationQueryService ..> GetInvitationByIdQuery : handles
 InvitationQueryService ..> GetInvitationByTokenQuery : handles
@@ -234,16 +223,13 @@ CareLinkQueryService ..> GetActiveCareLinkByPatientIdQuery : handles
 CareLinkQueryService ..> GetCareLinksByPractitionerIdQuery : handles
 CareLinkQueryService ..> CareLink : returns
 
-' --- ACL facade: the Open Host Service the other five contexts consume ---
 CareRelationshipContextFacade --> ICareLinkQueryService : uses
 CareRelationshipContextFacade ..> GetActiveCareLinkByPatientIdQuery : issues
 CareRelationshipContextFacade ..> CareLinkStatusItem : returns
 
-' --- Application DTO composition ---
 InvitationRedemptionOutcome o--> "1" Invitation : carries
 InvitationRedemptionOutcome o--> "0..1" CareLink : carries
 
-' --- Result wrapper across command services ---
 IInvitationCommandService ..> Result
 ICareLinkCommandService ..> Result
 IInvitationCommandService ..> CareRelationshipError : returns

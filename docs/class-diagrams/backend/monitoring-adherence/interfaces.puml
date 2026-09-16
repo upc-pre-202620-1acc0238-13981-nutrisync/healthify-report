@@ -8,9 +8,6 @@ hide empty members
 package "Healthify.Platform.MonitoringAdherence.Interfaces" {
 
   package "Acl" {
-    ' Read only. Every method degrades gracefully, because the monitoring panel
-    ' is assembled from six contexts and one of them being quiet is not a
-    ' reason for the other five to disappear.
     interface IMonitoringContextFacade {
       +GetDailyComplianceSeries(patientId: int, days: int, ct): Task<IReadOnlyList<DailyComplianceItem>>
       +GetConsistencyState(patientId: int, ct): Task<ConsistencyStateItem?>
@@ -18,8 +15,6 @@ package "Healthify.Platform.MonitoringAdherence.Interfaces" {
       +GetAnthropometrySeriesPoints(patientId: int, ct): Task<IReadOnlyList<AnthropometryPointItem>>
       +GetReferrals(patientId: int, ct): Task<IReadOnlyList<ReferralItem>>
     }
-    ' The domain value the event storming names is exactly this pair, and it is
-    ' all the ACL contract of this context ever publishes about a day.
     class DailyComplianceItem <<record>> {
       -Date: DateOnly
       -Outcome: string
@@ -29,7 +24,6 @@ package "Healthify.Platform.MonitoringAdherence.Interfaces" {
       -ShownToPatientAt: DateTimeOffset?
       -EscalatedAt: DateTimeOffset?
     }
-    ' Clinical readings only. Nothing merges the patient's own weigh-ins here.
     class AnthropometryPointItem <<record>> {
       -Date: DateOnly
       -ValueKg: decimal
@@ -45,9 +39,6 @@ package "Healthify.Platform.MonitoringAdherence.Interfaces" {
   }
 
   package "REST" {
-    ' Read only, and split by role: the daily indicator and the consistency
-    ' card are the patient's, the deviations are the practitioner's. There is
-    ' no endpoint that evaluates, detects, escalates or closes anything.
     class PatientMonitoringController {
       +GetEvaluationWindows(patientId: int): Task<IActionResult>
       +GetCurrentEvaluationWindow(patientId: int): Task<IActionResult>
@@ -56,11 +47,9 @@ package "Healthify.Platform.MonitoringAdherence.Interfaces" {
       +GetConsistencyIndex(patientId: int): Task<IActionResult>
       +GetReferrals(patientId: int): Task<IActionResult>
     }
-    ' One of the two commands in this context a person issues.
     class ReferralsController {
       +RecordReferral(resource: RecordReferralResource): Task<IActionResult>
     }
-    ' The other one, plus the practitioner agenda.
     class ScheduledFollowUpsController {
       +ScheduleFollowUp(resource: ScheduleFollowUpResource): Task<IActionResult>
       +GetPractitionerAgenda(practitionerId: int): Task<IActionResult>
@@ -92,7 +81,6 @@ package "Healthify.Platform.MonitoringAdherence.Interfaces" {
     class ConsistencyIndexResourceAssembler <<static>>
     class ReferralResourceAssembler <<static>>
     class ScheduledFollowUpResourceAssembler <<static>>
-    ' The single place where a MonitoringError becomes an HTTP status.
     class MonitoringActionResultAssembler <<static>>
   }
 }
@@ -141,12 +129,10 @@ package "MonitoringAdherence.Resources" {
   class MonitoringMessages
 }
 
-' Resolved generic: the controllers depend on IStringLocalizer<MonitoringMessages>.
 interface "IStringLocalizer<MonitoringMessages>" as IStringLocalizer
 IStringLocalizer ..|> IStringLocalizerGeneric
 IStringLocalizer ..> MonitoringMessages : parameterized by
 
-' --- Controllers ---
 PatientMonitoringController --|> ControllerBase
 ReferralsController --|> ControllerBase
 ScheduledFollowUpsController --|> ControllerBase
@@ -161,12 +147,10 @@ ScheduledFollowUpsController --> IScheduledFollowUpCommandService : uses
 ScheduledFollowUpsController --> IScheduledFollowUpQueryService : uses
 ScheduledFollowUpsController --> IStringLocalizer : uses
 
-' --- The identity that is trusted is the one in the token ---
 PatientMonitoringController ..> ControllerBaseExtensions : authorizes the reader
 ReferralsController ..> ControllerBaseExtensions : reads practitioner id
 ScheduledFollowUpsController ..> ControllerBaseExtensions : reads practitioner id
 
-' --- Controllers to assemblers and queries ---
 PatientMonitoringController ..> GetEvaluationWindowsByPatientIdQuery : builds
 PatientMonitoringController ..> GetCurrentEvaluationWindowByPatientIdQuery : builds
 PatientMonitoringController ..> GetDailyComplianceByPatientIdQuery : builds
@@ -186,13 +170,11 @@ ScheduledFollowUpsController ..> ScheduledFollowUpResourceAssembler : uses
 ScheduledFollowUpsController ..> MonitoringActionResultAssembler : uses
 ScheduledFollowUpsController ..> GetScheduledFollowUpsByPractitionerIdQuery : builds
 
-' --- Request resource to command assemblers ---
 RecordReferralCommandAssembler ..> RecordReferralResource : from
 RecordReferralCommandAssembler ..> RecordReferralCommand : to
 ScheduleFollowUpCommandAssembler ..> ScheduleFollowUpResource : from
 ScheduleFollowUpCommandAssembler ..> ScheduleFollowUpCommand : to
 
-' --- Entity to response resource assemblers ---
 EvaluationWindowResourceAssembler ..> EvaluationWindow : from
 EvaluationWindowResourceAssembler ..> EvaluationWindowResource : to
 EvaluationWindowResourceAssembler ..> DailyComplianceResourceAssembler : uses
@@ -215,13 +197,11 @@ ReferralResourceAssembler ..> ReferralResource : to
 ScheduledFollowUpResourceAssembler ..> ScheduledFollowUp : from
 ScheduledFollowUpResourceAssembler ..> ScheduledFollowUpResource : to
 
-' --- Read resource composition ---
 EvaluationWindowResource *--> "1" IntakeSummaryResource : contains
 EvaluationWindowResource o--> "0..*" TargetsSnapshotResource : prescribed series
 EvaluationWindowResource o--> "0..*" DailyComplianceResource : day-by-day series
 EvaluationWindowResource o--> "0..*" AnthropometryPointResource : clinical weight series
 
-' --- Result to IActionResult assembler ---
 MonitoringActionResultAssembler ..> Result : maps
 MonitoringActionResultAssembler ..> MonitoringError : maps
 MonitoringActionResultAssembler ..> ReferralResourceAssembler : uses
@@ -229,7 +209,6 @@ MonitoringActionResultAssembler ..> ScheduledFollowUpResourceAssembler : uses
 MonitoringActionResultAssembler ..> ProblemDetailsFactory : builds problem details with
 MonitoringActionResultAssembler ..> IStringLocalizer : localizes with
 
-' --- ACL facade contract & its DTOs ---
 IMonitoringContextFacade ..> DailyComplianceItem : returns
 IMonitoringContextFacade ..> ConsistencyStateItem : returns
 IMonitoringContextFacade ..> AnthropometryPointItem : returns

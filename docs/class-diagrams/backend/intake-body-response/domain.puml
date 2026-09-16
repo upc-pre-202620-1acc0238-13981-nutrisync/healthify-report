@@ -8,10 +8,6 @@ hide empty members
 package "Healthify.Platform.IntakeBodyResponse.Domain" {
 
   package "Model.Aggregates" {
-    ' The patient copy of the published contract. There is no field here for a
-    ' diagnosis, a rationale, an equation, a reference weight, an activity
-    ' factor or a deficit, so there is nowhere for them to be cached even by
-    ' accident. The patient is the root: one cache each, replaced in place.
     class ActiveTargetsCache {
       -PatientId: int <<key>>
       -PlanVersion: int
@@ -33,9 +29,6 @@ package "Healthify.Platform.IntakeBodyResponse.Domain" {
       -Apply(command: RefreshActiveTargetsCacheCommand): void
     }
 
-    ' One thing the patient says they ate. Entry Never Deleted: there is no
-    ' method that removes one. It carries no compliance flag, no deviation, no
-    ' streak and no penalty - comparing belongs to Monitoring and Adherence.
     class DiaryEntry {
       -Id: DiaryEntryId
       -PatientId: int
@@ -72,9 +65,6 @@ package "Healthify.Platform.IntakeBodyResponse.Domain" {
       -StoreConfirmation(referenceFoodId: int, portionGrams: decimal): void
     }
 
-    ' One reading the patient took of themselves. Not a clinical measurement,
-    ' and this context never pretends otherwise. A reading outside the protocol
-    ' is stored in full: it simply does not smooth the trend.
     class SelfWeighIn {
       -Id: SelfWeighInId
       -PatientId: int
@@ -94,9 +84,6 @@ package "Healthify.Platform.IntakeBodyResponse.Domain" {
       +SelfWeighIn(patientId, valueKg, localTimestamp, protocolCompliance)
     }
 
-    ' The smoothed series, which is the unit this context publishes about body
-    ' weight. A single daily figure is never exposed as the headline. The
-    ' patient is the root: one trend each, recalculated in place.
     class WeightTrend {
       +{static} DefaultWindowSize: int = 7
       -PatientId: int <<key>>
@@ -122,15 +109,12 @@ package "Healthify.Platform.IntakeBodyResponse.Domain" {
       -Value: int
       +{static} FromRaw(value: int): SelfWeighInId
     }
-    ' The one timestamp in the platform the server does not own.
     class LocalTimestamp <<record>> {
       -{static} MaximumFutureSkew: TimeSpan = 24h
       -Value: DateTimeOffset
       +Date: DateOnly <<derived>>
       +LocalTimestamp(value: DateTimeOffset)
     }
-    ' An estimate without its confidence is a number pretending to be a
-    ' measurement.
     class Confidence <<record>> {
       -Value: decimal
       +Confidence(value: decimal)
@@ -141,8 +125,6 @@ package "Healthify.Platform.IntakeBodyResponse.Domain" {
       -Value: decimal
       +WeightKg(value: decimal)
     }
-    ' Provenance is not metadata, it is part of the reading. OffPlan is not a
-    ' lesser value: it exists so declaring costs one tap.
     class Provenance <<record>> {
       +{static} Photo: string
       +{static} Manual: string
@@ -161,22 +143,17 @@ package "Healthify.Platform.IntakeBodyResponse.Domain" {
       +IsSynced: bool <<derived>>
       +IsConflicted: bool <<derived>>
     }
-    ' What the on-device estimator thinks was eaten. A proposal, never a fact.
     class ProposedEstimate <<record>> {
       -ReferenceFoodId: int
       -PortionGrams: decimal
       -Confidence: Confidence
       -EstimatedAt: DateTimeOffset
     }
-    ' What the patient said. It carries no confidence, and that absence is the
-    ' point: the patient is not a probabilistic estimator.
     class ConfirmedEstimate <<record>> {
       -ReferenceFoodId: int
       -PortionGrams: decimal
       -ConfirmedAt: DateTimeOffset
     }
-    ' Fasted, same time of day, same scale. The patient declares it; nothing
-    ' here verifies it and nothing here judges it.
     class ProtocolCompliance <<record>> {
       -FastedState: bool
       -SameTimeOfDay: bool
@@ -190,22 +167,17 @@ package "Healthify.Platform.IntakeBodyResponse.Domain" {
   }
 
   package "Model.Commands" {
-    ' Issued by the policy reacting to ActiveTargetsUpdated. No endpoint.
     class RefreshActiveTargetsCacheCommand <<record>>
     class LogMealByPhotoCommand <<record>>
-    ' Issued by the photo estimation policy only. No endpoint.
     class EstimatePortionCommand <<record>>
     class ConfirmEstimateCommand <<record>>
     class AdjustEstimateCommand <<record>>
     class LogMealManuallyCommand <<record>>
-    ' No food, no portion, no reason, no note. Asking for them is what makes
-    ' people stop declaring.
     class LogOffPlanMealCommand <<record>> {
       -PatientId: int
       -LocalTimestamp: DateTimeOffset
     }
     class RecordSelfWeighInCommand <<record>>
-    ' Issued by the policy reacting to SelfWeighInRecorded. No endpoint.
     class RecalculateWeightTrendCommand <<record>> {
       -PatientId: int
     }
@@ -235,7 +207,6 @@ package "Healthify.Platform.IntakeBodyResponse.Domain" {
 
   package "Model.Events" {
     class ActiveTargetsCacheRefreshed <<record>>
-    ' Integration event 7 of 13: crosses to Monitoring and Adherence 5.4.
     class MealLogged <<record>> {
       -DiaryEntryId: int
       -PatientId: int
@@ -245,29 +216,19 @@ package "Healthify.Platform.IntakeBodyResponse.Domain" {
       -ProposedPortionGrams: decimal?
       -ProposedConfidence: decimal?
     }
-    ' Crosses no boundary: a proposal is not intake.
     class EstimateProposed <<record>>
-    ' Integration event 8 of 13.
     class EstimateConfirmedByPatient <<record>>
     class EstimateAdjustedByPatient <<record>>
-    ' Integration event 9 of 13. Carries the fact and the moment, no judgement.
     class OffPlanEntryLogged <<record>>
-    ' Crosses no boundary: what leaves is the trend, never a single reading.
     class SelfWeighInRecorded <<record>>
-    ' Integration event 10 of 13: one of the two series the consistency index
-    ' needs.
     class WeightTrendRecalculated <<record>>
     class SelfWeighInExcludedFromTrend <<record>>
     class EntryQueuedOffline <<record>>
-    ' Integration event 11 of 13: a late entry re-evaluates its own day.
     class EntrySynchronized <<record>>
     class SyncConflictResolved <<record>>
   }
 
   package "Model.Errors" {
-    ' Read the list for what is missing: no value for a meal that was too
-    ' large or a week that went badly. This context reports that it could not
-    ' record something, never that what was recorded was wrong.
     enum IntakeError {
       ActiveTargetsCacheNotFound
       PublishedContractOnly
@@ -296,8 +257,6 @@ package "Healthify.Platform.IntakeBodyResponse.Domain" {
     interface IActiveTargetsCacheRepository {
       +FindByPatientIdAsync(patientId: int, ct): Task<ActiveTargetsCache?>
     }
-    ' Nothing in this context calls the inherited Remove: the rule Entry Never
-    ' Deleted is kept by there being no code path to deletion.
     interface IDiaryEntryRepository {
       +ListByPatientIdAsync(patientId: int, date: DateOnly?, ct): Task<IEnumerable<DiaryEntry>>
       +FindByClientEntryIdAsync(clientEntryId: Guid, ct): Task<DiaryEntry?>
@@ -319,30 +278,21 @@ package "Shared.Domain" <<external>> {
 }
 
 package "FoodCatalog.Interfaces.Acl" <<external>> {
-  ' Resolved through the ACL: a plain int inside this context.
   class ReferenceFoodItem <<record>>
 }
 
-' --- Aggregate roots & auditing ---
 ActiveTargetsCache ..|> IAuditableEntity
 DiaryEntry ..|> IAuditableEntity
 SelfWeighIn ..|> IAuditableEntity
 WeightTrend ..|> IAuditableEntity
 
-' --- How the four aggregates relate around one patient ---
-' All four are keyed by the patient. The trend is computed from the readings;
-' the targets cache is what the diary is aimed at, though nothing here compares
-' the two - that is Monitoring's work.
 WeightTrend "1" ..> "0..*" SelfWeighIn : smoothed from
 ActiveTargetsCache "1" ..> "0..*" DiaryEntry : what the day is aimed at
 DiaryEntry ..> ReferenceFoodItem : resolves its food through the ACL
 
-' --- Identity & value objects held by the aggregates ---
 DiaryEntry *--> "1" DiaryEntryId : identified by
 DiaryEntry *--> "1" Provenance : Photo, Manual or OffPlan
 DiaryEntry *--> "1" SyncState : Pending, Synced or Conflicted
-' Proposal and confirmation coexist on the same row: confirming does not
-' overwrite the proposal, adjusting does not delete it.
 DiaryEntry *--> "0..1" ProposedEstimate : what a model guessed
 DiaryEntry *--> "0..1" ConfirmedEstimate : what the person said
 DiaryEntry ..> LocalTimestamp : declared with
@@ -355,7 +305,6 @@ ProposedEstimate *--> "1" Confidence : always attached
 ProposedEstimate ..> ConfirmedEstimate : confirmed or corrected into
 ProtocolCompliance ..> WeightTrendPoint : only compliant readings smooth a point
 
-' --- Aggregate construction & the commands they apply ---
 ActiveTargetsCache ..> RefreshActiveTargetsCacheCommand : built from / refreshed by
 DiaryEntry ..> LogMealByPhotoCommand : built from
 DiaryEntry ..> LogMealManuallyCommand : built from
@@ -368,7 +317,6 @@ SyncPendingEntriesCommand o--> "0..*" PendingDiaryEntry : batch of
 SelfWeighIn ..> RecordSelfWeighInCommand : built from
 WeightTrend ..> RecalculateWeightTrendCommand : applies
 
-' --- Repositories ---
 IActiveTargetsCacheRepository --|> IBaseRepository
 IDiaryEntryRepository --|> IBaseRepository
 ISelfWeighInRepository --|> IBaseRepository
@@ -379,7 +327,6 @@ IDiaryEntryRepository ..> SyncState : filters the pending queue by
 ISelfWeighInRepository ..> SelfWeighIn : manages
 IWeightTrendRepository ..> WeightTrend : manages
 
-' --- Queries target their read models ---
 GetActiveTargetsByPatientIdQuery ..> ActiveTargetsCache : queries
 GetDiaryEntryByIdQuery ..> DiaryEntry : queries
 GetDiaryEntriesByPatientIdQuery ..> DiaryEntry : queries
@@ -387,7 +334,6 @@ GetPendingSyncQueueByPatientIdQuery ..> DiaryEntry : queries
 GetSelfWeighInsByPatientIdQuery ..> SelfWeighIn : queries
 GetWeightTrendByPatientIdQuery ..> WeightTrend : queries
 
-' --- Domain events ---
 ActiveTargetsCacheRefreshed --|> DomainEventBase
 MealLogged --|> DomainEventBase
 EstimateProposed --|> DomainEventBase
@@ -414,11 +360,9 @@ SelfWeighIn ..> SelfWeighInRecorded : raises
 WeightTrend ..> WeightTrendRecalculated : raises
 WeightTrend ..> SelfWeighInExcludedFromTrend : raises per kept-but-excluded reading
 
-' --- Policies inside this context, as event to command chains ---
 MealLogged ..> EstimatePortionCommand : policy issues (Provenance = Photo)
 SelfWeighInRecorded ..> RecalculateWeightTrendCommand : policy issues
 
-' --- Errors: one value per business rule this context enforces ---
 IntakeError ..> ActiveTargetsCache : reports failures of
 IntakeError ..> DiaryEntry : reports failures of
 IntakeError ..> SelfWeighIn : reports failures of

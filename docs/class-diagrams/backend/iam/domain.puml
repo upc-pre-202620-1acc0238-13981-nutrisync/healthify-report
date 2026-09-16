@@ -8,9 +8,6 @@ hide empty members
 package "Healthify.Platform.Iam.Domain" {
 
   package "Model.Aggregates" {
-    ' User is a partial class: User.cs + UserAudit.cs (IAuditableEntity).
-    ' Answers "who you are" and nothing else: being linked to a practitioner is
-    ' the question CareRelationship answers.
     class User {
       -{static} MaxFailedSignInAttempts: int = 5
       -Id: UserId
@@ -29,9 +26,6 @@ package "Healthify.Platform.Iam.Domain" {
       +StartSession(): UserSession
     }
 
-    ' UserSession is a partial class: UserSession.cs + UserSessionAudit.cs.
-    ' Separate aggregate root inside the same bounded context: UserId is a plain
-    ' int, there is no EF navigation between the two roots.
     class UserSession {
       -Id: SessionId
       -UserId: int
@@ -69,15 +63,12 @@ package "Healthify.Platform.Iam.Domain" {
       -{static} Pattern(): Regex
       +ToString(): string
     }
-    ' Exists only long enough to be hashed: never persisted, never logged.
     class Password <<record>> {
       -{static} MinimumLength: int = 8
       -{static} MaximumLength: int = 128
       -Value: string
       +Password(value: string)
     }
-    ' Hotspot: one account holds exactly one role, declared at registration and
-    ' immutable. Holding both roles would mean two accounts.
     class Role <<record>> {
       +{static} Patient: string
       +{static} Practitioner: string
@@ -110,7 +101,6 @@ package "Healthify.Platform.Iam.Domain" {
       -Email: string
       -Password: string
     }
-    ' Issued by the policy that reacts to RoleClaimIssued, never by a user.
     class SelectNavigationShellCommand <<record>> {
       -SessionId: int
       -NavigationShell: string
@@ -137,7 +127,6 @@ package "Healthify.Platform.Iam.Domain" {
   }
 
   package "Model.Events" {
-    ' Every Iam event stays inside Iam: no other bounded context may subscribe.
     class AccountCreated <<record>> {
       -UserId: int
       -Email: string
@@ -195,8 +184,6 @@ package "Healthify.Platform.Iam.Domain" {
   }
 
   package "Services" {
-    ' The "Auth Provider" of the event storming is implemented inside the
-    ' platform: there is no third-party identity provider.
     interface IHashingService {
       +Hash(password: Password): string
       +Verify(plainPassword: string, passwordHash: string): bool
@@ -213,12 +200,10 @@ package "Shared.Domain" <<external>> {
   abstract DomainEventBase
 }
 
-' --- Aggregate roots & auditing ---
 User ..|> IAuditableEntity
 UserSession ..|> IAuditableEntity
 User "1" ..> "0..*" UserSession : starts (by UserId, no navigation)
 
-' --- Identity & value objects held by the aggregates ---
 User *--> "1" UserId : identified by
 User *--> "1" Email : identified by
 User *--> "1" Role : holds
@@ -226,37 +211,31 @@ UserSession *--> "1" SessionId : identified by
 UserSession *--> "1" Role : freezes as RoleClaim
 UserSession *--> "0..1" NavigationShell : mounts
 
-' --- Value object collaborations ---
 NavigationShell ..> Role : derived from / matches
 Password ..> User : hashed into PasswordHash
 Email ..> UserId : uniquely resolves
 
-' --- Aggregate construction & invariants ---
 User ..> RegisterAccountCommand : built from
 UserSession ..> SelectNavigationShellCommand : applies
 UserSession ..> SignOutCommand : terminated by
 SignInCommand ..> User : authenticates
 SignInCommand ..> Password : validated as
 
-' --- Repositories ---
 IUserRepository --|> IBaseRepository
 IUserSessionRepository --|> IBaseRepository
 IUserRepository ..> User : manages
 IUserSessionRepository ..> UserSession : manages
 
-' --- Domain services ---
 IHashingService ..> Password : hashes
 IHashingService ..> User : verifies credentials of
 ITokenService ..> User : stamps subject of
 ITokenService ..> UserSession : stamps role claim of
 
-' --- Queries target their read models ---
 GetUserByIdQuery ..> User : queries
 GetUserByEmailQuery ..> User : queries
 GetUserSessionByIdQuery ..> UserSession : queries
 GetUserSessionsByUserIdQuery ..> UserSession : queries
 
-' --- Domain events ---
 AccountCreated --|> DomainEventBase
 SessionStarted --|> DomainEventBase
 RoleClaimIssued --|> DomainEventBase
@@ -270,7 +249,6 @@ UserSession ..> NavigationShellSelected : shell selection raises
 UserSession ..> SessionTerminated : sign-out raises
 RoleClaimIssued ..> SelectNavigationShellCommand : policy issues
 
-' --- Errors: one value per business rule this context enforces ---
 IamError ..> User : reports failures of
 IamError ..> UserSession : reports failures of
 

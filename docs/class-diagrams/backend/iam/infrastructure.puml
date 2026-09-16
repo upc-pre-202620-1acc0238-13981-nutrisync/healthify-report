@@ -8,8 +8,6 @@ hide empty members
 package "Healthify.Platform.Iam.Infrastructure" {
 
   package "Hashing.BCrypt" {
-    ' This is the whole of the "Auth Provider" the event storming draws:
-    ' no third-party identity service is involved.
     class BCryptHashingService {
       +Hash(password: Password): string
       +Verify(plainPassword: string, passwordHash: string): bool
@@ -17,8 +15,6 @@ package "Healthify.Platform.Iam.Infrastructure" {
   }
 
   package "Tokens.JWT" {
-    ' HMAC-SHA256 session token. Its parameters mirror exactly what the bearer
-    ' handler in the composition root validates.
     class JwtTokenService {
       -configuration: IConfiguration
       +GenerateToken(user: User, session: UserSession): string
@@ -77,24 +73,20 @@ package "External libraries" <<external>> {
   interface IConfiguration
 }
 
-' --- Ports implemented by this layer (adapters) ---
 BCryptHashingService ..|> IHashingService
 JwtTokenService ..|> ITokenService
 UserRepository ..|> IUserRepository
 UserSessionRepository ..|> IUserSessionRepository
 
-' --- Hashing adapter ---
 BCryptHashingService --> BCryptNet : delegates to
 BCryptHashingService ..> Password : hashes
 
-' --- Token adapter ---
 JwtTokenService --> IConfiguration : reads TokenSettings from
 JwtTokenService --> JwtSecurityTokenHandler : writes token with
 JwtTokenService ..> User : claims subject / email from
 JwtTokenService ..> UserSession : claims role / sessionId from
 JwtTokenService ..> Role : stamps immutable claim
 
-' --- EF Core entity configurations ---
 UserEntityTypeConfiguration ..|> IEntityTypeConfiguration
 UserSessionEntityTypeConfiguration ..|> IEntityTypeConfiguration
 UserEntityTypeConfiguration ..> User : maps to table users
@@ -110,7 +102,6 @@ AppDbContext ..> UserEntityTypeConfiguration : applies
 AppDbContext ..> UserSessionEntityTypeConfiguration : applies
 AppDbContext --> AuditableEntityInterceptor : stamps created_at / updated_at
 
-' --- Repositories ---
 UserRepository --|> BaseRepository
 UserSessionRepository --|> BaseRepository
 BaseRepository ..|> IBaseRepository

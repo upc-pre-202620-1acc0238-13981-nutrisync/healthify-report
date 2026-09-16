@@ -8,8 +8,6 @@ hide empty members
 package "Healthify.Platform.NutritionalCare.Domain" {
 
   package "Model.Aggregates" {
-    ' Clinical phase 1. Once closed it is immutable: a correction does not edit
-    ' it, it creates a new assessment that points back at this one.
     class NutritionalAssessment {
       -Id: AssessmentId
       -PatientId: int
@@ -34,8 +32,6 @@ package "Healthify.Platform.NutritionalCare.Domain" {
       +Close(): void
     }
 
-    ' Clinical phase 2. Deliberately crosses no boundary: the patient does not
-    ' read their diagnosis in the app.
     class NutritionalDiagnosis {
       -Id: DiagnosisId
       -PatientId: int
@@ -53,9 +49,6 @@ package "Healthify.Platform.NutritionalCare.Domain" {
       +Supersede(): void
     }
 
-    ' Clinical phase 3, and the root of the versioning: proposed by arithmetic,
-    ' prescribed by a person, and only then published. The three composite value
-    ' objects are stored flat and rebuilt by the computed properties.
     class NutritionPlan {
       -Id: PlanId
       -PatientId: int
@@ -102,8 +95,6 @@ package "Healthify.Platform.NutritionalCare.Domain" {
       +CreateAdjustedVersion(command: AdjustNutritionPlanCommand, changeReason: ChangeReason): NutritionPlan
     }
 
-    ' Where the automation ends. A signal notifies and never modifies: there is
-    ' no path from a review item to Adjust Nutrition Plan.
     class ReviewItem {
       -Id: ReviewItemId
       -PatientId: int
@@ -124,8 +115,6 @@ package "Healthify.Platform.NutritionalCare.Domain" {
   }
 
   package "Model.Entities" {
-    ' A Clinical Measurement and a Self Weigh In are different things: this one
-    ' is taken under a recorded protocol and carries clinical authority.
     class ClinicalMeasurement {
       -Id: int
       -AssessmentId: AssessmentId
@@ -171,8 +160,6 @@ package "Healthify.Platform.NutritionalCare.Domain" {
       -{static} MaximumLength: int = 2000
       -Value: string
     }
-    ' Which equation to use is irreducible clinical judgement: it arrives in the
-    ' command, the aggregate never picks it.
     class Equation <<record>> {
       +{static} MifflinStJeor: string
       +{static} HarrisBenedict: string
@@ -195,8 +182,6 @@ package "Healthify.Platform.NutritionalCare.Domain" {
       -Value: decimal
       +DeficitKcalFor(tdee: decimal): decimal
     }
-    ' What makes a target auditable: the equation is published, the parameters
-    ' were chosen by a human, the number can be recomputed by hand.
     class CalculationBasis <<record>> {
       -Equation: Equation
       -ReferenceWeightKind: string
@@ -210,7 +195,6 @@ package "Healthify.Platform.NutritionalCare.Domain" {
       +DeficitStrategy: DeficitStrategy <<derived>>
       +{static} From(equation, referenceWeight, activityFactor, deficitStrategy, bmr, tdee): CalculationBasis
     }
-    ' A proposal is not a prescription.
     class TargetProposal <<record>> {
       -EnergyKcal: decimal
       -ProteinG: decimal
@@ -227,7 +211,6 @@ package "Healthify.Platform.NutritionalCare.Domain" {
       -{static} MaximumLength: int = 500
       -Value: string
     }
-    ' Every target in the platform is traceable to a person through this.
     class PrescribedTargets <<record>> {
       -EnergyKcal: decimal
       -ProteinG: decimal
@@ -258,17 +241,13 @@ package "Healthify.Platform.NutritionalCare.Domain" {
     class TakeClinicalMeasurementCommand <<record>>
     class CloseAssessmentCommand <<record>>
     class IssueDiagnosisCommand <<record>>
-    ' The five decisions the system never makes arrive here.
     class ProposeTargetsCommand <<record>>
     class PrescribeTargetsCommand <<record>>
     class PublishNutritionPlanCommand <<record>>
-    ' Issued by a policy, never by a user. No REST endpoint.
     class PublishActiveTargetsCommand <<record>> {
       -PlanId: int
     }
     class AdjustNutritionPlanCommand <<record>>
-    ' Issued by the policies reacting to signals from Monitoring. No endpoint,
-    ' and it can never modify a plan.
     class OpenReviewItemCommand <<record>> {
       -PatientId: int
       -SignalType: string
@@ -290,7 +269,6 @@ package "Healthify.Platform.NutritionalCare.Domain" {
 
   package "Model.Events" {
     class NutritionalAssessmentRecorded <<record>>
-    ' Integration event 3 of 13: crosses into Monitoring and Adherence.
     class ClinicalMeasurementTaken <<record>>
     class AssessmentClosed <<record>>
     class NutritionalDiagnosisIssued <<record>>
@@ -308,9 +286,6 @@ package "Healthify.Platform.NutritionalCare.Domain" {
       -CarbG: decimal
       -FatG: decimal
     }
-    ' The Published Language of this context, and the only thing about a plan
-    ' that ever reaches the patient. Integration events 4, 5 and 6 of 13.
-    ' No diagnosis, no rationale, no calculation basis travels on it.
     class ActiveTargetsUpdated <<record>> {
       -PatientId: int
       -PlanVersion: int
@@ -376,7 +351,6 @@ package "Healthify.Platform.NutritionalCare.Domain" {
   }
 
   package "Services" {
-    ' Facts an equation reads. Facts, not clinical choices.
     class BmrInputs <<record>> {
       -ReferenceWeightKg: decimal
       -HeightCm: decimal
@@ -384,8 +358,6 @@ package "Healthify.Platform.NutritionalCare.Domain" {
       -BiologicalSex: BiologicalSex
       -BodyFatPercentage: decimal?
     }
-    ' Not an external service and not a model: deterministic arithmetic with
-    ' published equations, reproducible by hand from the calculation basis.
     interface IBmrCalculator {
       +ComputeBmr(equation: Equation, inputs: BmrInputs): decimal
     }
@@ -398,13 +370,11 @@ package "Shared.Domain" <<external>> {
   abstract DomainEventBase
 }
 
-' --- Aggregate roots & auditing ---
 NutritionalAssessment ..|> IAuditableEntity
 NutritionalDiagnosis ..|> IAuditableEntity
 NutritionPlan ..|> IAuditableEntity
 ReviewItem ..|> IAuditableEntity
 
-' --- The clinical chain: assessment, diagnosis, plan, and the inbox ---
 NutritionalAssessment "1" *--> "0..*" ClinicalMeasurement : Anthropometry
 NutritionalDiagnosis "0..*" ..> "1" NutritionalAssessment : reads a closed one (AssessmentId)
 NutritionPlan "0..*" ..> "1" NutritionalDiagnosis : grounded on (DiagnosisId)
@@ -412,7 +382,6 @@ NutritionPlan "1" ..> "0..1" NutritionPlan : supersedes the previous version
 NutritionalAssessment "0..1" ..> "1" NutritionalAssessment : correction supersedes
 ReviewItem ..> NutritionPlan : signals about, never modifies
 
-' --- Identity & value objects ---
 NutritionalAssessment *--> "1" AssessmentId : identified by
 NutritionalAssessment *--> "1" BiologicalSex : stratifies the equations
 NutritionalDiagnosis *--> "1" DiagnosisId : identified by
@@ -428,7 +397,6 @@ ReviewItem *--> "1" ReviewItemState : Open or Resolved
 ClinicalMeasurement *--> "1" MeasurementProtocol : authorised by
 ClinicalMeasurement ..> AssessmentId : owned by
 
-' --- Composition of the calculation value objects ---
 CalculationBasis *--> "1" Equation : ran on
 CalculationBasis ..> ReferenceWeight : rebuilt from flat components
 CalculationBasis ..> DeficitStrategy : rebuilt from flat components
@@ -436,14 +404,12 @@ PrescribedTargets *--> "1" PrescriptionOutcome : accepted or overridden
 PrescribedTargets *--> "0..1" OverrideReason : required when overridden
 TargetProposal ..> PrescribedTargets : signed into
 
-' --- Domain service ---
 IBmrCalculator ..> Equation : selects
 IBmrCalculator ..> BmrInputs : reads
 BmrInputs ..> BiologicalSex : stratified by
 BmrInputs ..> ClinicalMeasurement : sourced from
 IBmrCalculator ..> CalculationBasis : feeds ComputedBmr
 
-' --- Repositories ---
 INutritionalAssessmentRepository --|> IBaseRepository
 INutritionalDiagnosisRepository --|> IBaseRepository
 INutritionPlanRepository --|> IBaseRepository
@@ -454,7 +420,6 @@ INutritionPlanRepository ..> NutritionPlan : manages
 IReviewItemRepository ..> ReviewItem : manages
 IReviewItemRepository ..> SignalType : filters by
 
-' --- Aggregate construction & the commands they apply ---
 NutritionalAssessment ..> RecordAssessmentCommand : built from
 NutritionalAssessment ..> TakeClinicalMeasurementCommand : applies
 NutritionalAssessment ..> CloseAssessmentCommand : applies
@@ -467,7 +432,6 @@ NutritionPlan ..> PublishActiveTargetsCommand : republishes the contract for
 ReviewItem ..> OpenReviewItemCommand : built from
 ReviewItem ..> ResolveReviewItemCommand : applies
 
-' --- Queries target their read models ---
 GetAssessmentByIdQuery ..> NutritionalAssessment : queries
 GetAssessmentsByPatientIdQuery ..> NutritionalAssessment : queries
 GetActiveDiagnosisByPatientIdQuery ..> NutritionalDiagnosis : queries
@@ -477,7 +441,6 @@ GetPlansByPatientIdQuery ..> NutritionPlan : queries
 GetReviewItemByIdQuery ..> ReviewItem : queries
 GetOpenReviewItemsByPractitionerIdQuery ..> ReviewItem : queries
 
-' --- Domain events ---
 NutritionalAssessmentRecorded --|> DomainEventBase
 ClinicalMeasurementTaken --|> DomainEventBase
 AssessmentClosed --|> DomainEventBase
@@ -498,7 +461,6 @@ ClinicalMeasurement ..> ClinicalMeasurementTaken : raises
 NutritionalAssessment ..> AssessmentClosed : raises
 NutritionalDiagnosis ..> NutritionalDiagnosisIssued : raises
 NutritionPlan ..> TargetsProposed : raises
-' Exactly one of the two, never both.
 NutritionPlan ..> TargetsAcceptedAsProposed : raises
 NutritionPlan ..> TargetsOverridden : raises
 NutritionPlan ..> NutritionPlanPublished : raises
@@ -508,11 +470,9 @@ NutritionPlan ..> ActiveTargetsUpdated : publishes the reduced contract
 ReviewItem ..> ReviewItemCreated : raises
 ReviewItem ..> ReviewItemResolved : raises
 
-' --- Policies expressed as event to command chains (inside this context) ---
 NutritionPlanPublished ..> PublishActiveTargetsCommand : policy issues
 NutritionPlanAdjusted ..> PublishActiveTargetsCommand : policy issues
 
-' --- Errors: one value per business rule this context enforces ---
 NutritionalCareError ..> NutritionalAssessment : reports failures of
 NutritionalCareError ..> NutritionalDiagnosis : reports failures of
 NutritionalCareError ..> NutritionPlan : reports failures of
