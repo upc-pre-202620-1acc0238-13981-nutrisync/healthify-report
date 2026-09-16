@@ -114,8 +114,6 @@ nutritional_assessments ||..o{ nutritional_diagnoses : "assessment_id"
 nutritional_diagnoses ||..o{ nutrition_plans : "diagnosis_id"
 nutrition_plans ||..o| nutrition_plans : "superseded by next"
 
-review_items }..|| nutrition_plans : "concerns active plan"
-
 users ||..o{ nutritional_assessments : "patient_id / practitioner_id"
 users ||..o{ nutritional_diagnoses : "patient_id / practitioner_id"
 users ||..o{ nutrition_plans : "patient_id / practitioner_id"
