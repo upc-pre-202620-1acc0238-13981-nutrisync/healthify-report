@@ -2736,125 +2736,137 @@ El Deployment Diagram (diagrama suplementario del modelo C4, elaborado en notaci
 
 #### 2.6.1.1. Domain Layer
 
-El bounded context Intake & Body Response (`Healthify.Platform.IntakeBodyResponse`) es el diario del paciente: registra lo que el paciente declara haber comido y los autopesajes que realiza en casa. Su Domain Layer contiene cuatro aggregate roots, un conjunto de value objects que validan sus propios valores y cuatro abstracciones de repositorio. El contexto solo registra información y no la evalúa: no existe atributo ni método que exprese cumplimiento, desviación, racha o penalización, porque comparar lo prescrito contra lo comido es responsabilidad de Monitoring & Adherence.
+El bounded context Intake & Body Response, implementado en `Healthify.Platform.IntakeBodyResponse`, funciona como el diario del paciente y guarda tanto las comidas que este declara haber consumido como los autopesajes que realiza en casa. Su Domain Layer está formado por cuatro aggregate roots, un conjunto de value objects que validan sus propios valores y cuatro abstracciones de repositorio. Todo lo que hace este contexto es registrar información, nunca evaluarla, de manera que ninguno de sus atributos o métodos habla de cumplimiento, desviación, racha o penalización. Esa comparación entre lo prescrito y lo comido le corresponde a Monitoring & Adherence.
 
 **Aggregates (Aggregate Roots)**
 
-**`ActiveTargetsCache`** — La copia local que el paciente tiene del contrato publicado por el profesional: qué apuntar hoy. El paciente es la raíz del agregado (un caché por paciente, reemplazado en el sitio), lo que permite que la app funcione sin conectividad.
+`ActiveTargetsCache` es la copia local que el paciente guarda del contrato publicado por el profesional, es decir aquello que debe apuntar durante el día. El paciente actúa como raíz del agregado, con un caché por persona que se reemplaza en el sitio, y esa decisión es la que permite que la app siga funcionando sin conectividad.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
-| `PatientId` | `int` | `public get / private set` | Identidad del agregado; es la clave primaria. |
+| `PatientId` | `int` | `public get / private set` | Identidad del agregado, que funciona además como clave primaria. |
 | `PlanVersion` | `int` | `public get / private set` | Versión del contrato cacheado. |
 | `ValidFrom` | `DateTimeOffset` | `public get / private set` | Vigencia declarada por el contrato. |
-| `EnergyKcal`, `ProteinG`, `CarbG`, `FatG` | `decimal` | `public get / private set` | Objetivos diarios. |
+| `EnergyKcal`, `ProteinG`, `CarbG`, `FatG` | `decimal` | `public get / private set` | Los objetivos diarios. |
 | `RefreshedAt` | `DateTimeOffset` | `public get / private set` | Momento del último refresco. |
-| `Guidelines`, `Restrictions` | `IReadOnlyList<string>` | `public` (computada) | Texto libre; este contexto no lo interpreta. |
+| `Guidelines`, `Restrictions` | `IReadOnlyList<string>` | `public` (computada) | Texto libre que este contexto no interpreta. |
 
 | Método | Scope | Descripción |
 |---|---|---|
-| `ActiveTargetsCache(RefreshActiveTargetsCacheCommand)` | `public` | Constructor; delega en `Apply`. |
+| `ActiveTargetsCache(RefreshActiveTargetsCacheCommand)` | `public` | Constructor, que delega en `Apply`. |
 | `Refresh(RefreshActiveTargetsCacheCommand)` | `public` | Reemplaza el caché cuando llega una versión más nueva del contrato. |
-| `Apply(RefreshActiveTargetsCacheCommand)` | `private` | Valida versión y energía positivas, redondea y normaliza las listas. |
+| `Apply(RefreshActiveTargetsCacheCommand)` | `private` | Valida que versión y energía sean positivas, redondea y normaliza las listas. |
 
-Las reglas *Published Contract Only* y *Diagnosis And Basis Never Cached* se cumplen por la estructura de la clase: no tiene campos para diagnóstico, razonamiento clínico, ecuación ni déficit, por lo que esa información no puede almacenarse en el caché.
+Las reglas *Published Contract Only* y *Diagnosis And Basis Never Cached* se cumplen por la propia estructura de la clase, ya que no existen campos para el diagnóstico, el razonamiento clínico, la ecuación ni el déficit, y por lo tanto esa información no puede llegar a almacenarse en el caché.
 
-**`DiaryEntry`** — Registro de un consumo declarado por el paciente. Es el agregado central del contexto.
+`DiaryEntry` es el registro de un consumo declarado por el paciente y constituye el agregado central del contexto.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `Id` | `DiaryEntryId` | `public get / private set` | Identidad tipada. |
 | `PatientId` | `int` | `public get / private set` | Referencia cross-context. |
-| `LocalTimestamp` | `DateTime` | `public get / private set` | Fecha y hora local del dispositivo del paciente al momento del registro. |
+| `LocalTimestamp` | `DateTime` | `public get / private set` | Fecha y hora local del dispositivo del paciente en el momento del registro. |
 | `LocalUtcOffsetMinutes` | `int` | `public get / private set` | Offset declarado por el dispositivo. |
-| `DeclaredLocalTimestamp` | `DateTimeOffset` | `public` (computada) | El momento reconstruido; nunca reescrito por el servidor. |
-| `Provenance` | `Provenance` | `public get / private set` | `Photo`, `Manual` u `OffPlan`. |
-| `PhotoRef` | `string?` | `public get / private set` | Referencia que el cliente posee; el servidor nunca guarda bytes de imagen. |
+| `DeclaredLocalTimestamp` | `DateTimeOffset` | `public` (computada) | El momento reconstruido, que el servidor nunca reescribe. |
+| `Provenance` | `Provenance` | `public get / private set` | Puede ser `Photo`, `Manual` u `OffPlan`. |
+| `PhotoRef` | `string?` | `public get / private set` | Referencia que el cliente posee, ya que el servidor nunca guarda bytes de imagen. |
 | `ProposedReferenceFoodId`, `ProposedPortionGrams`, `ProposedConfidence`, `ProposedEstimatedAt` | nullable | `public get / private set` | Proyección persistida del VO `ProposedEstimate`. |
 | `ConfirmedReferenceFoodId`, `ConfirmedPortionGrams`, `ConfirmedAt` | nullable | `public get / private set` | Proyección persistida del VO `ConfirmedEstimate`. |
-| `SyncState` | `SyncState` | `public get / private set` | `Pending`, `Synced` o `Conflicted`. |
-| `ClientEntryId` | `Guid?` | `public get / private set` | Identificador generado por el dispositivo offline; hace idempotente la sincronización. |
-| `LocalDate` | `DateOnly` | `public` (computada) | El día de calendario que el paciente vivía, no el del servidor. |
+| `SyncState` | `SyncState` | `public get / private set` | Puede ser `Pending`, `Synced` o `Conflicted`. |
+| `ClientEntryId` | `Guid?` | `public get / private set` | Identificador generado por el dispositivo offline, que vuelve idempotente la sincronización. |
+| `LocalDate` | `DateOnly` | `public` (computada) | El día de calendario que el paciente estaba viviendo, no el del servidor. |
 
 | Método | Scope | Reglas que aplica |
 |---|---|---|
-| `DiaryEntry(int, LocalTimestamp, Provenance, SyncState, string?, Guid?)` | `public` | *Local Timestamp Required*, *Provenance Required*. |
-| `ProposeEstimate(ProposedEstimate)` | `public` | *Estimate Stored As Proposal Only*: una propuesta nunca llega después de que el paciente ya habló. |
-| `ConfirmProposedEstimate()` | `public` | *Proposal Kept Alongside Confirmation*: deja intactas las columnas de la propuesta. |
-| `AdjustProposedEstimate(int, decimal)` | `public` | Escribe la corrección al lado de la propuesta, nunca encima, para que el tamaño de la corrección sea visible. |
-| `ConfirmDirectly(ConfirmedEstimate)` | `public` | Registro manual: lo tecleado es una confirmación desde el inicio. |
-| `MarkSynchronized()` / `MarkConflicted()` | `public` | Transiciones de sincronización. |
-| `ResolveWithLatest(int, decimal, DateTimeOffset) : bool` | `public` | *Last Write Wins* aplicado sólo al estimado; el momento declarado no es alcanzable desde aquí. |
+| `DiaryEntry(int, LocalTimestamp, Provenance, SyncState, string?, Guid?)` | `public` | Aplica *Local Timestamp Required* y *Provenance Required*. |
+| `ProposeEstimate(ProposedEstimate)` | `public` | Aplica *Estimate Stored As Proposal Only*, de modo que una propuesta nunca puede llegar después de que el paciente ya se pronunció. |
+| `ConfirmProposedEstimate()` | `public` | Aplica *Proposal Kept Alongside Confirmation*, dejando intactas las columnas de la propuesta. |
+| `AdjustProposedEstimate(int, decimal)` | `public` | Escribe la corrección al lado de la propuesta y nunca encima, para que el tamaño de esa corrección quede visible. |
+| `ConfirmDirectly(ConfirmedEstimate)` | `public` | Atiende el registro manual, donde lo tecleado es una confirmación desde el inicio. |
+| `MarkSynchronized()` / `MarkConflicted()` | `public` | Resuelven las transiciones de sincronización. |
+| `ResolveWithLatest(int, decimal, DateTimeOffset) : bool` | `public` | Aplica *Last Write Wins*, pero solo sobre el estimado, ya que el momento declarado no es alcanzable desde aquí. |
 | `StoreConfirmation(int, decimal)` | `private` | Construye el VO y lo aplana en columnas. |
 
-El agregado no tiene un método para eliminar entradas, lo que aplica la regla *Diary Entry Cannot Be Deleted*: el historial debe conservarse completo para que el seguimiento sea interpretable.
+El agregado no ofrece ningún método para eliminar entradas, y así se aplica la regla *Diary Entry Cannot Be Deleted*, puesto que el historial debe conservarse completo para que el seguimiento resulte interpretable.
 
-**`SelfWeighIn`** — Una lectura de peso que el paciente tomó de sí mismo. No es una medición clínica y el contexto nunca pretende lo contrario: se toma sin supervisión, en una báscula desconocida, por eso el protocolo se declara junto a ella.
+`SelfWeighIn` es una lectura de peso que el paciente se tomó a sí mismo. No es una medición clínica y el contexto nunca pretende lo contrario, ya que se toma sin supervisión y en una báscula desconocida, razón por la cual el protocolo se declara junto a ella.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `Id` | `SelfWeighInId` | `public get / private set` | Identidad tipada. |
 | `PatientId` | `int` | `public get / private set` | Referencia cross-context. |
-| `ValueKg` | `decimal` | `public get / private set` | Lectura declarada. |
-| `LocalTimestamp` / `LocalUtcOffsetMinutes` | `DateTime` / `int` | `public get / private set` | Mismo tratamiento que en `DiaryEntry`. |
+| `ValueKg` | `decimal` | `public get / private set` | La lectura declarada. |
+| `LocalTimestamp` / `LocalUtcOffsetMinutes` | `DateTime` / `int` | `public get / private set` | Reciben el mismo tratamiento que en `DiaryEntry`. |
 | `ProtocolFastedState`, `ProtocolSameTimeOfDay`, `ProtocolSameScale` | `bool` | `public get / private set` | Proyección del VO `ProtocolCompliance`. |
-| `FollowsProtocol` | `bool` | `public` (computada) | *Only Protocol Compliant Weigh Ins Smooth The Trend*. |
+| `FollowsProtocol` | `bool` | `public` (computada) | Sostiene *Only Protocol Compliant Weigh Ins Smooth The Trend*. |
 
-Regla *Excluded Weigh Ins Are Kept As Data*: una lectura fuera de protocolo se guarda completa, pero no se usa para calcular la tendencia.
+Conviene añadir la regla *Excluded Weigh Ins Are Kept As Data*, según la cual una lectura fuera de protocolo se guarda completa aunque no se use para calcular la tendencia.
 
-**`WeightTrend`** — La serie de peso suavizada del paciente; la unidad que este contexto publica sobre peso corporal. El paciente es la raíz.
+`WeightTrend` es la serie de peso suavizada del paciente y constituye la unidad que este contexto publica sobre peso corporal, con el paciente como raíz.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
-| `DefaultWindowSize` | `const int = 7` | `public` | Siete días absorben un ritmo semanal sin ocultar un cambio real. |
-| `PatientId` | `int` | `public get / private set` | Clave primaria. |
+| `DefaultWindowSize` | `const int = 7` | `public` | Siete días absorben un ritmo semanal sin llegar a ocultar un cambio real. |
+| `PatientId` | `int` | `public get / private set` | Funciona como clave primaria. |
 | `WindowSize` | `int` | `public get / private set` | Largo de la media móvil. |
 | `LastRecalculatedAt` | `DateTimeOffset` | `public get / private set` | Auditoría del cálculo. |
-| `Points` | `IReadOnlyList<WeightTrendPoint>` | `public` (computada) | Serie suavizada, más antigua primero. |
+| `Points` | `IReadOnlyList<WeightTrendPoint>` | `public` (computada) | La serie suavizada, ordenada de lo más antiguo a lo más reciente. |
 
 | Método | Scope | Descripción |
 |---|---|---|
-| `WeightTrend(int patientId, int windowSize = DefaultWindowSize)` | `public` | Exige ventana positiva. |
-| `Recalculate(IReadOnlyList<SelfWeighIn>) : IReadOnlyList<int>` | `public` | Método principal del agregado: separa las lecturas fuera de protocolo (y devuelve sus identificadores), agrupa por día tomando la última lectura de cada uno, calcula la media móvil de cola y reconstruye la serie completa. Se reconstruye en vez de anexarse porque una lectura tardía cambia los puntos a su alrededor. |
+| `WeightTrend(int patientId, int windowSize = DefaultWindowSize)` | `public` | Exige que la ventana sea positiva. |
+| `Recalculate(IReadOnlyList<SelfWeighIn>) : IReadOnlyList<int>` | `public` | Es el método principal del agregado. Separa las lecturas fuera de protocolo y devuelve sus identificadores, agrupa por día quedándose con la última lectura de cada uno, calcula la media móvil de cola y reconstruye la serie completa. Se reconstruye en lugar de anexarse porque una lectura tardía cambia los puntos que la rodean. |
 
-El filtrado vive dentro del agregado, que recibe todas las lecturas y devuelve las que excluyó, para que el servicio de aplicación no decida qué cuenta.
+El filtrado vive dentro del agregado, que recibe todas las lecturas y devuelve las que excluyó, de modo que el servicio de aplicación nunca decide qué cuenta.
 
 **Value Objects**
 
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
-| `ProposedEstimate` | Lo que el estimador on-device cree que se comió; una propuesta, nunca un hecho. | `ReferenceFoodId > 0`, `PortionGrams > 0`, `Confidence`, `EstimatedAt`. |
-| `ConfirmedEstimate` | Lo que el paciente dijo que comió. | No lleva nivel de confianza, porque el valor lo declara el paciente y no un estimador. |
-| `ProtocolCompliance` | Las tres condiciones que hacen comparable un autopesaje con el anterior. | `FastedState`, `SameTimeOfDay`, `SameScale`; `FollowsProtocol` exige las tres. |
-| `WeightTrendPoint` | Un punto de la serie suavizada. | `Date : DateOnly`, `SmoothedValueKg > 0`. |
-| `LocalTimestamp` | El único timestamp de la plataforma que el servidor no posee. | Tolera hasta 24 h de desfase futuro (los relojes de dispositivo derivan). |
-| `Confidence` | Cuán seguro estaba el estimador, de 0 a 1. | *Confidence Always Attached*: toda estimación debe indicar su nivel de confianza para no confundirse con una medición. |
-| `WeightKg` | Peso corporal dentro del rango que un cuerpo humano puede ocupar. | `Minimum = 20`, `Maximum = 400`; el rango sirve para detectar errores de digitación. |
-| `Provenance` | Cómo llegó a existir una entrada. | `Photo`, `Manual`, `OffPlan`; la procedencia es parte de la lectura, no metadato. |
-| `SyncState` | Dónde está una entrada entre dispositivo y servidor. | `Pending`, `Synced`, `Conflicted`. |
-| `DiaryEntryId`, `SelfWeighInId` | Identidades tipadas. | `Value : int > 0`, `internal static FromRaw(int)`, operadores de conversión. |
+| `ProposedEstimate` | Lo que el estimador on-device cree que se comió, que es una propuesta y nunca un hecho. | `ReferenceFoodId > 0`, `PortionGrams > 0`, `Confidence` y `EstimatedAt`. |
+| `ConfirmedEstimate` | Lo que el paciente dijo que comió. | No lleva nivel de confianza, ya que el valor lo declara el paciente y no un estimador. |
+| `ProtocolCompliance` | Las tres condiciones que hacen comparable un autopesaje con el anterior. | `FastedState`, `SameTimeOfDay` y `SameScale`, donde `FollowsProtocol` exige las tres a la vez. |
+| `WeightTrendPoint` | Un punto de la serie suavizada. | `Date : DateOnly` y `SmoothedValueKg > 0`. |
+| `LocalTimestamp` | El único timestamp de la plataforma que el servidor no posee. | Tolera hasta 24 h de desfase futuro, dado que los relojes de los dispositivos derivan. |
+| `Confidence` | Cuán seguro estaba el estimador, en una escala de 0 a 1. | Sostiene *Confidence Always Attached*, según la cual toda estimación debe indicar su nivel de confianza para no confundirse con una medición. |
+| `WeightKg` | Un peso corporal dentro del rango que un cuerpo humano puede ocupar. | `Minimum = 20` y `Maximum = 400`, un rango que sirve sobre todo para detectar errores de digitación. |
+| `Provenance` | Cómo llegó a existir una entrada. | `Photo`, `Manual` y `OffPlan`. La procedencia forma parte de la lectura y no es un metadato. |
+| `SyncState` | Dónde se encuentra una entrada entre el dispositivo y el servidor. | `Pending`, `Synced` y `Conflicted`. |
+| `DiaryEntryId`, `SelfWeighInId` | Las identidades tipadas del contexto. | `Value : int > 0`, `internal static FromRaw(int)` y operadores de conversión. |
 
-**Commands (10)** — `RefreshActiveTargetsCacheCommand`, `LogMealByPhotoCommand`, `EstimatePortionCommand`, `ConfirmEstimateCommand`, `AdjustEstimateCommand`, `LogMealManuallyCommand`, `LogOffPlanMealCommand`, `RecordSelfWeighInCommand`, `RecalculateWeightTrendCommand` y `SyncPendingEntriesCommand`, este último con un lote de registros `PendingDiaryEntry`. `LogOffPlanMealCommand` no incluye alimento, porción, motivo ni nota, porque exigir esos datos desincentiva que el paciente declare las comidas fuera del plan.
+**Commands**
 
-**Queries (6)** — `GetActiveTargetsByPatientIdQuery`, `GetDiaryEntriesByPatientIdQuery`, `GetDiaryEntryByIdQuery`, `GetWeightTrendByPatientIdQuery`, `GetPendingSyncQueueByPatientIdQuery` y `GetSelfWeighInsByPatientIdQuery`.
+Los diez commands son `RefreshActiveTargetsCacheCommand`, `LogMealByPhotoCommand`, `EstimatePortionCommand`, `ConfirmEstimateCommand`, `AdjustEstimateCommand`, `LogMealManuallyCommand`, `LogOffPlanMealCommand`, `RecordSelfWeighInCommand`, `RecalculateWeightTrendCommand` y `SyncPendingEntriesCommand`, este último acompañado de un lote de registros `PendingDiaryEntry`. `LogOffPlanMealCommand` no incluye alimento, porción, motivo ni nota, ya que exigir esos datos desincentivaría que el paciente declarara las comidas fuera del plan.
 
-**Domain Events (12)** — Todos heredan de `DomainEventBase`. Cinco cruzan frontera hacia Monitoring & Adherence: `MealLogged`, `EstimateConfirmedByPatient`, `OffPlanEntryLogged`, `WeightTrendRecalculated` y `EntrySynchronized`. Los internos son `ActiveTargetsCacheRefreshed`, `EstimateProposed`, `EstimateAdjustedByPatient`, `SelfWeighInRecorded`, `SelfWeighInExcludedFromTrend`, `EntryQueuedOffline` y `SyncConflictResolved`. `EstimateProposed` es interno a propósito: una propuesta no es ingesta, y dejarla cruzar permitiría que la conjetura de un modelo se evaluara como si el paciente la hubiera dicho.
+**Queries**
 
-**Errors** — `enum IntakeError` con 20 valores, entre ellos `ReferenceFoodNotResolved`, `RetroactiveLoggingWindowExceeded`, `DuplicatedClientEntryId`, `LocalTimestampCannotBeRewritten` y `DiaryEntryCannotBeDeleted`. La enumeración no incluye errores que califiquen la cantidad consumida, porque esa evaluación corresponde a Monitoring & Adherence.
+Las seis queries son `GetActiveTargetsByPatientIdQuery`, `GetDiaryEntriesByPatientIdQuery`, `GetDiaryEntryByIdQuery`, `GetWeightTrendByPatientIdQuery`, `GetPendingSyncQueueByPatientIdQuery` y `GetSelfWeighInsByPatientIdQuery`.
 
-**Repositories (abstracciones)** — `IActiveTargetsCacheRepository`, `IDiaryEntryRepository`, `ISelfWeighInRepository` e `IWeightTrendRepository`, todas derivadas de `IBaseRepository<T>`. Destacan `FindByClientEntryIdAsync(Guid)`, que hace idempotente la sincronización, y `ListUnreconciledByPatientIdAsync(int)`, que alimenta la cola pendiente.
+**Domain Events**
 
-**Domain Services** — Ninguno. Este contexto no declara servicios de dominio propios; consume los ACL de Food Catalog y Care Relationship desde la capa de aplicación. El servidor no ejecuta ningún modelo de visión: la estimación de porciones corre en el dispositivo y llega ya calculada.
+Los doce domain events heredan de `DomainEventBase`. Cinco de ellos cruzan la frontera hacia Monitoring & Adherence, y son `MealLogged`, `EstimateConfirmedByPatient`, `OffPlanEntryLogged`, `WeightTrendRecalculated` y `EntrySynchronized`. Los internos son `ActiveTargetsCacheRefreshed`, `EstimateProposed`, `EstimateAdjustedByPatient`, `SelfWeighInRecorded`, `SelfWeighInExcludedFromTrend`, `EntryQueuedOffline` y `SyncConflictResolved`. `EstimateProposed` se mantiene interno a propósito, dado que una propuesta no es ingesta y dejarla cruzar permitiría que la conjetura de un modelo se evaluara como si la hubiera dicho el paciente.
 
-**Relaciones entre clases:** `DiaryEntry` compone `DiaryEntryId`, `Provenance` y `SyncState`, y agrega de forma reconstruida `ProposedEstimate` y `ConfirmedEstimate` (0..1 cada uno, derivados de columnas planas). `SelfWeighIn` compone `SelfWeighInId` y reconstruye `ProtocolCompliance`. `WeightTrend` agrega 0..* `WeightTrendPoint` y depende de `SelfWeighIn` sólo como parámetro de `Recalculate`, nunca por navegación. Los cuatro agregados son raíces independientes que se referencian entre sí por `PatientId` plano, respetando la regla de no navegar entre raíces de agregado.
+**Errors**
+
+El `enum IntakeError` reúne 20 valores, entre los que figuran `ReferenceFoodNotResolved`, `RetroactiveLoggingWindowExceeded`, `DuplicatedClientEntryId`, `LocalTimestampCannotBeRewritten` y `DiaryEntryCannotBeDeleted`. La enumeración no incluye errores que califiquen la cantidad consumida, ya que esa evaluación le corresponde a Monitoring & Adherence.
+
+**Repositories (abstracciones)**
+
+Son cuatro: `IActiveTargetsCacheRepository`, `IDiaryEntryRepository`, `ISelfWeighInRepository` e `IWeightTrendRepository`, todas derivadas de `IBaseRepository<T>`. Entre sus operaciones destacan `FindByClientEntryIdAsync(Guid)`, que vuelve idempotente la sincronización, y `ListUnreconciledByPatientIdAsync(int)`, que alimenta la cola de pendientes.
+
+**Domain Services**
+
+Este contexto no declara servicios de dominio propios y se limita a consumir los ACL de Food Catalog y Care Relationship desde la capa de aplicación. El servidor no ejecuta ningún modelo de visión, puesto que la estimación de porciones corre en el dispositivo y llega ya calculada.
+
+**Relaciones entre clases:** `DiaryEntry` compone `DiaryEntryId`, `Provenance` y `SyncState`, y agrega de forma reconstruida `ProposedEstimate` y `ConfirmedEstimate`, con 0..1 de cada uno, derivados de columnas planas. `SelfWeighIn` compone `SelfWeighInId` y reconstruye `ProtocolCompliance`. `WeightTrend` agrega 0..* `WeightTrendPoint` y depende de `SelfWeighIn` únicamente como parámetro de `Recalculate`, nunca por navegación. Los cuatro agregados son raíces independientes que se referencian entre sí mediante un `PatientId` plano, respetando así la regla de no navegar entre raíces de agregado.
 
 #### 2.6.1.2. Interface Layer
 
-La Interface Layer de Intake & Body Response expone el diario al cliente móvil del paciente y publica el contrato de sólo lectura que los demás bounded contexts consultan. Los tres controllers están anotados con `[Authorize(Roles = "Patient")]`: este diario lo escribe el paciente y nadie más.
+La Interface Layer de Intake & Body Response expone el diario al cliente móvil del paciente y publica el contrato de solo lectura que los demás bounded contexts consultan. Los tres controllers están anotados con `[Authorize(Roles = "Patient")]`, ya que este diario lo escribe el paciente y nadie más.
 
 **Controllers**
 
-**`DiaryEntriesController`** — `[Route("api/v1/diary-entries")] [Tags("Intake and Body Response")]`. Recibe las escrituras del diario y traduce `Result<T, IntakeError>` a respuestas HTTP.
+`DiaryEntriesController` se publica bajo `[Route("api/v1/diary-entries")] [Tags("Intake and Body Response")]`. Recibe las escrituras del diario y traduce `Result<T, IntakeError>` a respuestas HTTP.
 
 | Verbo / Ruta | Acción | Respuestas |
 |---|---|---|
@@ -2865,11 +2877,11 @@ La Interface Layer de Intake & Body Response expone el diario al cliente móvil 
 | `POST /{diaryEntryId:int}/estimate-adjustment` | `AdjustEstimate(int, AdjustEstimateResource)` | 200 · 401 · 403 · 404 · 409 · 422 |
 | `POST /synchronization` | `SyncPendingEntries(SyncPendingEntriesResource)` | 200 `SyncOutcomeResource` · 401 · 403 |
 
-Cuenta con el método privado `PatientWriteOnly()`. No existe verbo `DELETE` en este controller, y `Estimate Portion` no tiene endpoint: se alcanza únicamente desde la política interna del subflujo 4.2.
+Cuenta además con el método privado `PatientWriteOnly()`. No existe ningún verbo `DELETE` en este controller, y `Estimate Portion` tampoco tiene endpoint, ya que solo se alcanza desde la política interna del subflujo 4.2.
 
-**`SelfWeighInsController`** — `[Route("api/v1/self-weigh-ins")]`. Un único `POST /` (`RecordSelfWeighIn(RecordSelfWeighInResource)`, respuestas 201 · 400 · 401 · 403). `Recalculate Weight Trend` tampoco tiene endpoint: lo dispara la política que escucha `SelfWeighInRecorded`.
+`SelfWeighInsController`, bajo `[Route("api/v1/self-weigh-ins")]`, expone un único `POST /` resuelto por `RecordSelfWeighIn(RecordSelfWeighInResource)`, con respuestas 201 · 400 · 401 · 403. La operación `Recalculate Weight Trend` tampoco tiene endpoint, puesto que la dispara la política que escucha `SelfWeighInRecorded`.
 
-**`PatientIntakeController`** — `[Route("api/v1/patients")]`. Sirve los cuatro read models del paciente. Métodos privados `IsSelf(int)` y `NotThisPatient()`.
+`PatientIntakeController`, bajo `[Route("api/v1/patients")]`, sirve los cuatro read models del paciente y declara los métodos privados `IsSelf(int)` y `NotThisPatient()`.
 
 | Verbo / Ruta | Acción | Read Model |
 |---|---|---|
@@ -2878,13 +2890,17 @@ Cuenta con el método privado `PatientWriteOnly()`. No existe verbo `DELETE` en 
 | `GET /{patientId:int}/weight-trend` | `GetWeightTrend(int)` | Weight Trend Chart |
 | `GET /{patientId:int}/pending-sync-queue` | `GetPendingSyncQueue(int)` | Pending Sync Queue |
 
-La ruta lleva el `patientId` porque ésa es la forma del read model, pero la identidad que se confía es siempre la del token.
+La ruta lleva el `patientId` porque esa es la forma del read model, aunque la identidad que se confía sigue siendo siempre la del token.
 
-**Resources** — Las clases de entrada viven en `IntakeResources.cs` (`LogMealByPhotoResource`, `LogMealManuallyResource`, `LogOffPlanMealResource`, `AdjustEstimateResource`, `RecordSelfWeighInResource`, `PendingDiaryEntryResource`, `SyncPendingEntriesResource`) y las de salida en `IntakeReadResources.cs` (`ActiveTargetsResource`, `DiaryEntryResource`, `SelfWeighInResource`, `WeightTrendPointResource`, `WeightTrendResource`, `SyncedEntryOutcomeResource`, `SyncOutcomeResource`). `WeightTrendResource` no tiene campo para la última lectura, ni para el peso de hoy, ni para el cambio desde la semana pasada, aplicando la regla *Daily Figure Never Exposed As Headline*; `DiaryEntryResource` lleva siempre `Provenance` y `Confidence`, aplicando *Confidence And Provenance Always Exposed*.
+**Resources**
 
-**Transform / Assemblers** — `IntakeAssemblers.cs` reúne siete command assemblers (`LogMealByPhotoCommandAssembler`, `LogMealManuallyCommandAssembler`, `LogOffPlanMealCommandAssembler`, `ConfirmEstimateCommandAssembler`, `AdjustEstimateCommandAssembler`, `RecordSelfWeighInCommandAssembler`, `SyncPendingEntriesCommandAssembler`) y cinco resource assemblers (`ActiveTargetsResourceAssembler`, `DiaryEntryResourceAssembler`, `SelfWeighInResourceAssembler`, `WeightTrendResourceAssembler`, `SyncOutcomeResourceAssembler`). Todo assembler toma el `patientId` de la sesión autenticada, nunca del payload.
+Las clases de entrada viven en `IntakeResources.cs` y son `LogMealByPhotoResource`, `LogMealManuallyResource`, `LogOffPlanMealResource`, `AdjustEstimateResource`, `RecordSelfWeighInResource`, `PendingDiaryEntryResource` y `SyncPendingEntriesResource`. Las de salida viven en `IntakeReadResources.cs` y son `ActiveTargetsResource`, `DiaryEntryResource`, `SelfWeighInResource`, `WeightTrendPointResource`, `WeightTrendResource`, `SyncedEntryOutcomeResource` y `SyncOutcomeResource`. `WeightTrendResource` no tiene campo para la última lectura, ni para el peso de hoy, ni para el cambio desde la semana pasada, con lo que aplica la regla *Daily Figure Never Exposed As Headline*, mientras que `DiaryEntryResource` lleva siempre `Provenance` y `Confidence` en cumplimiento de *Confidence And Provenance Always Exposed*.
 
-`IntakeActionResultAssembler.cs` concentra la traducción de errores a HTTP mediante `ToDiaryEntryResult`, `ToSelfWeighInResult`, `ToSyncResult`, `ToNotFoundResult` y el privado `FailureResult`:
+**Transform / Assemblers**
+
+`IntakeAssemblers.cs` reúne siete command assemblers, que son `LogMealByPhotoCommandAssembler`, `LogMealManuallyCommandAssembler`, `LogOffPlanMealCommandAssembler`, `ConfirmEstimateCommandAssembler`, `AdjustEstimateCommandAssembler`, `RecordSelfWeighInCommandAssembler` y `SyncPendingEntriesCommandAssembler`, junto con cinco resource assemblers: `ActiveTargetsResourceAssembler`, `DiaryEntryResourceAssembler`, `SelfWeighInResourceAssembler`, `WeightTrendResourceAssembler` y `SyncOutcomeResourceAssembler`. Todo assembler toma el `patientId` de la sesión autenticada y nunca del payload.
+
+Por su parte, `IntakeActionResultAssembler.cs` concentra la traducción de errores a HTTP mediante `ToDiaryEntryResult`, `ToSelfWeighInResult`, `ToSyncResult`, `ToNotFoundResult` y el privado `FailureResult`.
 
 | Errores | Status |
 |---|---|
@@ -2895,77 +2911,91 @@ La ruta lleva el `patientId` porque ésa es la forma del read model, pero la ide
 | `RetroactiveLoggingWindowExceeded`, `ReferenceFoodNotResolved`, `EstimateNotProposed` | **422** |
 | `UnexpectedError` (por defecto) | **500** |
 
-**ACL Contract** — `IIntakeContextFacade` declara los DTO `DailyIntakeSummaryItem`, `WeightTrendPointItem` y `DiaryEntryItem`, y tres operaciones: `GetDailyIntakeSummary(int, DateOnly)`, `GetWeightTrendPoints(int, int)` y `GetDiaryEntries(int, DateOnly)`. Es un contrato de solo lectura: ningún otro contexto puede escribir en el diario a través de él. `DailyIntakeSummaryItem` no incluye cumplimiento ni evaluación; su campo `HasAnyEntry` existe para que un consumidor distinga un día no registrado de un día registrado que sumó poco.
+**ACL Contract**
 
-**Localización** — `IntakeBodyResponse/Resources/IntakeMessages.cs`, clase marcador de los archivos `.resx` (`en`, `es`).
+`IIntakeContextFacade` declara los DTO `DailyIntakeSummaryItem`, `WeightTrendPointItem` y `DiaryEntryItem`, junto con tres operaciones, que son `GetDailyIntakeSummary(int, DateOnly)`, `GetWeightTrendPoints(int, int)` y `GetDiaryEntries(int, DateOnly)`. Es un contrato de solo lectura, así que ningún otro contexto puede escribir en el diario a través de él. `DailyIntakeSummaryItem` no incluye cumplimiento ni evaluación alguna, y su campo `HasAnyEntry` existe para que un consumidor pueda distinguir un día no registrado de un día registrado que sumó poco.
+
+**Localización**
+
+Los mensajes localizados se declaran en `IntakeBodyResponse/Resources/IntakeMessages.cs`, clase marcador de los archivos `.resx` en inglés y español.
 
 #### 2.6.1.3. Application Layer
 
-La Application Layer orquesta los seis subflujos del contexto (4.1 a 4.6) mediante command services, query services y tres event handlers que implementan las políticas. Las interfaces públicas viven en `Application/CommandServices` y `Application/QueryServices`; las implementaciones, en `Application/Internal/...`.
+La Application Layer orquesta los seis subflujos del contexto, numerados del 4.1 al 4.6, mediante command services, query services y tres event handlers que implementan las políticas. Las interfaces públicas viven en `Application/CommandServices` y `Application/QueryServices`, mientras que las implementaciones están en `Application/Internal/...`.
 
 **Command Services**
 
-**`ActiveTargetsCacheCommandService`** (implementa `IActiveTargetsCacheCommandService`) — Depende de `IActiveTargetsCacheRepository`, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. Su único método, `Handle(RefreshActiveTargetsCacheCommand)`, implementa el subflujo 4.1: valida *Published Contract Only*, exige un `CareLink` activo y, si el vínculo desapareció, deja el caché existente exactamente como está en lugar de borrarlo. Publica `ActiveTargetsCacheRefreshed`. Este servicio nunca habla con Nutritional Care: sólo ve lo que el evento publicado decidió llevar.
+`ActiveTargetsCacheCommandService`, que implementa `IActiveTargetsCacheCommandService`, depende de `IActiveTargetsCacheRepository`, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. Su único método, `Handle(RefreshActiveTargetsCacheCommand)`, implementa el subflujo 4.1: valida *Published Contract Only*, exige un `CareLink` activo y, si el vínculo desapareció, deja el caché existente exactamente como está en lugar de borrarlo. Publica `ActiveTargetsCacheRefreshed`. Este servicio nunca habla con Nutritional Care y solo ve aquello que el evento publicado decidió llevar consigo.
 
-**`DiaryEntryCommandService`** (implementa `IDiaryEntryCommandService`) — Depende de `IDiaryEntryRepository`, `IUnitOfWork`, `IFoodCatalogContextFacade`, `IConfiguration`, `ILogger<...>` e `IMediator`; declara la constante `DefaultRetroactiveLoggingWindowHours = 48`.
+`DiaryEntryCommandService`, que implementa `IDiaryEntryCommandService`, depende de `IDiaryEntryRepository`, `IUnitOfWork`, `IFoodCatalogContextFacade`, `IConfiguration`, `ILogger<...>` e `IMediator`, y declara la constante `DefaultRetroactiveLoggingWindowHours = 48`.
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
-| `Handle(LogMealByPhotoCommand)` | 4.2 | Valida confianza, alimento y porción; construye el `LocalTimestamp`; crea la entrada con `Provenance.Photo` y publica `MealLogged` con la propuesta a bordo. |
-| `Handle(EstimatePortionCommand)` | 4.2 | Sólo desde la política. Resuelve el alimento vía el ACL de Food Catalog (*Food Resolved From Local Catalog*) y llama a `ProposeEstimate`. Publica `EstimateProposed`. |
-| `Handle(ConfirmEstimateCommand)` | 4.2 | Guardas en orden: la entrada existe, pertenece al paciente, tiene propuesta y no está confirmada. Publica `EstimateConfirmedByPatient`. |
-| `Handle(AdjustEstimateCommand)` | 4.2 | Mismas guardas más la resolución del alimento. Publica ambos eventos: `EstimateAdjustedByPatient` y `EstimateConfirmedByPatient`. |
-| `Handle(LogMealManuallyCommand)` | 4.3 | Alternativa al registro por foto cuando este no está disponible. Crea con `Provenance.Manual` y `ConfirmDirectly(...)`. |
+| `Handle(LogMealByPhotoCommand)` | 4.2 | Valida confianza, alimento y porción, construye el `LocalTimestamp`, crea la entrada con `Provenance.Photo` y publica `MealLogged` llevando la propuesta a bordo. |
+| `Handle(EstimatePortionCommand)` | 4.2 | Solo se alcanza desde la política. Resuelve el alimento a través del ACL de Food Catalog, conforme a *Food Resolved From Local Catalog*, y llama a `ProposeEstimate`. Publica `EstimateProposed`. |
+| `Handle(ConfirmEstimateCommand)` | 4.2 | Dispone sus guardas en orden: la entrada existe, pertenece al paciente, tiene propuesta y aún no está confirmada. Publica `EstimateConfirmedByPatient`. |
+| `Handle(AdjustEstimateCommand)` | 4.2 | Aplica las mismas guardas y añade la resolución del alimento. Publica ambos eventos, `EstimateAdjustedByPatient` y `EstimateConfirmedByPatient`. |
+| `Handle(LogMealManuallyCommand)` | 4.3 | Es la alternativa al registro por foto cuando este no está disponible. Crea la entrada con `Provenance.Manual` y `ConfirmDirectly(...)`. |
 | `Handle(LogOffPlanMealCommand)` | 4.4 | No solicita alimento, porción ni motivo, para no desincentivar la declaración. Publica `MealLogged` y `OffPlanEntryLogged`. |
-| `Handle(SyncPendingEntriesCommand)` | 4.6 | Reconcilia el lote encolado por el dispositivo offline. |
+| `Handle(SyncPendingEntriesCommand)` | 4.6 | Reconcilia el lote que encoló el dispositivo offline. |
 
-Sus métodos privados son `ReconcileAsync(int, PendingDiaryEntry, CT)` —el núcleo de la sincronización, que verifica propietario, exige que el `DeclaredLocalTimestamp` coincida exactamente y resuelve conflictos con `ResolveWithLatest`—, `MarkSynchronizedAsync(DiaryEntry, CT)` y `BuildLocalTimestamp(DateTimeOffset, out IntakeError)`, que aplica la ventana de registro retroactivo leída de `Intake:RetroactiveLoggingWindowHours`. Cada elemento del lote es su propio paso *committed*: así la sincronización es idempotente por elemento y una entrada rechazada no impide sincronizar las demás.
+Sus métodos privados son tres. `ReconcileAsync(int, PendingDiaryEntry, CT)` es el núcleo de la sincronización, y verifica el propietario, exige que el `DeclaredLocalTimestamp` coincida exactamente y resuelve los conflictos con `ResolveWithLatest`. `MarkSynchronizedAsync(DiaryEntry, CT)` cierra cada elemento reconciliado. `BuildLocalTimestamp(DateTimeOffset, out IntakeError)` aplica la ventana de registro retroactivo que se lee de `Intake:RetroactiveLoggingWindowHours`. Cada elemento del lote constituye su propio paso *committed*, así que la sincronización resulta idempotente elemento por elemento y una entrada rechazada no impide sincronizar las demás.
 
-**`SelfWeighInCommandService`** — Depende de `ISelfWeighInRepository`, `IUnitOfWork`, `ILogger<...>` e `IMediator`. `Handle(RecordSelfWeighInCommand)` (subflujo 4.5) valida el rango plausible de peso, construye `ProtocolCompliance` y publica `SelfWeighInRecorded`. Nada aquí rechaza una lectura por ser inconveniente.
+`SelfWeighInCommandService` depende de `ISelfWeighInRepository`, `IUnitOfWork`, `ILogger<...>` e `IMediator`. Su método `Handle(RecordSelfWeighInCommand)`, correspondiente al subflujo 4.5, valida el rango plausible de peso, construye `ProtocolCompliance` y publica `SelfWeighInRecorded`. Nada en esta clase rechaza una lectura por resultar inconveniente.
 
-**`WeightTrendCommandService`** — Depende de `IWeightTrendRepository`, `ISelfWeighInRepository`, `IUnitOfWork`, `ILogger<...>` e `IMediator`. `Handle(RecalculateWeightTrendCommand)` carga todas las lecturas, delega en `trend.Recalculate(...)`, hace commit y publica `WeightTrendRecalculated` más un `SelfWeighInExcludedFromTrend` por cada lectura excluida.
+`WeightTrendCommandService` depende de `IWeightTrendRepository`, `ISelfWeighInRepository`, `IUnitOfWork`, `ILogger<...>` e `IMediator`. Su método `Handle(RecalculateWeightTrendCommand)` carga todas las lecturas, delega en `trend.Recalculate(...)`, hace commit y publica `WeightTrendRecalculated` junto con un `SelfWeighInExcludedFromTrend` por cada lectura excluida.
 
-**Query Services** — `ActiveTargetsCacheQueryService`, `DiaryEntryQueryService`, `SelfWeighInQueryService` y `WeightTrendQueryService` resuelven las seis queries del dominio sin efectos secundarios.
+**Query Services**
 
-**Event Handlers (políticas)** — Los tres crean un scope de DI aislado, porque las notificaciones se manejan en paralelo y compartir el `DbContext` del request produciría un error de concurrencia.
+`ActiveTargetsCacheQueryService`, `DiaryEntryQueryService`, `SelfWeighInQueryService` y `WeightTrendQueryService` resuelven las seis queries del dominio sin producir efectos secundarios.
+
+**Event Handlers (políticas)**
+
+Los tres handlers crean un scope de DI aislado, ya que las notificaciones se manejan en paralelo y compartir el `DbContext` del request produciría un error de concurrencia.
 
 | Handler | Escucha | Política | Emite |
 |---|---|---|---|
-| `OnActiveTargetsUpdatedIntakeHandler` | `ActiveTargetsUpdated` (Nutritional Care) | *When Active Targets Updated* (4.1); es el único punto por el que algo de Nutritional Care entra a este contexto, y entra como evento publicado, no como consulta. | `RefreshActiveTargetsCacheCommand` |
-| `OnMealLoggedPhotoEstimationHandler` | `MealLogged` (propio) | *When Meal Logged And Provenance Is Photo* (4.2). La guarda de procedencia es el disparador de la política misma. No hace llamada de red ni alcanza ningún servicio de IA. | `EstimatePortionCommand` |
-| `OnSelfWeighInRecordedHandler` | `SelfWeighInRecorded` (propio) | *When Self Weigh In Recorded* (4.5). Corre para toda lectura, incluidas las de fuera de protocolo: es el agregado quien decide qué suaviza la tendencia. | `RecalculateWeightTrendCommand` |
+| `OnActiveTargetsUpdatedIntakeHandler` | `ActiveTargetsUpdated`, de Nutritional Care | *When Active Targets Updated*, del subflujo 4.1. Es el único punto por el que algo de Nutritional Care entra a este contexto, y entra como evento publicado antes que como consulta. | `RefreshActiveTargetsCacheCommand` |
+| `OnMealLoggedPhotoEstimationHandler` | `MealLogged`, propio | *When Meal Logged And Provenance Is Photo*, del subflujo 4.2. La guarda de procedencia es el disparador mismo de la política. No hace ninguna llamada de red ni alcanza servicio de IA alguno. | `EstimatePortionCommand` |
+| `OnSelfWeighInRecordedHandler` | `SelfWeighInRecorded`, propio | *When Self Weigh In Recorded*, del subflujo 4.5. Corre para toda lectura, incluidas las que quedan fuera de protocolo, ya que es el agregado quien decide qué suaviza la tendencia. | `RecalculateWeightTrendCommand` |
 
-**DTO de aplicación** — `SyncedEntryOutcome(Guid, int?, string, string?)` con las constantes `Created`, `AlreadyPresent`, `ConflictResolved` y `Rejected`, y `SyncOutcome(int, int, int, int, int, IReadOnlyList<SyncedEntryOutcome>)`, que resume el lote de sincronización.
+**DTO de aplicación**
 
-**ACL Facade** — `IntakeContextFacade` implementa `IIntakeContextFacade` apoyándose en los query services y en `IFoodCatalogContextFacade`, con la constante `NutrientBasisGrams = 100m`. Los totales diarios se calculan aquí, no se almacenan, porque un total almacenado sería una segunda fuente de verdad; y sólo se cuentan los estimados confirmados, porque una propuesta no confirmada por el paciente no representa su consumo. Si el alimento de una entrada no se puede resolver, se conserva su identificador y solo se omite el nombre.
+`SyncedEntryOutcome(Guid, int?, string, string?)` declara las constantes `Created`, `AlreadyPresent`, `ConflictResolved` y `Rejected`, mientras que `SyncOutcome(int, int, int, int, int, IReadOnlyList<SyncedEntryOutcome>)` resume el lote de sincronización.
+
+**ACL Facade**
+
+`IntakeContextFacade` implementa `IIntakeContextFacade` apoyándose en los query services y en `IFoodCatalogContextFacade`, con la constante `NutrientBasisGrams = 100m`. Los totales diarios se calculan aquí y no se almacenan, ya que un total almacenado sería una segunda fuente de verdad, y solo se cuentan los estimados confirmados, porque una propuesta que el paciente no confirmó no representa su consumo. Si el alimento de una entrada no puede resolverse, se conserva su identificador y únicamente se omite el nombre.
 
 #### 2.6.1.4. Infrastructure Layer
 
-La Infrastructure Layer de este bounded context se limita a la persistencia: no consume ningún servicio externo, no ejecuta modelos de visión y no aloja hosted services. Las cuatro configuraciones de EF Core viven en `IntakeEntityTypeConfigurations.cs` y los cuatro repositorios en `IntakeRepositories.cs`.
+La Infrastructure Layer de este bounded context se limita a la persistencia, de modo que no consume ningún servicio externo, no ejecuta modelos de visión y no aloja hosted services. Las cuatro configuraciones de EF Core viven en `IntakeEntityTypeConfigurations.cs` y los cuatro repositorios en `IntakeRepositories.cs`.
 
 **Configuraciones de EF Core**
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
-| `ActiveTargetsCacheEntityTypeConfiguration` | `active_targets_caches` | `HasKey(c => c.PatientId)` con `ValueGeneratedNever()`, porque el paciente es la raíz. Objetivos como `decimal(10,2)`. `guidelines` y `restrictions` se persisten como columnas `json` a través de *backing fields*, con un `ValueComparer<List<string>>` estático, necesario para que EF Core detecte los cambios en esas listas. |
-| `DiaryEntryEntityTypeConfiguration` | `diary_entries` | PK con converter `DiaryEntryId.FromRaw`. `local_timestamp` se mapea como tipo plano y bajo ese nombre exacto, porque el interceptor UTC compartido excluye las propiedades así llamadas y porque el diario se lee por rango de fechas. Cuatro columnas de propuesta (con `proposed_confidence` como `decimal(6,4)`) y tres de confirmación coexisten, lo que implementa *Proposal Kept Alongside Confirmation*. `client_entry_id` lleva índice único `ix_diary_entries_client_entry_id` y es nullable: MySQL admite cualquier cantidad de `NULL` en un índice único, que es exactamente el comportamiento deseado. |
-| `SelfWeighInEntityTypeConfiguration` | `self_weigh_ins` | PK con converter `SelfWeighInId.FromRaw`; `value_kg` como `decimal(10,2)`; las tres banderas de protocolo requeridas; índice `ix_self_weigh_ins_patient_id`. |
-| `WeightTrendEntityTypeConfiguration` | `weight_trends` | `HasKey(t => t.PatientId)` con `ValueGeneratedNever()`. La serie `points` se persiste como `json` desde el backing field `_points`, con el comparador estático `PointListComparer`. |
+| `ActiveTargetsCacheEntityTypeConfiguration` | `active_targets_caches` | Usa `HasKey(c => c.PatientId)` con `ValueGeneratedNever()`, ya que el paciente es la raíz, y declara los objetivos como `decimal(10,2)`. Las listas `guidelines` y `restrictions` se persisten como columnas `json` a través de *backing fields*, con un `ValueComparer<List<string>>` estático que resulta necesario para que EF Core detecte los cambios en ellas. |
+| `DiaryEntryEntityTypeConfiguration` | `diary_entries` | La PK usa el converter `DiaryEntryId.FromRaw`. La columna `local_timestamp` se mapea como tipo plano y bajo ese nombre exacto, tanto porque el interceptor UTC compartido excluye las propiedades así llamadas como porque el diario se lee por rango de fechas. Conviven cuatro columnas de propuesta, con `proposed_confidence` como `decimal(6,4)`, y tres de confirmación, lo que implementa *Proposal Kept Alongside Confirmation*. La columna `client_entry_id` lleva el índice único `ix_diary_entries_client_entry_id` y es nullable, dado que MySQL admite cualquier cantidad de `NULL` en un índice único, que es exactamente el comportamiento deseado. |
+| `SelfWeighInEntityTypeConfiguration` | `self_weigh_ins` | La PK usa el converter `SelfWeighInId.FromRaw`, `value_kg` se declara como `decimal(10,2)`, las tres banderas de protocolo son requeridas y existe el índice `ix_self_weigh_ins_patient_id`. |
+| `WeightTrendEntityTypeConfiguration` | `weight_trends` | Usa `HasKey(t => t.PatientId)` con `ValueGeneratedNever()`, y la serie `points` se persiste como `json` desde el backing field `_points`, con el comparador estático `PointListComparer`. |
 
-Las cuatro configuraciones declaran `Ignore(...)` sobre cada propiedad calculada (`DeclaredLocalTimestamp`, `LocalDate`, `ProposedEstimate`, `ConfirmedEstimate`, `FollowsProtocol`, `Points`, entre otras), que existen en el dominio pero no son columnas.
+Las cuatro configuraciones declaran `Ignore(...)` sobre cada propiedad calculada, entre ellas `DeclaredLocalTimestamp`, `LocalDate`, `ProposedEstimate`, `ConfirmedEstimate`, `FollowsProtocol` y `Points`, todas las cuales existen en el dominio pero no corresponden a columnas.
 
 **Repositorios (implementaciones)**
 
 | Clase | Detalles de implementación |
 |---|---|
-| `ActiveTargetsCacheRepository` | Implementa `FindByPatientIdAsync`; como el paciente es la clave, buscar por identificador y buscar por paciente son la misma operación. |
-| `DiaryEntryRepository` | Declara los campos `private static readonly SyncState PendingState` y `ConflictedState`, comparados a través del converter porque EF no puede traducir un acceso a miembro de un tipo convertido. `ListByPatientIdAsync` filtra sobre el reloj de pared local y ordena descendente; `FindByClientEntryIdAsync` rechaza `Guid.Empty`; `ListUnreconciledByPatientIdAsync` filtra `Pending` o `Conflicted`. Nada aquí sobrescribe ni llama al `Remove` heredado. |
-| `SelfWeighInRepository` | `ListByPatientIdAsync` devuelve todas las lecturas ordenadas ascendentemente: el agregado decide qué cuenta, así que hay que entregárselo todo. |
-| `WeightTrendRepository` | `FindByPatientIdAsync` sobre la clave primaria del paciente. |
+| `ActiveTargetsCacheRepository` | Implementa `FindByPatientIdAsync`. Como el paciente es la clave, buscar por identificador y buscar por paciente vienen a ser la misma operación. |
+| `DiaryEntryRepository` | Declara los campos `private static readonly SyncState PendingState` y `ConflictedState`, que se comparan a través del converter porque EF no puede traducir el acceso a un miembro de un tipo convertido. `ListByPatientIdAsync` filtra sobre el reloj de pared local y ordena de forma descendente, `FindByClientEntryIdAsync` rechaza `Guid.Empty` y `ListUnreconciledByPatientIdAsync` filtra los estados `Pending` o `Conflicted`. Nada en esta clase sobrescribe ni llama al `Remove` heredado. |
+| `SelfWeighInRepository` | `ListByPatientIdAsync` devuelve todas las lecturas ordenadas de forma ascendente, ya que el agregado decide qué cuenta y por eso hay que entregárselo todo. |
+| `WeightTrendRepository` | `FindByPatientIdAsync` trabaja sobre la clave primaria del paciente. |
 
-Los cuatro heredan de `BaseRepository<T>` y reimplementan explícitamente `IBaseRepository<T>.FindByIdAsync` para que las llamadas a través de la interfaz alcancen la versión especializada por identidad tipada. La persistencia corre sobre MySQL 8.4 con convención `snake_case`, auditoría automática mediante `AuditableEntityInterceptor` y normalización a UTC mediante `UtcDateTimeInterceptor`, del que `local_timestamp` está deliberadamente exceptuado.
+Los cuatro heredan de `BaseRepository<T>` y reimplementan de forma explícita `IBaseRepository<T>.FindByIdAsync`, para que las llamadas hechas a través de la interfaz alcancen la versión especializada por identidad tipada. La persistencia corre sobre MySQL 8.4 con convención `snake_case`, auditoría automática mediante `AuditableEntityInterceptor` y normalización a UTC mediante `UtcDateTimeInterceptor`, del que `local_timestamp` queda deliberadamente exceptuado.
 
-**Servicios externos** — Ninguno. La estimación de porciones se ejecuta en el dispositivo del paciente con ML Kit; el servidor sólo persiste la propuesta que recibe.
+**Servicios externos**
+
+Este contexto no consume ninguno. La estimación de porciones se ejecuta en el dispositivo del paciente con ML Kit, y el servidor se limita a persistir la propuesta que recibe.
 
 #### 2.6.1.5. Bounded Context Software Architecture Component Level Diagrams
 
@@ -3009,136 +3039,150 @@ Database:
 
 #### 2.6.2.1. Domain Layer
 
-**Monitoring & Adherence** (`Healthify.Platform.MonitoringAdherence`) es el único bounded context que compara lo prescrito con lo registrado e interpreta la diferencia. Su Domain Layer aloja cinco aggregate roots y concentra la lógica de interpretación dentro de ellos, sin domain services. Tres invariantes gobiernan la capa: ninguna desviación se evalúa sobre una ventana de menos de siete días; el paciente es notificado antes de escalar una alerta al profesional; y una señal escalada nunca modifica un plan.
+El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.MonitoringAdherence`, es el único que compara lo prescrito con lo registrado e interpreta la diferencia. Su Domain Layer aloja cinco aggregate roots y concentra la lógica de interpretación dentro de ellos, sin recurrir a domain services. Tres invariantes gobiernan toda la capa. El primero establece que ninguna desviación se evalúa sobre una ventana de menos de siete días. El segundo, que el paciente recibe una notificación antes de que una alerta escale al profesional. El tercero, que una señal escalada nunca modifica un plan.
 
 **Aggregates (Aggregate Roots)**
 
-**`EvaluationWindow`** — El periodo sobre el que se compara lo prescrito contra lo registrado. Una ventana por relación de cuidado: abre cuando se establece el vínculo y cierra cuando se revoca. Sostiene tres series que deliberadamente nunca se mezclan entre sí.
+`EvaluationWindow` representa el periodo sobre el que se compara lo prescrito contra lo registrado. Existe una ventana por relación de cuidado, que abre cuando se establece el vínculo y cierra cuando este se revoca, y dentro de ella conviven tres series que de forma deliberada nunca se mezclan entre sí.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
-| `MinimumDays` | `const int = 7` | `public` | Invariante 1. El largo configurado puede ser mayor, nunca menor. |
+| `MinimumDays` | `const int = 7` | `public` | Sostiene el primer invariante. El largo configurado puede ser mayor, pero nunca menor. |
 | `Id` | `WindowId` | `public get / private set` | Identidad tipada. |
 | `PatientId` / `CareLinkId` | `int` | `public get / private set` | Referencias cross-context. |
-| `WindowDays` | `int` | `public get / private set` | Largo configurado con el que abrió, guardado en la fila para que un cambio de configuración no reinterprete una ventana en curso. |
+| `WindowDays` | `int` | `public get / private set` | Largo configurado con el que la ventana abrió, guardado en la fila para que un cambio de configuración no reinterprete una ventana en curso. |
 | `FromDate` / `ToDate` | `DateTime` | `public get / private set` | Extremos de la ventana, almacenados a medianoche. |
-| `State` | `WindowState` | `public get / private set` | `Open` o `Closed`. |
-| `LastLoggingGapFlaggedOn`, `LastPatientRemindedAt` | nullable | `public get / private set` | Para que la política del hueco de registro lo diga una vez y no cada doce horas. |
+| `State` | `WindowState` | `public get / private set` | Puede ser `Open` o `Closed`. |
+| `LastLoggingGapFlaggedOn`, `LastPatientRemindedAt` | nullable | `public get / private set` | Permiten que la política del hueco de registro lo diga una sola vez y no cada doce horas. |
 | `TargetsSnapshots` | `IReadOnlyList<TargetsSnapshot>` | `public` (computada) | Todo snapshot recibido, del más antiguo al más nuevo. Nada se elimina. |
 | `DailyComplianceSeries` | `IReadOnlyList<DailyCompliance>` | `public` (computada) | El resultado día a día. |
-| `AnthropometrySeries` | `IReadOnlyList<AnthropometryPoint>` | `public` (computada) | Solo contiene mediciones clínicas; los autopesajes del paciente no forman parte de esta serie. |
-| `IntakeSummary` | `IntakeSummary` | `public` (computada) | Calculado, nunca almacenado, así que no puede discrepar con la serie que resume. |
+| `AnthropometrySeries` | `IReadOnlyList<AnthropometryPoint>` | `public` (computada) | Contiene solo mediciones clínicas, ya que los autopesajes del paciente no forman parte de esta serie. |
+| `IntakeSummary` | `IntakeSummary` | `public` (computada) | Se calcula y nunca se almacena, de modo que no puede discrepar con la serie que resume. |
 
 | Método | Scope | Reglas que aplica |
 |---|---|---|
-| `EvaluationWindow(OpenEvaluationWindowCommand, int, DateOnly)` | `public` | *Minimum Seven Day Window*. |
-| `TakeSnapshot(TargetsSnapshot) : bool` | `public` | *Later Adjustment Never Rewrites Evaluated Days*: anexa y no toca la serie diaria. Devuelve `false` si esa versión ya es el snapshot vigente. |
-| `SnapshotInForceOn(DateOnly) : TargetsSnapshot?` | `public` | *Each Day Evaluated Against That Day Snapshot*. |
-| `AppendAnthropometryPoint(AnthropometryPoint) : bool` | `public` | *Clinical Measurement Outranks Self Weigh In*, *Two Series Never Merged*; el tipo del parámetro es la aplicación de la regla. |
-| `RecordDayEvaluation(DailyCompliance) : bool` | `public` | *Late Entry Re Evaluates Its Own Day Only*: una entrada tardía solo reemplaza la evaluación de su propio día. |
-| `MarkUnloggedDaysBefore(DateOnly) : IReadOnlyList<DailyCompliance>` | `public` | *Day Without Entries Marked Unlogged Not Non Compliant*: marca como no registrados los días sin entradas para que la serie muestre esos huecos. |
-| `CountingThrough(DateOnly) : DateOnly`, `SpanDays(DateOnly) : int`, `HasMinimumSpan(DateOnly) : bool` | `public` | *Closed Window Stops Counting Days* e invariante 1: la ventana alcanza su duración mínima por los días transcurridos. |
-| `HorizonDays(DateOnly) : IReadOnlyList<DailyCompliance>` | `public` | Horizonte rodante sobre el que se juzga una desviación. |
-| `FlagLoggingGap(DateOnly) : bool` | `public` | *Gap Is Not A Deviation*, *Gap Never Escalates*: solo registra la fecha del vacío, sin crear desviaciones ni escalar al profesional. |
-| `RemindPatient() : bool` | `public` | *Reminder Is Local And Non Accusatory*. |
-| `Close(DateTimeOffset)` | `public` | *Evaluated Data Is Preserved*: nada se borra y nada se recalcula. |
+| `EvaluationWindow(OpenEvaluationWindowCommand, int, DateOnly)` | `public` | Aplica *Minimum Seven Day Window*. |
+| `TakeSnapshot(TargetsSnapshot) : bool` | `public` | Aplica *Later Adjustment Never Rewrites Evaluated Days*, ya que anexa sin tocar la serie diaria. Devuelve `false` cuando esa versión ya es el snapshot vigente. |
+| `SnapshotInForceOn(DateOnly) : TargetsSnapshot?` | `public` | Aplica *Each Day Evaluated Against That Day Snapshot*. |
+| `AppendAnthropometryPoint(AnthropometryPoint) : bool` | `public` | Aplica *Clinical Measurement Outranks Self Weigh In* y *Two Series Never Merged*, donde el tipo mismo del parámetro es lo que hace cumplir la regla. |
+| `RecordDayEvaluation(DailyCompliance) : bool` | `public` | Aplica *Late Entry Re Evaluates Its Own Day Only*, de modo que una entrada tardía solo reemplaza la evaluación de su propio día. |
+| `MarkUnloggedDaysBefore(DateOnly) : IReadOnlyList<DailyCompliance>` | `public` | Aplica *Day Without Entries Marked Unlogged Not Non Compliant*, marcando como no registrados los días sin entradas para que la serie muestre esos huecos. |
+| `CountingThrough(DateOnly) : DateOnly`, `SpanDays(DateOnly) : int`, `HasMinimumSpan(DateOnly) : bool` | `public` | Aplican *Closed Window Stops Counting Days* y el primer invariante, dado que la ventana alcanza su duración mínima por los días transcurridos. |
+| `HorizonDays(DateOnly) : IReadOnlyList<DailyCompliance>` | `public` | Define el horizonte rodante sobre el que se juzga una desviación. |
+| `FlagLoggingGap(DateOnly) : bool` | `public` | Aplica *Gap Is Not A Deviation* y *Gap Never Escalates*, limitándose a registrar la fecha del vacío sin crear desviaciones ni escalar al profesional. |
+| `RemindPatient() : bool` | `public` | Aplica *Reminder Is Local And Non Accusatory*. |
+| `Close(DateTimeOffset)` | `public` | Aplica *Evaluated Data Is Preserved*, así que nada se borra y nada se recalcula. |
 
-**`Deviation`** — Diferencia entre lo prescrito y lo registrado que supera la tolerancia y se repite en varios días de la ventana.
+`Deviation` modela la diferencia entre lo prescrito y lo registrado cuando esta supera la tolerancia y se repite a lo largo de varios días de la ventana.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `Id` | `DeviationId` | `public get / private set` | Identidad tipada. |
 | `WindowRef` | `WindowId` | `public get / private set` | La ventana de la que se leyó. |
-| `PatientId` | `int` | `public get / private set` | Copiado de la ventana para responder el read model. |
+| `PatientId` | `int` | `public get / private set` | Se copia de la ventana para poder responder el read model. |
 | `MagnitudeRelativeValue`, `MagnitudeEnergyKcal` | `decimal` | `public get / private set` | Proyección de `DeviationMagnitude`. |
-| `Direction` | `DeviationDirection` | `public get / private set` | `Above` o `Below`. |
-| `IsSustained` / `SustainedAt` | `bool` / `DateTimeOffset?` | `public get / private set` | *Sustained If Persists Across Majority Of Window*. |
-| `LoggedDaysConsidered`, `DeviatingDaysConsidered` | `int` | `public get / private set` | Los dos conteos con los que se decidió la mayoría, guardados para que la evidencia enviada al inbox no se recalcule desde una ventana que ya se movió. |
+| `Direction` | `DeviationDirection` | `public get / private set` | Puede ser `Above` o `Below`. |
+| `IsSustained` / `SustainedAt` | `bool` / `DateTimeOffset?` | `public get / private set` | Sostienen *Sustained If Persists Across Majority Of Window*. |
+| `LoggedDaysConsidered`, `DeviatingDaysConsidered` | `int` | `public get / private set` | Los dos conteos con los que se decidió la mayoría, guardados para que la evidencia enviada al inbox no tenga que recalcularse desde una ventana que ya se movió. |
 
 | Método | Scope | Descripción |
 |---|---|---|
-| `Deviation(WindowId, int, DeviationMagnitude, DeviationDirection, int, int)` | `public` | *Only Logged Days Count*. |
-| `DetectFrom(WindowId, int, IReadOnlyList<DailyCompliance>) : Deviation?` | `public static` | Factory que aplica las reglas de detección: descarta días no registrados, separa desviaciones por encima y por debajo y devuelve `null` si ambas direcciones están empatadas, porque en ese caso no hay una tendencia clara. |
-| `Restate(DeviationMagnitude, int, int) : bool` | `public` | Re-enuncia la misma desviación sobre un horizonte que se movió; devuelve `false` si nada cambió. |
-| `MarkSustained(decimal) : bool` | `public` | Devuelve `true` sólo en la transición, así la señal cruza la frontera exactamente una vez. |
+| `Deviation(WindowId, int, DeviationMagnitude, DeviationDirection, int, int)` | `public` | Aplica *Only Logged Days Count*. |
+| `DetectFrom(WindowId, int, IReadOnlyList<DailyCompliance>) : Deviation?` | `public static` | Factory que aplica las reglas de detección, descartando los días no registrados, separando las desviaciones por encima de las que van por debajo y devolviendo `null` cuando ambas direcciones quedan empatadas, situación en la que no hay una tendencia clara. |
+| `Restate(DeviationMagnitude, int, int) : bool` | `public` | Vuelve a enunciar la misma desviación sobre un horizonte que se movió, y devuelve `false` si nada cambió. |
+| `MarkSustained(decimal) : bool` | `public` | Devuelve `true` únicamente en la transición, con lo cual la señal cruza la frontera exactamente una vez. |
 | `Evidence() : string` | `public` | Genera el texto de evidencia que se envía a la bandeja del profesional, sin calificar al paciente. |
 
-**`ConsistencyIndex`** — Cuán bien concuerdan entre sí la serie de peso y la serie de ingesta registrada. El paciente es la raíz.
+`ConsistencyIndex` mide cuán bien concuerdan entre sí la serie de peso y la serie de ingesta registrada, y tiene al paciente como raíz.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
-| `EnergyKcalPerKg` | `const decimal = 7700m` | `public` | Regla de dedo, igual para todos; por eso sirve como chequeo de consistencia y no como predicción. |
-| `PatientId` | `int` | `public get / private set` | Clave primaria. |
-| `Value` | `decimal` | `public get / private set` | Movimiento de peso inexplicado, en kg por semana. |
-| `State` | `ConsistencyState` | `public get / private set` | `Normal`, `Watch` o `Alert`. |
-| `FirstFlaggedAt`, `ShownToPatientAt`, `EscalatedAt`, `AlertSinceAt` | `DateTimeOffset?` | `public get / private set` | La cronología del episodio; `ShownToPatientAt` es precondición de la escalación. |
+| `EnergyKcalPerKg` | `const decimal = 7700m` | `public` | Es una regla de dedo idéntica para todos, y justamente por eso sirve como chequeo de consistencia y no como predicción. |
+| `PatientId` | `int` | `public get / private set` | Funciona como clave primaria. |
+| `Value` | `decimal` | `public get / private set` | Movimiento de peso inexplicado, expresado en kg por semana. |
+| `State` | `ConsistencyState` | `public get / private set` | Puede ser `Normal`, `Watch` o `Alert`. |
+| `FirstFlaggedAt`, `ShownToPatientAt`, `EscalatedAt`, `AlertSinceAt` | `DateTimeOffset?` | `public get / private set` | Componen la cronología del episodio, y `ShownToPatientAt` es precondición de la escalación. |
 
 | Método | Scope | Descripción |
 |---|---|---|
-| `Recompute(weightSeries, intakeSeries, decimal) : bool` | `public` | Calcula el cambio observado frente al implicado por la ingesta registrada sobre el periodo compartido por ambas series; devuelve `true` sólo cuando el índice acaba de entrar en `Alert`. |
-| `CanCompute(weightSeries, intakeSeries) : bool` | `public static` | *Both Series Required*. |
-| `PromptPatient() : bool` | `public` | *Patient First Always*, *Prompt Date Recorded*. |
+| `Recompute(weightSeries, intakeSeries, decimal) : bool` | `public` | Calcula el cambio observado frente al que implica la ingesta registrada, sobre el periodo compartido por ambas series, y devuelve `true` solo cuando el índice acaba de entrar en `Alert`. |
+| `CanCompute(weightSeries, intakeSeries) : bool` | `public static` | Aplica *Both Series Required*. |
+| `PromptPatient() : bool` | `public` | Aplica *Patient First Always* y *Prompt Date Recorded*. |
 | `ThreeWeeksInAlertElapsed(int, DateTimeOffset) : bool` | `public` | Evalúa en una sola condición las reglas de escalación. |
-| `Escalate() : bool` | `public` | Lanza si `ShownToPatientAt` es `null`. Está en el agregado y no en un servicio, de modo que ningún llamador puede saltárselo. |
-| `NextState(decimal) : string` / `MoveTo(string) : bool` | `private` | Un umbral no configurado se lee siempre como `Normal`; al volver a `Normal` se limpian las tres fechas para que un episodio posterior se mida desde su propio inicio y se le pregunte al paciente otra vez. |
+| `Escalate() : bool` | `public` | Lanza una excepción si `ShownToPatientAt` está en `null`. Vive dentro del agregado y no en un servicio, de modo que ningún llamador puede saltárselo. |
+| `NextState(decimal) : string` / `MoveTo(string) : bool` | `private` | Un umbral no configurado se lee siempre como `Normal`, y al volver a ese estado se limpian las tres fechas para que un episodio posterior se mida desde su propio inicio y se le vuelva a preguntar al paciente. |
 
-**`Referral`** — Registro de la derivación del paciente a otro especialista. Atributos: `Id : ReferralId`, `PatientId`, `Specialty`, `Reason`, `IssuedBy`, `IssuedAt`. No tiene estado ni método que lo cambie: una derivación es el registro de que algo se decidió en una fecha, no un flujo de trabajo que esta plataforma gestione.
+`Referral` deja registro de la derivación del paciente a otro especialista. Sus atributos son `Id : ReferralId`, `PatientId`, `Specialty`, `Reason`, `IssuedBy` e `IssuedAt`. No tiene estado ni método alguno que lo cambie, ya que una derivación es el registro de que algo se decidió en una fecha y no un flujo de trabajo que esta plataforma deba gestionar.
 
-**`ScheduledFollowUp`** — La próxima visita en el calendario. Atributos: `Id : FollowUpId`, `PatientId`, `PractitionerId`, `ScheduledFor`, `State : FollowUpState`, `MissedAt`. Su constructor exige fecha futura y su único método de transición, `MarkMissed(DateTimeOffset) : bool`, solo actualiza el estado y la fecha de la cita: una cita perdida no cierra el vínculo de cuidado.
+`ScheduledFollowUp` representa la próxima visita en el calendario. Sus atributos son `Id : FollowUpId`, `PatientId`, `PractitionerId`, `ScheduledFor`, `State : FollowUpState` y `MissedAt`. Su constructor exige una fecha futura y su único método de transición, `MarkMissed(DateTimeOffset) : bool`, se limita a actualizar el estado y la fecha de la cita, puesto que una cita perdida no cierra el vínculo de cuidado.
 
 **Value Objects**
 
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
-| `TargetsSnapshot` | Copia de los objetivos diarios vigentes en un momento dado. | `PlanVersion > 0`, `EnergyKcal > 0`, macros, `TakenAt`, `EffectiveFrom`. No incluye diagnóstico, razonamiento clínico ni base de cálculo. |
-| `DailyCompliance` | Cómo se vio un día al poner la ingesta registrada al lado de los objetivos en vigor ese día. | Constantes `Met`, `Exceeded`, `Short`, `Unlogged`; `ToleranceRatio = 0.10m`; factory `Evaluate(...)` que usa si el diario tiene algo en absoluto, nunca los totales; `SaysTheSameAs(...)` para idempotencia. |
-| `AnthropometryPoint` | Un punto de la serie de peso clínica. | `Source` con exactamente un valor legal, `ClinicalMeasurement`, y factory `FromClinicalMeasurement(...)`, que aplican *Two Series Never Merged*. |
-| `IntakeSummary` | Lo que la ventana ha visto hasta ahora, sumado. | Días registrados y no registrados se cuentan por separado y nunca se suman. |
-| `DeviationDirection` | Hacia dónde va una desviación. | `Above`, `Below`; indican solo si lo registrado está por encima o por debajo del objetivo. |
-| `DeviationMagnitude` | Qué tan grande es, en fracción del objetivo y en kcal. | `RelativeValue ≥ 0`, `AbsoluteEnergyKcal ≥ 0`. |
-| `ConsistencyState` | Dónde está el índice. | `Normal`, `Watch`, `Alert`; describen la coherencia de los datos, no el comportamiento del paciente. |
-| `WindowState`, `FollowUpState` | Estados de ventana y de visita. | `Open`/`Closed`; `Scheduled`/`Completed`/`Missed`. |
-| `Specialty`, `ReferralReason` | Destino y motivo de una derivación. | Texto libre (120 y 1000 caracteres): no se usa una lista cerrada para no imponer una clasificación clínica que corresponde al profesional. |
-| `WindowId`, `DeviationId`, `ReferralId`, `FollowUpId` | Identidades tipadas. | `Value : int > 0`, `internal static FromRaw(int)`. |
+| `TargetsSnapshot` | La copia de los objetivos diarios vigentes en un momento dado. | `PlanVersion > 0`, `EnergyKcal > 0`, los macros, `TakenAt` y `EffectiveFrom`. No incluye diagnóstico, razonamiento clínico ni base de cálculo. |
+| `DailyCompliance` | Cómo se vio un día al poner la ingesta registrada al lado de los objetivos que regían ese mismo día. | Constantes `Met`, `Exceeded`, `Short` y `Unlogged`, con `ToleranceRatio = 0.10m`. La factory `Evaluate(...)` mira si el diario tiene algo en absoluto y nunca los totales, y `SaysTheSameAs(...)` resuelve la idempotencia. |
+| `AnthropometryPoint` | Un punto de la serie de peso clínica. | `Source` admite exactamente un valor legal, `ClinicalMeasurement`, y junto con la factory `FromClinicalMeasurement(...)` hacen cumplir *Two Series Never Merged*. |
+| `IntakeSummary` | Lo que la ventana ha visto hasta ahora, ya sumado. | Los días registrados y los no registrados se cuentan por separado y nunca se suman entre sí. |
+| `DeviationDirection` | Hacia dónde va una desviación. | `Above` y `Below`, que indican únicamente si lo registrado está por encima o por debajo del objetivo. |
+| `DeviationMagnitude` | Qué tan grande es esa desviación, tanto en fracción del objetivo como en kcal. | `RelativeValue ≥ 0` y `AbsoluteEnergyKcal ≥ 0`. |
+| `ConsistencyState` | En qué punto se encuentra el índice. | `Normal`, `Watch` y `Alert`, que describen la coherencia de los datos y no el comportamiento del paciente. |
+| `WindowState`, `FollowUpState` | Los estados de una ventana y de una visita. | `Open` y `Closed` para la primera; `Scheduled`, `Completed` y `Missed` para la segunda. |
+| `Specialty`, `ReferralReason` | El destino y el motivo de una derivación. | Texto libre de 120 y 1000 caracteres respectivamente. No se usa una lista cerrada, para no imponer una clasificación clínica que le corresponde al profesional. |
+| `WindowId`, `DeviationId`, `ReferralId`, `FollowUpId` | Las identidades tipadas del contexto. | `Value : int > 0` e `internal static FromRaw(int)`. |
 
-**Commands (16)** — Desde `OpenEvaluationWindowCommand` y `SnapshotActiveTargetsCommand` hasta `CloseEvaluationWindowCommand`. Sólo dos tienen endpoint (`RecordReferralCommand` y `ScheduleFollowUpCommand`): el contexto es principalmente reactivo y se activa por eventos y por políticas temporales. `ReEvaluateWindowCommand` recibe una sola fecha, no un rango.
+**Commands**
 
-**Queries (10)** — Siete alimentan read models (Patient Monitoring Panel, Daily Compliance Indicator, Consistency Card, Practitioner Agenda, entre otros) y tres son entrada de las políticas temporales: `GetOpenEvaluationWindowsQuery`, `GetEscalatableConsistencyIndicesQuery` y `GetOverdueScheduledFollowUpsQuery`.
+Los dieciséis commands van desde `OpenEvaluationWindowCommand` y `SnapshotActiveTargetsCommand` hasta `CloseEvaluationWindowCommand`. Solo dos de ellos tienen endpoint, que son `RecordReferralCommand` y `ScheduleFollowUpCommand`, ya que el contexto es principalmente reactivo y se activa por eventos y por políticas temporales. Conviene notar que `ReEvaluateWindowCommand` recibe una sola fecha y no un rango.
 
-**Domain Events (18)** — Sólo dos cruzan frontera, ambos hacia Nutritional Care: `SustainedDeviationDetected` y `AlertEscalatedToPractitioner`, y ninguno lleva objetivos, ajustes ni instrucciones en el payload, porque la decisión la toma el profesional. `LoggingGapDetected` y `FollowUpMissed` son internos y ningún otro contexto se suscribe a ellos: así se mantienen las reglas de que un hueco nunca escala y una visita perdida no cierra el vínculo.
+**Queries**
 
-**Errors** — `enum MonitoringError` con 19 valores. Todos describen condiciones que impiden interpretar los datos (por ejemplo, ventana insuficiente o series faltantes); ninguno califica la conducta del paciente.
+De las diez queries, siete alimentan read models como Patient Monitoring Panel, Daily Compliance Indicator, Consistency Card y Practitioner Agenda, entre otros, mientras que las tres restantes son la entrada de las políticas temporales: `GetOpenEvaluationWindowsQuery`, `GetEscalatableConsistencyIndicesQuery` y `GetOverdueScheduledFollowUpsQuery`.
 
-**Repositories (abstracciones)** — `IEvaluationWindowRepository`, `IDeviationRepository`, `IConsistencyIndexRepository`, `IReferralRepository` e `IScheduledFollowUpRepository`. Destaca `FindLatestByWindowAndDirectionAsync`, sin el cual la misma tendencia produciría una fila nueva en cada comida. Nada en este contexto llama al `Remove` heredado.
+**Domain Events**
 
-**Relaciones entre clases:** `EvaluationWindow` compone `WindowId` y `WindowState`, y agrega 0..* `TargetsSnapshot`, 0..* `DailyCompliance` y 0..* `AnthropometryPoint` (tres series independientes serializadas como JSON). `Deviation` referencia la ventana por `WindowRef : WindowId` —asociación por identificador, sin navegación— y compone `DeviationMagnitude` y `DeviationDirection`. `ConsistencyIndex` compone `ConsistencyState` y depende de `DailyCompliance` y de los puntos de tendencia sólo como parámetros de `Recompute`. `Referral` compone `Specialty` y `ReferralReason`; `ScheduledFollowUp` compone `FollowUpState`.
+De los dieciocho domain events, solo dos cruzan la frontera y ambos van hacia Nutritional Care: `SustainedDeviationDetected` y `AlertEscalatedToPractitioner`. Ninguno de ellos lleva objetivos, ajustes ni instrucciones en el payload, precisamente porque la decisión la toma el profesional. `LoggingGapDetected` y `FollowUpMissed` son internos y ningún otro contexto se suscribe a ellos, y así se mantienen las reglas de que un hueco nunca escala y de que una visita perdida no cierra el vínculo.
+
+**Errors**
+
+El `enum MonitoringError` reúne 19 valores, todos los cuales describen condiciones que impiden interpretar los datos, como una ventana insuficiente o unas series faltantes. Ninguno califica la conducta del paciente.
+
+**Repositories (abstracciones)**
+
+Son cinco: `IEvaluationWindowRepository`, `IDeviationRepository`, `IConsistencyIndexRepository`, `IReferralRepository` e `IScheduledFollowUpRepository`. Entre sus operaciones destaca `FindLatestByWindowAndDirectionAsync`, sin la cual una misma tendencia produciría una fila nueva con cada comida. Nada en este contexto llama al `Remove` heredado.
+
+**Relaciones entre clases:** `EvaluationWindow` compone `WindowId` y `WindowState`, y agrega 0..* `TargetsSnapshot`, 0..* `DailyCompliance` y 0..* `AnthropometryPoint`, tres series independientes que se serializan como JSON. `Deviation` referencia la ventana mediante `WindowRef : WindowId`, en una asociación por identificador y sin navegación, y compone `DeviationMagnitude` y `DeviationDirection`. `ConsistencyIndex` compone `ConsistencyState` y depende de `DailyCompliance` y de los puntos de tendencia solo como parámetros de `Recompute`. Por último, `Referral` compone `Specialty` y `ReferralReason`, y `ScheduledFollowUp` compone `FollowUpState`.
 
 #### 2.6.2.2. Interface Layer
 
-La Interface Layer de Monitoring & Adherence es notablemente pequeña en escritura y rica en lectura, porque el contexto es reactivo: de sus dieciséis comandos sólo dos se exponen como endpoint. Los tres controllers reflejan en la API el principio *Patient First Always*.
+La Interface Layer de Monitoring & Adherence es notablemente pequeña en escritura y rica en lectura, y la razón está en que el contexto es reactivo: de sus dieciséis comandos solo dos se exponen como endpoint. Los tres controllers trasladan a la API el principio *Patient First Always*.
 
 **Controllers**
 
-**`PatientMonitoringController`** — `[Route("api/v1/patients")] [Authorize] [Tags("Monitoring and Adherence")]`. Depende de los cuatro query services de lectura y de `IStringLocalizer<MonitoringMessages>`.
+`PatientMonitoringController` se publica bajo `[Route("api/v1/patients")] [Authorize] [Tags("Monitoring and Adherence")]` y depende de los cuatro query services de lectura y de `IStringLocalizer<MonitoringMessages>`.
 
 | Verbo / Ruta | Acción | Rol | Read Model |
 |---|---|---|---|
 | `GET /{patientId:int}/evaluation-windows` | `GetEvaluationWindows(int)` | Ambos participantes | Patient Monitoring Panel |
 | `GET /{patientId:int}/evaluation-windows/current` | `GetCurrentEvaluationWindow(int)` | Ambos participantes | Patient Monitoring Panel |
 | `GET /{patientId:int}/daily-compliance?date=` | `GetDailyCompliance(int, DateOnly?)` | `Patient` | Daily Compliance Indicator |
-| `GET /{patientId:int}/deviations` | `GetDeviations(int)` | `Practitioner` | Patient Monitoring Panel, desviaciones |
+| `GET /{patientId:int}/deviations` | `GetDeviations(int)` | `Practitioner` | Patient Monitoring Panel, sección de desviaciones |
 | `GET /{patientId:int}/consistency-index` | `GetConsistencyIndex(int)` | `Patient` | Consistency Card |
-| `GET /{patientId:int}/referrals` | `GetReferrals(int)` | Ambos participantes | Patient Record, derivaciones |
+| `GET /{patientId:int}/referrals` | `GetReferrals(int)` | Ambos participantes | Patient Record, sección de derivaciones |
 
-Los permisos son asimétricos: el paciente ve su indicador diario y su tarjeta de consistencia; el profesional ve las desviaciones.
+Los permisos son deliberadamente asimétricos, de modo que el paciente ve su indicador diario y su tarjeta de consistencia mientras que el profesional es quien ve las desviaciones.
 
-**`ReferralsController`** — `[Route("api/v1/referrals")] [Authorize(Roles = "Practitioner")]`. Un único `POST /` (`RecordReferral(RecordReferralResource)`, respuestas 201 · 400 · 401 · 403).
+`ReferralsController`, bajo `[Route("api/v1/referrals")] [Authorize(Roles = "Practitioner")]`, expone un único `POST /` resuelto por `RecordReferral(RecordReferralResource)`, con respuestas 201 · 400 · 401 · 403.
 
-**`ScheduledFollowUpsController`** — `[Route("api/v1/scheduled-follow-ups")] [Authorize(Roles = "Practitioner")]`. Expone `POST /` (`ScheduleFollowUp(ScheduleFollowUpResource)`) y `GET /api/v1/practitioners/{practitionerId:int}/scheduled-follow-ups` (`GetPractitionerAgenda(int)`, read model Practitioner Agenda, con ruta absoluta que sobrescribe la de clase). `Flag Missed Follow Up` no tiene endpoint: lo emite la política temporal.
+`ScheduledFollowUpsController`, bajo `[Route("api/v1/scheduled-follow-ups")] [Authorize(Roles = "Practitioner")]`, expone `POST /`, resuelto por `ScheduleFollowUp(ScheduleFollowUpResource)`, y `GET /api/v1/practitioners/{practitionerId:int}/scheduled-follow-ups`, resuelto por `GetPractitionerAgenda(int)`, que sirve el read model Practitioner Agenda con una ruta absoluta que sobrescribe la de la clase. La operación `Flag Missed Follow Up` no tiene endpoint, ya que la emite la política temporal.
 
-**Resources** — `MonitoringResources.cs` contiene las clases de entrada `RecordReferralResource` y `ScheduleFollowUpResource`, con `[Required]` en sus campos. `MonitoringReadResources.cs` contiene las de salida: `DailyComplianceResource`, `TargetsSnapshotResource`, `AnthropometryPointResource`, `IntakeSummaryResource`, `EvaluationWindowResource`, `DeviationResource`, `ConsistencyIndexResource`, `ReferralResource` y `ScheduledFollowUpResource`.
+**Resources**
 
-**Transform / Assemblers** — `MonitoringAssemblers.cs` reúne dos command assemblers (`RecordReferralCommandAssembler`, `ScheduleFollowUpCommandAssembler`) y ocho resource assemblers (`DailyComplianceResourceAssembler`, `TargetsSnapshotResourceAssembler`, `AnthropometryPointResourceAssembler`, `EvaluationWindowResourceAssembler`, `DeviationResourceAssembler`, `ConsistencyIndexResourceAssembler`, `ReferralResourceAssembler`, `ScheduledFollowUpResourceAssembler`). `MonitoringActionResultAssembler.cs` expone `ToReferralResult`, `ToScheduledFollowUpResult`, `ToNotFoundResult` y el privado `FailureResult`, y es el único lugar donde `MonitoringError` se convierte en un código HTTP:
+`MonitoringResources.cs` contiene las clases de entrada `RecordReferralResource` y `ScheduleFollowUpResource`, ambas con `[Required]` en sus campos. `MonitoringReadResources.cs` contiene las de salida, que son `DailyComplianceResource`, `TargetsSnapshotResource`, `AnthropometryPointResource`, `IntakeSummaryResource`, `EvaluationWindowResource`, `DeviationResource`, `ConsistencyIndexResource`, `ReferralResource` y `ScheduledFollowUpResource`.
+
+**Transform / Assemblers**
+
+`MonitoringAssemblers.cs` reúne dos command assemblers, que son `RecordReferralCommandAssembler` y `ScheduleFollowUpCommandAssembler`, junto con ocho resource assemblers: `DailyComplianceResourceAssembler`, `TargetsSnapshotResourceAssembler`, `AnthropometryPointResourceAssembler`, `EvaluationWindowResourceAssembler`, `DeviationResourceAssembler`, `ConsistencyIndexResourceAssembler`, `ReferralResourceAssembler` y `ScheduledFollowUpResourceAssembler`. Por su parte, `MonitoringActionResultAssembler.cs` expone `ToReferralResult`, `ToScheduledFollowUpResult`, `ToNotFoundResult` y el privado `FailureResult`, y es el único lugar donde `MonitoringError` se convierte en un código HTTP.
 
 | Errores | Status |
 |---|---|
@@ -3149,48 +3193,56 @@ Los permisos son asimétricos: el paciente ve su indicador diario y su tarjeta d
 | `TargetsSnapshotMissing`, `InsufficientWindowLength`, `NoLoggedDays`, `BothSeriesRequired`, `ConsistencyThresholdNotConfigured`, `PatientPromptRequiredBeforeEscalation`, `ThreeWeeksInAlertRequired` | **422** |
 | `UnexpectedError` (por defecto) | **500** |
 
-**ACL Contract** — `IMonitoringContextFacade` declara los DTO `DailyComplianceItem`, `ConsistencyStateItem`, `AnthropometryPointItem` y `ReferralItem`, y las operaciones `GetDailyComplianceSeries`, `GetConsistencyState`, `GetAnthropometrySeries`, `GetAnthropometrySeriesPoints` y `GetReferrals`. Es un contrato de solo lectura. No expone desviaciones ni su evidencia: estas cruzan la frontera únicamente como eventos, una sola vez y cuando son sostenidas, y llegan a la bandeja del profesional. Así se evita un segundo camino por el que una señal pueda llegar a una decisión clínica. `ConsistencyStateItem` incluye la fecha en que se notificó al paciente y la fecha de escalación, porque el invariante exige que la notificación ocurra primero.
+**ACL Contract**
 
-**Localización** — `MonitoringAdherence/Resources/MonitoringMessages.cs`. Contiene los textos del recordatorio y de la notificación al paciente, redactados sin lenguaje acusatorio.
+`IMonitoringContextFacade` declara los DTO `DailyComplianceItem`, `ConsistencyStateItem`, `AnthropometryPointItem` y `ReferralItem`, junto con las operaciones `GetDailyComplianceSeries`, `GetConsistencyState`, `GetAnthropometrySeries`, `GetAnthropometrySeriesPoints` y `GetReferrals`. Es un contrato de solo lectura y no expone desviaciones ni su evidencia, dado que estas cruzan la frontera únicamente como eventos, una sola vez y cuando ya son sostenidas, para llegar a la bandeja del profesional. De este modo se evita que exista un segundo camino por el que una señal pueda desembocar en una decisión clínica. `ConsistencyStateItem` incluye tanto la fecha en que se notificó al paciente como la fecha de escalación, ya que el invariante exige que la notificación ocurra primero.
+
+**Localización**
+
+Los mensajes localizados se declaran en `MonitoringAdherence/Resources/MonitoringMessages.cs`, que contiene los textos del recordatorio y de la notificación al paciente, redactados sin lenguaje acusatorio.
 
 #### 2.6.2.3. Application Layer
 
-La Application Layer de este contexto orquesta once subflujos (5.1 a 5.11) y aloja el mayor número de event handlers de la plataforma: trece políticas disparadas por eventos, de las cuales nueve reaccionan a eventos de otros bounded contexts. A ellas se suman tres políticas temporales ejecutadas como `BackgroundService` (vacío de registro, escalación de consistencia y cita no acudida), para un total de dieciséis. Es aquí donde se evidencian los capabilities del contexto: evaluar días, detectar y sostener desviaciones, calcular el índice de consistencia, preguntar al paciente, escalar al profesional, detectar huecos de registro y gestionar derivaciones y citas.
+La Application Layer de este contexto orquesta once subflujos, numerados del 5.1 al 5.11, y aloja el mayor número de event handlers de toda la plataforma, con trece políticas disparadas por eventos de las cuales nueve reaccionan a eventos de otros bounded contexts. A ellas se suman tres políticas temporales ejecutadas como `BackgroundService`, que atienden el vacío de registro, la escalación de consistencia y la cita no acudida, para un total de dieciséis. Es aquí donde quedan a la vista los capabilities del contexto, esto es evaluar días, detectar y sostener desviaciones, calcular el índice de consistencia, preguntar al paciente, escalar al profesional, detectar huecos de registro y gestionar derivaciones y citas.
 
 **Command Services**
 
-**`EvaluationWindowCommandService`** — Depende de `IEvaluationWindowRepository`, `IIntakeContextFacade`, `IUnitOfWork`, `IConfiguration`, `ILogger<...>` e `IMediator`. Es la clase que compara lo prescrito con lo registrado: obtiene lo registrado mediante el ACL de Intake & Body Response y lo prescrito desde los snapshots guardados en la ventana. No modifica ninguno de los dos.
+`EvaluationWindowCommandService` depende de `IEvaluationWindowRepository`, `IIntakeContextFacade`, `IUnitOfWork`, `IConfiguration`, `ILogger<...>` e `IMediator`. Es la clase que compara lo prescrito con lo registrado, para lo cual obtiene lo registrado mediante el ACL de Intake & Body Response y lo prescrito desde los snapshots guardados en la ventana, sin modificar ninguno de los dos.
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
-| `Handle(OpenEvaluationWindowCommand)` | 5.1 | *Minimum Seven Day Window* y *One Open Window Per Patient*. Publica `EvaluationWindowOpened`. |
+| `Handle(OpenEvaluationWindowCommand)` | 5.1 | Aplica *Minimum Seven Day Window* y *One Open Window Per Patient*. Publica `EvaluationWindowOpened`. |
 | `Handle(SnapshotActiveTargetsCommand)` | 5.2 | Construye el `TargetsSnapshot` y lo anexa sin modificar la serie diaria. Publica `TargetsSnapshotTaken`. |
 | `Handle(AppendAnthropometryPointCommand)` | 5.3 | Añade el punto clínico. Publica `AnthropometryPointAppended`. |
 | `Handle(EvaluateDayCommand)` | 5.4 | Delega en `EvaluateSingleDay(..., isReEvaluation: false, ...)`. |
 | `Handle(ReEvaluateWindowCommand)` | 5.5 | Delega en `EvaluateSingleDay(..., isReEvaluation: true, ...)`. |
-| `Handle(FlagLoggingGapCommand)` | 5.9 | Umbral `Monitoring:LoggingGapThresholdDays` (3 por defecto). Publica `LoggingGapDetected`. Nada aquí alcanza el agregado `Deviation` ni el índice de consistencia. |
+| `Handle(FlagLoggingGapCommand)` | 5.9 | Usa el umbral `Monitoring:LoggingGapThresholdDays`, que por defecto vale 3, y publica `LoggingGapDetected`. Nada de lo que ocurre aquí alcanza el agregado `Deviation` ni el índice de consistencia. |
 | `Handle(RemindPatientCommand)` | 5.9 | Publica `PatientReminded`. |
 | `Handle(CloseEvaluationWindowCommand)` | 5.11 | Publica `EvaluationWindowClosed`. |
 
-Su método privado clave, `EvaluateSingleDay(int, DateOnly, bool, CT)`, resuelve la ventana abierta, toma los objetivos que estaban en vigor el día evaluado (no los de ahora), consulta el resumen de ingesta por el ACL, construye el `DailyCompliance` usando `HasAnyEntry` y nunca los totales, rellena los días no registrados sólo fuera de la ruta de re-evaluación, y publica los eventos correspondientes.
+Su método privado clave es `EvaluateSingleDay(int, DateOnly, bool, CT)`, que resuelve la ventana abierta, toma los objetivos que estaban en vigor el día evaluado en lugar de los de ahora, consulta el resumen de ingesta por el ACL, construye el `DailyCompliance` usando `HasAnyEntry` y nunca los totales, rellena los días no registrados solo cuando no se trata de una re-evaluación, y publica los eventos correspondientes.
 
-**`DeviationCommandService`** — Depende de `IDeviationRepository`, `IEvaluationWindowRepository`, `IUnitOfWork`, `IConfiguration`, `ILogger<...>` e `IMediator`. `Handle(DetectDeviationCommand)` exige `HasMinimumSpan` (invariante 1), toma el horizonte rodante, delega en `Deviation.DetectFrom(...)` y, si ya existe una desviación en esa ventana y dirección, la re-enuncia en vez de duplicarla. `Handle(FlagSustainedDeviationCommand)` aplica el ratio configurable `Monitoring:SustainedDeviationRatio` (0.5 por defecto) y publica `SustainedDeviationDetected` sólo en la transición.
+`DeviationCommandService` depende de `IDeviationRepository`, `IEvaluationWindowRepository`, `IUnitOfWork`, `IConfiguration`, `ILogger<...>` e `IMediator`. Su método `Handle(DetectDeviationCommand)` exige `HasMinimumSpan`, conforme al primer invariante, toma el horizonte rodante, delega en `Deviation.DetectFrom(...)` y, cuando ya existe una desviación en esa ventana y dirección, la vuelve a enunciar en lugar de duplicarla. `Handle(FlagSustainedDeviationCommand)`, por su parte, aplica el ratio configurable `Monitoring:SustainedDeviationRatio`, que por defecto vale 0.5, y publica `SustainedDeviationDetected` únicamente en la transición.
 
-**`ConsistencyIndexCommandService`** — Depende de `IConsistencyIndexRepository`, `IEvaluationWindowRepository`, `IIntakeContextFacade`, `ICareRelationshipContextFacade`, `IUnitOfWork`, `IConfiguration`, `ILogger<...>` e `IMediator`; constante `TrendDays = 90`. Para cumplir el invariante 3, la clase no tiene dependencias hacia planes nutricionales.
+`ConsistencyIndexCommandService` depende de `IConsistencyIndexRepository`, `IEvaluationWindowRepository`, `IIntakeContextFacade`, `ICareRelationshipContextFacade`, `IUnitOfWork`, `IConfiguration`, `ILogger<...>` e `IMediator`, y declara la constante `TrendDays = 90`. Para cumplir el tercer invariante, la clase no tiene ninguna dependencia hacia los planes nutricionales.
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
-| `Handle(RecomputeConsistencyIndexCommand)` | 5.7 | Toma la tendencia suavizada de 90 días vía ACL y la serie diaria de la ventana; publica `ConsistencyIndexRecomputed` siempre y `ConsistencyAlertRaised` sólo al entrar en `Alert`. |
-| `Handle(PromptPatientCommand)` | 5.7 | *Patient First Always*, *Prompt Date Recorded*. Publica `PatientPromptedAboutConsistency`. |
-| `Handle(EscalateToPractitionerCommand)` | 5.8 | Guardas en orden: umbral configurado, paciente ya informado, tres semanas en alerta y `CareLink` activo. Publica `AlertEscalatedToPractitioner`. |
+| `Handle(RecomputeConsistencyIndexCommand)` | 5.7 | Toma la tendencia suavizada de 90 días a través del ACL junto con la serie diaria de la ventana, publica `ConsistencyIndexRecomputed` siempre y `ConsistencyAlertRaised` solo al entrar en `Alert`. |
+| `Handle(PromptPatientCommand)` | 5.7 | Aplica *Patient First Always* y *Prompt Date Recorded*. Publica `PatientPromptedAboutConsistency`. |
+| `Handle(EscalateToPractitionerCommand)` | 5.8 | Dispone las guardas en orden: umbral configurado, paciente ya informado, tres semanas en alerta y `CareLink` activo. Publica `AlertEscalatedToPractitioner`. |
 
-La guarda del paciente informado se comprueba aquí para dar una respuesta con nombre y se aplica otra vez dentro del agregado para que ningún otro llamador pueda saltársela.
+La guarda del paciente informado se comprueba aquí para poder dar una respuesta con nombre propio, y se aplica una segunda vez dentro del agregado para que ningún otro llamador pueda saltársela.
 
-**`ReferralCommandService`** y **`ScheduledFollowUpCommandService`** — Ambos dependen del ACL de Care Relationship y exigen vínculo activo. El primero registra derivaciones (*Specialty And Reason Required*); el segundo programa visitas (*One Active Scheduled Visit Per Patient*) y marca las perdidas desde la política temporal.
+`ReferralCommandService` y `ScheduledFollowUpCommandService` dependen ambos del ACL de Care Relationship y exigen un vínculo activo. El primero registra derivaciones aplicando *Specialty And Reason Required*, mientras que el segundo programa visitas bajo *One Active Scheduled Visit Per Patient* y marca las perdidas desde la política temporal.
 
-**Query Services** — `EvaluationWindowQueryService`, `DeviationQueryService`, `ConsistencyIndexQueryService`, `ReferralQueryService` y `ScheduledFollowUpQueryService`.
+**Query Services**
 
-**Event Handlers (políticas)** — Trece clases, todas con scope de DI aislado:
+Son cinco: `EvaluationWindowQueryService`, `DeviationQueryService`, `ConsistencyIndexQueryService`, `ReferralQueryService` y `ScheduledFollowUpQueryService`.
+
+**Event Handlers (políticas)**
+
+Son trece clases y todas trabajan con un scope de DI aislado.
 
 | Handler | Escucha | Origen | Emite |
 |---|---|---|---|
@@ -3200,43 +3252,53 @@ La guarda del paciente informado se comprueba aquí para dar una respuesta con n
 | `OnMealLoggedHandler` | `MealLogged` | Intake & Body Response | `EvaluateDayCommand` |
 | `OnEstimateConfirmedByPatientHandler` | `EstimateConfirmedByPatient` | Intake & Body Response | `EvaluateDayCommand` |
 | `OnOffPlanEntryLoggedHandler` | `OffPlanEntryLogged` | Intake & Body Response | `EvaluateDayCommand` |
-| `OnEntrySynchronizedHandler` | `EntrySynchronized` | Intake & Body Response | `ReEvaluateWindowCommand` (una sola fecha) |
+| `OnEntrySynchronizedHandler` | `EntrySynchronized` | Intake & Body Response | `ReEvaluateWindowCommand`, con una sola fecha |
 | `OnWeightTrendRecalculatedHandler` | `WeightTrendRecalculated` | Intake & Body Response | `RecomputeConsistencyIndexCommand` |
 | `OnCareLinkRevokedHandler` | `CareLinkRevoked` | Care Relationship | `CloseEvaluationWindowCommand` |
 | `OnDayEvaluatedHandler` | `DayEvaluated` | Interno | `DetectDeviationCommand` |
 | `OnDeviationDetectedHandler` | `DeviationDetected` | Interno | `FlagSustainedDeviationCommand` |
-| `OnConsistencyAlertRaisedHandler` | `ConsistencyAlertRaised` | Interno | `PromptPatientCommand` (único suscriptor; notifica primero al paciente) |
-| `OnLoggingGapDetectedHandler` | `LoggingGapDetected` | Interno | `RemindPatientCommand` (único suscriptor) |
+| `OnConsistencyAlertRaisedHandler` | `ConsistencyAlertRaised` | Interno | `PromptPatientCommand`, como único suscriptor, notificando primero al paciente |
+| `OnLoggingGapDetectedHandler` | `LoggingGapDetected` | Interno | `RemindPatientCommand`, como único suscriptor |
 
 Los tres handlers de entradas de diario comparten un método auxiliar que emite `EvaluateDayCommand(patientId, date)`, donde `date` es el día de calendario que el paciente estaba viviendo, tomado del timestamp local declarado en el evento y nunca del reloj del servidor.
 
-**ACL Facade** — `MonitoringContextFacade` implementa `IMonitoringContextFacade` apoyándose exclusivamente en los query services propios, y ante un fallo devuelve `null` o una lista vacía en lugar de propagar la excepción.
+**ACL Facade**
+
+`MonitoringContextFacade` implementa `IMonitoringContextFacade` apoyándose exclusivamente en los query services propios, y ante un fallo devuelve `null` o una lista vacía en lugar de propagar la excepción.
 
 #### 2.6.2.4. Infrastructure Layer
 
-La Infrastructure Layer de Monitoring & Adherence contiene la persistencia sobre MySQL 8.4 y tres `BackgroundService`, más que cualquier otro bounded context de la plataforma, porque tres de sus políticas no las dispara ni un usuario ni un evento, sino el paso del tiempo. No consume servicios externos de terceros.
+La Infrastructure Layer de Monitoring & Adherence contiene la persistencia sobre MySQL 8.4 y tres `BackgroundService`, más que cualquier otro bounded context de la plataforma, y la razón es que tres de sus políticas no las dispara ni un usuario ni un evento sino el paso del tiempo. No consume servicios externos de terceros.
 
-**Configuraciones de EF Core** — Las cinco viven en `MonitoringEntityTypeConfigurations.cs`.
+**Configuraciones de EF Core**
+
+Las cinco viven en `MonitoringEntityTypeConfigurations.cs`.
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
-| `EvaluationWindowEntityTypeConfiguration` | `evaluation_windows` | PK con converter `WindowId.FromRaw`; índices `ix_evaluation_windows_patient_id` e `ix_evaluation_windows_state` (este último lo usa la política temporal). Tres columnas `json` —`targets_snapshots`, `daily_compliance_series` y `anthropometry_series`— mapeadas desde sus backing fields, cada una con su propio `ValueComparer` estático, sin el cual EF nunca detectaría un cambio. Nueve `Ignore` sobre las propiedades calculadas. |
-| `DeviationEntityTypeConfiguration` | `deviations` | PK con converter `DeviationId.FromRaw`; `window_id` con converter e índice; `magnitude_relative_value` como `decimal(10,4)` y `magnitude_energy_kcal` como `decimal(10,2)`; los dos conteos con los que se decidió la mayoría. `Ignore(Magnitude)`. |
-| `ConsistencyIndexEntityTypeConfiguration` | `consistency_indices` | `HasKey(i => i.PatientId)` con `ValueGeneratedNever()`; `value` como `decimal(12,4)`; `state` con converter e índice `ix_consistency_indices_state`; las cuatro fechas del episodio. |
-| `ReferralEntityTypeConfiguration` | `referrals` | PK con converter `ReferralId.FromRaw`; `specialty` y `reason` con las longitudes máximas declaradas en los propios value objects. |
-| `ScheduledFollowUpEntityTypeConfiguration` | `scheduled_follow_ups` | PK con converter `FollowUpId.FromRaw`; índices sobre `patient_id` y `practitioner_id`; `state` con converter. |
+| `EvaluationWindowEntityTypeConfiguration` | `evaluation_windows` | La PK usa el converter `WindowId.FromRaw` y se declaran los índices `ix_evaluation_windows_patient_id` e `ix_evaluation_windows_state`, este último usado por la política temporal. Las tres columnas `json`, que son `targets_snapshots`, `daily_compliance_series` y `anthropometry_series`, se mapean desde sus backing fields, cada una con su propio `ValueComparer` estático, sin el cual EF nunca detectaría un cambio. Se aplican nueve `Ignore` sobre las propiedades calculadas. |
+| `DeviationEntityTypeConfiguration` | `deviations` | La PK usa el converter `DeviationId.FromRaw` y `window_id` lleva converter e índice. `magnitude_relative_value` se declara como `decimal(10,4)` y `magnitude_energy_kcal` como `decimal(10,2)`, junto con los dos conteos con los que se decidió la mayoría. Se aplica `Ignore(Magnitude)`. |
+| `ConsistencyIndexEntityTypeConfiguration` | `consistency_indices` | Usa `HasKey(i => i.PatientId)` con `ValueGeneratedNever()`, `value` como `decimal(12,4)`, `state` con converter e índice `ix_consistency_indices_state`, y las cuatro fechas del episodio. |
+| `ReferralEntityTypeConfiguration` | `referrals` | La PK usa el converter `ReferralId.FromRaw`, y `specialty` y `reason` toman las longitudes máximas declaradas en los propios value objects. |
+| `ScheduledFollowUpEntityTypeConfiguration` | `scheduled_follow_ups` | La PK usa el converter `FollowUpId.FromRaw`, hay índices sobre `patient_id` y `practitioner_id`, y `state` lleva converter. |
 
-**Repositorios (implementaciones)** — Las cinco clases de `MonitoringRepositories.cs` heredan de `BaseRepository<T>`, sobrescriben `FindByIdAsync` con la identidad tipada y reimplementan explícitamente `IBaseRepository<T>.FindByIdAsync`. Los estados y direcciones se comparan contra instancias estáticas de value object, porque EF Core no puede traducir a SQL un acceso a miembro de un tipo convertido. Ninguna de ellas usa el `Remove` heredado, lo que hace estructural la regla *Evaluated Data Is Preserved*.
+**Repositorios (implementaciones)**
 
-**Scheduling — Hosted Services** — Los tres siguen las cinco guardas obligatorias del proyecto (cuerpo del ciclo dentro de `try/catch`, servicios *scoped* resueltos en un scope propio, propagación del `stoppingToken`, ciclo idempotente y migraciones ya aplicadas antes del arranque), usan `PeriodicTimer` con el método privado `SafeWaitAsync` y declaran `BatchSize = 200`.
+Las cinco clases de `MonitoringRepositories.cs` heredan de `BaseRepository<T>`, sobrescriben `FindByIdAsync` con la identidad tipada y reimplementan de forma explícita `IBaseRepository<T>.FindByIdAsync`. Los estados y las direcciones se comparan contra instancias estáticas de value object, dado que EF Core no puede traducir a SQL el acceso a un miembro de un tipo convertido. Ninguna de ellas usa el `Remove` heredado, lo que vuelve estructural la regla *Evaluated Data Is Preserved*.
+
+**Scheduling**
+
+Los tres hosted services siguen las cinco guardas obligatorias del proyecto, con el cuerpo del ciclo dentro de un `try/catch`, los servicios *scoped* resueltos en un scope propio, la propagación del `stoppingToken`, un ciclo idempotente y las migraciones ya aplicadas antes del arranque. Todos usan `PeriodicTimer` con el método privado `SafeWaitAsync` y declaran `BatchSize = 200`.
 
 | Hosted Service | Política implementada | Intervalo (configuración) | Flujo |
 |---|---|---|---|
-| `LoggingGapDetectionHostedService` | *When N Days Without Diary Entry* (5.9) | `Scheduling:LoggingGapIntervalHours`, 12 h por defecto | Lista las ventanas abiertas y emite un `FlagLoggingGapCommand` por cada una. |
-| `ConsistencyEscalationHostedService` | *When Consistency Alert Sustained Three Weeks* (5.8) | `Scheduling:ConsistencyEscalationIntervalHours`, 24 h por defecto | Calcula el corte a partir de `Monitoring:ConsistencyEscalationWeeks` (3 por defecto) y emite un `EscalateToPractitionerCommand` por índice escalable. |
-| `MissedFollowUpHostedService` | *When Scheduled Date Passed Without Visit* (5.10) | `Scheduling:MissedFollowUpIntervalHours`, 12 h por defecto | Lista las visitas vencidas y emite un `FlagMissedFollowUpCommand` por cada una. |
+| `LoggingGapDetectionHostedService` | *When N Days Without Diary Entry*, del subflujo 5.9 | `Scheduling:LoggingGapIntervalHours`, 12 h por defecto | Lista las ventanas abiertas y emite un `FlagLoggingGapCommand` por cada una. |
+| `ConsistencyEscalationHostedService` | *When Consistency Alert Sustained Three Weeks*, del subflujo 5.8 | `Scheduling:ConsistencyEscalationIntervalHours`, 24 h por defecto | Calcula el corte a partir de `Monitoring:ConsistencyEscalationWeeks`, que por defecto vale 3, y emite un `EscalateToPractitionerCommand` por cada índice escalable. |
+| `MissedFollowUpHostedService` | *When Scheduled Date Passed Without Visit*, del subflujo 5.10 | `Scheduling:MissedFollowUpIntervalHours`, 12 h por defecto | Lista las visitas vencidas y emite un `FlagMissedFollowUpCommand` por cada una. |
 
-**Servicios externos** — Ninguno. Todo el cálculo de este contexto es aritmética local sobre datos que ya posee o que lee por los ACL de Intake & Body Response y Care Relationship.
+**Servicios externos**
+
+Este contexto no consume ninguno. Todo su cálculo es aritmética local sobre datos que ya posee o que lee a través de los ACL de Intake & Body Response y Care Relationship.
 
 #### 2.6.2.5. Bounded Context Software Architecture Component Level Diagrams
 
@@ -3280,95 +3342,107 @@ Database:
 
 #### 2.6.3.1. Domain Layer
 
-**Care Relationship** (`Healthify.Platform.CareRelationship`) gobierna la relación consentida entre paciente y profesional y es la única fuente de verdad sobre quién puede ver a quién. Aquí se hace cumplir técnicamente, y no por convención, el principio de asimetría de la plataforma. Su Domain Layer declara dos aggregate roots, cinco value objects y diez eventos de dominio, de los cuales sólo dos cruzan frontera.
+El bounded context Care Relationship, implementado en `Healthify.Platform.CareRelationship`, gobierna la relación consentida entre paciente y profesional y constituye la única fuente de verdad sobre quién puede ver a quién. Es aquí donde el principio de asimetría de la plataforma se hace cumplir técnicamente y no por simple convención. Su Domain Layer declara dos aggregate roots, cinco value objects y diez eventos de dominio, de los cuales solo dos llegan a cruzar la frontera.
 
 **Aggregates (Aggregate Roots)**
 
-**`Invitation`** — El token de un solo uso que el profesional muestra como código QR durante la consulta. Es el único medio por el que un paciente se vincula a un profesional; crear una cuenta no otorga acceso a ninguna información.
+`Invitation` es el token de un solo uso que el profesional muestra como código QR durante la consulta. Se trata del único medio por el que un paciente se vincula a un profesional, ya que crear una cuenta no otorga acceso a ninguna información.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `Id` | `InvitationId` | `public get / private set` | Identidad tipada. |
-| `IssuedBy` | `int` | `public get / private set` | Profesional emisor; referencia cross-context como `int` plano, sin navegación EF. |
+| `IssuedBy` | `int` | `public get / private set` | Profesional emisor, guardado como referencia cross-context en un `int` plano y sin navegación de EF. |
 | `Token` | `InvitationToken` | `public get / private set` | Secreto opaco generado criptográficamente. |
-| `ExpiresAt` | `DateTimeOffset` | `public get / private set` | Fecha en que deja de ser canjeable. |
-| `RedeemedAt` | `DateTimeOffset?` | `public get / private set` | Momento del canje. |
-| `ExpiredAt` | `DateTimeOffset?` | `public get / private set` | Momento en que la política de expiración la retiró; distinto de `ExpiresAt`. |
-| `IsRedeemed` / `IsExpired` | `bool` | `public` (computadas) | Derivadas de las dos fechas anteriores. |
+| `ExpiresAt` | `DateTimeOffset` | `public get / private set` | Fecha en la que deja de ser canjeable. |
+| `RedeemedAt` | `DateTimeOffset?` | `public get / private set` | Momento en que se produjo el canje. |
+| `ExpiredAt` | `DateTimeOffset?` | `public get / private set` | Momento en que la política de expiración la retiró, que no debe confundirse con `ExpiresAt`. |
+| `IsRedeemed` / `IsExpired` | `bool` | `public` (computadas) | Se derivan de las dos fechas anteriores. |
 
 | Método | Scope | Reglas que aplica |
 |---|---|---|
-| `Invitation(IssueInvitationCommand)` | `public` | *Expiration Date Required* (fecha futura) y *Single Use Token* (genera el token con `InvitationToken.Generate()`). |
-| `IsValidAt(DateTimeOffset) : bool` | `public` | *Invitation Must Be Valid*: ni canjeada, ni expirada, ni vencida. |
-| `Redeem(DateTimeOffset)` | `public` | *Invitation Must Be Unused*, *Invitation Must Be Valid*. |
-| `Expire(DateTimeOffset)` | `public` | *Redeemed Invitation Cannot Expire*. Si ya está expirada es un no-op, lo que hace idempotente la política temporal. |
+| `Invitation(IssueInvitationCommand)` | `public` | Aplica *Expiration Date Required*, exigiendo una fecha futura, y *Single Use Token*, generando el token con `InvitationToken.Generate()`. |
+| `IsValidAt(DateTimeOffset) : bool` | `public` | Aplica *Invitation Must Be Valid*, comprobando que no esté canjeada, ni expirada, ni vencida. |
+| `Redeem(DateTimeOffset)` | `public` | Aplica *Invitation Must Be Unused* e *Invitation Must Be Valid*. |
+| `Expire(DateTimeOffset)` | `public` | Aplica *Redeemed Invitation Cannot Expire*. Si la invitación ya estaba expirada se comporta como un no-op, y eso vuelve idempotente la política temporal. |
 
-**`CareLink`** — La relación consentida paciente–profesional. El consentimiento se almacena como cuatro columnas y se reconstruye como value object mediante la propiedad calculada `Consent`, porque un *owned type* nullable es frágil en EF Core y el consentimiento está genuinamente ausente entre establecer el vínculo y que el paciente lo otorgue.
+`CareLink` modela la relación consentida entre paciente y profesional. El consentimiento se almacena como cuatro columnas y se reconstruye como value object mediante la propiedad calculada `Consent`, ya que un *owned type* nullable resulta frágil en EF Core y el consentimiento está genuinamente ausente durante el tramo que va desde establecer el vínculo hasta que el paciente lo otorga.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `Id` | `CareLinkId` | `public get / private set` | Identidad tipada. |
-| `PatientId` / `PractitionerId` | `int` | `public get / private set` | Referencias cross-context, `int` planos. |
-| `EstablishedAt` | `DateTimeOffset` | `public get / private set` | Creación del vínculo. |
-| `RevokedAt`, `DischargedAt`, `DischargeReason` | nullable | `public get / private set` | Cierre por retiro de consentimiento o por alta clínica. |
-| `PendingTargetsVersion`, `LastAcknowledgedVersion` | `int?` | `public get / private set` | Versión pendiente de acuse y última acusada. |
+| `PatientId` / `PractitionerId` | `int` | `public get / private set` | Referencias cross-context guardadas como `int` planos. |
+| `EstablishedAt` | `DateTimeOffset` | `public get / private set` | Momento de creación del vínculo. |
+| `RevokedAt`, `DischargedAt`, `DischargeReason` | nullable | `public get / private set` | Cierre del vínculo, sea por retiro del consentimiento o por alta clínica. |
+| `PendingTargetsVersion`, `LastAcknowledgedVersion` | `int?` | `public get / private set` | Versión pendiente de acuse y última versión acusada. |
 | `ConsentGranted`, `ConsentScope`, `ConsentGrantedAt`, `ConsentWithdrawnAt` | proyección | `public get / private set` | Proyección persistida del VO `Consent`. |
-| `Consent` | `Consent?` | `public` (computada) | Reconstruido desde las cuatro columnas. |
-| `IsActive` | `bool` | `public` (computada) | Consentimiento vigente, sin revocar y sin alta. Es el valor que el Open Host Service devuelve a Nutritional Care, Intake & Body Response, Monitoring & Adherence y a la capa de read models compuestos. |
-| `IsRevoked` / `IsDischarged` | `bool` | `public` (computadas) | Estados de cierre. |
+| `Consent` | `Consent?` | `public` (computada) | Se reconstruye a partir de las cuatro columnas anteriores. |
+| `IsActive` | `bool` | `public` (computada) | Indica consentimiento vigente, sin revocar y sin alta. Es el valor que el Open Host Service devuelve a Nutritional Care, Intake & Body Response, Monitoring & Adherence y a la capa de read models compuestos. |
+| `IsRevoked` / `IsDischarged` | `bool` | `public` (computadas) | Representan los dos estados de cierre. |
 
 | Método | Scope | Reglas que aplica |
 |---|---|---|
-| `CareLink(EstablishCareLinkCommand)` | `public` | *Patient Cannot Self Link*, *Link Starts Inactive Until Consent*. |
-| `GrantConsent(GrantConsentCommand)` | `public` | *Discharged Link Never Reactivated*, *Consent Scope Recorded*; rechaza el doble consentimiento. |
-| `WithdrawConsent()` | `public` | *Consent Always Revocable*, *No Justification Required*. Deliberadamente no recibe argumento de motivo. |
-| `Revoke()` | `public` | *Revoked Link Kept With Revocation Date*: la fila nunca se borra. |
-| `Discharge(ClinicalReason)` | `public` | *Clinical Reason Required*, *Discharged Link Never Reactivated*. |
-| `MarkTargetsPending(int)` | `public` | *One Pending Version At A Time*: una publicación más nueva reemplaza a la pendiente, no se encola. |
-| `AcknowledgeActiveTargets(int)` | `public` | *Acknowledgement Does Not Change The Plan*: sólo mueve `LastAcknowledgedVersion` y limpia la pendiente. |
+| `CareLink(EstablishCareLinkCommand)` | `public` | Aplica *Patient Cannot Self Link* y *Link Starts Inactive Until Consent*. |
+| `GrantConsent(GrantConsentCommand)` | `public` | Aplica *Discharged Link Never Reactivated* y *Consent Scope Recorded*, y rechaza el doble consentimiento. |
+| `WithdrawConsent()` | `public` | Aplica *Consent Always Revocable* y *No Justification Required*, por lo que de forma deliberada no recibe ningún argumento de motivo. |
+| `Revoke()` | `public` | Aplica *Revoked Link Kept With Revocation Date*, de modo que la fila nunca llega a borrarse. |
+| `Discharge(ClinicalReason)` | `public` | Aplica *Clinical Reason Required* y *Discharged Link Never Reactivated*. |
+| `MarkTargetsPending(int)` | `public` | Aplica *One Pending Version At A Time*, así que una publicación más nueva reemplaza a la pendiente en lugar de encolarse detrás de ella. |
+| `AcknowledgeActiveTargets(int)` | `public` | Aplica *Acknowledgement Does Not Change The Plan*, limitándose a mover `LastAcknowledgedVersion` y a limpiar la pendiente. |
 
-Los métodos reflejan la asimetría entre roles: el alta exige una razón clínica del profesional, mientras que el retiro del consentimiento no exige justificación del paciente.
+Los métodos reflejan la asimetría entre roles, ya que el alta exige una razón clínica de parte del profesional mientras que el retiro del consentimiento no exige justificación alguna de parte del paciente.
 
 **Value Objects**
 
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
-| `Consent` | El permiso que el paciente da y puede retirar en cualquier momento sin explicar por qué. | `IsGranted`, `Scope` (máx. 200), `GrantedAt`, `WithdrawnAt?`. `Withdraw(DateTimeOffset)` devuelve una nueva instancia, preservando la inmutabilidad. |
-| `ClinicalReason` | Justificación clínica registrada al dar de alta. | `Value : string`, máximo 500; rechaza vacío. |
-| `InvitationToken` | Secreto opaco de un solo uso del QR. | 32 bytes de `RandomNumberGenerator`, codificados en Base64 URL-safe; sólo acepta `[A-Za-z0-9-_]`; factory `Generate()`. |
-| `CareLinkId`, `InvitationId` | Identidades tipadas. | `Value : int > 0`, `internal static FromRaw(int)`, operadores de conversión. |
+| `Consent` | El permiso que el paciente otorga y puede retirar en cualquier momento sin explicar por qué. | `IsGranted`, `Scope` con un máximo de 200 caracteres, `GrantedAt` y `WithdrawnAt?`. El método `Withdraw(DateTimeOffset)` devuelve una instancia nueva y así preserva la inmutabilidad. |
+| `ClinicalReason` | La justificación clínica que queda registrada al dar de alta. | `Value : string` con un máximo de 500 caracteres, rechazando el valor vacío. |
+| `InvitationToken` | El secreto opaco de un solo uso que porta el QR. | 32 bytes de `RandomNumberGenerator` codificados en Base64 URL-safe, aceptando solo `[A-Za-z0-9-_]`, con la factory `Generate()`. |
+| `CareLinkId`, `InvitationId` | Las identidades tipadas del contexto. | `Value : int > 0`, `internal static FromRaw(int)` y operadores de conversión. |
 
-**Commands (10)** — `IssueInvitationCommand`, `ExpireInvitationCommand`, `RedeemInvitationCommand`, `EstablishCareLinkCommand`, `GrantConsentCommand`, `MarkTargetsPendingAcknowledgementCommand`, `AcknowledgeActiveTargetsCommand`, `WithdrawConsentCommand`, `RevokeCareLinkCommand` y `DischargePatientCommand`. Cuatro de ellos no tienen endpoint: son emitidos exclusivamente por políticas.
+**Commands**
 
-**Queries (6)** — `GetInvitationByIdQuery`, `GetInvitationByTokenQuery`, `GetExpirableInvitationsQuery`, `GetCareLinkByIdQuery`, `GetActiveCareLinkByPatientIdQuery` (que respalda el Open Host Service) y `GetCareLinksByPractitionerIdQuery`.
+Los diez commands son `IssueInvitationCommand`, `ExpireInvitationCommand`, `RedeemInvitationCommand`, `EstablishCareLinkCommand`, `GrantConsentCommand`, `MarkTargetsPendingAcknowledgementCommand`, `AcknowledgeActiveTargetsCommand`, `WithdrawConsentCommand`, `RevokeCareLinkCommand` y `DischargePatientCommand`. Cuatro de ellos carecen de endpoint, ya que los emiten exclusivamente las políticas.
 
-**Domain Events (10)** — Todos heredan de `DomainEventBase`. Sólo dos cruzan frontera, ambos hacia Monitoring & Adherence: `CareLinkEstablished`, que abre la ventana de evaluación, y `CareLinkRevoked`, que la cierra. `ConsentGranted` es interno a propósito: preguntar si un vínculo está activo no es reaccionar a un hecho pasado, y por eso Care Link Status se consulta de forma síncrona por el OHS. Los restantes —`InvitationIssued`, `InvitationExpired`, `InvitationRedeemed`, `ConsentWithdrawn`, `TreatmentDischarged`, `TargetsPendingAcknowledgement` y `ActiveTargetsAcknowledged`— son internos.
+**Queries**
 
-**Errors** — `enum CareRelationshipError` con 21 valores, entre ellos `PatientCannotSelfLink`, `PatientAlreadyHasActiveLink`, `ConsentScopeRequired`, `DischargedLinkCannotBeReactivated` y `AcknowledgedVersionNewerThanActive`.
+Las seis queries son `GetInvitationByIdQuery`, `GetInvitationByTokenQuery`, `GetExpirableInvitationsQuery`, `GetCareLinkByIdQuery`, `GetActiveCareLinkByPatientIdQuery`, que respalda el Open Host Service, y `GetCareLinksByPractitionerIdQuery`.
 
-**Repositories (abstracciones)** — `IInvitationRepository` (con `FindByTokenAsync` y `ListExpirableAsync`) e `ICareLinkRepository` (con `FindActiveByPatientIdAsync`, `ExistsUnclosedByPatientIdAsync`, `FindUnclosedByPatientIdAsync` y `ListByPractitionerIdAsync`). La distinción semántica es clave: *active* significa con consentimiento vivo y sin cerrar; *unclosed* significa que ocupa el único cupo del paciente, con o sin consentimiento todavía.
+**Domain Events**
 
-**Domain Services** — Este bounded context no declara interfaces de domain service propias; consume el ACL de IAM (`IIamContextFacade`) desde la capa de aplicación.
+Los diez domain events heredan de `DomainEventBase` y solo dos cruzan la frontera, ambos hacia Monitoring & Adherence: `CareLinkEstablished`, que abre la ventana de evaluación, y `CareLinkRevoked`, que la cierra. `ConsentGranted` es interno a propósito, puesto que preguntar si un vínculo está activo no equivale a reaccionar a un hecho pasado, y de ahí que Care Link Status se consulte de forma síncrona por el OHS. Los restantes son internos y comprenden `InvitationIssued`, `InvitationExpired`, `InvitationRedeemed`, `ConsentWithdrawn`, `TreatmentDischarged`, `TargetsPendingAcknowledgement` y `ActiveTargetsAcknowledged`.
 
-**Relaciones entre clases:** `Invitation` compone `InvitationId` e `InvitationToken`. `CareLink` compone `CareLinkId`, agrega de forma reconstruida 0..1 `Consent` y depende de `ClinicalReason` como parámetro de `Discharge`. Entre `Invitation` y `CareLink` existe una asociación por identificador y a través de una política (1 → 0..1, `redeemedInto`): no hay navegación EF ni columna `invitation_id` en el vínculo. Ambas raíces realizan `IAuditableEntity`, y los diez eventos generalizan `DomainEventBase`, que a su vez realiza `IEvent`.
+**Errors**
+
+El `enum CareRelationshipError` reúne 21 valores, entre los que figuran `PatientCannotSelfLink`, `PatientAlreadyHasActiveLink`, `ConsentScopeRequired`, `DischargedLinkCannotBeReactivated` y `AcknowledgedVersionNewerThanActive`.
+
+**Repositories (abstracciones)**
+
+`IInvitationRepository` añade `FindByTokenAsync` y `ListExpirableAsync`, mientras que `ICareLinkRepository` añade `FindActiveByPatientIdAsync`, `ExistsUnclosedByPatientIdAsync`, `FindUnclosedByPatientIdAsync` y `ListByPractitionerIdAsync`. La distinción semántica entre ambos adjetivos es clave, ya que *active* significa que el vínculo tiene consentimiento vivo y no está cerrado, mientras que *unclosed* significa que ocupa el único cupo del paciente, tenga o no consentimiento todavía.
+
+**Domain Services**
+
+Este bounded context no declara interfaces de domain service propias y se limita a consumir el ACL de IAM, `IIamContextFacade`, desde la capa de aplicación.
+
+**Relaciones entre clases:** `Invitation` compone `InvitationId` e `InvitationToken`. `CareLink` compone `CareLinkId`, agrega de forma reconstruida 0..1 `Consent` y depende de `ClinicalReason` como parámetro de `Discharge`. Entre `Invitation` y `CareLink` existe una asociación por identificador y a través de una política, de 1 a 0..1 y etiquetada *redeemedInto*, sin navegación de EF ni columna `invitation_id` en el vínculo. Ambas raíces realizan `IAuditableEntity` y los diez eventos generalizan `DomainEventBase`, que a su vez realiza `IEvent`.
 
 #### 2.6.3.2. Interface Layer
 
-La Interface Layer de Care Relationship expone cuatro controllers y, sobre todo, publica el Open Host Service de la plataforma: el contrato por el que los tres bounded contexts que manejan información del paciente (Nutritional Care, Intake & Body Response y Monitoring & Adherence), junto con la capa de read models compuestos, preguntan si un vínculo está activo antes de servir nada.
+La Interface Layer de Care Relationship expone cuatro controllers y, sobre todo, publica el Open Host Service de la plataforma. Ese contrato es el que usan los tres bounded contexts que manejan información del paciente, esto es Nutritional Care, Intake & Body Response y Monitoring & Adherence, junto con la capa de read models compuestos, para preguntar si un vínculo está activo antes de servir nada.
 
 **Controllers**
 
-**`InvitationsController`** — `[Route("api/v1/invitations")] [Authorize] [Tags("Invitations")]`. Depende de `IInvitationCommandService`, `IInvitationQueryService` e `IStringLocalizer<CareRelationshipMessages>`.
+`InvitationsController` se publica bajo `[Route("api/v1/invitations")] [Authorize] [Tags("Invitations")]` y depende de `IInvitationCommandService`, `IInvitationQueryService` e `IStringLocalizer<CareRelationshipMessages>`.
 
 | Verbo / Ruta | Acción | Rol | Read Model | Respuestas |
 |---|---|---|---|---|
 | `POST /api/v1/invitations` | `IssueInvitation(IssueInvitationResource)` | `Practitioner` | QR Code On Screen | 201 · 400 · 401 · 403 · 500 |
-| `GET /api/v1/invitations/{invitationId:int}` | `GetInvitationById(int)` | Sólo el emisor | Invitation Status | 200 · 401 · 403 · 404 |
+| `GET /api/v1/invitations/{invitationId:int}` | `GetInvitationById(int)` | Solo el emisor | Invitation Status | 200 · 401 · 403 · 404 |
 | `POST /api/v1/invitations/redemption` | `RedeemInvitation(RedeemInvitationResource)` | `Patient` | — | 201 `CareLinkResource` · 400 · 401 · 403 · 404 · 409 · 422 |
 
-El token sólo viaja en la respuesta que crea la invitación; toda lectura posterior lo reporta como `null`.
+El token solo viaja en la respuesta que crea la invitación, y toda lectura posterior lo reporta como `null`.
 
-**`CareLinksController`** — `[Route("api/v1/care-links")] [Authorize] [Tags("Care Links")]`.
+`CareLinksController` se publica bajo `[Route("api/v1/care-links")] [Authorize] [Tags("Care Links")]` y concentra las transiciones del vínculo.
 
 | Verbo / Ruta | Acción | Rol | Respuestas |
 |---|---|---|---|
@@ -3379,17 +3453,21 @@ El token sólo viaja en la respuesta que crea la invitación; toda lectura poste
 | `POST /{careLinkId:int}/targets-acknowledgement` | `AcknowledgeActiveTargets` | `Patient` | 200 · 401 · 403 · 404 · 422 |
 | `POST /{careLinkId:int}/discharge` | `DischargePatient` | `Practitioner` | 200 · 400 · 401 · 403 · 404 · 409 |
 
-`Revoke Care Link` no tiene endpoint: se ejecuta mediante una política interna disparada por `ConsentWithdrawn`.
+La operación `Revoke Care Link` no tiene endpoint, ya que se ejecuta mediante una política interna que dispara `ConsentWithdrawn`.
 
-**`PatientCareLinksController`** — `[Route("api/v1/patients")] [Authorize]`. Expone `GET /{patientId:int}/care-links/active` (`GetActiveCareLink(int)`), que sirve el read model Care Link Status: la pregunta que los contextos que manejan información del paciente hacen antes de servir nada.
+`PatientCareLinksController`, bajo `[Route("api/v1/patients")] [Authorize]`, expone `GET /{patientId:int}/care-links/active`, resuelto por `GetActiveCareLink(int)`, que sirve el read model Care Link Status. Esa es exactamente la pregunta que los contextos con información del paciente hacen antes de servir nada.
 
-**`PractitionerPatientsController`** — `[Route("api/v1/practitioners")] [Authorize(Roles = "Practitioner")]`. Expone `GET /{practitionerId:int}/patients` (`GetPatientsByPractitionerId(int)`), read model Practitioner Patient List, que incluye vínculos revocados y dados de alta para conservar el historial.
+`PractitionerPatientsController`, bajo `[Route("api/v1/practitioners")] [Authorize(Roles = "Practitioner")]`, expone `GET /{practitionerId:int}/patients`, resuelto por `GetPatientsByPractitionerId(int)`, que sirve el read model Practitioner Patient List e incluye los vínculos revocados y dados de alta para conservar el historial completo.
 
-**Resources** — `IssueInvitationResource`, `RedeemInvitationResource`, `InvitationResource` (con `Token?` y un `Status` derivado: `Pending`, `Redeemed` o `Expired`), `GrantConsentResource`, `DischargePatientResource`, `AcknowledgeActiveTargetsResource`, `CareLinkResource` y `TargetsReadStatusResource`.
+**Resources**
 
-**Transform / Assemblers** — Los command assemblers son `IssueInvitationCommandAssembler`, `RedeemInvitationCommandAssembler` (el `patientId` sale del token, nunca del payload), `GrantConsentCommandAssembler`, `WithdrawConsentCommandAssembler` (que no acepta motivo), `AcknowledgeActiveTargetsCommandAssembler` y `DischargePatientCommandAssembler`. Entre los resource assemblers destaca `InvitationResourceAssembler`, con dos métodos deliberadamente distintos: `ToResource(...)`, sin token, y `ToResourceWithToken(...)`, usado sólo en la respuesta de creación; su método privado `Build` deriva el `Status`.
+Las clases son `IssueInvitationResource`, `RedeemInvitationResource`, `InvitationResource`, que lleva `Token?` y un `Status` derivado con los valores `Pending`, `Redeemed` o `Expired`, junto con `GrantConsentResource`, `DischargePatientResource`, `AcknowledgeActiveTargetsResource`, `CareLinkResource` y `TargetsReadStatusResource`.
 
-`CareRelationshipActionResultAssembler` es el único lugar donde el error de dominio se convierte en HTTP, mediante `ToIssueInvitationResult`, `ToRedeemInvitationResult`, `ToCareLinkResult`, `ToWithdrawConsentResult`, `ToNotFoundResult` y el privado `FailureResult`:
+**Transform / Assemblers**
+
+Los command assemblers son `IssueInvitationCommandAssembler`, `RedeemInvitationCommandAssembler`, donde el `patientId` sale del token y nunca del payload, `GrantConsentCommandAssembler`, `WithdrawConsentCommandAssembler`, que no acepta motivo alguno, `AcknowledgeActiveTargetsCommandAssembler` y `DischargePatientCommandAssembler`. Entre los resource assemblers destaca `InvitationResourceAssembler`, que ofrece dos métodos deliberadamente distintos, `ToResource(...)` sin token y `ToResourceWithToken(...)` reservado a la respuesta de creación, mientras que su método privado `Build` deriva el `Status`.
+
+`CareRelationshipActionResultAssembler` es el único lugar donde el error de dominio se convierte en HTTP, y lo hace mediante `ToIssueInvitationResult`, `ToRedeemInvitationResult`, `ToCareLinkResult`, `ToWithdrawConsentResult`, `ToNotFoundResult` y el privado `FailureResult`.
 
 | Errores | Status |
 |---|---|
@@ -3400,51 +3478,63 @@ El token sólo viaja en la respuesta que crea la invitación; toda lectura poste
 | `InvitationExpired`, `NoPendingTargetsVersion`, `AcknowledgedVersionNewerThanActive` | **422** |
 | `UnexpectedError` (por defecto) | **500** |
 
-**ACL Contract / Open Host Service** — `ICareRelationshipContextFacade` declara el DTO `CareLinkStatusItem(int, int, int, bool, bool, int?)` y dos operaciones: `IsCareLinkActive(int, int)` y `GetActiveCareLinkByPatientId(int)`. Es el Open Host Service de la plataforma y funciona por consulta síncrona: los demás contextos preguntan si el vínculo está activo en el momento en que lo necesitan, por lo que `ConsentGranted` no dispara políticas en otros contextos.
+**ACL Contract / Open Host Service**
 
-**Localización** — `CareRelationship/Resources/CareRelationshipMessages.cs`, clase marcador de los recursos `.resx`.
+`ICareRelationshipContextFacade` declara el DTO `CareLinkStatusItem(int, int, int, bool, bool, int?)` y dos operaciones, que son `IsCareLinkActive(int, int)` y `GetActiveCareLinkByPatientId(int)`. Constituye el Open Host Service de la plataforma y funciona por consulta síncrona, de manera que los demás contextos preguntan si el vínculo está activo justo en el momento en que lo necesitan, razón por la cual `ConsentGranted` no dispara políticas en otros contextos.
+
+**Localización**
+
+Los mensajes localizados se declaran en `CareRelationship/Resources/CareRelationshipMessages.cs`, clase marcador de los recursos `.resx`.
 
 #### 2.6.3.3. Application Layer
 
-La Application Layer maneja los cinco subflujos del contexto (2.1 a 2.5) y evidencia sus capabilities: emitir y expirar invitaciones, canjearlas, establecer el vínculo, otorgar y retirar consentimiento, acusar recibo de objetivos, revocar y dar de alta.
+La Application Layer maneja los cinco subflujos del contexto, numerados del 2.1 al 2.5, y deja a la vista sus capabilities, que son emitir y expirar invitaciones, canjearlas, establecer el vínculo, otorgar y retirar el consentimiento, acusar recibo de los objetivos, revocar y dar de alta.
 
 **Command Services**
 
-**`InvitationCommandService`** (implementa `IInvitationCommandService`) — Depende de `IInvitationRepository`, `ICareLinkRepository`, `IUnitOfWork`, `IIamContextFacade`, `ILogger<...>` e `IMediator`.
+`InvitationCommandService`, que implementa `IInvitationCommandService`, depende de `IInvitationRepository`, `ICareLinkRepository`, `IUnitOfWork`, `IIamContextFacade`, `ILogger<...>` e `IMediator`.
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
-| `Handle(IssueInvitationCommand)` | 2.1 | Verifica *Practitioner Only* contra el ACL de IAM además del atributo de rol del endpoint; como la fachada degrada a `false`, un fallo de identidad rechaza la invitación. Publica `InvitationIssued`. |
-| `Handle(ExpireInvitationCommand)` | 2.1 | Sólo desde la política temporal. Una invitación ya expirada devuelve éxito sin segundo evento, lo que hace idempotente la política. Publica `InvitationExpired`. |
-| `Handle(RedeemInvitationCommand)` | 2.2 | Guardas en orden: token válido, invitación existente, no usada, aún vigente, *Patient Cannot Self Link* (antes de quemar el token) y *One Active Link Per Patient*. Publica `InvitationRedeemed` y relee el `CareLink` que creó la política para responder al llamador. |
+| `Handle(IssueInvitationCommand)` | 2.1 | Verifica *Practitioner Only* contra el ACL de IAM además del atributo de rol del endpoint y, como la fachada degrada a `false`, un fallo de identidad termina rechazando la invitación. Publica `InvitationIssued`. |
+| `Handle(ExpireInvitationCommand)` | 2.1 | Solo lo invoca la política temporal. Una invitación ya expirada devuelve éxito sin emitir un segundo evento, lo que vuelve idempotente la política. Publica `InvitationExpired`. |
+| `Handle(RedeemInvitationCommand)` | 2.2 | Dispone las guardas en orden: token válido, invitación existente, sin usar y aún vigente, luego *Patient Cannot Self Link*, comprobado antes de quemar el token, y finalmente *One Active Link Per Patient*. Publica `InvitationRedeemed` y relee el `CareLink` que creó la política para poder responder al llamador. |
 
-Nota arquitectónica: el `CareLink` no se crea aquí. Canjear publica `InvitationRedeemed`, y la política que reacciona emite `EstablishCareLinkCommand` —el único camino hacia un vínculo—. Como la publicación de eventos espera a sus handlers, el vínculo ya existe cuando el método lo relee.
+Vale la pena detenerse en una decisión arquitectónica: el `CareLink` no se crea aquí. Canjear una invitación publica `InvitationRedeemed`, y la política que reacciona a ese evento emite `EstablishCareLinkCommand`, que es el único camino existente hacia un vínculo. Como la publicación de eventos espera a sus handlers, el vínculo ya existe en el momento en que el método vuelve a leerlo.
 
-**`CareLinkCommandService`** (implementa `ICareLinkCommandService`) — Depende de `ICareLinkRepository`, `IUnitOfWork`, `IIamContextFacade`, `ILogger<...>` e `IMediator`.
+`CareLinkCommandService`, que implementa `ICareLinkCommandService`, depende de `ICareLinkRepository`, `IUnitOfWork`, `IIamContextFacade`, `ILogger<...>` e `IMediator`.
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
-| `Handle(EstablishCareLinkCommand)` | 2.2 | Sólo desde la política *When Invitation Redeemed*. Verifica *One Active Link Per Patient*, construye el vínculo y publica `CareLinkEstablished` (evento de integración). |
-| `Handle(GrantConsentCommand)` | 2.3 | Valida el scope antes de cargar nada; descarta vínculos dados de alta o revocados y el consentimiento ya otorgado. Publica `ConsentGranted` (interno). |
-| `Handle(WithdrawConsentCommand)` | 2.5 | Sin justificación. Publica `ConsentWithdrawn`, que consume la política propia. |
-| `Handle(RevokeCareLinkCommand)` | 2.5 | Sólo desde la política *When Consent Withdrawn*. Idempotente. Publica `CareLinkRevoked` (evento de integración). |
-| `Handle(DischargePatientCommand)` | 2.5 | Valida la razón clínica, comprueba `IsPractitioner` vía ACL y verifica que sea el profesional vinculado. Publica `TreatmentDischarged`. |
-| `Handle(MarkTargetsPendingAcknowledgementCommand)` | 2.4 | Sólo desde la política que reacciona a `ActiveTargetsUpdated`; idempotente si la versión pendiente ya es igual o mayor. Publica `TargetsPendingAcknowledgement`. |
-| `Handle(AcknowledgeActiveTargetsCommand)` | 2.4 | Exige `IsActive` (*No Access Without Consent*) y una versión pendiente. Publica `ActiveTargetsAcknowledged`; nada de esto alcanza a Nutritional Care. |
+| `Handle(EstablishCareLinkCommand)` | 2.2 | Solo lo invoca la política *When Invitation Redeemed*. Verifica *One Active Link Per Patient*, construye el vínculo y publica `CareLinkEstablished`, que es un evento de integración. |
+| `Handle(GrantConsentCommand)` | 2.3 | Valida el scope antes de cargar nada, y descarta tanto los vínculos dados de alta o revocados como el consentimiento ya otorgado. Publica `ConsentGranted`, que es interno. |
+| `Handle(WithdrawConsentCommand)` | 2.5 | No pide justificación alguna. Publica `ConsentWithdrawn`, que consume la política propia del contexto. |
+| `Handle(RevokeCareLinkCommand)` | 2.5 | Solo lo invoca la política *When Consent Withdrawn* y es idempotente. Publica `CareLinkRevoked`, que es un evento de integración. |
+| `Handle(DischargePatientCommand)` | 2.5 | Valida la razón clínica, comprueba `IsPractitioner` a través del ACL y verifica que se trate del profesional vinculado. Publica `TreatmentDischarged`. |
+| `Handle(MarkTargetsPendingAcknowledgementCommand)` | 2.4 | Solo lo invoca la política que reacciona a `ActiveTargetsUpdated`, y resulta idempotente si la versión pendiente ya es igual o mayor. Publica `TargetsPendingAcknowledgement`. |
+| `Handle(AcknowledgeActiveTargetsCommand)` | 2.4 | Exige `IsActive`, conforme a *No Access Without Consent*, y una versión pendiente. Publica `ActiveTargetsAcknowledged`, y nada de esto alcanza a Nutritional Care. |
 
-**Query Services** — `InvitationQueryService` (con resolución del QR escaneado, donde un token malformado devuelve `null` en lugar de fallar) y `CareLinkQueryService`, que respalda el read model Care Link Status.
+**Query Services**
 
-**Event Handlers (políticas)** — Los tres crean un scope de DI aislado mediante `IServiceScopeFactory.CreateAsyncScope()`, porque las notificaciones se manejan en paralelo.
+`InvitationQueryService` se encarga además de resolver el QR escaneado, y ante un token malformado devuelve `null` en lugar de fallar. `CareLinkQueryService`, por su parte, respalda el read model Care Link Status.
+
+**Event Handlers (políticas)**
+
+Los tres handlers crean un scope de DI aislado mediante `IServiceScopeFactory.CreateAsyncScope()`, dado que las notificaciones se manejan en paralelo.
 
 | Handler | Escucha | Política | Emite |
 |---|---|---|---|
-| `OnInvitationRedeemedHandler` | `InvitationRedeemed` (propio) | *When Invitation Redeemed* (2.2). El único camino hacia un `CareLink`, lo que vuelve estructural la regla de que el paciente no puede auto-vincularse. | `EstablishCareLinkCommand` |
-| `OnConsentWithdrawnHandler` | `ConsentWithdrawn` (propio) | *When Consent Withdrawn* (2.5). Retirar el consentimiento revoca el vínculo; por eso revocar no tiene endpoint. | `RevokeCareLinkCommand` |
-| `OnActiveTargetsUpdatedCareRelationshipHandler` | `ActiveTargetsUpdated` (Nutritional Care) | *When Active Targets Updated* (2.4). Acusar recibo es un acto de la relación, no del acto clínico; por eso la bandera de pendiente vive en el `CareLink` y no en el plan. | `MarkTargetsPendingAcknowledgementCommand` |
+| `OnInvitationRedeemedHandler` | `InvitationRedeemed`, propio | *When Invitation Redeemed*, del subflujo 2.2. Es el único camino hacia un `CareLink`, lo que vuelve estructural la regla de que el paciente no puede auto-vincularse. | `EstablishCareLinkCommand` |
+| `OnConsentWithdrawnHandler` | `ConsentWithdrawn`, propio | *When Consent Withdrawn*, del subflujo 2.5. Retirar el consentimiento revoca el vínculo, y por eso revocar no necesita endpoint. | `RevokeCareLinkCommand` |
+| `OnActiveTargetsUpdatedCareRelationshipHandler` | `ActiveTargetsUpdated`, de Nutritional Care | *When Active Targets Updated*, del subflujo 2.4. Acusar recibo es un acto de la relación antes que del acto clínico, y por eso la bandera de pendiente vive en el `CareLink` y no en el plan. | `MarkTargetsPendingAcknowledgementCommand` |
 
-**DTO de aplicación** — `InvitationRedemptionOutcome(Invitation, CareLink?)`, que permite responder al canje con el vínculo recién creado.
+**DTO de aplicación**
 
-**ACL Facade** — `CareRelationshipContextFacade` implementa `ICareRelationshipContextFacade` apoyándose en `ICareLinkQueryService` y nunca en un repositorio, para no puentear la capa de aplicación. Ante cualquier fallo, `IsCareLinkActive` devuelve `false`, de modo que un error se traduce en denegación de acceso.
+`InvitationRedemptionOutcome(Invitation, CareLink?)` permite responder al canje incluyendo el vínculo recién creado.
+
+**ACL Facade**
+
+`CareRelationshipContextFacade` implementa `ICareRelationshipContextFacade` apoyándose en `ICareLinkQueryService` y nunca en un repositorio, con lo cual no se puentea la capa de aplicación. Ante cualquier fallo, `IsCareLinkActive` devuelve `false`, de modo que un error termina traduciéndose en denegación de acceso.
 
 #### 2.6.3.4. Infrastructure Layer
 
@@ -3454,24 +3544,25 @@ La Infrastructure Layer de Care Relationship comprende la persistencia sobre MyS
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
-| `InvitationEntityTypeConfiguration` | `invitations` | PK con converter `InvitationId.FromRaw` y `ValueGeneratedOnAdd()`. `issued_by` requerido con índice `ix_invitations_issued_by`, sin navegación y sin restricción de clave foránea, porque es una referencia cross-context. `token` como `VARCHAR(64)` con converter e índice único `ix_invitations_token`, segunda línea de defensa de *Single Use Token*. `expires_at` requerido; `redeemed_at` y `expired_at` opcionales. `Ignore(IsRedeemed)`, `Ignore(IsExpired)`. |
-| `CareLinkEntityTypeConfiguration` | `care_links` | PK con converter `CareLinkId.FromRaw`. `patient_id` y `practitioner_id` requeridos con sus índices y sin FK. Cierre mediante `revoked_at`, `discharged_at` y `discharge_reason` (`VARCHAR(500)`). Acuse mediante `pending_targets_version` y `last_acknowledged_version`. Proyección del VO `Consent` en cuatro columnas: `consent_granted` (requerida), `consent_scope` (`VARCHAR(200)`), `consent_granted_at` y `consent_withdrawn_at`. `Ignore` sobre `Consent`, `IsActive`, `IsRevoked` e `IsDischarged`. |
+| `InvitationEntityTypeConfiguration` | `invitations` | La PK usa el converter `InvitationId.FromRaw` con `ValueGeneratedOnAdd()`. La columna `issued_by` es requerida y lleva el índice `ix_invitations_issued_by`, sin navegación y sin restricción de clave foránea por tratarse de una referencia cross-context. La columna `token` es un `VARCHAR(64)` con converter y el índice único `ix_invitations_token`, que funciona como segunda línea de defensa de *Single Use Token*. Finalmente `expires_at` es requerida, `redeemed_at` y `expired_at` son opcionales, y se aplica `Ignore` sobre `IsRedeemed` e `IsExpired`. |
+| `CareLinkEntityTypeConfiguration` | `care_links` | La PK usa el converter `CareLinkId.FromRaw`, y tanto `patient_id` como `practitioner_id` son requeridos, con sus índices y sin clave foránea. El cierre se resuelve con `revoked_at`, `discharged_at` y `discharge_reason` como `VARCHAR(500)`, mientras que el acuse lo hacen `pending_targets_version` y `last_acknowledged_version`. El VO `Consent` se proyecta en cuatro columnas, que son `consent_granted` requerida, `consent_scope` como `VARCHAR(200)`, `consent_granted_at` y `consent_withdrawn_at`. Se aplica `Ignore` sobre `Consent`, `IsActive`, `IsRevoked` e `IsDischarged`. |
 
 **Repositorios (implementaciones)**
 
 | Clase | Detalles de implementación |
 |---|---|
-| `InvitationRepository(AppDbContext)` | Sobrescribe `FindByIdAsync` con la identidad tipada; `FindByTokenAsync` compara contra una instancia del value object; `ListExpirableAsync` filtra invitaciones ni canjeadas ni expiradas cuya fecha ya venció, ordena por vencimiento y aplica `Take(maxResults)`. Reimplementa explícitamente `IBaseRepository<Invitation>.FindByIdAsync`. |
-| `CareLinkRepository(AppDbContext)` | `FindActiveByPatientIdAsync` combina el helper privado `Unclosed()` con el consentimiento otorgado; `FindUnclosedByPatientIdAsync` y `ExistsUnclosedByPatientIdAsync` respaldan *One Active Link Per Patient*; `ListByPractitionerIdAsync` devuelve todo el historial, incluidos los vínculos revocados y dados de alta, porque el roster del profesional es un registro y no una lista de activos. |
+| `InvitationRepository(AppDbContext)` | Sobrescribe `FindByIdAsync` con la identidad tipada y resuelve `FindByTokenAsync` comparando contra una instancia del value object. `ListExpirableAsync` filtra las invitaciones que no fueron canjeadas ni expiradas y cuya fecha ya venció, las ordena por vencimiento y aplica `Take(maxResults)`. Reimplementa de forma explícita `IBaseRepository<Invitation>.FindByIdAsync`. |
+| `CareLinkRepository(AppDbContext)` | `FindActiveByPatientIdAsync` combina el helper privado `Unclosed()` con el consentimiento otorgado, mientras que `FindUnclosedByPatientIdAsync` y `ExistsUnclosedByPatientIdAsync` respaldan *One Active Link Per Patient*. `ListByPractitionerIdAsync` devuelve todo el historial, incluidos los vínculos revocados y dados de alta, ya que el roster del profesional es un registro antes que una lista de activos. |
 
-**Scheduling — `InvitationExpiryHostedService`** — `BackgroundService` que implementa la política temporal *When Expiration Date Reached* (subflujo 2.1). Como no la dispara un usuario ni un evento, sino el vencimiento de la fecha, se implementa como hosted service y no como event handler.
+**Scheduling**
 
-- Dependencias: `IServiceScopeFactory`, `IConfiguration`, `ILogger<...>`.
-- Constante `BatchSize = 200`; intervalo desde `Scheduling:InvitationExpiryIntervalMinutes` (60 minutos por defecto, mínimo 1), con `PeriodicTimer`.
-- Cumple las cinco guardas obligatorias del proyecto: todo el cuerpo del ciclo dentro de `try/catch` para que un ciclo fallido nunca tumbe el host; los servicios *scoped* resueltos en un scope propio; el `stoppingToken` propagado a cada llamada; el ciclo idempotente, porque expirar algo ya expirado es un no-op sin segundo evento; y las migraciones de EF ya aplicadas en el composition root antes de arrancar el host.
-- Método privado `SafeWaitAsync(PeriodicTimer, CancellationToken)`, que controla la excepción de cancelación al detener el servicio.
+`InvitationExpiryHostedService` es un `BackgroundService` que implementa la política temporal *When Expiration Date Reached* del subflujo 2.1. Como no la dispara un usuario ni un evento sino el vencimiento de una fecha, se implementa como hosted service en lugar de como event handler.
 
-**Servicios externos** — Ninguno. El generador criptográfico del token de invitación es la biblioteca estándar de .NET, no un proveedor externo.
+Depende de `IServiceScopeFactory`, `IConfiguration` e `ILogger<...>`, declara la constante `BatchSize = 200` y lee su intervalo de `Scheduling:InvitationExpiryIntervalMinutes`, con 60 minutos por defecto y un mínimo de 1, apoyándose en `PeriodicTimer`. Cumple las cinco guardas obligatorias del proyecto, de manera que todo el cuerpo del ciclo va dentro de un `try/catch` para que un ciclo fallido nunca tumbe el host, los servicios *scoped* se resuelven en un scope propio, el `stoppingToken` se propaga a cada llamada, el ciclo es idempotente porque expirar algo ya expirado no produce un segundo evento, y las migraciones de EF quedan aplicadas en el composition root antes de que el host arranque. Su método privado `SafeWaitAsync(PeriodicTimer, CancellationToken)` controla la excepción de cancelación que se produce al detener el servicio.
+
+**Servicios externos**
+
+Este contexto no consume ninguno. El generador criptográfico del token de invitación es la biblioteca estándar de .NET y no un proveedor externo.
 
 #### 2.6.3.5. Bounded Context Software Architecture Component Level Diagrams
 
@@ -3515,30 +3606,30 @@ Database:
 
 #### 2.6.4.1. Domain Layer
 
-**Nutritional Care** (`Healthify.Platform.NutritionalCare`) modela el acto clínico completo en tres fases —evaluación, diagnóstico y plan nutricional— más la bandeja de revisión que recibe las señales de Monitoring. Dos principios rigen su Domain Layer: trazabilidad del cálculo (todo objetivo puede auditarse y recalcularse desde la base de cálculo almacenada) y decisión humana (una señal genera un ítem de revisión, pero nunca modifica el plan).
+El bounded context Nutritional Care, implementado en `Healthify.Platform.NutritionalCare`, modela el acto clínico completo en sus tres fases de evaluación, diagnóstico y plan nutricional, y suma a ellas la bandeja de revisión que recibe las señales de Monitoring. Su Domain Layer se rige por dos principios. El primero es la trazabilidad del cálculo, de modo que todo objetivo pueda auditarse y recalcularse a partir de la base de cálculo almacenada. El segundo es la decisión humana, ya que una señal genera un ítem de revisión pero nunca llega a modificar el plan.
 
 **Aggregates (Aggregate Roots)**
 
-**`NutritionalAssessment`** — Fase clínica 1: hábitos, historia, actividad física, antropometría y bioquímica, registrados dentro de la consulta. Una vez cerrada es inmutable; una corrección no la edita, crea una nueva evaluación que la referencia.
+`NutritionalAssessment` corresponde a la primera fase clínica y reúne hábitos, historia, actividad física, antropometría y bioquímica, todos ellos registrados dentro de la consulta. Una vez cerrada se vuelve inmutable, y una corrección no la edita sino que crea una evaluación nueva que la referencia.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `Id` | `AssessmentId` | `public get / private set` | Identidad tipada. |
 | `PatientId` / `PractitionerId` | `int` | `public get / private set` | Referencias cross-context. |
-| `Habits`, `MedicalHistory`, `PhysicalActivity` | `string` | `public get / private set` | Obligatorios. |
-| `Biochemistry` | `string?` | `public get / private set` | Opcional. |
-| `AgeYears` | `int` | `public get / private set` | 1–120; tres de las cuatro ecuaciones lo requieren. |
+| `Habits`, `MedicalHistory`, `PhysicalActivity` | `string` | `public get / private set` | Campos obligatorios. |
+| `Biochemistry` | `string?` | `public get / private set` | Campo opcional. |
+| `AgeYears` | `int` | `public get / private set` | Valor entre 1 y 120, requerido por tres de las cuatro ecuaciones. |
 | `BiologicalSex` | `BiologicalSex` | `public get / private set` | Estratifica las ecuaciones. |
-| `SupersedesAssessmentId` | `int?` | `public get / private set` | *Correction Creates A New Assessment*. |
-| `ClosedAt` / `IsClosed` | `DateTimeOffset?` / `bool` | `public` | Cierre del agregado. |
+| `SupersedesAssessmentId` | `int?` | `public get / private set` | Da soporte a *Correction Creates A New Assessment*. |
+| `ClosedAt` / `IsClosed` | `DateTimeOffset?` / `bool` | `public` | Marcan el cierre del agregado. |
 | `Measurements` | `IReadOnlyCollection<ClinicalMeasurement>` | `public` | Colección de la entidad hija. |
-| `LatestMeasurement` | `ClinicalMeasurement?` | `public` (computada) | La antropometría más reciente; sobre ella corre el cálculo. |
+| `LatestMeasurement` | `ClinicalMeasurement?` | `public` (computada) | La antropometría más reciente, que es sobre la que corre el cálculo. |
 
-Métodos: `NutritionalAssessment(RecordAssessmentCommand)` (*Habits History And Activity Required*), `TakeClinicalMeasurement(TakeClinicalMeasurementCommand) : ClinicalMeasurement` (*No Measurement On Closed Assessment*, *Measurement Protocol Recorded*) y `Close()` (*Closed Assessment Is Immutable*).
+Sus métodos son el constructor `NutritionalAssessment(RecordAssessmentCommand)`, que hace cumplir *Habits History And Activity Required*, `TakeClinicalMeasurement(TakeClinicalMeasurementCommand) : ClinicalMeasurement`, que aplica *No Measurement On Closed Assessment* y *Measurement Protocol Recorded*, y `Close()`, que activa *Closed Assessment Is Immutable*.
 
-**`NutritionalDiagnosis`** — Fase clínica 2: la afirmación que fundamenta todo plan, y el razonamiento detrás. Atributos: `Id : DiagnosisId`, `PatientId`, `PractitionerId`, `AssessmentId`, `Statement`, `Rationale : ClinicalRationale`, `IssuedAt`, `SupersededAt?` y la computada `IsActive` (*One Active Diagnosis Per Patient*). Métodos: el constructor, que exige statement y razonamiento clínico, y `Supersede()`, que retira el diagnóstico para que otro ocupe su lugar conservando la fila.
+`NutritionalDiagnosis` cubre la segunda fase clínica y contiene la afirmación que fundamenta todo plan junto con el razonamiento que la sustenta. Sus atributos son `Id : DiagnosisId`, `PatientId`, `PractitionerId`, `AssessmentId`, `Statement`, `Rationale : ClinicalRationale`, `IssuedAt`, `SupersededAt?` y la computada `IsActive`, que sostiene *One Active Diagnosis Per Patient*. Declara dos métodos, el constructor, que exige tanto el statement como el razonamiento clínico, y `Supersede()`, que retira el diagnóstico para que otro ocupe su lugar sin perder la fila original.
 
-**`NutritionPlan`** — Fase clínica 3 y raíz del versionado. Un plan atraviesa tres estados dentro de una consulta: los objetivos se proponen mediante cálculo, los prescribe el profesional y recién entonces se publican. Sus tres value objects compuestos se almacenan como columnas planas y se reconstruyen mediante propiedades calculadas.
+`NutritionPlan` corresponde a la tercera fase clínica y es además la raíz del versionado. Un plan atraviesa tres estados dentro de una misma consulta, ya que los objetivos primero se proponen mediante cálculo, después los prescribe el profesional y recién entonces se publican. Sus tres value objects compuestos se almacenan como columnas planas y se reconstruyen mediante propiedades calculadas.
 
 | Grupo de atributos | Miembros | Scope |
 |---|---|---|
@@ -3551,57 +3642,71 @@ Métodos: `NutritionalAssessment(RecordAssessmentCommand)` (*Habits History And 
 
 | Método | Scope | Reglas que aplica |
 |---|---|---|
-| `NutritionPlan(int, int, int, int, CalculationBasis, TargetProposal)` | `public` | *No Plan Without Diagnosis* (la referencia es obligatoria en el constructor) y *Calculation Basis Always Recorded*. El plan se crea siempre con su propuesta de objetivos. |
-| `StoreCalculationBasis(...)` / `StoreProposal(...)` | `private` | Aplanan los value objects en columnas. |
-| `PrescribeTargets(PrescribedTargets)` | `public` | *Previous Proposal Required*, *Override Requires Reason*. |
-| `Publish(IEnumerable<string>, IEnumerable<string>)` | `public` | Requiere prescripción previa; normaliza las listas y marca el plan activo. |
-| `Supersede()` | `public` | *Previous Version Superseded Never Deleted*. |
+| `NutritionPlan(int, int, int, int, CalculationBasis, TargetProposal)` | `public` | Hace cumplir *No Plan Without Diagnosis*, ya que la referencia al diagnóstico es obligatoria en el constructor, y *Calculation Basis Always Recorded*. El plan se crea siempre con su propuesta de objetivos. |
+| `StoreCalculationBasis(...)` / `StoreProposal(...)` | `private` | Aplanan los value objects en sus respectivas columnas. |
+| `PrescribeTargets(PrescribedTargets)` | `public` | Aplica *Previous Proposal Required* y *Override Requires Reason*. |
+| `Publish(IEnumerable<string>, IEnumerable<string>)` | `public` | Requiere una prescripción previa, normaliza las listas y marca el plan como activo. |
+| `Supersede()` | `public` | Aplica *Previous Version Superseded Never Deleted*. |
 | `CreateAdjustedVersion(AdjustNutritionPlanCommand, ChangeReason) : NutritionPlan` | `public` | Factory Method que produce la siguiente versión arrastrando la base de cálculo anterior. |
 
-**`ReviewItem`** — Señal recibida de Monitoring que queda pendiente de la decisión del profesional. Atributos: `Id : ReviewItemId`, `PatientId`, `PractitionerId` (resuelto desde el `CareLink` al abrir el ítem, porque la bandeja se lee por profesional), `SignalType`, `Evidence` (evidencia, no veredicto), `State : ReviewItemState`, `ResolvedWithAdjustment?`, `ResolvedAt?`, `ResolutionNote?` y la computada `IsOpen`. Métodos: el constructor y `Resolve(bool, string?)`, que aplica *Resolution States Whether The Plan Was Adjusted*.
+`ReviewItem` representa una señal recibida de Monitoring que queda pendiente de la decisión del profesional. Sus atributos son `Id : ReviewItemId`, `PatientId`, `PractitionerId`, que se resuelve desde el `CareLink` al abrir el ítem porque la bandeja se lee por profesional, `SignalType`, `Evidence`, que aporta evidencia y no un veredicto, `State : ReviewItemState`, `ResolvedWithAdjustment?`, `ResolvedAt?`, `ResolutionNote?` y la computada `IsOpen`. Sus métodos son el constructor y `Resolve(bool, string?)`, que aplica *Resolution States Whether The Plan Was Adjusted*.
 
 **Entity (no raíz)**
 
-**`ClinicalMeasurement`** — Una lectura antropométrica tomada por el profesional, con el protocolo seguido; vive dentro del agregado `NutritionalAssessment`. Atributos: `Id : int` (PK simple), `AssessmentId : AssessmentId` (tipada igual que la clave principal porque EF Core exige que ambos extremos compartan el tipo CLR), `WeightKg` (20–400), `HeightCm` (80–250), `Protocol : MeasurementProtocol`, `BodyFatPercentage?` (1–70), `WaistCircumferenceCm?` (30–250) y `TakenAt`. Su constructor es `internal`: sólo el agregado puede crearla. Un `ClinicalMeasurement` y un `SelfWeighIn` son cosas diferentes —éste lo toma un profesional bajo protocolo registrado y tiene autoridad clínica—, y las dos series nunca se fusionan.
+`ClinicalMeasurement` es una lectura antropométrica tomada por el profesional junto con el protocolo que siguió, y vive dentro del agregado `NutritionalAssessment`. Sus atributos son `Id : int` como PK simple, `AssessmentId : AssessmentId`, tipada igual que la clave principal porque EF Core exige que ambos extremos compartan el tipo CLR, `WeightKg` entre 20 y 400, `HeightCm` entre 80 y 250, `Protocol : MeasurementProtocol`, `BodyFatPercentage?` entre 1 y 70, `WaistCircumferenceCm?` entre 30 y 250, y `TakenAt`. Su constructor es `internal`, de manera que solo el agregado puede crearla. Conviene insistir en que un `ClinicalMeasurement` y un `SelfWeighIn` son cosas distintas, ya que el primero lo toma un profesional bajo un protocolo registrado y tiene autoridad clínica, y por eso las dos series nunca se fusionan.
 
-**Value Objects (16)**
+**Value Objects**
+
+El contexto declara dieciséis value objects.
 
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
-| `Equation` | Ecuación publicada de metabolismo basal elegida por el profesional. | `MifflinStJeor`, `HarrisBenedict`, `FaoWhoUnu`, `KatchMcArdle`; `RequiresBodyFatPercentage`. |
-| `ReferenceWeight` | Sobre qué peso corre el cálculo. | Kinds `Actual`, `Ideal`, `Adjusted`; `ValueKg` 20–400. |
-| `DeficitStrategy` | Cuánta energía se resta del gasto total. | `FixedKcal` (0–1500) o `PercentOfTdee` (0–40); método `DeficitKcalFor(decimal)`. |
-| `CalculationBasis` | Todo aquello sobre lo que corrió el cálculo, guardado con el plan para siempre. Es lo que hace auditable un objetivo. | Ocho componentes planos; valida factor de actividad 1.0–2.5 y BMR/TDEE positivos; factory `From(...)`. |
-| `TargetProposal` | Resultado del cálculo antes de la prescripción. | `EnergyKcal > 0`, macros ≥ 0. |
-| `PrescriptionOutcome` | Si el profesional firmó la propuesta o la reemplazó. | `AcceptedAsProposed`, `Overridden`. |
-| `PrescribedTargets` | Objetivos que el profesional confirma; permite saber quién prescribió cada objetivo. | Exige `OverrideReason` cuando el resultado es un reemplazo. |
-| `OverrideReason`, `ChangeReason`, `ClinicalRationale`, `MeasurementProtocol` | Justificaciones obligatorias en cada punto de decisión. | 500, 500, 2000 y 300 caracteres respectivamente. |
-| `BiologicalSex` | Sexo biológico por el que se estratifican las ecuaciones. | `Female`, `Male`. |
-| `SignalType` | Qué clase de señal de Monitoring abrió un ítem. | `SustainedDeviation`, `ConsistencyEscalation`; ninguno modifica el plan. |
-| `ReviewItemState` | Dónde está un ítem en la bandeja. | `Open`, `Resolved`. |
-| `AssessmentId`, `DiagnosisId`, `PlanId`, `ReviewItemId` | Identidades tipadas. | `Value : int > 0`, `internal static FromRaw(int)`. |
+| `Equation` | La ecuación publicada de metabolismo basal que el profesional elige. | `MifflinStJeor`, `HarrisBenedict`, `FaoWhoUnu` y `KatchMcArdle`, además de `RequiresBodyFatPercentage`. |
+| `ReferenceWeight` | El peso sobre el que corre el cálculo. | Los kinds `Actual`, `Ideal` y `Adjusted`, con `ValueKg` entre 20 y 400. |
+| `DeficitStrategy` | Cuánta energía se resta del gasto total. | `FixedKcal` entre 0 y 1500 o `PercentOfTdee` entre 0 y 40, más el método `DeficitKcalFor(decimal)`. |
+| `CalculationBasis` | Todo aquello sobre lo que corrió el cálculo, guardado con el plan para siempre. Es lo que vuelve auditable un objetivo. | Ocho componentes planos, validación del factor de actividad entre 1.0 y 2.5, BMR y TDEE positivos, y la factory `From(...)`. |
+| `TargetProposal` | El resultado del cálculo antes de que exista prescripción. | `EnergyKcal > 0` y macros mayores o iguales a cero. |
+| `PrescriptionOutcome` | Indica si el profesional firmó la propuesta o la reemplazó. | `AcceptedAsProposed` y `Overridden`. |
+| `PrescribedTargets` | Los objetivos que el profesional confirma, lo que permite saber quién prescribió cada uno. | Exige `OverrideReason` cuando el resultado es un reemplazo. |
+| `OverrideReason`, `ChangeReason`, `ClinicalRationale`, `MeasurementProtocol` | Las justificaciones obligatorias en cada punto de decisión. | Admiten 500, 500, 2000 y 300 caracteres respectivamente. |
+| `BiologicalSex` | El sexo biológico por el que se estratifican las ecuaciones. | `Female` y `Male`. |
+| `SignalType` | Qué clase de señal de Monitoring abrió un ítem. | `SustainedDeviation` y `ConsistencyEscalation`, ninguno de los cuales modifica el plan. |
+| `ReviewItemState` | Dónde se encuentra un ítem dentro de la bandeja. | `Open` y `Resolved`. |
+| `AssessmentId`, `DiagnosisId`, `PlanId`, `ReviewItemId` | Las identidades tipadas del contexto. | `Value : int > 0` e `internal static FromRaw(int)`. |
 
-**Commands (11)** — Desde `RecordAssessmentCommand` hasta `ResolveReviewItemCommand`. Sólo `PublishActiveTargetsCommand` y `OpenReviewItemCommand` carecen de endpoint: los emiten políticas. En `ProposeTargetsCommand`, la ecuación, el peso de referencia, el factor de actividad, el déficit y el objetivo proteico los elige el profesional y llegan como parámetros; el agregado no los selecciona.
+**Commands**
 
-**Queries (8)** — `GetAssessmentByIdQuery`, `GetAssessmentsByPatientIdQuery`, `GetActiveDiagnosisByPatientIdQuery`, `GetPlanByIdQuery`, `GetActivePlanByPatientIdQuery`, `GetPlansByPatientIdQuery` y las dos de la bandeja (`GetOpenReviewItemsByPractitionerIdQuery`, `GetReviewItemByIdQuery`).
+Son once y van desde `RecordAssessmentCommand` hasta `ResolveReviewItemCommand`. Solo `PublishActiveTargetsCommand` y `OpenReviewItemCommand` carecen de endpoint, ya que los emiten las políticas. En `ProposeTargetsCommand` la ecuación, el peso de referencia, el factor de actividad, el déficit y el objetivo proteico los elige el profesional y llegan como parámetros, de manera que el agregado no selecciona ninguno de ellos.
 
-**Domain Events (13)** — `NutritionalAssessmentRecorded`, `ClinicalMeasurementTaken`, `AssessmentClosed`, `NutritionalDiagnosisIssued`, `TargetsProposed`, `TargetsAcceptedAsProposed`, `TargetsOverridden`, `NutritionPlanPublished`, `ActiveTargetsUpdated`, `NutritionPlanAdjusted`, `PlanVersionSuperseded`, `ReviewItemCreated` y `ReviewItemResolved`. Dos cruzan frontera: `ClinicalMeasurementTaken` (hacia Monitoring) y `ActiveTargetsUpdated` (hacia Intake, Monitoring y Care Relationship). `ActiveTargetsUpdated` es el Published Language del contexto: lleva paciente, versión, vigencia, objetivos diarios, pautas y restricciones, pero no incluye diagnóstico, razonamiento clínico ni base de cálculo, conforme a la regla *Diagnosis And Basis Never Leave The Context*. Los objetivos diarios viajan en el record `DailyTargets(decimal, decimal, decimal, decimal)`, que no es un evento. Los demás eventos son internos; entre ellos, `NutritionalDiagnosisIssued` no se publica porque el paciente no consulta su diagnóstico en la app, y `ReviewItemCreated` solo alimenta la bandeja del profesional.
+**Queries**
 
-**Errors** — `enum NutritionalCareError` con 30 valores, uno por cada regla que el contexto hace cumplir.
+Las ocho queries son `GetAssessmentByIdQuery`, `GetAssessmentsByPatientIdQuery`, `GetActiveDiagnosisByPatientIdQuery`, `GetPlanByIdQuery`, `GetActivePlanByPatientIdQuery`, `GetPlansByPatientIdQuery` y las dos de la bandeja, que son `GetOpenReviewItemsByPractitionerIdQuery` y `GetReviewItemByIdQuery`.
 
-**Repositories (abstracciones)** — `INutritionalAssessmentRepository`, `INutritionalDiagnosisRepository` (con `FindActiveByPatientIdAsync`), `INutritionPlanRepository` (con `FindActiveByPatientIdAsync`, `ListByPatientIdAsync` y `GetLatestVersionAsync`) e `IReviewItemRepository` (con `ExistsOpenForPatientAndSignalTypeAsync`, `ListOpenByPractitionerIdAsync` y `CountOpenByPractitionerIdAsync`).
+**Domain Events**
 
-**Domain Services** — `IBmrCalculator`, con el record de entrada `BmrInputs` y el método `ComputeBmr(Equation, BmrInputs) : decimal`. No es un servicio externo ni un modelo de aprendizaje automático, sino un cálculo determinista con ecuaciones publicadas; se define como interfaz para que las cuatro ecuaciones se puedan probar y cambiar independientemente del agregado.
+Los trece domain events son `NutritionalAssessmentRecorded`, `ClinicalMeasurementTaken`, `AssessmentClosed`, `NutritionalDiagnosisIssued`, `TargetsProposed`, `TargetsAcceptedAsProposed`, `TargetsOverridden`, `NutritionPlanPublished`, `ActiveTargetsUpdated`, `NutritionPlanAdjusted`, `PlanVersionSuperseded`, `ReviewItemCreated` y `ReviewItemResolved`. Solo dos cruzan la frontera, que son `ClinicalMeasurementTaken` hacia Monitoring y `ActiveTargetsUpdated` hacia Intake, Monitoring y Care Relationship. Este último constituye el Published Language del contexto y lleva paciente, versión, vigencia, objetivos diarios, pautas y restricciones, aunque deja fuera el diagnóstico, el razonamiento clínico y la base de cálculo conforme a la regla *Diagnosis And Basis Never Leave The Context*. Los objetivos diarios viajan en el record `DailyTargets(decimal, decimal, decimal, decimal)`, que no es un evento. Los demás eventos son internos, y entre ellos `NutritionalDiagnosisIssued` no se publica porque el paciente no consulta su diagnóstico en la app, mientras que `ReviewItemCreated` solo alimenta la bandeja del profesional.
 
-**Relaciones entre clases:** `NutritionalAssessment` compone 0..* `ClinicalMeasurement` (única relación de composición entre entidades del contexto, con cascada) y compone `AssessmentId` y `BiologicalSex`. `NutritionalDiagnosis` referencia la evaluación por identificador y compone `ClinicalRationale`. `NutritionPlan` referencia el diagnóstico por identificador, agrega de forma reconstruida `CalculationBasis`, `TargetProposal` y 0..1 `PrescribedTargets`, y depende de `ChangeReason`; entre versiones existe una asociación reflexiva `supersedes` (1 → 0..1) resuelta por `Version` y `SupersededAt`. `ReviewItem` compone `SignalType` y `ReviewItemState`, y no tiene relación alguna con `NutritionPlan`: esa ausencia es la regla.
+**Errors**
+
+El `enum NutritionalCareError` reúne 30 valores, uno por cada regla que el contexto hace cumplir.
+
+**Repositories (abstracciones)**
+
+Son cuatro. `INutritionalAssessmentRepository` se limita a las operaciones base, `INutritionalDiagnosisRepository` añade `FindActiveByPatientIdAsync`, `INutritionPlanRepository` incorpora `FindActiveByPatientIdAsync`, `ListByPatientIdAsync` y `GetLatestVersionAsync`, e `IReviewItemRepository` suma `ExistsOpenForPatientAndSignalTypeAsync`, `ListOpenByPractitionerIdAsync` y `CountOpenByPractitionerIdAsync`.
+
+**Domain Services**
+
+El único es `IBmrCalculator`, con el record de entrada `BmrInputs` y el método `ComputeBmr(Equation, BmrInputs) : decimal`. No se trata de un servicio externo ni de un modelo de aprendizaje automático, sino de un cálculo determinista con ecuaciones publicadas, y se define como interfaz para que las cuatro ecuaciones puedan probarse y cambiarse con independencia del agregado.
+
+**Relaciones entre clases:** `NutritionalAssessment` compone 0..* `ClinicalMeasurement`, que es la única relación de composición entre entidades del contexto y se configura con cascada, y compone además `AssessmentId` y `BiologicalSex`. `NutritionalDiagnosis` referencia la evaluación por identificador y compone `ClinicalRationale`. `NutritionPlan` referencia el diagnóstico por identificador, agrega de forma reconstruida `CalculationBasis`, `TargetProposal` y 0..1 `PrescribedTargets`, y depende de `ChangeReason`; entre versiones existe además una asociación reflexiva *supersedes* de 1 a 0..1 que se resuelve por `Version` y `SupersededAt`. `ReviewItem` compone `SignalType` y `ReviewItemState`, y no guarda relación alguna con `NutritionPlan`, ausencia que constituye la regla misma.
 
 #### 2.6.4.2. Interface Layer
 
-La Interface Layer de Nutritional Care expone cinco controllers y todos están anotados con `[Authorize(Roles = "Practitioner")]`: no hay ni una ruta orientada al paciente. Lo que el paciente recibe es el contrato publicado, y eso viaja como evento hacia Intake & Body Response, no como endpoint.
+La Interface Layer de Nutritional Care expone cinco controllers y todos llevan la anotación `[Authorize(Roles = "Practitioner")]`, así que no existe ni una sola ruta orientada al paciente. Lo que el paciente recibe es el contrato publicado, y ese contrato viaja como evento hacia Intake & Body Response en lugar de exponerse como endpoint.
 
 **Controllers**
 
-**`NutritionalAssessmentsController`** — `[Route("api/v1/nutritional-assessments")] [Tags("Nutritional Assessments")]`.
+`NutritionalAssessmentsController` se publica bajo `[Route("api/v1/nutritional-assessments")] [Tags("Nutritional Assessments")]` y cubre la primera fase clínica.
 
 | Verbo / Ruta | Acción | Respuestas |
 |---|---|---|
@@ -3610,9 +3715,9 @@ La Interface Layer de Nutritional Care expone cinco controllers y todos están a
 | `POST /{assessmentId:int}/closure` | `CloseAssessment(int)` | 200 · 401 · 403 · 404 · 409 |
 | `GET /{assessmentId:int}` | `GetAssessmentById(int)` | 200 · 401 · 403 · 404 |
 
-**`NutritionalDiagnosesController`** — `[Route("api/v1/nutritional-diagnoses")]`. Un único `POST /` (`IssueDiagnosis(IssueDiagnosisResource)`, respuestas 201 · 400 · 401 · 403 · 404 · 409 · 422).
+`NutritionalDiagnosesController`, bajo `[Route("api/v1/nutritional-diagnoses")]`, expone un único `POST /` resuelto por `IssueDiagnosis(IssueDiagnosisResource)`, con respuestas 201 · 400 · 401 · 403 · 404 · 409 · 422.
 
-**`NutritionPlansController`** — `[Route("api/v1/nutrition-plans")]`. Recorre las cuatro transiciones del plan.
+`NutritionPlansController` se publica bajo `[Route("api/v1/nutrition-plans")]` y recorre las cuatro transiciones del plan.
 
 | Verbo / Ruta | Acción | Respuestas |
 |---|---|---|
@@ -3621,24 +3726,28 @@ La Interface Layer de Nutritional Care expone cinco controllers y todos están a
 | `POST /{planId:int}/publication` | `PublishNutritionPlan(int, PublishNutritionPlanResource)` | 200 · 401 · 403 · 404 · 409 · 422 |
 | `POST /{planId:int}/adjustments` | `AdjustNutritionPlan(int, AdjustNutritionPlanResource)` | 201 · 400 · 401 · 403 · 404 · 409 |
 
-`Publish Active Targets` no tiene endpoint: lo ejecuta una política al publicar o ajustar un plan, y es la única información del plan que llega al paciente.
+La operación `Publish Active Targets` no tiene endpoint, ya que la ejecuta una política al publicar o ajustar un plan, y es la única información del plan que llega hasta el paciente.
 
-**`PatientClinicalRecordController`** — `[Route("api/v1/patients")] [Tags("Nutritional Care")]`. Depende adicionalmente de `ICareRelationshipContextFacade` y usa el método privado `IsLinkedToAsync(int)`, que consulta el Open Host Service y degrada a `false`, denegando el acceso ante cualquier fallo.
+`PatientClinicalRecordController` se publica bajo `[Route("api/v1/patients")] [Tags("Nutritional Care")]`, depende adicionalmente de `ICareRelationshipContextFacade` y usa el método privado `IsLinkedToAsync(int)`, que consulta el Open Host Service y degrada a `false` para denegar el acceso ante cualquier fallo.
 
 | Verbo / Ruta | Acción | Read Model |
 |---|---|---|
 | `GET /{patientId:int}/nutritional-assessments` | `GetAssessments(int)` | Assessment Timeline |
 | `GET /{patientId:int}/nutritional-diagnoses/active` | `GetActiveDiagnosis(int)` | Active Diagnosis |
 | `GET /{patientId:int}/nutrition-plans` | `GetPlans(int)` | Plan Version History |
-| `GET /{patientId:int}/nutrition-plans/active` | `GetActivePlan(int)` | Active Plan, con base de cálculo |
+| `GET /{patientId:int}/nutrition-plans/active` | `GetActivePlan(int)` | Active Plan, con su base de cálculo |
 
-**`ReviewItemsController`** — `[Route("api/v1/review-items")] [Tags("Review Inbox")]`. Expone `GET /` (`GetOpenReviewItems()`, read model Practitioner Review Inbox) y `POST /{reviewItemId:int}/resolution` (`ResolveReviewItem(int, ResolveReviewItemResource)`). `Open Review Item` no tiene endpoint: los ítems llegan por las políticas que reaccionan a señales de Monitoring, y aquí es donde la automatización se detiene.
+`ReviewItemsController`, bajo `[Route("api/v1/review-items")] [Tags("Review Inbox")]`, expone `GET /` resuelto por `GetOpenReviewItems()`, que sirve el read model Practitioner Review Inbox, y `POST /{reviewItemId:int}/resolution`, resuelto por `ResolveReviewItem(int, ResolveReviewItemResource)`. La operación `Open Review Item` no tiene endpoint, dado que los ítems llegan por las políticas que reaccionan a las señales de Monitoring, y es justamente aquí donde la automatización se detiene.
 
-**Resources** — Las de entrada viven en `NutritionalCareResources.cs` (`RecordAssessmentResource`, `TakeClinicalMeasurementResource`, `IssueDiagnosisResource`, `ProposeTargetsResource`, `PrescribeTargetsResource`, `PublishNutritionPlanResource`, `AdjustNutritionPlanResource`, `ResolveReviewItemResource`) y las de salida en `NutritionalCareReadResources.cs` (`ClinicalMeasurementResource`, `NutritionalAssessmentResource`, `NutritionalDiagnosisResource`, `CalculationBasisResource`, `TargetsResource`, `NutritionPlanResource`, `ReviewItemResource`). `CalculationBasisResource` existe precisamente porque el profesional debe poder auditar el número: expone ecuación, peso de referencia, factor de actividad, déficit, BMR y TDEE calculados.
+**Resources**
 
-**Transform / Assemblers** — Nueve command assemblers (`RecordAssessmentCommandAssembler`, `TakeClinicalMeasurementCommandAssembler`, `CloseAssessmentCommandAssembler`, `IssueDiagnosisCommandAssembler`, `ProposeTargetsCommandAssembler`, `PrescribeTargetsCommandAssembler`, `PublishNutritionPlanCommandAssembler`, `AdjustNutritionPlanCommandAssembler`, `ResolveReviewItemCommandAssembler`) y cuatro resource assemblers (`NutritionalAssessmentResourceAssembler`, `NutritionalDiagnosisResourceAssembler`, `NutritionPlanResourceAssembler`, `ReviewItemResourceAssembler`).
+Las clases de entrada viven en `NutritionalCareResources.cs` y son `RecordAssessmentResource`, `TakeClinicalMeasurementResource`, `IssueDiagnosisResource`, `ProposeTargetsResource`, `PrescribeTargetsResource`, `PublishNutritionPlanResource`, `AdjustNutritionPlanResource` y `ResolveReviewItemResource`. Las de salida viven en `NutritionalCareReadResources.cs` y son `ClinicalMeasurementResource`, `NutritionalAssessmentResource`, `NutritionalDiagnosisResource`, `CalculationBasisResource`, `TargetsResource`, `NutritionPlanResource` y `ReviewItemResource`. `CalculationBasisResource` existe precisamente para que el profesional pueda auditar el número, así que expone la ecuación, el peso de referencia, el factor de actividad, el déficit y los valores calculados de BMR y TDEE.
 
-`NutritionalCareActionResultAssembler` expone cuatro métodos con estado de éxito parametrizable (`ToAssessmentResult`, `ToDiagnosisResult`, `ToPlanResult`, `ToReviewItemResult`), más `ToNotFoundResult` y el privado `FailureResult`:
+**Transform / Assemblers**
+
+Hay nueve command assemblers, que son `RecordAssessmentCommandAssembler`, `TakeClinicalMeasurementCommandAssembler`, `CloseAssessmentCommandAssembler`, `IssueDiagnosisCommandAssembler`, `ProposeTargetsCommandAssembler`, `PrescribeTargetsCommandAssembler`, `PublishNutritionPlanCommandAssembler`, `AdjustNutritionPlanCommandAssembler` y `ResolveReviewItemCommandAssembler`, junto con cuatro resource assemblers, que son `NutritionalAssessmentResourceAssembler`, `NutritionalDiagnosisResourceAssembler`, `NutritionPlanResourceAssembler` y `ReviewItemResourceAssembler`.
+
+Por su parte, `NutritionalCareActionResultAssembler` expone cuatro métodos con estado de éxito parametrizable, que son `ToAssessmentResult`, `ToDiagnosisResult`, `ToPlanResult` y `ToReviewItemResult`, además de `ToNotFoundResult` y el privado `FailureResult`.
 
 | Errores | Status |
 |---|---|
@@ -3649,92 +3758,106 @@ La Interface Layer de Nutritional Care expone cinco controllers y todos están a
 | `ClosedAssessmentRequired`, `ActiveDiagnosisRequired`, `PreviousProposalRequired`, `PlanRequiresDiagnosis`, `CalculationBasisRequired`, `ClinicalMeasurementRequired` | **422** |
 | `UnexpectedError` (por defecto) | **500** |
 
-**ACL Contract** — `INutritionalCareContextFacade` declara el DTO `ActiveTargetsItem` y dos operaciones: `GetActiveTargetsByPatientId(int)` y `GetOpenReviewItemCount(int)`. Nunca expone un diagnóstico, un razonamiento clínico ni una base de cálculo: espeja exactamente el contrato publicado.
+**ACL Contract**
 
-**Localización** — `NutritionalCare/Resources/NutritionalCareMessages.cs`.
+`INutritionalCareContextFacade` declara el DTO `ActiveTargetsItem` y dos operaciones, que son `GetActiveTargetsByPatientId(int)` y `GetOpenReviewItemCount(int)`. Nunca expone un diagnóstico, un razonamiento clínico ni una base de cálculo, con lo cual espeja exactamente el contrato publicado.
+
+**Localización**
+
+Los mensajes localizados se declaran en `NutritionalCare/Resources/NutritionalCareMessages.cs`.
 
 #### 2.6.4.3. Application Layer
 
-La Application Layer de Nutritional Care orquesta los siete subflujos del acto clínico (3.1 a 3.7). Sus capabilities son registrar y cerrar evaluaciones, emitir diagnósticos, proponer, prescribir, publicar y ajustar objetivos, y gestionar la bandeja de revisión.
+La Application Layer de Nutritional Care orquesta los siete subflujos del acto clínico, numerados del 3.1 al 3.7. Sus capabilities consisten en registrar y cerrar evaluaciones, emitir diagnósticos, proponer, prescribir, publicar y ajustar objetivos, y gestionar la bandeja de revisión.
 
 **Command Services**
 
-**`NutritionalAssessmentCommandService`** — Depende de `INutritionalAssessmentRepository`, `IUnitOfWork`, `IIamContextFacade`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`.
+`NutritionalAssessmentCommandService` depende de `INutritionalAssessmentRepository`, `IUnitOfWork`, `IIamContextFacade`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`.
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
-| `Handle(RecordAssessmentCommand)` | 3.1 | *Practitioner Only Measures* vía el ACL de IAM y *Active Care Link Required* vía el OHS de Care Relationship, que degrada a `false`. Publica `NutritionalAssessmentRecorded`. |
-| `Handle(TakeClinicalMeasurementCommand)` | 3.1 | Valida el protocolo antes de cargar nada, verifica propiedad y rechaza evaluaciones cerradas. Publica `ClinicalMeasurementTaken` (evento de integración). |
-| `Handle(CloseAssessmentCommand)` | 3.1 | Publica `AssessmentClosed`; tras esto el agregado es inmutable. |
+| `Handle(RecordAssessmentCommand)` | 3.1 | Aplica *Practitioner Only Measures* a través del ACL de IAM y *Active Care Link Required* a través del OHS de Care Relationship, que degrada a `false`. Publica `NutritionalAssessmentRecorded`. |
+| `Handle(TakeClinicalMeasurementCommand)` | 3.1 | Valida el protocolo antes de cargar nada, verifica la propiedad y rechaza las evaluaciones cerradas. Publica `ClinicalMeasurementTaken`, que es un evento de integración. |
+| `Handle(CloseAssessmentCommand)` | 3.1 | Publica `AssessmentClosed`, y a partir de ese momento el agregado queda inmutable. |
 
-**`NutritionalDiagnosisCommandService`** — Depende de los repositorios de diagnóstico y evaluación, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. Su método `Handle(IssueDiagnosisCommand)` (3.2) aplica las guardas en orden: razonamiento no vacío, vínculo activo, evaluación existente y del paciente, evaluación cerrada —un diagnóstico lee una foto terminada, no una que aún se edita— y *One Active Diagnosis Per Patient*.
+`NutritionalDiagnosisCommandService` depende de los repositorios de diagnóstico y evaluación, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. Su método `Handle(IssueDiagnosisCommand)`, correspondiente al subflujo 3.2, aplica las guardas en un orden preciso: razonamiento no vacío, vínculo activo, evaluación existente y perteneciente al paciente, evaluación cerrada, ya que un diagnóstico lee una foto terminada y no una que todavía se está editando, y finalmente *One Active Diagnosis Per Patient*.
 
-**`NutritionPlanCommandService`** — Depende de los tres repositorios clínicos, `IUnitOfWork`, `IBmrCalculator`, `ILogger<...>` e `IMediator`; declara las constantes privadas `KcalPerGramProtein = 4m`, `KcalPerGramCarbohydrate = 4m` y `KcalPerGramFat = 9m`.
+`NutritionPlanCommandService` depende de los tres repositorios clínicos, `IUnitOfWork`, `IBmrCalculator`, `ILogger<...>` e `IMediator`, y declara las constantes privadas `KcalPerGramProtein = 4m`, `KcalPerGramCarbohydrate = 4m` y `KcalPerGramFat = 9m`.
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
-| `Handle(ProposeTargetsCommand)` | 3.3 | Valida cada value object reportando su propio error; exige diagnóstico activo y propiedad; toma la última medición y, si la ecuación requiere porcentaje de grasa y falta, responde `ClinicalMeasurementRequired`; ejecuta la aritmética y calcula la siguiente versión. Publica `TargetsProposed` (interno). |
-| `Handle(PrescribeTargetsCommand)` | 3.4 | Valida el resultado de prescripción y *Override Requires Reason*. Publica exactamente uno de `TargetsOverridden` o `TargetsAcceptedAsProposed`, nunca ambos. |
-| `Handle(PublishNutritionPlanCommand)` | 3.5 | Requiere plan prescrito y no publicado; aplica *No Plan Without Diagnosis* y *One Active Version Per Patient*. Publica `NutritionPlanPublished`. |
-| `Handle(PublishActiveTargetsCommand)` | 3.5 / 3.6 | Sólo desde política. El único lugar donde algo de un plan sale del bounded context, y sólo lleva el contrato reducido. Publica `ActiveTargetsUpdated`. |
-| `Handle(AdjustNutritionPlanCommand)` | 3.6 | *Change Reason Required*; crea la versión ajustada y marca la anterior como superseded. Publica `NutritionPlanAdjusted` y `PlanVersionSuperseded`. |
+| `Handle(ProposeTargetsCommand)` | 3.3 | Valida cada value object reportando su propio error, exige diagnóstico activo y propiedad, toma la última medición y, si la ecuación requiere porcentaje de grasa y este falta, responde `ClinicalMeasurementRequired`. Luego ejecuta la aritmética y calcula la siguiente versión. Publica `TargetsProposed`, que es interno. |
+| `Handle(PrescribeTargetsCommand)` | 3.4 | Valida el resultado de la prescripción y aplica *Override Requires Reason*. Publica exactamente uno de `TargetsOverridden` o `TargetsAcceptedAsProposed`, nunca los dos. |
+| `Handle(PublishNutritionPlanCommand)` | 3.5 | Requiere un plan prescrito y todavía no publicado, y aplica *No Plan Without Diagnosis* junto con *One Active Version Per Patient*. Publica `NutritionPlanPublished`. |
+| `Handle(PublishActiveTargetsCommand)` | 3.5 / 3.6 | Solo lo invoca una política. Es el único lugar donde algo de un plan sale del bounded context, y lo que sale es únicamente el contrato reducido. Publica `ActiveTargetsUpdated`. |
+| `Handle(AdjustNutritionPlanCommand)` | 3.6 | Aplica *Change Reason Required*, crea la versión ajustada y marca la anterior como superseded. Publica `NutritionPlanAdjusted` y `PlanVersionSuperseded`. |
 
-La aritmética de la propuesta, en el orden en que las reglas la enuncian: el BMR sale de la ecuación elegida; el TDEE es el BMR por el factor de actividad; el objetivo energético es el TDEE menos el déficit; la proteína son los gramos por kilo por el peso de referencia; la grasa es el porcentaje de energía dividido entre nueve; y los hidratos salen por diferencia. Todo resultado se redondea a dos decimales y es recalculable con una calculadora de bolsillo.
+La aritmética de la propuesta sigue el mismo orden en que las reglas la enuncian. El BMR sale de la ecuación elegida y el TDEE resulta de multiplicarlo por el factor de actividad. El objetivo energético es ese TDEE menos el déficit, la proteína son los gramos por kilo multiplicados por el peso de referencia, la grasa se obtiene del porcentaje de energía dividido entre nueve, y los hidratos salen por diferencia. Todo resultado se redondea a dos decimales y puede recalcularse con una calculadora de bolsillo.
 
-**`ReviewItemCommandService`** — la bandeja de entrada. Depende de `IReviewItemRepository`, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. La clase no accede a `NutritionPlan` ni depende del servicio de comandos del plan, lo que garantiza la regla *Signal Notifies Never Modifies The Plan*. `Handle(OpenReviewItemCommand)` aplica *One Open Item Per Patient And Signal Type* y resuelve el profesional desde el vínculo activo; `Handle(ResolveReviewItemCommand)` exige que la resolución declare si el plan fue ajustado.
+`ReviewItemCommandService` atiende la bandeja de entrada y depende de `IReviewItemRepository`, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. La clase no accede a `NutritionPlan` ni depende del servicio de comandos del plan, y es esa ausencia la que garantiza la regla *Signal Notifies Never Modifies The Plan*. `Handle(OpenReviewItemCommand)` aplica *One Open Item Per Patient And Signal Type* y resuelve al profesional desde el vínculo activo, mientras que `Handle(ResolveReviewItemCommand)` exige que la resolución declare si el plan fue ajustado.
 
-**Query Services** — `NutritionalAssessmentQueryService`, `NutritionalDiagnosisQueryService`, `NutritionPlanQueryService` y `ReviewItemQueryService`; este último añade `CountOpen(int)`, usado por el ACL.
+**Query Services**
 
-**Event Handlers (políticas)** — Cuatro, todos con scope de DI aislado:
+Son cuatro: `NutritionalAssessmentQueryService`, `NutritionalDiagnosisQueryService`, `NutritionPlanQueryService` y `ReviewItemQueryService`, este último con el añadido de `CountOpen(int)`, que usa el ACL.
+
+**Event Handlers (políticas)**
+
+Son cuatro y todos trabajan con un scope de DI aislado.
 
 | Handler | Escucha | Política | Emite |
 |---|---|---|---|
-| `OnNutritionPlanPublishedHandler` | `NutritionPlanPublished` (propio) | *When Nutrition Plan Published* (3.5) | `PublishActiveTargetsCommand` |
-| `OnNutritionPlanAdjustedHandler` | `NutritionPlanAdjusted` (propio) | *When Nutrition Plan Adjusted* (3.6): un ajuste republica el contrato exactamente igual que una primera publicación | `PublishActiveTargetsCommand` |
-| `OnSustainedDeviationDetectedHandler` | `SustainedDeviationDetected` (Monitoring) | *When Sustained Deviation Detected* (3.7) | `OpenReviewItemCommand` con `SignalType.SustainedDeviation` |
-| `OnAlertEscalatedToPractitionerHandler` | `AlertEscalatedToPractitioner` (Monitoring) | *When Alert Escalated To Practitioner* (3.7) | `OpenReviewItemCommand` con `SignalType.ConsistencyEscalation` |
+| `OnNutritionPlanPublishedHandler` | `NutritionPlanPublished`, propio | *When Nutrition Plan Published*, del subflujo 3.5 | `PublishActiveTargetsCommand` |
+| `OnNutritionPlanAdjustedHandler` | `NutritionPlanAdjusted`, propio | *When Nutrition Plan Adjusted*, del subflujo 3.6, donde un ajuste republica el contrato exactamente igual que una primera publicación | `PublishActiveTargetsCommand` |
+| `OnSustainedDeviationDetectedHandler` | `SustainedDeviationDetected`, de Monitoring | *When Sustained Deviation Detected*, del subflujo 3.7 | `OpenReviewItemCommand` con `SignalType.SustainedDeviation` |
+| `OnAlertEscalatedToPractitionerHandler` | `AlertEscalatedToPractitioner`, de Monitoring | *When Alert Escalated To Practitioner*, del subflujo 3.7 | `OpenReviewItemCommand` con `SignalType.ConsistencyEscalation` |
 
-Los dos últimos handlers solo emiten el comando que abre un ítem de revisión y no tienen acceso al servicio de planes. De esta forma, un ajuste del plan siempre requiere la decisión del profesional y nunca se produce automáticamente a partir de una estimación por fotografía.
+Los dos últimos handlers se limitan a emitir el comando que abre un ítem de revisión y no tienen acceso alguno al servicio de planes. De esta forma, un ajuste del plan siempre requiere la decisión del profesional y nunca se produce de manera automática a partir de una estimación por fotografía.
 
-**ACL Facade** — `NutritionalCareContextFacade` depende de `INutritionPlanQueryService` e `IReviewItemQueryService`. `GetActiveTargetsByPatientId` sólo devuelve datos si el plan está publicado y tiene objetivos prescritos, y sólo cruza el contrato publicado: sin diagnóstico y sin base de cálculo.
+**ACL Facade**
+
+`NutritionalCareContextFacade` depende de `INutritionPlanQueryService` e `IReviewItemQueryService`. Su método `GetActiveTargetsByPatientId` solo devuelve datos cuando el plan está publicado y tiene objetivos prescritos, y lo único que cruza es el contrato publicado, sin diagnóstico y sin base de cálculo.
 
 #### 2.6.4.4. Infrastructure Layer
 
-La Infrastructure Layer de Nutritional Care contiene la implementación del único domain service del contexto y la persistencia de sus cinco tablas. No consume APIs de terceros ni aloja hosted services.
+La Infrastructure Layer de Nutritional Care contiene la implementación del único domain service del contexto junto con la persistencia de sus cinco tablas. No consume APIs de terceros ni aloja hosted services.
 
-**Calculators — `BmrCalculator`**
+**Calculadores**
 
-Implementa `IBmrCalculator` seleccionando la ecuación con un `switch` y redondeando el resultado a dos decimales. Cada constante proviene de la literatura publicada y todo resultado puede reproducirse manualmente, lo que sostiene el principio de trazabilidad del cálculo.
+`BmrCalculator` implementa `IBmrCalculator` seleccionando la ecuación con un `switch` y redondeando el resultado a dos decimales. Cada constante proviene de la literatura publicada y todo resultado puede reproducirse a mano, lo que sostiene el principio de trazabilidad del cálculo.
 
 | Método privado | Ecuación | Nota |
 |---|---|---|
-| `MifflinStJeor(BmrInputs)` | Mifflin-St Jeor (1990) | Lineal en peso, talla y edad, con constante por sexo. |
-| `HarrisBenedict(BmrInputs)` | Harris-Benedict revisada por Roza y Shizgal (1984) | Coeficientes distintos por sexo. |
-| `FaoWhoUnu(BmrInputs)` | FAO/WHO/UNU (1985) | Bandas por sexo y edad, sólo en función del peso. |
-| `KatchMcArdle(BmrInputs)` | Katch-McArdle | Basada en masa magra; la única que ignora edad y sexo, y la única que exige una lectura de composición corporal. |
+| `MifflinStJeor(BmrInputs)` | Mifflin-St Jeor (1990) | Es lineal en peso, talla y edad, con una constante por sexo. |
+| `HarrisBenedict(BmrInputs)` | Harris-Benedict revisada por Roza y Shizgal (1984) | Usa coeficientes distintos según el sexo. |
+| `FaoWhoUnu(BmrInputs)` | FAO/WHO/UNU (1985) | Trabaja con bandas por sexo y edad, y depende únicamente del peso. |
+| `KatchMcArdle(BmrInputs)` | Katch-McArdle | Se basa en la masa magra, y es la única que ignora edad y sexo y la única que exige una lectura de composición corporal. |
 
 **Configuraciones de EF Core**
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
-| `NutritionalAssessmentEntityTypeConfiguration` | `nutritional_assessments` | PK con converter `AssessmentId.FromRaw`; campos narrativos con longitudes amplias; `biological_sex` con converter. Configura la relación de composición con `HasMany(a => a.Measurements).WithOne().HasForeignKey(m => m.AssessmentId).IsRequired().OnDelete(DeleteBehavior.Cascade)` más el acceso por campo a la navegación. |
-| `ClinicalMeasurementEntityTypeConfiguration` | `clinical_measurements` | PK `id` como `int` simple; `assessment_id` con converter, requerido e indexado; las cuatro medidas como `decimal(10,2)`; `protocol` con converter. |
-| `NutritionalDiagnosisEntityTypeConfiguration` | `nutritional_diagnoses` | PK con converter `DiagnosisId.FromRaw`; `statement` (1000) y `rationale` (2000, con converter); índice sobre `patient_id`. |
-| `NutritionPlanEntityTypeConfiguration` | `nutrition_plans` | PK con converter `PlanId.FromRaw`; ocho columnas de base de cálculo, cuatro de propuesta (requeridas) y seis de prescripción (nullables); `change_reason` con un `ValueConverter` explícito; `guidelines` y `restrictions` como columnas `json` mapeadas desde sus backing fields con `JsonSerializer` y un `ValueComparer<List<string>>` estático, necesario para que EF Core detecte los cambios en esas listas. Ocho `Ignore` sobre las propiedades calculadas. |
-| `ReviewItemEntityTypeConfiguration` | `review_items` | PK con converter `ReviewItemId.FromRaw`; índices sobre `patient_id` y `practitioner_id`; `signal_type` (40), `evidence` (2000) y `state` (20) con sus converters. |
+| `NutritionalAssessmentEntityTypeConfiguration` | `nutritional_assessments` | La PK usa el converter `AssessmentId.FromRaw`, los campos narrativos reciben longitudes amplias y `biological_sex` lleva converter. Configura la relación de composición con `HasMany(a => a.Measurements).WithOne().HasForeignKey(m => m.AssessmentId).IsRequired().OnDelete(DeleteBehavior.Cascade)` y añade el acceso por campo a la navegación. |
+| `ClinicalMeasurementEntityTypeConfiguration` | `clinical_measurements` | La PK `id` es un `int` simple, `assessment_id` lleva converter y es requerido e indexado, las cuatro medidas se declaran como `decimal(10,2)` y `protocol` lleva converter. |
+| `NutritionalDiagnosisEntityTypeConfiguration` | `nutritional_diagnoses` | La PK usa el converter `DiagnosisId.FromRaw`, `statement` admite 1000 caracteres y `rationale` admite 2000 con converter, y existe un índice sobre `patient_id`. |
+| `NutritionPlanEntityTypeConfiguration` | `nutrition_plans` | La PK usa el converter `PlanId.FromRaw` y conviven ocho columnas de base de cálculo, cuatro de propuesta requeridas y seis de prescripción nullables. `change_reason` usa un `ValueConverter` explícito, mientras que `guidelines` y `restrictions` se mapean como columnas `json` desde sus backing fields con `JsonSerializer` y un `ValueComparer<List<string>>` estático, indispensable para que EF Core detecte los cambios en esas listas. Se aplican ocho `Ignore` sobre las propiedades calculadas. |
+| `ReviewItemEntityTypeConfiguration` | `review_items` | La PK usa el converter `ReviewItemId.FromRaw`, hay índices sobre `patient_id` y `practitioner_id`, y `signal_type` con 40 caracteres, `evidence` con 2000 y `state` con 20 llevan sus respectivos converters. |
 
-La razón por la que los tres value objects compuestos del plan se aplanan en columnas en lugar de usarse como *owned types* es concreta: un owned type necesitaría mapear su propia clave sobre una clave primaria tipada, algo que EF Core no puede reconciliar.
+Los tres value objects compuestos del plan se aplanan en columnas en lugar de usarse como *owned types* por una razón concreta, y es que un owned type necesitaría mapear su propia clave sobre una clave primaria tipada, algo que EF Core no logra reconciliar.
 
-**Repositorios (implementaciones)** — Las cuatro clases de `NutritionalCareRepositories.cs` heredan de `BaseRepository<T>` y reimplementan explícitamente `IBaseRepository<T>.FindByIdAsync`.
+**Repositorios (implementaciones)**
+
+Las cuatro clases de `NutritionalCareRepositories.cs` heredan de `BaseRepository<T>` y reimplementan de forma explícita `IBaseRepository<T>.FindByIdAsync`.
 
 | Clase | Detalles de implementación |
 |---|---|
-| `NutritionalAssessmentRepository` | Helper privado `WithRelations()` que aplica `.Include(a => a.Measurements)`, porque el cálculo necesita la antropometría. |
-| `NutritionalDiagnosisRepository` | `FindActiveByPatientIdAsync` filtra por diagnóstico no superseded y ordena por fecha de emisión descendente. |
-| `NutritionPlanRepository` | `FindActiveByPatientIdAsync` filtra activo y no superseded; `ListByPatientIdAsync` incluye las versiones superseded, porque el historial de versiones es un read model; `GetLatestVersionAsync` proyecta versiones y devuelve el máximo. |
-| `ReviewItemRepository` | Campo estático con la instancia del estado `Open` y helper privado `OpenFor(int)`; la comparación se hace contra la instancia del value object porque EF no puede traducir un miembro de un tipo convertido. |
+| `NutritionalAssessmentRepository` | Declara el helper privado `WithRelations()`, que aplica `.Include(a => a.Measurements)`, ya que el cálculo necesita la antropometría. |
+| `NutritionalDiagnosisRepository` | `FindActiveByPatientIdAsync` filtra los diagnósticos no superseded y ordena por fecha de emisión descendente. |
+| `NutritionPlanRepository` | `FindActiveByPatientIdAsync` filtra los planes activos y no superseded, `ListByPatientIdAsync` sí incluye las versiones superseded porque el historial de versiones es un read model, y `GetLatestVersionAsync` proyecta las versiones y devuelve el máximo. |
+| `ReviewItemRepository` | Declara un campo estático con la instancia del estado `Open` y el helper privado `OpenFor(int)`. La comparación se hace contra la instancia del value object, dado que EF no puede traducir un miembro de un tipo convertido. |
 
-**Servicios externos** — Ninguno. El `BmrCalculator` es aritmética local, no una API de terceros, y ninguna decisión clínica de este contexto sale de la aplicación.
+**Servicios externos**
+
+Este contexto no consume ninguno. El `BmrCalculator` es aritmética local antes que una API de terceros, y ninguna decisión clínica tomada aquí sale de la aplicación.
 
 #### 2.6.4.5. Bounded Context Software Architecture Component Level Diagrams
 
@@ -3778,79 +3901,91 @@ Database:
 
 #### 2.6.5.1. Domain Layer
 
-**IAM** (`Healthify.Platform.Iam`) se encarga de la identidad de los usuarios. Gestiona cuentas, autenticación, el *role claim* inmutable por sesión y la selección del *navigation shell* del cliente. Su Domain Layer declara dos aggregate roots, seis value objects y dos interfaces de domain service. Crear una cuenta no otorga acceso a información clínica: un paciente sin `CareLink` no ve objetivos, no tiene diario y no puede registrar comidas.
+El bounded context IAM, implementado en `Healthify.Platform.Iam`, se encarga de la identidad de los usuarios y gestiona las cuentas, la autenticación, el *role claim* inmutable por sesión y la selección del *navigation shell* que monta el cliente. Su Domain Layer declara dos aggregate roots, seis value objects y dos interfaces de domain service. Conviene subrayar que crear una cuenta no otorga por sí sola acceso a la información clínica, de manera que un paciente sin `CareLink` no ve objetivos, no tiene diario y tampoco puede registrar comidas.
 
 **Aggregates (Aggregate Roots)**
 
-**`User`** — Una cuenta en la plataforma. Solo representa la identidad del usuario; la relación con un profesional es responsabilidad de Care Relationship. Está implementada como `partial class` dividida en `User.cs` (dominio) y `UserAudit.cs` (implementación de `IAuditableEntity`), para separar el modelo de dominio de los campos de auditoría.
+`User` modela una cuenta dentro de la plataforma y se limita a representar la identidad del usuario, ya que la relación con un profesional le corresponde a Care Relationship. Está implementada como `partial class` repartida entre `User.cs`, donde vive el dominio, y `UserAudit.cs`, donde se implementa `IAuditableEntity`, con lo que el modelo de dominio queda separado de los campos de auditoría.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
-| `MaxFailedSignInAttempts` | `const int = 5` | `private` | Umbral de la regla *Lockout After Five Failed Attempts*. |
+| `MaxFailedSignInAttempts` | `const int = 5` | `private` | Umbral que impone la regla *Lockout After Five Failed Attempts*. |
 | `Id` | `UserId` | `public get / private set` | Identidad tipada del agregado. |
 | `Email` | `Email` | `public get / private set` | Dirección de correo normalizada a minúsculas. |
-| `PasswordHash` | `string` | `public get / private set` | Hash BCrypt; la contraseña en claro nunca se persiste. |
-| `Role` | `Role` | `public get / private set` | Rol declarado en el registro; nunca se muta. |
+| `PasswordHash` | `string` | `public get / private set` | Hash BCrypt. La contraseña en claro nunca llega a persistirse. |
+| `Role` | `Role` | `public get / private set` | Rol declarado durante el registro, que nunca se muta. |
 | `FailedSignInAttempts` | `int` | `public get / private set` | Intentos fallidos consecutivos. |
-| `LockedOutAt` | `DateTimeOffset?` | `public get / private set` | Momento del bloqueo. |
-| `IsLockedOut` | `bool` | `public` (computada) | Derivada de `LockedOutAt`; no es columna. |
+| `LockedOutAt` | `DateTimeOffset?` | `public get / private set` | Momento en que se produjo el bloqueo. |
+| `IsLockedOut` | `bool` | `public` (computada) | Se deriva de `LockedOutAt` y no corresponde a ninguna columna. |
 
 | Método | Scope | Descripción |
 |---|---|---|
-| `User(RegisterAccountCommand, string passwordHash)` | `public` | Valida *Role Declared At Registration* y la presencia del hash; construye los VO `Email` y `Role`. |
-| `RegisterFailedSignInAttempt()` | `public` | Incrementa el contador y bloquea al alcanzar el umbral. |
-| `RegisterSuccessfulSignIn()` | `public` | Resetea el contador y desbloquea. |
-| `StartSession() : UserSession` | `public` | Factory Method: abre una sesión copiando el role claim. Es el único camino de creación de `UserSession`. |
+| `User(RegisterAccountCommand, string passwordHash)` | `public` | Valida la regla *Role Declared At Registration* junto con la presencia del hash, y construye los VO `Email` y `Role`. |
+| `RegisterFailedSignInAttempt()` | `public` | Incrementa el contador y bloquea la cuenta al alcanzar el umbral. |
+| `RegisterSuccessfulSignIn()` | `public` | Resetea el contador y desbloquea la cuenta. |
+| `StartSession() : UserSession` | `public` | Factory Method que abre una sesión copiando el role claim, y que es el único camino posible para crear un `UserSession`. |
 
-**`UserSession`** — Una sesión autenticada. Transporta el role claim que el resto de la plataforma lee del token y el navigation shell que el cliente monta a raíz de ese rol. Es un aggregate root independiente dentro del mismo bounded context: referencia a `User` con un `int` plano, sin navegación EF, respetando la regla de no navegar entre agregados.
+`UserSession` modela una sesión autenticada. Transporta el role claim que el resto de la plataforma lee desde el token y el navigation shell que el cliente monta a raíz de ese rol. Es un aggregate root independiente dentro del mismo bounded context y referencia a `User` mediante un `int` plano, sin navegación de EF, con lo que se respeta la regla de no navegar entre agregados.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `Id` | `SessionId` | `public get / private set` | Identidad tipada. |
-| `UserId` | `int` | `public get / private set` | Referencia por identificador, no por navegación. |
-| `RoleClaim` | `Role` | `public get / private set` | Rol congelado al inicio de sesión. No hay mutador. |
-| `NavigationShell` | `NavigationShell?` | `public get / private set` | Shell seleccionado, `null` hasta que la política lo asigna. |
+| `UserId` | `int` | `public get / private set` | Referencia por identificador y no por navegación. |
+| `RoleClaim` | `Role` | `public get / private set` | Rol congelado al inicio de la sesión. No existe mutador. |
+| `NavigationShell` | `NavigationShell?` | `public get / private set` | Shell seleccionado, que permanece en `null` hasta que la política lo asigna. |
 | `StartedAt` / `TerminatedAt` | `DateTimeOffset` / `DateTimeOffset?` | `public get / private set` | Ciclo de vida de la sesión. |
-| `IsActive` | `bool` | `public` (computada) | La sesión no ha terminado. |
-| `ActiveRoleClaim` | `Role?` | `public` (computada) | El rol que la sesión todavía otorga: `null` si está terminada. |
+| `IsActive` | `bool` | `public` (computada) | Indica que la sesión todavía no ha terminado. |
+| `ActiveRoleClaim` | `Role?` | `public` (computada) | El rol que la sesión aún otorga, que queda en `null` cuando ya terminó. |
 
 | Método | Scope | Descripción |
 |---|---|---|
-| `UserSession(int, Role)` | `internal` | Deliberadamente `internal`: sólo `User.StartSession()` puede crearla. |
+| `UserSession(int, Role)` | `internal` | Es `internal` de forma deliberada, ya que solo `User.StartSession()` debería poder crearla. |
 | `SelectNavigationShell(NavigationShell)` | `public` | Aplica *Role Claim Discarded On Sign Out*, *One Shell Per Session* y *Role Change Requires Re Authentication*. |
-| `Terminate()` | `public` | Cierra la sesión; lanza si ya estaba terminada. |
+| `Terminate()` | `public` | Cierra la sesión y lanza una excepción si esta ya estaba terminada. |
 
 **Value Objects**
 
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
-| `Email` | Dirección de correo de la cuenta. | Valida no vacío, 255 caracteres máximo y expresión regular generada; normaliza a minúsculas para que la unicidad sea *case insensitive*. |
-| `Password` | Contraseña en claro que ya pasó la política de fortaleza. Existe sólo el tiempo necesario para ser hasheada; nunca se persiste ni se loguea. | Longitud 8–128; exige mayúscula, minúscula, dígito y carácter especial. Implementa *Strong Password Required*. |
-| `Role` | Rol de la persona en la plataforma. | Constantes `Patient` y `Practitioner`; conjunto permitido case-insensitive; propiedades `IsPatient` e `IsPractitioner`. Se asume una cuenta igual a un rol, inmutable. |
-| `NavigationShell` | Shell que la app cliente monta para una sesión. | Constantes `PatientShell` y `PractitionerShell`; factory `ForRole(Role)`; método `MatchesRole(Role)`. |
-| `UserId`, `SessionId` | Identidades tipadas. | `Value : int > 0`, `internal static FromRaw(int)` reservada a los value converters de EF, y operadores de conversión. |
+| `Email` | La dirección de correo de la cuenta. | Valida que no venga vacía, admite hasta 255 caracteres, aplica una expresión regular generada y normaliza a minúsculas para que la unicidad sea *case insensitive*. |
+| `Password` | La contraseña en claro que ya superó la política de fortaleza. Vive solo el tiempo necesario para ser hasheada y jamás se persiste ni se escribe en los logs. | Longitud entre 8 y 128 caracteres, con mayúscula, minúscula, dígito y carácter especial. Implementa la regla *Strong Password Required*. |
+| `Role` | El rol que la persona ocupa en la plataforma. | Constantes `Patient` y `Practitioner`, conjunto permitido case-insensitive y propiedades `IsPatient` e `IsPractitioner`. Se asume que una cuenta equivale a un rol y que ese rol es inmutable. |
+| `NavigationShell` | El shell que la app cliente monta para una sesión. | Constantes `PatientShell` y `PractitionerShell`, factory `ForRole(Role)` y método `MatchesRole(Role)`. |
+| `UserId`, `SessionId` | Las identidades tipadas del contexto. | `Value : int > 0`, `internal static FromRaw(int)` reservada a los value converters de EF, y operadores de conversión. |
 
-**Commands (4)** — `RegisterAccountCommand`, `SignInCommand`, `SelectNavigationShellCommand` (sin endpoint REST, emitido sólo por la política) y `SignOutCommand`.
+**Commands**
 
-**Queries (4)** — `GetUserByIdQuery` (read model Welcome Screen), `GetUserByEmailQuery` (resolución de cuenta previa a la verificación de credenciales), `GetUserSessionByIdQuery` (App Shell) y `GetUserSessionsByUserIdQuery` (Session Context).
+Los cuatro commands son `RegisterAccountCommand`, `SignInCommand`, `SelectNavigationShellCommand` y `SignOutCommand`. El tercero no tiene endpoint REST y lo emite únicamente la política.
 
-**Domain Events (5)** — `AccountCreated`, `SessionStarted`, `RoleClaimIssued`, `NavigationShellSelected` y `SessionTerminated`. Ninguno cruza frontera de bounded context, y ningún otro contexto puede declarar un handler para ellos: la infraestructura de cuentas y sesiones no tiene significado de dominio fuera de IAM. El role claim viaja hacia los demás contextos dentro del token JWT, que es infraestructura, no un evento de dominio.
+**Queries**
 
-**Errors** — `enum IamError` con 14 valores, uno por regla que el contexto hace cumplir: `EmailAlreadyTaken`, `InvalidEmail`, `WeakPassword`, `RoleNotDeclared`, `InvalidRole`, `UserNotFound`, `InvalidCredentials`, `AccountLocked`, `SessionNotFound`, `SessionAlreadyTerminated`, `ShellAlreadySelectedForSession`, `RoleChangeRequiresReAuthentication`, `RoleImmutablePerSession` y `UnexpectedError`.
+También son cuatro. `GetUserByIdQuery` alimenta el read model Welcome Screen y `GetUserByEmailQuery` resuelve la cuenta antes de verificar las credenciales, mientras que `GetUserSessionByIdQuery` sirve el App Shell y `GetUserSessionsByUserIdQuery` el Session Context.
 
-**Repositories (abstracciones)** — `IUserRepository`, con `FindByEmailAsync(Email)` y `ExistsByEmailAsync(Email)` que respalda *Unique Email Required*, e `IUserSessionRepository`, con `ListByUserIdAsync(int)`. Ambas derivan de `IBaseRepository<TEntity>`, que declara `AddAsync`, `FindByIdAsync`, `Update`, `Remove` y `ListAsync` y nunca expone `IQueryable`.
+**Domain Events**
 
-**Domain Services (interfaces)** — `IHashingService`, con `Hash(Password) : string` y `Verify(string, string) : bool`, e `ITokenService`, con `GenerateToken(User, UserSession) : string`, que emite el token firmado con el subject, el email, el role claim inmutable y el identificador de sesión. El *auth provider* que dibuja el event storming está implementado dentro de la plataforma: no hay proveedor de identidad de terceros.
+Los cinco domain events son `AccountCreated`, `SessionStarted`, `RoleClaimIssued`, `NavigationShellSelected` y `SessionTerminated`. Ninguno cruza la frontera del bounded context y ningún otro contexto puede declarar un handler para ellos, ya que la infraestructura de cuentas y sesiones carece de significado de dominio fuera de IAM. El role claim viaja hacia los demás contextos dentro del token JWT, que es infraestructura y no un evento de dominio.
 
-**Relaciones entre clases:** `User` compone `UserId`, `Email` y `Role`, y depende de `UserSession` como creador a través de `StartSession()` (1 → 0..*), sin navegación de EF. `UserSession` compone `SessionId` y `Role` (como role claim congelado) y 0..1 `NavigationShell`, que a su vez depende de `Role` mediante `ForRole` y `MatchesRole`. `IHashingService` depende de `Password`; `ITokenService` depende de `User` y `UserSession`. Ambos agregados realizan `IAuditableEntity`, y los cinco eventos generalizan `DomainEventBase`.
+**Errors**
+
+El `enum IamError` reúne 14 valores, uno por cada regla que el contexto hace cumplir: `EmailAlreadyTaken`, `InvalidEmail`, `WeakPassword`, `RoleNotDeclared`, `InvalidRole`, `UserNotFound`, `InvalidCredentials`, `AccountLocked`, `SessionNotFound`, `SessionAlreadyTerminated`, `ShellAlreadySelectedForSession`, `RoleChangeRequiresReAuthentication`, `RoleImmutablePerSession` y `UnexpectedError`.
+
+**Repositories (abstracciones)**
+
+`IUserRepository` declara `FindByEmailAsync(Email)` y `ExistsByEmailAsync(Email)`, esta última como respaldo de la regla *Unique Email Required*, e `IUserSessionRepository` añade `ListByUserIdAsync(int)`. Ambas derivan de `IBaseRepository<TEntity>`, que declara `AddAsync`, `FindByIdAsync`, `Update`, `Remove` y `ListAsync` sin exponer nunca un `IQueryable`.
+
+**Domain Services (interfaces)**
+
+`IHashingService` ofrece `Hash(Password) : string` y `Verify(string, string) : bool`, mientras que `ITokenService` ofrece `GenerateToken(User, UserSession) : string`, que emite el token firmado con el subject, el email, el role claim inmutable y el identificador de sesión. El *auth provider* que dibuja el event storming está implementado dentro de la propia plataforma, así que no interviene ningún proveedor de identidad de terceros.
+
+**Relaciones entre clases:** `User` compone `UserId`, `Email` y `Role`, y depende de `UserSession` como creador a través de `StartSession()`, en una relación 1 → 0..* que no usa navegación de EF. `UserSession` compone `SessionId` y `Role`, este último en su papel de role claim congelado, junto con 0..1 `NavigationShell`, que a su vez depende de `Role` mediante `ForRole` y `MatchesRole`. `IHashingService` depende de `Password` e `ITokenService` depende tanto de `User` como de `UserSession`. Ambos agregados realizan `IAuditableEntity` y los cinco eventos generalizan `DomainEventBase`.
 
 #### 2.6.5.2. Interface Layer
 
-La Interface Layer de IAM expone tres controllers y el contrato ACL por el que los demás bounded contexts resuelven identidades puntuales. Todas las respuestas de error se construyen con `ProblemDetailsFactory.Create(...)` (RFC 7807) y con textos localizados a través de `IStringLocalizer<IamMessages>`.
+La Interface Layer de IAM expone tres controllers y el contrato ACL por el que los demás bounded contexts resuelven identidades puntuales. Todas las respuestas de error se construyen con `ProblemDetailsFactory.Create(...)`, siguiendo el RFC 7807, y con textos localizados a través de `IStringLocalizer<IamMessages>`.
 
 **Controllers**
 
-**`AuthenticationController`** — `[ApiController] [Route("api/v1/authentication")] [Authorize] [Tags("Authentication")]`, con `[Produces]` y `[Consumes]` en `application/json`. Depende de `IUserCommandService`, `IUserSessionCommandService` e `IStringLocalizer<IamMessages>`.
+`AuthenticationController` se publica bajo `[ApiController] [Route("api/v1/authentication")] [Authorize] [Tags("Authentication")]`, con `[Produces]` y `[Consumes]` en `application/json`, y depende de `IUserCommandService`, `IUserSessionCommandService` e `IStringLocalizer<IamMessages>`.
 
 | Verbo / Ruta | Acción | Autorización | Respuestas |
 |---|---|---|---|
@@ -3858,18 +3993,18 @@ La Interface Layer de IAM expone tres controllers y el contrato ACL por el que l
 | `POST /api/v1/authentication/sign-in` | `SignIn(SignInResource)` | `[AllowAnonymous]` | 200 `SignInResponseResource` · 401 · 500 |
 | `POST /api/v1/authentication/sign-out` | `SignOutSession()` | Bearer | 204 · 401 · 404 · 409 |
 
-`sign-out` no recibe body: toma el identificador de sesión y el de usuario del token, por lo que un usuario no puede cerrar la sesión de otro enviando un identificador ajeno.
+La operación de cierre de sesión no recibe body y toma tanto el identificador de sesión como el de usuario del propio token, de modo que nadie puede cerrar la sesión de otra persona enviando un identificador ajeno.
 
-**`UsersController`** — `[Route("api/v1/users")] [Authorize] [Tags("Users")]`.
+`UsersController` se publica bajo `[Route("api/v1/users")] [Authorize] [Tags("Users")]` y sirve los dos read models de cuenta.
 
 | Verbo / Ruta | Acción | Read Model | Respuestas |
 |---|---|---|---|
 | `GET /api/v1/users/{userId:int}` | `GetUserById(int)` | Welcome Screen | 200 · 401 · 403 · 404 |
 | `GET /api/v1/users/{userId:int}/sessions` | `GetSessionsByUserId(int)` | Session Context | 200 · 401 · 403 |
 
-Ambos comparan el identificador de la ruta contra el del token autenticado y devuelven `Forbid()` si no coinciden.
+Ambos comparan el identificador de la ruta contra el del token autenticado y devuelven `Forbid()` cuando no coinciden.
 
-**`SessionsController`** — `[Route("api/v1/sessions")] [Authorize] [Tags("Sessions")]`. Expone `GET /{sessionId:int}/navigation-shell` (`GetNavigationShell(int)`), que sirve el read model App Shell con respuestas 200 · 401 · 403 · 404.
+`SessionsController`, bajo `[Route("api/v1/sessions")] [Authorize] [Tags("Sessions")]`, expone un único `GET /{sessionId:int}/navigation-shell`, resuelto por `GetNavigationShell(int)`, que sirve el read model App Shell con respuestas 200 · 401 · 403 · 404.
 
 **Resources**
 
@@ -3877,8 +4012,8 @@ Ambos comparan el identificador de la ruta contra el del token autenticado y dev
 |---|---|---|
 | `SignUpResource` | `Email`, `Password`, `Role` | Request de registro. |
 | `SignInResource` | `Email`, `Password` | Request de autenticación. |
-| `SignInResponseResource` | `UserId`, `Email`, `Role`, `SessionId`, `Token`, `StartedAt` | Response de sign-in (Session Context). |
-| `UserResource` | `UserId`, `Email`, `Role`, `CreatedAt` | Welcome Screen. El hash y el contador de bloqueo nunca salen del contexto. |
+| `SignInResponseResource` | `UserId`, `Email`, `Role`, `SessionId`, `Token`, `StartedAt` | Response del sign-in, correspondiente al Session Context. |
+| `UserResource` | `UserId`, `Email`, `Role`, `CreatedAt` | Welcome Screen. Ni el hash ni el contador de bloqueo salen alguna vez del contexto. |
 | `UserSessionResource` | `SessionId`, `UserId`, `RoleClaim`, `NavigationShell?`, `StartedAt`, `TerminatedAt?`, `IsActive` | Session Context. |
 | `NavigationShellResource` | `SessionId`, `RoleClaim?`, `NavigationShell?`, `IsActive` | App Shell. |
 
@@ -3891,10 +4026,10 @@ Ambos comparan el identificador de la ruta contra el del token autenticado y dev
 | `SignOutCommandAssembler` | Claims → Command | `ToCommand(int sessionId, int userId)` |
 | `UserResourceAssembler`, `UserSessionResourceAssembler` | Aggregate → Resource | `ToResource(...)` |
 | `SignInResponseResourceAssembler` | DTO → Resource | `ToResource(SignInOutcome)` |
-| `NavigationShellResourceAssembler` | Aggregate → Resource | Usa `ActiveRoleClaim` para que una sesión terminada no reporte rol. |
+| `NavigationShellResourceAssembler` | Aggregate → Resource | Se apoya en `ActiveRoleClaim` para que una sesión terminada no reporte rol alguno. |
 | `IamActionResultAssembler` | `Result<T, IamError>` → `IActionResult` | `ToRegisterAccountResult`, `ToSignInResult`, `ToSignOutResult`, `ToNotFoundResult` y el privado `FailureResult` |
 
-El mapeo de errores a HTTP ocurre en un único lugar, para que una misma regla no reporte dos códigos distintos:
+El mapeo de errores a HTTP ocurre en un único lugar, y así se evita que una misma regla termine reportando dos códigos distintos.
 
 | Errores | Status |
 |---|---|
@@ -3905,65 +4040,83 @@ El mapeo de errores a HTTP ocurre en un único lugar, para que una misma regla n
 | `RoleChangeRequiresReAuthentication`, `RoleImmutablePerSession` | **422** |
 | `UnexpectedError` (por defecto) | **500** |
 
-**ACL Contract** — `IIamContextFacade` declara el DTO `UserIdentityItem(int UserId, string Email, string Role)` y tres operaciones: `GetUserById(int)`, `IsPractitioner(int)` e `IsPatient(int)`. Todo parámetro y retorno es un primitivo o un DTO sólo-de-primitivos declarado aquí; nunca un command, un aggregate o una entity.
+**ACL Contract**
 
-**Localización** — `Iam/Resources/IamMessages.cs`, clase marcador de los archivos `.resx` en inglés y español.
+`IIamContextFacade` declara el DTO `UserIdentityItem(int UserId, string Email, string Role)` y tres operaciones, que son `GetUserById(int)`, `IsPractitioner(int)` e `IsPatient(int)`. Todo parámetro y todo retorno es un primitivo o un DTO formado solo por primitivos declarado aquí mismo, nunca un command, un aggregate o una entity.
+
+**Localización**
+
+Los mensajes localizados se declaran en `Iam/Resources/IamMessages.cs`, clase marcador de los archivos `.resx` en inglés y español.
 
 #### 2.6.5.3. Application Layer
 
-La Application Layer de IAM maneja los tres subflujos del contexto (1.1 registro, 1.2 autenticación y selección de shell, 1.3 cierre de sesión). Sigue la estructura estándar del proyecto: interfaces públicas en `Application/CommandServices` y `Application/QueryServices`, implementaciones en `Application/Internal/...`, handlers de eventos en `Application/Internal/EventHandlers` y fachada ACL en `Application/Acl`.
+La Application Layer de IAM maneja los tres subflujos del contexto, que son el registro en 1.1, la autenticación junto con la selección de shell en 1.2 y el cierre de sesión en 1.3. Sigue la estructura estándar del proyecto, con las interfaces públicas en `Application/CommandServices` y `Application/QueryServices`, las implementaciones en `Application/Internal/...`, los handlers de eventos en `Application/Internal/EventHandlers` y la fachada ACL en `Application/Acl`.
 
 **Command Services**
 
-**`UserCommandService`** (implementa `IUserCommandService`) — Depende de `IUserRepository`, `IUnitOfWork`, `IHashingService`, `ILogger<UserCommandService>` e `IMediator`.
+`UserCommandService`, que implementa `IUserCommandService`, depende de `IUserRepository`, `IUnitOfWork`, `IHashingService`, `ILogger<UserCommandService>` e `IMediator`.
 
-Su método `Handle(RegisterAccountCommand, CancellationToken) : Task<Result<User, IamError>>` implementa el subflujo 1.1 con las guardas en un orden deliberado: valida el value object `Email` (`InvalidEmail`), comprueba que el rol venga declarado (`RoleNotDeclared`) y sea válido (`InvalidRole`), construye el `Password` aplicando la política de fortaleza (`WeakPassword`), verifica la unicidad del correo (`EmailAlreadyTaken`), construye el agregado con el hash producido por el servicio de hashing, persiste y hace commit, y publica `AccountCreated` siempre después del commit. En los logs registra el correo, pero nunca la contraseña.
+Su método `Handle(RegisterAccountCommand, CancellationToken) : Task<Result<User, IamError>>` implementa el subflujo 1.1 con las guardas dispuestas en un orden deliberado. Primero valida el value object `Email` y reporta `InvalidEmail` si falla, luego comprueba que el rol venga declarado con `RoleNotDeclared` y que sea válido con `InvalidRole`, y a continuación construye el `Password` aplicando la política de fortaleza, que puede devolver `WeakPassword`. Después verifica la unicidad del correo con `EmailAlreadyTaken`, construye el agregado con el hash producido por el servicio de hashing, persiste, hace commit y publica `AccountCreated` siempre después del commit. En los logs deja registrado el correo, pero nunca la contraseña.
 
-**`UserSessionCommandService`** (implementa `IUserSessionCommandService`) — Depende de `IUserRepository`, `IUserSessionRepository`, `IUnitOfWork`, `IHashingService`, `ITokenService`, `ILogger<...>` e `IMediator`.
+`UserSessionCommandService`, que implementa `IUserSessionCommandService`, depende de `IUserRepository`, `IUserSessionRepository`, `IUnitOfWork`, `IHashingService`, `ITokenService`, `ILogger<...>` e `IMediator`.
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
-| `Handle(SignInCommand)` | 1.2 | Un correo malformado se reporta como `InvalidCredentials`, no como correo inválido, para no revelar qué direcciones existen. Comprueba el bloqueo de la cuenta; ante credenciales incorrectas registra el intento fallido y hace commit; ante credenciales válidas resetea el contador, abre la sesión con `user.StartSession()`, persiste, genera el token y publica `SessionStarted` y `RoleClaimIssued` tras el commit. Devuelve `SignInOutcome`. |
-| `Handle(SelectNavigationShellCommand)` | 1.2 | Invocado sólo por la política, nunca por un endpoint. Distingue `SessionAlreadyTerminated`, `ShellAlreadySelectedForSession` y `RoleChangeRequiresReAuthentication`. Publica `NavigationShellSelected`. |
-| `Handle(SignOutCommand)` | 1.3 | Una sesión ajena se reporta como inexistente, no como prohibida. Termina la sesión, hace commit y publica `SessionTerminated`. |
+| `Handle(SignInCommand)` | 1.2 | Un correo malformado se reporta como `InvalidCredentials` y no como correo inválido, para no revelar qué direcciones existen. Comprueba el bloqueo de la cuenta y, ante credenciales incorrectas, registra el intento fallido y hace commit. Ante credenciales válidas resetea el contador, abre la sesión con `user.StartSession()`, persiste, genera el token y publica `SessionStarted` y `RoleClaimIssued` una vez hecho el commit. Devuelve `SignInOutcome`. |
+| `Handle(SelectNavigationShellCommand)` | 1.2 | Solo lo invoca la política y nunca un endpoint. Distingue entre `SessionAlreadyTerminated`, `ShellAlreadySelectedForSession` y `RoleChangeRequiresReAuthentication`. Publica `NavigationShellSelected`. |
+| `Handle(SignOutCommand)` | 1.3 | Una sesión ajena se reporta como inexistente antes que como prohibida. Termina la sesión, hace commit y publica `SessionTerminated`. |
 
-**Query Services** — `UserQueryService(IUserRepository)` resuelve `GetUserByIdQuery` y `GetUserByEmailQuery`, donde un correo malformado devuelve `null` porque las queries reportan ausencia, no fallo. `UserSessionQueryService(IUserSessionRepository)` resuelve `GetUserSessionByIdQuery` y `GetUserSessionsByUserIdQuery`.
+**Query Services**
+
+`UserQueryService(IUserRepository)` resuelve `GetUserByIdQuery` y `GetUserByEmailQuery`, donde un correo malformado devuelve `null`, ya que las queries reportan ausencia y no fallo. `UserSessionQueryService(IUserSessionRepository)`, por su parte, resuelve `GetUserSessionByIdQuery` y `GetUserSessionsByUserIdQuery`.
 
 **Event Handlers (políticas)**
 
-**`OnRoleClaimIssuedHandler`** implementa la política *When Role Claim Issued* del subflujo 1.2. Escucha `RoleClaimIssued` a través de `IEventHandler<T>` —alias tipado sobre el `INotificationHandler<T>` de Cortex.Mediator— y depende de `IServiceScopeFactory` y `ILogger<...>`. Crea un scope de DI aislado con su propio `DbContext`, porque las notificaciones se manejan en paralelo y compartir el contexto del request produciría un error de concurrencia; deriva el shell con `NavigationShell.ForRole(...)` y emite `SelectNavigationShellCommand`. Si falla, sólo registra una advertencia: el usuario ya está autenticado y el shell puede resolverse después.
+`OnRoleClaimIssuedHandler` implementa la política *When Role Claim Issued* del subflujo 1.2. Escucha `RoleClaimIssued` a través de `IEventHandler<T>`, un alias tipado sobre el `INotificationHandler<T>` de Cortex.Mediator, y depende de `IServiceScopeFactory` y `ILogger<...>`. Crea un scope de DI aislado con su propio `DbContext`, ya que las notificaciones se manejan en paralelo y compartir el contexto del request produciría un error de concurrencia, luego deriva el shell con `NavigationShell.ForRole(...)` y emite `SelectNavigationShellCommand`. Si algo falla se limita a registrar una advertencia, puesto que el usuario ya está autenticado y el shell puede resolverse más adelante.
 
-Es la única política del bounded context y no cruza frontera: productor y suscriptor son ambos IAM.
+Es la única política del bounded context y no cruza la frontera, dado que productor y suscriptor son ambos IAM.
 
-**DTO de aplicación** — `SignInOutcome(User User, UserSession Session, string Token)`, que respalda el read model *Session Context*. No es un tipo de dominio ni un recurso HTTP: existe para que el controller pueda componer la respuesta de sign-in sin que la capa de aplicación conozca la forma del payload.
+**DTO de aplicación**
 
-**ACL Facade** — `IamContextFacade` implementa `IIamContextFacade` delegando en `IUserQueryService` y nunca en un repositorio, para no puentear la capa de aplicación. Sus tres métodos capturan los errores con `try/catch` y devuelven `null` o `false` sin propagar excepciones, de modo que un fallo de identidad se traduce en denegación de acceso en el contexto que pregunta.
+`SignInOutcome(User User, UserSession Session, string Token)` respalda el read model *Session Context*. No es un tipo de dominio ni un recurso HTTP, y existe únicamente para que el controller pueda componer la respuesta del sign-in sin que la capa de aplicación tenga que conocer la forma del payload.
+
+**ACL Facade**
+
+`IamContextFacade` implementa `IIamContextFacade` delegando en `IUserQueryService` y nunca en un repositorio, con lo cual no se puentea la capa de aplicación. Sus tres métodos capturan los errores con `try/catch` y devuelven `null` o `false` sin propagar excepciones, de modo que un fallo de identidad se traduce en una denegación de acceso dentro del contexto que pregunta.
 
 #### 2.6.5.4. Infrastructure Layer
 
-La Infrastructure Layer de IAM implementa la persistencia de cuentas y sesiones y las dos interfaces de domain service declaradas en el dominio. Este bounded context no registra ningún `IHostedService` y no consume proveedores de identidad de terceros.
+La Infrastructure Layer de IAM implementa la persistencia de cuentas y sesiones junto con las dos interfaces de domain service declaradas en el dominio. Este bounded context no registra ningún `IHostedService` ni consume proveedores de identidad de terceros.
 
 **Configuraciones de EF Core**
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
-| `UserEntityTypeConfiguration` | `users` | PK `id` con conversión `UserId.FromRaw` y `ValueGeneratedOnAdd()`. `email` con converter, 255 caracteres, requerido y con índice único `ix_users_email`, segunda línea de defensa de *Unique Email Required*. `password_hash` (255), `role` (20, con converter), `failed_sign_in_attempts` y `locked_out_at`. `Ignore(u => u.IsLockedOut)`, por ser propiedad calculada. |
-| `UserSessionEntityTypeConfiguration` | `user_sessions` | PK con converter `SessionId.FromRaw`. `user_id` como `int` plano sin navegación EF, con índice `ix_user_sessions_user_id`. `role_claim` (20) con converter. `navigation_shell` (30, opcional) con un `ValueConverter<NavigationShell?, string?>` explícito, en lugar de un `OwnsOne` nullable frágil. `started_at` requerido y `terminated_at` opcional. `Ignore` sobre `IsActive` y `ActiveRoleClaim`. |
+| `UserEntityTypeConfiguration` | `users` | La PK `id` usa la conversión `UserId.FromRaw` con `ValueGeneratedOnAdd()`. La columna `email` lleva converter, 255 caracteres, es requerida y tiene el índice único `ix_users_email`, que funciona como segunda línea de defensa de *Unique Email Required*. Le siguen `password_hash` con 255 caracteres, `role` con 20 y converter, `failed_sign_in_attempts` y `locked_out_at`. Se aplica `Ignore(u => u.IsLockedOut)` por tratarse de una propiedad calculada. |
+| `UserSessionEntityTypeConfiguration` | `user_sessions` | La PK usa el converter `SessionId.FromRaw` y `user_id` se guarda como `int` plano sin navegación de EF, con el índice `ix_user_sessions_user_id`. La columna `role_claim` ocupa 20 caracteres con converter y `navigation_shell` ocupa 30 y es opcional, resuelta con un `ValueConverter<NavigationShell?, string?>` explícito en lugar de un `OwnsOne` nullable más frágil. Finalmente `started_at` es requerida, `terminated_at` opcional, y se aplica `Ignore` sobre `IsActive` y `ActiveRoleClaim`. |
 
 **Repositorios (implementaciones)**
 
 | Clase | Base | Detalles de implementación |
 |---|---|---|
-| `UserRepository(AppDbContext)` | `BaseRepository<User>`, `IUserRepository` | Sobrescribe `FindByIdAsync` validando el identificador y comparando por `UserId`; implementa `FindByEmailAsync` y `ExistsByEmailAsync` con `AnyAsync`. Reimplementa explícitamente `IBaseRepository<User>.FindByIdAsync` para que las llamadas por interfaz alcancen la versión especializada. |
-| `UserSessionRepository(AppDbContext)` | `BaseRepository<UserSession>`, `IUserSessionRepository` | Sobrescribe `FindByIdAsync` y ofrece `ListByUserIdAsync`, que filtra por usuario y ordena por inicio de sesión descendente. Misma reimplementación explícita. |
+| `UserRepository(AppDbContext)` | `BaseRepository<User>`, `IUserRepository` | Sobrescribe `FindByIdAsync` validando el identificador y comparando por `UserId`, e implementa `FindByEmailAsync` y `ExistsByEmailAsync` con `AnyAsync`. Reimplementa de forma explícita `IBaseRepository<User>.FindByIdAsync` para que las llamadas por interfaz alcancen la versión especializada. |
+| `UserSessionRepository(AppDbContext)` | `BaseRepository<UserSession>`, `IUserSessionRepository` | Sobrescribe `FindByIdAsync` y ofrece `ListByUserIdAsync`, que filtra por usuario y ordena por inicio de sesión descendente. Aplica la misma reimplementación explícita. |
 
-**Hashing — `BCryptHashingService`** — Implementa `IHashingService` con la biblioteca BCrypt.Net. `Hash(Password)` delega en el algoritmo de la biblioteca sobre el valor en claro, que existe sólo el tiempo necesario para ser hasheado. `Verify(plain, hash)` devuelve `false` ante entradas vacías y envuelve la verificación en `try/catch`, de modo que un hash almacenado malformado se lea como verificación fallida y nunca como una excepción que filtre el estado de la cuenta.
+**Hashing**
 
-**Tokens — `JwtTokenService`** — Implementa `ITokenService` y depende de `IConfiguration`, leyendo la sección `TokenSettings` (`Secret`, `Issuer` con valor por defecto `healthify-platform`, `Audience` con valor por defecto `healthify-clients` y `ExpiresInMinutes` con 1440 por defecto). Firma con HMAC-SHA256 sobre una `SymmetricSecurityKey` y emite los claims `sub`, `NameIdentifier`, `email` (bajo el nombre registrado y bajo la clave simple), `Role` con el valor del role claim de la sesión, `sessionId` y `jti`. Sus parámetros reflejan exactamente lo que el *bearer handler* del composition root valida.
+`BCryptHashingService` implementa `IHashingService` apoyándose en la biblioteca BCrypt.Net. `Hash(Password)` delega en el algoritmo de la biblioteca sobre el valor en claro, que existe solo el tiempo necesario para ser hasheado. `Verify(plain, hash)` devuelve `false` ante entradas vacías y envuelve la verificación en un `try/catch`, así un hash almacenado malformado se lee como una verificación fallida y nunca como una excepción que filtre el estado de la cuenta.
 
-**Configuración del pipeline** — Además de sus propios registros de repositorios, servicios de dominio, command/query services y fachada ACL, IAM configura la autenticación JWT Bearer de toda la aplicación: validación de issuer, audience, firma y lifetime con una tolerancia de reloj de dos minutos, y una personalización de `OnChallenge` que devuelve un `ProblemDetails` localizado en lugar del 401 vacío por defecto. El role claim que emite este servicio es lo que los demás bounded contexts leen para autorizar por rol.
+**Tokens**
 
-**Servicios externos** — Ninguno. El *auth provider* que aparece en el event storming está implementado dentro del contenedor: no hay proveedor de identidad externo.
+`JwtTokenService` implementa `ITokenService` y depende de `IConfiguration`, desde donde lee la sección `TokenSettings` con `Secret`, `Issuer` que por defecto vale `healthify-platform`, `Audience` que por defecto vale `healthify-clients` y `ExpiresInMinutes` con 1440 por defecto. Firma con HMAC-SHA256 sobre una `SymmetricSecurityKey` y emite los claims `sub`, `NameIdentifier`, `email`, tanto bajo el nombre registrado como bajo la clave simple, `Role` con el valor del role claim de la sesión, `sessionId` y `jti`. Sus parámetros reflejan exactamente lo que el *bearer handler* del composition root valida.
+
+**Configuración del pipeline**
+
+Además de sus propios registros de repositorios, servicios de dominio, command y query services y fachada ACL, IAM configura la autenticación JWT Bearer de toda la aplicación. Esto incluye la validación de issuer, audience, firma y lifetime con una tolerancia de reloj de dos minutos, junto con una personalización de `OnChallenge` que devuelve un `ProblemDetails` localizado en lugar del 401 vacío por defecto. El role claim que emite este servicio es lo que los demás bounded contexts leen para autorizar por rol.
+
+**Servicios externos**
+
+Este contexto no consume ninguno. El *auth provider* que aparece en el event storming está implementado dentro del mismo contenedor, así que no interviene ningún proveedor de identidad externo.
 
 #### 2.6.5.5. Bounded Context Software Architecture Component Level Diagrams
 
@@ -4007,61 +4160,73 @@ Database:
 
 #### 2.6.6.1. Domain Layer
 
-**Food Catalog** (`Healthify.Platform.FoodCatalog`) mantiene el catálogo local de alimentos de referencia: nombre y nutrientes por 100 gramos. Es un subdominio genérico con un modelo simple; la mayor parte de su lógica está en la capa anticorrupción que traduce las fuentes externas. Su Domain Layer declara un único aggregate root y cuatro value objects, y tres decisiones de diseño lo definen: la importación traduce y anuncia pero no escribe; ningún identificador externo entra al dominio; y la búsqueda es local-first.
+El bounded context Food Catalog, implementado en `Healthify.Platform.FoodCatalog`, mantiene el catálogo local de alimentos de referencia con su nombre y sus nutrientes por cada 100 gramos. Se trata de un subdominio genérico y su modelo es simple, ya que la mayor parte de la lógica vive en la capa anticorrupción encargada de traducir las fuentes externas. Su Domain Layer declara un único aggregate root junto con cuatro value objects, y hay tres decisiones de diseño que lo definen. La primera es que la importación traduce y anuncia, pero nunca escribe. La segunda es que ningún identificador externo llega a entrar al dominio. La tercera es que toda búsqueda empieza por lo local.
 
 **Aggregate Root**
 
-**`ReferenceFood`** — Una entrada del catálogo local: un nombre y sus nutrientes por 100 gramos. El value object compuesto `NutrientsPer100g` se almacena como columnas planas y se reconstruye por propiedad calculada, siguiendo el patrón del proyecto.
+`ReferenceFood` representa una entrada del catálogo local, es decir un nombre acompañado de sus nutrientes por 100 gramos. El value object compuesto `NutrientsPer100g` se almacena como columnas planas y se reconstruye mediante una propiedad calculada, siguiendo el mismo patrón que usa el resto del proyecto.
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
-| `Id` | `ReferenceFoodId` | `public get / private set` | Identidad tipada. |
-| `LocalNameText` | `string` | `public get / private set` | Proyección persistida del VO `LocalName`, guardada como `string` plano porque la búsqueda hace *match* sobre él y EF Core no puede traducir a SQL un acceso a miembro de un tipo convertido. |
+| `Id` | `ReferenceFoodId` | `public get / private set` | Identidad tipada del agregado. |
+| `LocalNameText` | `string` | `public get / private set` | Proyección persistida del VO `LocalName`. Se guarda como `string` plano, ya que la búsqueda hace *match* sobre él y EF Core no logra traducir a SQL el acceso a un miembro de un tipo convertido. |
 | `EnergyKcalPer100g`, `ProteinGPer100g`, `CarbGPer100g`, `FatGPer100g` | `decimal` | `public get / private set` | Proyección de `NutrientsPer100g`. |
-| `SourceHash` | `SourceHash` | `public get / private set` | Huella del registro upstream: almacenada, comparada y nunca expuesta en un resource. |
-| `IsLocalOverride` | `bool` | `public get / private set` | Marca de entrada creada localmente por un profesional. No existe método que la limpie. |
-| `LocalName` | `LocalName` | `public` (computada) | Reconstruido desde `LocalNameText`. |
-| `NutrientsPer100g` | `NutrientsPer100g` | `public` (computada) | Reconstruido desde las cuatro columnas. |
+| `SourceHash` | `SourceHash` | `public get / private set` | Huella del registro upstream. Se almacena y se compara, pero nunca se expone en un resource. |
+| `IsLocalOverride` | `bool` | `public get / private set` | Marca las entradas que un profesional creó localmente. Ningún método permite limpiarla. |
+| `LocalName` | `LocalName` | `public` (computada) | Se reconstruye a partir de `LocalNameText`. |
+| `NutrientsPer100g` | `NutrientsPer100g` | `public` (computada) | Se reconstruye a partir de las cuatro columnas de nutrientes. |
 
 | Método | Scope | Descripción |
 |---|---|---|
-| `ReferenceFood(LocalName, NutrientsPer100g, SourceHash)` | `public` | Constructor de importación; deja `IsLocalOverride` en falso. |
-| `ReferenceFood(CreateLocalOverrideCommand)` | `public` | Constructor de override local; genera el hash con `SourceHash.ForLocalOverride(...)` y marca la entrada como override. |
-| `RefreshFromUpstream(LocalName, NutrientsPer100g)` | `public` | Lanza si la entrada es un override local: un override existe precisamente porque el catálogo externo estaba equivocado o callado sobre ese alimento, así que una importación nunca toca uno. |
-| `StoreNutrients(NutrientsPer100g)` | `private` | Aplana el value object en columnas. |
+| `ReferenceFood(LocalName, NutrientsPer100g, SourceHash)` | `public` | Constructor que usa la importación, y que deja `IsLocalOverride` en falso. |
+| `ReferenceFood(CreateLocalOverrideCommand)` | `public` | Constructor del override local. Genera el hash con `SourceHash.ForLocalOverride(...)` y marca la entrada como override. |
+| `RefreshFromUpstream(LocalName, NutrientsPer100g)` | `public` | Lanza una excepción si la entrada es un override local. Si alguien creó un override fue justamente porque el catálogo externo estaba equivocado o callado sobre ese alimento, de modo que una importación nunca debería tocarlo. |
+| `StoreNutrients(NutrientsPer100g)` | `private` | Aplana el value object en sus cuatro columnas. |
 
 **Value Objects**
 
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
-| `LocalName` | El nombre que un alimento lleva dentro de esta plataforma. Es el resultado de la traducción, nunca la etiqueta del proveedor. | `MaxLength = 200`; rechaza vacío y recorta. Implementa *Taxonomy Translation Mandatory*. |
-| `NutrientsPer100g` | Contenido nutricional, siempre por 100 gramos y nunca por porción: la porción la declara quien registra la comida. | Energía máxima de 950 kcal por 100 g; macros entre 0 y 100 g; redondeo a dos decimales. |
-| `SourceHash` | Huella digital del registro upstream del que se tradujo un alimento. | `Length = 64` (SHA-256 en hexadecimal minúscula); factories estáticas `Of(params string[])` y `ForLocalOverride(string)`. |
-| `ReferenceFoodId` | Identidad tipada. | `Value : int > 0`, `internal static FromRaw(int)`, operadores de conversión. |
+| `LocalName` | El nombre con el que un alimento se conoce dentro de esta plataforma. Siempre es el resultado de la traducción y nunca la etiqueta original del proveedor. | `MaxLength = 200`, rechaza el valor vacío y recorta los espacios sobrantes. Con esto se implementa la regla *Taxonomy Translation Mandatory*. |
+| `NutrientsPer100g` | El contenido nutricional, expresado siempre por 100 gramos y nunca por porción, ya que la porción la declara quien registra la comida. | Energía máxima de 950 kcal por 100 g, macros entre 0 y 100 g y redondeo a dos decimales. |
+| `SourceHash` | La huella digital del registro upstream desde el que se tradujo un alimento. | `Length = 64`, correspondiente a un SHA-256 en hexadecimal minúscula, con las factories estáticas `Of(params string[])` y `ForLocalOverride(string)`. |
+| `ReferenceFoodId` | La identidad tipada del agregado. | `Value : int > 0`, `internal static FromRaw(int)` y operadores de conversión. |
 
-Se usa un digest en lugar del identificador del proveedor para que ningún concepto externo forme parte del dominio: el digest permite reconocer un registro ya importado, pero no puede usarse para consultar al proveedor.
+Se emplea un digest en lugar del identificador del proveedor para que ningún concepto externo termine formando parte del dominio. El digest alcanza para reconocer un registro que ya fue importado, pero no sirve para volver a consultar al proveedor.
 
-**Commands (4)** — `ImportCatalogSnapshotCommand`, `CacheFoodLocallyCommand` (sin endpoint; lleva el payload traducido como primitivos, sin identificador externo, por construcción), `SearchFoodCommand` y `CreateLocalOverrideCommand`.
+**Commands**
 
-**Queries (3)** — `GetReferenceFoodByIdQuery`, `SearchReferenceFoodsQuery` (read model Food Results List) y `GetLocalFoodCatalogQuery` (read model Local Food Catalog, que llena la copia offline del dispositivo).
+El contexto declara cuatro commands: `ImportCatalogSnapshotCommand`, `CacheFoodLocallyCommand`, `SearchFoodCommand` y `CreateLocalOverrideCommand`. El segundo no tiene endpoint asociado y transporta el payload ya traducido como primitivos, de manera que por construcción no puede arrastrar ningún identificador externo.
 
-**Domain Events (6)** — `ExternalCatalogSnapshotImported`, `ReferenceFoodTranslated`, `TranslationFailed`, `ReferenceFoodCached`, `FoodSearchPerformed` y `LocalFoodOverrideCreated`. Ninguno cruza frontera de bounded context: Intake & Body Response lee el catálogo de forma síncrona por el ACL, porque registrar una comida necesita el alimento en ese momento. `TranslationFailed` no representa una excepción sino un resultado esperado: el registro se descarta para evitar que un alimento incompleto se use luego en el cálculo de la ingesta.
+**Queries**
 
-**Errors** — `enum FoodCatalogError` con nueve valores: `ExternalCatalogUnavailable`, `TaxonomyTranslationFailed`, `ExternalIdNotAllowed`, `SourceHashRequired`, `ReferenceFoodNotFound`, `PractitionerOnly`, `LocalNameAndNutrientsRequired`, `DuplicatedLocalOverride` y `UnexpectedError`.
+Las tres queries son `GetReferenceFoodByIdQuery`, `SearchReferenceFoodsQuery`, que alimenta el read model Food Results List, y `GetLocalFoodCatalogQuery`, que alimenta el read model Local Food Catalog con el que se llena la copia offline del dispositivo.
 
-**Repositories (abstracción)** — `IReferenceFoodRepository : IBaseRepository<ReferenceFood>` declara `FindBySourceHashAsync(SourceHash)` —la huella upstream es lo que hace idempotentes la importación y el sembrado—, `SearchByLocalNameAsync(string, int)` —que hace *match* sobre el nombre local y nunca sobre una etiqueta de proveedor—, `ListLocalCatalogAsync(int)`, `ExistsLocalOverrideWithNameAsync(string)` y `CountAsync()`.
+**Domain Events**
 
-**Domain Services** — `IExternalFoodCatalogProvider`, con la propiedad `ProviderName` y el método `FetchSnapshotAsync(string term, int max, CancellationToken)`, más los records `ExternalFoodRecord(LocalName, NutrientsPer100g, SourceHash)` y `ExternalCatalogSnapshot(string, IReadOnlyList<ExternalFoodRecord>, IReadOnlyList<string>)`. Esta interfaz es la parte de la capa anticorrupción visible desde el dominio: el dominio recibe snapshots y fallos de traducción, pero desconoce los detalles de comunicación HTTP. `ExternalFoodRecord` no tiene campo para un identificador externo, por lo que los adaptadores no pueden introducirlo. Un registro se traduce completo o se reporta como fallo y se descarta; no existe un estado parcial, porque un alimento sin nutrientes produciría registros de ingesta incorrectos.
+Los seis domain events son `ExternalCatalogSnapshotImported`, `ReferenceFoodTranslated`, `TranslationFailed`, `ReferenceFoodCached`, `FoodSearchPerformed` y `LocalFoodOverrideCreated`. Ninguno cruza la frontera del bounded context, ya que Intake & Body Response lee el catálogo de forma síncrona a través del ACL y necesita el alimento en el mismo instante en que el paciente registra su comida. `TranslationFailed` no representa una excepción sino un resultado previsto, y el registro se descarta para evitar que un alimento incompleto termine usándose luego en el cálculo de la ingesta.
 
-**Relaciones entre clases:** `ReferenceFood` compone `ReferenceFoodId` y `SourceHash`, y agrega de forma reconstruida `LocalName` y `NutrientsPer100g`, derivados respectivamente de `LocalNameText` y de las cuatro columnas de nutrientes. `ExternalFoodRecord` compone los mismos tres value objects, y `ExternalCatalogSnapshot` agrega 0..* `ExternalFoodRecord`. `IExternalFoodCatalogProvider` depende de `ExternalCatalogSnapshot` (`fetches`) e `IReferenceFoodRepository` depende de `SourceHash` (`findsBy`). No hay ninguna relación entre agregados dentro del contexto, porque sólo existe uno.
+**Errors**
+
+El `enum FoodCatalogError` agrupa nueve valores, que son `ExternalCatalogUnavailable`, `TaxonomyTranslationFailed`, `ExternalIdNotAllowed`, `SourceHashRequired`, `ReferenceFoodNotFound`, `PractitionerOnly`, `LocalNameAndNutrientsRequired`, `DuplicatedLocalOverride` y `UnexpectedError`.
+
+**Repositories (abstracción)**
+
+`IReferenceFoodRepository : IBaseRepository<ReferenceFood>` declara cinco operaciones. `FindBySourceHashAsync(SourceHash)` se apoya en la huella upstream, que es lo que vuelve idempotentes tanto la importación como el sembrado, mientras que `SearchByLocalNameAsync(string, int)` hace *match* sobre el nombre local y jamás sobre una etiqueta de proveedor. Las tres restantes son `ListLocalCatalogAsync(int)`, `ExistsLocalOverrideWithNameAsync(string)` y `CountAsync()`.
+
+**Domain Services**
+
+El único domain service es `IExternalFoodCatalogProvider`, que expone la propiedad `ProviderName` y el método `FetchSnapshotAsync(string term, int max, CancellationToken)`, acompañado de los records `ExternalFoodRecord(LocalName, NutrientsPer100g, SourceHash)` y `ExternalCatalogSnapshot(string, IReadOnlyList<ExternalFoodRecord>, IReadOnlyList<string>)`. Esta interfaz es la parte de la capa anticorrupción que el dominio alcanza a ver, de modo que recibe snapshots y fallos de traducción sin enterarse nunca de los detalles de la comunicación HTTP. Como `ExternalFoodRecord` no tiene un campo para identificadores externos, los adaptadores tampoco pueden introducirlos. Un registro se traduce completo o se reporta como fallo y se descarta, sin que exista un estado intermedio, ya que un alimento sin nutrientes produciría registros de ingesta incorrectos.
+
+**Relaciones entre clases:** `ReferenceFood` compone `ReferenceFoodId` y `SourceHash`, y agrega de forma reconstruida `LocalName` y `NutrientsPer100g`, derivados respectivamente de `LocalNameText` y de las cuatro columnas de nutrientes. `ExternalFoodRecord` compone esos mismos tres value objects y `ExternalCatalogSnapshot` agrega 0..* `ExternalFoodRecord`. `IExternalFoodCatalogProvider` depende de `ExternalCatalogSnapshot` mediante la relación *fetches*, e `IReferenceFoodRepository` depende de `SourceHash` mediante *findsBy*. Dentro del contexto no hay relaciones entre agregados, dado que solo existe uno.
 
 #### 2.6.6.2. Interface Layer
 
-La Interface Layer de Food Catalog expone dos controllers con una asimetría deliberada de autorización: buscar es abierto, escribir no lo es.
+La Interface Layer de Food Catalog expone dos controllers y aplica entre ellos una asimetría deliberada de autorización, porque buscar en el catálogo es abierto y escribir en él no lo es.
 
 **Controllers**
 
-**`ReferenceFoodsController`** — `[Route("api/v1/reference-foods")] [Tags("Food Catalog")]`, sin `[Authorize]` a nivel de clase porque la lectura del catálogo es pública.
+`ReferenceFoodsController` se publica bajo `[Route("api/v1/reference-foods")] [Tags("Food Catalog")]` y no lleva `[Authorize]` a nivel de clase, dado que la lectura del catálogo es pública. Recibe tanto las consultas como las dos escrituras del contexto.
 
 | Verbo / Ruta | Acción | Autorización | Respuestas |
 |---|---|---|---|
@@ -4070,9 +4235,9 @@ La Interface Layer de Food Catalog expone dos controllers con una asimetría del
 | `POST /api/v1/reference-foods/local-overrides` | `CreateLocalOverride(CreateLocalOverrideResource)` | `[Authorize(Roles = "Practitioner")]` | 201 · 400 · 401 · 403 · 409 |
 | `POST /api/v1/reference-foods/catalog-imports` | `ImportCatalogSnapshot(ImportCatalogSnapshotResource)` | `[Authorize(Roles = "Practitioner")]` | **202** · 401 · 403 · 422 · 503 |
 
-Los alimentos y sus nutrientes por 100 g son datos de referencia públicos que no contienen información de pacientes, por lo que su consulta no requiere sesión. `Cache Food Locally` no tiene endpoint: las entradas llegan exclusivamente por la política de caching.
+Los alimentos y sus nutrientes por 100 g son datos de referencia públicos que no contienen información de pacientes, así que consultarlos no exige una sesión iniciada. La operación `Cache Food Locally` no aparece como endpoint, ya que las entradas llegan exclusivamente por la política de caching.
 
-**`LocalFoodCatalogController`** — `[Route("api/v1/patients")] [Authorize(Roles = "Patient")] [Tags("Food Catalog")]`, con la constante privada `MaxEntries = 500`. Expone `GET /{patientId:int}/local-food-catalog` (`GetLocalFoodCatalog(int)`), read model Local Food Catalog, con respuestas 200 · 401 · 403. El dispositivo del paciente mantiene su propia copia de esta lista para poder registrar una comida sin conectividad, y este endpoint es cómo se llena esa copia; la ruta lleva el `patientId` por la forma del read model, pero la identidad que se confía es la del token.
+`LocalFoodCatalogController` se publica bajo `[Route("api/v1/patients")] [Authorize(Roles = "Patient")] [Tags("Food Catalog")]` y declara la constante privada `MaxEntries = 500`. Expone un único `GET /{patientId:int}/local-food-catalog`, resuelto por `GetLocalFoodCatalog(int)`, que sirve el read model Local Food Catalog con respuestas 200 · 401 · 403. El dispositivo del paciente mantiene su propia copia de esta lista para poder registrar una comida sin conectividad, y es este endpoint el que la llena. La ruta incluye el `patientId` por la forma del read model, aunque la identidad que realmente se confía es siempre la del token.
 
 **Resources**
 
@@ -4083,76 +4248,94 @@ Los alimentos y sus nutrientes por 100 g son datos de referencia públicos que n
 | `ReferenceFoodResource` | response | `ReferenceFoodId`, `LocalName`, los cuatro nutrientes e `IsLocalOverride` |
 | `CatalogImportSummaryResource` | response | `Term`, `ProvidersConsulted`, `TranslatedCount`, `FailedCount` |
 
-`ReferenceFoodResource` no incluye `SourceHash`, para que no se use como identificador externo fuera del contexto.
+`ReferenceFoodResource` deja fuera `SourceHash` para que nadie termine usándolo como identificador externo fuera del contexto.
 
-**Transform / Assemblers** — `FoodCatalogAssemblers.cs` reúne `CreateLocalOverrideCommandAssembler`, `ImportCatalogSnapshotCommandAssembler`, `ReferenceFoodResourceAssembler` y `CatalogImportSummaryResourceAssembler`. `FoodCatalogActionResultAssembler.cs` expone `ToReferenceFoodResult` (con estado parametrizable), `ToReferenceFoodListResult`, `ToCatalogImportResult` (202 Accepted por defecto), `ToNotFoundResult` y el privado `FailureResult`:
+**Transform / Assemblers**
 
-| Error | Status | Razonamiento |
-|---|---|---|
-| `ReferenceFoodNotFound` | **404** | — |
-| `PractitionerOnly` | **403** | — |
-| `DuplicatedLocalOverride` | **409** | — |
-| `LocalNameAndNutrientsRequired`, `SourceHashRequired`, `ExternalIdNotAllowed` | **400** | — |
-| `TaxonomyTranslationFailed` | **422** | La petición está bien formada; el registro upstream simplemente no pudo expresarse en este vocabulario: es un resultado de traducción, no un error del cliente. |
-| `ExternalCatalogUnavailable` | **503** | Nada está mal en la petición ni en este servicio: el catálogo externo no responde y el llamador puede reintentar más tarde. |
-| `UnexpectedError` (por defecto) | **500** | — |
+`FoodCatalogAssemblers.cs` reúne `CreateLocalOverrideCommandAssembler`, `ImportCatalogSnapshotCommandAssembler`, `ReferenceFoodResourceAssembler` y `CatalogImportSummaryResourceAssembler`. Por su parte, `FoodCatalogActionResultAssembler.cs` expone `ToReferenceFoodResult`, cuyo estado es parametrizable, junto con `ToReferenceFoodListResult`, `ToCatalogImportResult`, que responde 202 Accepted por defecto, `ToNotFoundResult` y el privado `FailureResult`.
 
-La importación responde 202 Accepted porque una importación se *acepta*, no se *completa*: el trabajo real ocurre después, en la política de caching.
+| Error | Status |
+|---|---|
+| `ReferenceFoodNotFound` | **404** |
+| `PractitionerOnly` | **403** |
+| `DuplicatedLocalOverride` | **409** |
+| `LocalNameAndNutrientsRequired`, `SourceHashRequired`, `ExternalIdNotAllowed` | **400** |
+| `TaxonomyTranslationFailed` | **422** |
+| `ExternalCatalogUnavailable` | **503** |
+| `UnexpectedError` (por defecto) | **500** |
 
-**ACL Contract** — `IFoodCatalogContextFacade` declara el DTO `ReferenceFoodItem(int, string, decimal, decimal, decimal, decimal, bool)` y dos operaciones: `GetReferenceFoodById(int)` y `SearchReferenceFoods(string, int)`. Sin `SourceHash`. Es un contrato de consulta, no de publicación: Intake & Body Response resuelve un alimento mientras el paciente registra una comida, así que necesita la respuesta en ese momento, y por eso ningún evento de este contexto cruza frontera.
+Los dos últimos estados merecen una explicación. Cuando falla la traducción taxonómica la petición está perfectamente bien formada y lo que ocurre es que el registro upstream no pudo expresarse en este vocabulario, de manera que se trata de un resultado de traducción y no de un error del cliente, y de ahí el 422. El 503 aparece cuando el catálogo externo no responde, situación en la que nada está mal ni en la petición ni en este servicio y el llamador puede reintentar más tarde. La importación, a su vez, devuelve 202 Accepted dado que una importación se acepta y no se completa, pues el trabajo real ocurre después, dentro de la política de caching.
 
-**Localización** — `FoodCatalog/Resources/FoodCatalogMessages.cs`.
+**ACL Contract**
+
+`IFoodCatalogContextFacade` declara el DTO `ReferenceFoodItem(int, string, decimal, decimal, decimal, decimal, bool)` y dos operaciones, `GetReferenceFoodById(int)` y `SearchReferenceFoods(string, int)`, ninguna de las cuales expone `SourceHash`. Se trata de un contrato de consulta antes que de publicación, pues Intake & Body Response necesita resolver un alimento justo mientras el paciente registra su comida, y esa inmediatez explica que ningún evento de este contexto cruce la frontera.
+
+**Localización**
+
+Los mensajes localizados se declaran en `FoodCatalog/Resources/FoodCatalogMessages.cs`.
 
 #### 2.6.6.3. Application Layer
 
-La Application Layer de Food Catalog orquesta los cuatro subflujos del contexto (6.1 importar snapshot, 6.2 cachear alimento, 6.3 buscar y 6.4 crear override local). Su decisión principal es que la importación no escribe en el catálogo: solo la política de caching lo hace, de modo que toda fila almacenada pasó por la traducción.
+La Application Layer de Food Catalog orquesta los cuatro subflujos del contexto, numerados del 6.1 al 6.4, que consisten en importar un snapshot, cachear un alimento, buscar y crear un override local. Su decisión principal es que la importación no escribe en el catálogo y que solo la política de caching lo hace, con lo cual toda fila almacenada pasó necesariamente por la traducción.
 
 **Command Service**
 
-**`ReferenceFoodCommandService`** (implementa `IReferenceFoodCommandService`) — Depende de `IReferenceFoodRepository`, `IUnitOfWork`, `IEnumerable<IExternalFoodCatalogProvider>` (todas las implementaciones registradas), `ILogger<...>` e `IMediator`; declara la constante privada `MaxRecordsPerProvider = 100`.
+`ReferenceFoodCommandService`, que implementa `IReferenceFoodCommandService`, depende de `IReferenceFoodRepository`, `IUnitOfWork`, `IEnumerable<IExternalFoodCatalogProvider>` con todas las implementaciones registradas, `ILogger<...>` e `IMediator`, y declara la constante privada `MaxRecordsPerProvider = 100`.
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
-| `Handle(ImportCatalogSnapshotCommand)` | 6.1 | Rechaza el término vacío; si no hay proveedores registrados responde `ExternalCatalogUnavailable`. Por cada proveedor pide el snapshot y publica un `TranslationFailed` por cada fallo y un `ReferenceFoodTranslated` por cada traducción, cerrando con `ExternalCatalogSnapshotImported`. Si todos los proveedores respondieron sólo con fallos devuelve `ExternalCatalogUnavailable`, porque el catálogo es inalcanzable —no está vacío— y el llamador merece saber la diferencia. No escribe nada en la base de datos. |
-| `Handle(CacheFoodLocallyCommand)` | 6.2 | Único punto de escritura del catálogo. Rechaza candidatos que parezcan identificadores externos, valida el nombre local y los nutrientes, exige la huella de origen y aplica idempotencia buscando por `SourceHash`: si existe y es override no toca nada; si existe y no lo es lo refresca desde upstream; si no existe lo crea y publica `ReferenceFoodCached`. |
-| `Handle(SearchFoodCommand)` | 6.3 | Busca primero en el catálogo local y, sólo si el término tiene al menos tres caracteres y hay menos resultados de los pedidos, completa desde los proveedores externos y relee el catálogo local. Publica `FoodSearchPerformed`. |
+| `Handle(ImportCatalogSnapshotCommand)` | 6.1 | Rechaza el término vacío y, si no hay proveedores registrados, responde `ExternalCatalogUnavailable`. Por cada proveedor pide el snapshot y publica un `TranslationFailed` por cada fallo y un `ReferenceFoodTranslated` por cada traducción, para cerrar con `ExternalCatalogSnapshotImported`. Si todos los proveedores respondieron solo con fallos devuelve `ExternalCatalogUnavailable`, ya que el catálogo resulta inalcanzable antes que vacío y el llamador merece distinguir una cosa de la otra. No escribe nada en la base de datos. |
+| `Handle(CacheFoodLocallyCommand)` | 6.2 | Es el único punto de escritura del catálogo. Rechaza candidatos que parezcan identificadores externos, valida el nombre local y los nutrientes, exige la huella de origen y aplica idempotencia buscando por `SourceHash`, de modo que si la entrada existe y es un override no la toca, si existe y no lo es la refresca desde upstream, y si no existe la crea y publica `ReferenceFoodCached`. |
+| `Handle(SearchFoodCommand)` | 6.3 | Busca primero en el catálogo local y solo completa desde los proveedores externos cuando el término tiene al menos tres caracteres y hay menos resultados de los pedidos, tras lo cual relee el catálogo local. Publica `FoodSearchPerformed`. |
 | `Handle(CreateLocalOverrideCommand)` | 6.4 | Exige un profesional, valida ambos value objects y rechaza un override duplicado por nombre. Publica `LocalFoodOverrideCreated`. |
 
-Sus métodos privados son `TopUpFromExternalProvidersAsync(string, int, CT) : Task<bool>` —que envuelve cada proveedor en su propio `try/catch`, porque un proveedor no disponible es un caso previsto por la regla de fallback y no debe mostrarse como error—, `ToTranslatedEvent(ExternalFoodRecord)` y `LooksLikeAnExternalIdentifier(string?) : bool`, que devuelve `true` cuando el candidato no contiene letras, ya que un nombre formado solo por dígitos suele ser un código de barras o una clave de proveedor mal traducida.
+Sus métodos privados son tres. `TopUpFromExternalProvidersAsync(string, int, CT) : Task<bool>` envuelve cada proveedor en su propio `try/catch`, ya que un proveedor no disponible es un caso previsto por la regla de fallback y no debería presentarse como un error. `ToTranslatedEvent(ExternalFoodRecord)` arma el evento correspondiente a cada registro traducido. `LooksLikeAnExternalIdentifier(string?) : bool` devuelve `true` cuando el candidato no contiene ninguna letra, pues un nombre formado solo por dígitos suele ser un código de barras o una clave de proveedor mal traducida.
 
-**Query Service** — `ReferenceFoodQueryService(IReferenceFoodRepository)` resuelve las tres queries del dominio: por identificador, por búsqueda y para el catálogo local completo.
+**Query Service**
+
+`ReferenceFoodQueryService(IReferenceFoodRepository)` resuelve las tres queries del dominio, esto es la búsqueda por identificador, la búsqueda por nombre y la que devuelve el catálogo local completo.
 
 **Event Handler (política)**
 
-**`OnReferenceFoodTranslatedHandler`** implementa la política *When Reference Food Translated* del subflujo 6.2. Escucha `ReferenceFoodTranslated` mediante `IEventHandler<T>`, crea un scope de DI aislado y emite un `CacheFoodLocallyCommand` con el payload del evento. Es el único escritor del catálogo que reacciona a una importación: mantener la escritura aquí, y no dentro del comando de importación, es lo que garantiza que toda fila almacenada pasó por la traducción, porque no hay otra vía de entrada.
+`OnReferenceFoodTranslatedHandler` implementa la política *When Reference Food Translated* del subflujo 6.2. Escucha `ReferenceFoodTranslated` a través de `IEventHandler<T>`, crea un scope de DI aislado y emite un `CacheFoodLocallyCommand` con el payload del evento. Es el único escritor del catálogo que reacciona a una importación, y mantener la escritura aquí en lugar de dentro del comando de importación es lo que garantiza que toda fila almacenada haya pasado por la traducción, sencillamente porque no existe otra vía de entrada.
 
-**DTO de aplicación** — `CatalogImportSummary(string Term, int ProvidersConsulted, int TranslatedCount, int FailedCount)`, que resume el resultado de una importación y respalda la respuesta 202 Accepted del endpoint.
+**DTO de aplicación**
 
-**ACL Facade** — `FoodCatalogContextFacade` implementa `IFoodCatalogContextFacade` apoyándose en `IReferenceFoodQueryService`, con el método privado estático `ToItem(ReferenceFood) : ReferenceFoodItem` y ante un fallo devuelve `null` o una lista vacía. Es el contrato que Intake & Body Response consulta de forma síncrona para resolver el alimento que el paciente está registrando.
+`CatalogImportSummary(string Term, int ProvidersConsulted, int TranslatedCount, int FailedCount)` resume el resultado de una importación y respalda la respuesta 202 Accepted del endpoint.
+
+**ACL Facade**
+
+`FoodCatalogContextFacade` implementa `IFoodCatalogContextFacade` apoyándose en `IReferenceFoodQueryService` y en el método privado estático `ToItem(ReferenceFood) : ReferenceFoodItem`, y ante un fallo devuelve `null` o una lista vacía según corresponda. Es el contrato que Intake & Body Response consulta de forma síncrona para resolver el alimento que el paciente está registrando.
 
 #### 2.6.6.4. Infrastructure Layer
 
-La Infrastructure Layer de Food Catalog es la más rica de la plataforma en integración externa: aquí viven los dos adaptadores de la capa anticorrupción, la persistencia de la única tabla del contexto, un seeder y un hosted service.
+La Infrastructure Layer de Food Catalog es la más rica de la plataforma en integración externa, ya que aquí viven los dos adaptadores de la capa anticorrupción, la persistencia de la única tabla del contexto, un seeder y un hosted service.
 
-**External — Capa anticorrupción**
+**Capa anticorrupción**
 
-**`OpenFoodFactsProvider`** — Implementa `IExternalFoodCatalogProvider` sobre un `HttpClient` tipado, con `IConfiguration` e `ILogger<...>`. Consulta el endpoint de búsqueda del proveedor filtrando por país (`OpenFoodFacts:Country`, `peru` por defecto). Su método privado `Translate(JsonDocument)` recorre los productos devueltos, toma la clave y la etiqueta upstream —la clave se lee aquí, se pliega en el digest y nunca se vuelve a nombrar— y extrae los cuatro nutrientes por 100 g; si falta cualquiera de ellos añade una razón de fallo y continúa. Cuenta con los helpers privados estáticos `ReadString`, `ReadDecimal` y `Unavailable(string)`, y nunca lanza salvo una cancelación explícita: un proveedor inalcanzable devuelve un snapshot vacío con una razón.
+`OpenFoodFactsProvider` implementa `IExternalFoodCatalogProvider` sobre un `HttpClient` tipado y recibe además `IConfiguration` e `ILogger<...>`. Consulta el endpoint de búsqueda del proveedor filtrando por país, valor que se lee de `OpenFoodFacts:Country` y que por defecto es `peru`. Su método privado `Translate(JsonDocument)` recorre los productos devueltos y toma la clave y la etiqueta upstream, de manera que la clave se lee en ese punto, se pliega dentro del digest y nunca se vuelve a nombrar; luego extrae los cuatro nutrientes por 100 g y, si falta cualquiera de ellos, añade una razón de fallo y sigue adelante. Cuenta con los helpers privados estáticos `ReadString`, `ReadDecimal` y `Unavailable(string)`, y nunca lanza una excepción salvo ante una cancelación explícita, de modo que un proveedor inalcanzable se traduce en un snapshot vacío acompañado de su razón.
 
-**`UsdaFoodDataProvider`** — Mismo contrato sobre la API de USDA FoodData Central. Declara como constantes privadas los números de nutriente estándar de energía, proteína, carbohidrato y grasa, y requiere `Usda:ApiKey`; sin ella se reporta como no configurado en lugar de fallar. USDA reporta los nutrientes como una lista indexada por número en vez de campos con nombre, así que la traducción aquí es una búsqueda en vez de un renombrado, resuelta por el método privado estático `ReadNutrients(JsonElement)`.
+`UsdaFoodDataProvider` cumple el mismo contrato sobre la API de USDA FoodData Central. Declara como constantes privadas los números de nutriente estándar de energía, proteína, carbohidrato y grasa, y requiere `Usda:ApiKey`; si esa clave no está presente el proveedor se reporta como no configurado en lugar de fallar. Como USDA entrega los nutrientes en una lista indexada por número y no en campos con nombre, la traducción aquí consiste en una búsqueda antes que en un renombrado, y se resuelve en el método privado estático `ReadNutrients(JsonElement)`.
 
-Estos dos adaptadores son los únicos lugares de la plataforma que usan el vocabulario de los proveedores externos.
+Estos dos adaptadores son los únicos lugares de toda la plataforma donde se usa el vocabulario de los proveedores externos.
 
-**Persistencia — EF Core**
+**Persistencia con EF Core**
 
-`ReferenceFoodEntityTypeConfiguration` mapea la tabla `reference_foods`: PK con converter `ReferenceFoodId.FromRaw` y `ValueGeneratedOnAdd()`; `local_name` con la longitud máxima declarada en el propio value object, requerido y con índice `ix_reference_foods_local_name`; las cuatro columnas de nutrientes como `decimal(10,2)` requeridas; `source_hash` con converter, 64 caracteres y índice único `ix_reference_foods_source_hash`, que es la identidad que convierte una importación repetida en un no-op en vez de una fila duplicada; `is_local_override` requerido; e `Ignore` sobre `LocalName` y `NutrientsPer100g`.
+`ReferenceFoodEntityTypeConfiguration` mapea la tabla `reference_foods`. La clave primaria usa el converter `ReferenceFoodId.FromRaw` con `ValueGeneratedOnAdd()`. La columna `local_name` es requerida, toma su longitud máxima del propio value object y lleva el índice `ix_reference_foods_local_name`, mientras que las cuatro columnas de nutrientes se declaran como `decimal(10,2)` requeridas. La columna `source_hash` lleva converter, 64 caracteres y el índice único `ix_reference_foods_source_hash`, que es la identidad gracias a la cual una importación repetida se convierte en un no-op en vez de una fila duplicada. Finalmente `is_local_override` es requerida y se aplica `Ignore` sobre `LocalName` y `NutrientsPer100g`.
 
-`ReferenceFoodRepository(AppDbContext)` sobrescribe `FindByIdAsync`, implementa `FindBySourceHashAsync` comparando contra una instancia de value object (EF no puede traducir un miembro de un tipo convertido), y en `SearchByLocalNameAsync` y `ListLocalCatalogAsync` ordena poniendo primero los overrides locales y luego alfabéticamente, porque un profesional añadió un override precisamente porque el catálogo genérico no era suficiente para esta población. Ambos métodos acotan el tamaño del resultado con `Math.Clamp`. Reimplementa explícitamente `IBaseRepository<ReferenceFood>.FindByIdAsync`.
+`ReferenceFoodRepository(AppDbContext)` sobrescribe `FindByIdAsync` e implementa `FindBySourceHashAsync` comparando contra una instancia del value object, dado que EF Core no puede traducir el acceso a un miembro de un tipo convertido. Tanto `SearchByLocalNameAsync` como `ListLocalCatalogAsync` ordenan poniendo primero los overrides locales y después el resto en orden alfabético, ya que si un profesional creó un override fue justamente porque el catálogo genérico no alcanzaba para esta población; ambos métodos acotan además el tamaño del resultado con `Math.Clamp`. La clase reimplementa de forma explícita `IBaseRepository<ReferenceFood>.FindByIdAsync`.
 
-**Seeders — `ReferenceFoodSeeder`** — Depende de `IReferenceFoodRepository`, `IReferenceFoodCommandService`, `IConfiguration` e `ILogger<...>`, y declara la constante de procedencia del sembrado. Escribe a través del comando de caching y no del repositorio, para que las filas sembradas pasen por las mismas validaciones que las importadas. Es idempotente, porque cada entrada lleva un digest estable derivado de su procedencia y su nombre. Está condicionado por `Seeder:Enabled` (falso por defecto) y por un umbral mínimo de entradas, y su arreglo estático `StartingCatalog` contiene 60 alimentos peruanos por 100 g: cereales y tubérculos andinos, legumbres, carnes, pescados y mariscos, lácteos y huevo, frutas, verduras y grasas. Son datos de referencia para desarrollo, no una fuente clínica.
+**Seeder**
 
-**Scheduling — `CatalogImportHostedService`** — `BackgroundService` que implementa la política temporal *When Scheduled Import Due* del subflujo 6.1. Depende de `IServiceScopeFactory`, `IConfiguration` e `ILogger<...>`; importa 50 registros por proveedor con un intervalo configurable en `Scheduling:CatalogImportIntervalHours` (24 h por defecto, mínimo 1) mediante `PeriodicTimer`, usando como término el país configurado. Cumple las cinco guardas obligatorias del proyecto y trata la indisponibilidad de un proveedor externo como un caso previsto. Su método privado `SafeWaitAsync` controla la excepción de cancelación al detener el servicio.
+`ReferenceFoodSeeder` depende de `IReferenceFoodRepository`, `IReferenceFoodCommandService`, `IConfiguration` e `ILogger<...>`, y declara la constante de procedencia del sembrado. Escribe a través del comando de caching y no del repositorio, con lo cual las filas sembradas pasan por las mismas validaciones que las importadas, y es idempotente porque cada entrada lleva un digest estable derivado de su procedencia y su nombre. Se activa solo si `Seeder:Enabled` está en verdadero, valor que por defecto es falso, y si el catálogo no alcanza un umbral mínimo de entradas. Su arreglo estático `StartingCatalog` contiene 60 alimentos peruanos expresados por 100 g, entre cereales y tubérculos andinos, legumbres, carnes, pescados y mariscos, lácteos y huevo, frutas, verduras y grasas. Son datos de referencia pensados para el desarrollo y no una fuente clínica.
 
-**Servicios externos** — Open Food Facts (`https://world.openfoodfacts.org`) y USDA FoodData Central (`https://api.nal.usda.gov/fdc/v1`), ambos con `HttpClient` tipado, timeout de 10 segundos y `User-Agent` propio. Ambas implementaciones se registran contra el mismo contrato, por lo que agregar un tercer proveedor solo requiere registrarlo. Cada cliente HTTP tiene un nombre explícito para que cada proveedor conserve su propia dirección base.
+**Scheduling**
+
+`CatalogImportHostedService` es un `BackgroundService` que implementa la política temporal *When Scheduled Import Due* del subflujo 6.1. Depende de `IServiceScopeFactory`, `IConfiguration` e `ILogger<...>`, e importa 50 registros por proveedor usando como término el país configurado. El intervalo se lee de `Scheduling:CatalogImportIntervalHours`, con 24 horas por defecto y un mínimo de 1, y se implementa con `PeriodicTimer`. Cumple las cinco guardas obligatorias del proyecto y trata la indisponibilidad de un proveedor externo como un caso previsto. Su método privado `SafeWaitAsync` controla la excepción de cancelación que se produce al detener el servicio.
+
+**Servicios externos**
+
+Los dos servicios consumidos son Open Food Facts, en `https://world.openfoodfacts.org`, y USDA FoodData Central, en `https://api.nal.usda.gov/fdc/v1`. A ambos se accede con `HttpClient` tipado, timeout de 10 segundos y un `User-Agent` propio, y ambas implementaciones se registran contra el mismo contrato, de modo que agregar un tercer proveedor solo exigiría registrarlo. Cada cliente HTTP recibe un nombre explícito para que cada proveedor conserve su propia dirección base.
 
 #### 2.6.6.5. Bounded Context Software Architecture Component Level Diagrams
 
