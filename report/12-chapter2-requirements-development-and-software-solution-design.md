@@ -645,7 +645,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 
 ### EP01 — Gestión de la Relación de Cuidado
 
-<br>***US01 — Vinculación mediante invitación QR***
+<p class="caption"><strong>Tabla 27</strong><br><em>Historia de usuario US01: Vinculación mediante invitación QR</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -677,7 +678,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US02 — Otorgamiento de consentimiento para compartir información***
+<p class="caption"><strong>Tabla 28</strong><br><em>Historia de usuario US02: Otorgamiento de consentimiento para compartir información</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -709,7 +711,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US03 — Revocación del consentimiento***
+<p class="caption"><strong>Tabla 29</strong><br><em>Historia de usuario US03: Revocación del consentimiento</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -741,7 +744,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US04 — Generación de invitación QR para un nuevo paciente***
+<p class="caption"><strong>Tabla 30</strong><br><em>Historia de usuario US04: Generación de invitación QR para un nuevo paciente</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -773,7 +777,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US05 — Consulta de pacientes con vínculo activo***
+<p class="caption"><strong>Tabla 31</strong><br><em>Historia de usuario US05: Consulta de pacientes con vínculo activo</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -805,7 +810,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US06 — Alta del paciente al finalizar el tratamiento***
+<p class="caption"><strong>Tabla 32</strong><br><em>Historia de usuario US06: Alta del paciente al finalizar el tratamiento</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -833,11 +839,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Alta registrada</strong><br>Dado que el nutricionista mantiene un vínculo de cuidado activo<br>Cuando el nutricionista registra el alta del paciente<br>Entonces el sistema finaliza el vínculo por cierre clínico y conserva su historial.<br><br><strong>Escenario 2: Acceso posterior al alta</strong><br>Dado que el nutricionista ha registrado previamente el alta del paciente<br>Cuando el nutricionista consulta el estado del vínculo después de registrar el alta<br>Entonces el sistema no considera activo el vínculo finalizado por alta.</td>
+    <td colspan="8"><strong>Escenario 1: Alta registrada</strong><br>Dado que el nutricionista mantiene un vínculo de cuidado activo<br>Cuando el nutricionista registra el alta del paciente<br>Entonces el sistema finaliza el vínculo por cierre clínico y conserva su historial.<br><br><strong>Escenario 2: Acceso posterior al alta</strong><br>Dado que el nutricionista ha registrado previamente el alta del paciente<br>Cuando el nutricionista consulta el estado del vínculo después de registrar el alta<br>Entonces el sistema no considera activo el vínculo finalizado por alta.<br><br><strong>Escenario 3: Efectos del alta</strong><br>Dado que el nutricionista ha registrado el alta de un paciente que tenía consultas futuras agendadas y funciones con IA habilitadas<br>Cuando el sistema cierra el vínculo por alta<br>Entonces el sistema cancela las consultas futuras del paciente y desactiva las funciones con IA asociadas a ese vínculo.</td>
   </tr>
 </table>
 
-<br>***US07 — Revocación del vínculo de cuidado***
+<p class="caption"><strong>Tabla 33</strong><br><em>Historia de usuario US07: Cambio de nutricionista</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -847,32 +854,33 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
   <tr>
     <td colspan="2">US07</td>
-    <td colspan="2">Nutricionista</td>
+    <td colspan="2">Paciente</td>
     <td colspan="2">Media</td>
     <td colspan="2">EP01</td>
   </tr>
   <tr>
     <th colspan="2">Title</th>
-    <td colspan="6">Revocación del vínculo de cuidado</td>
+    <td colspan="6">Cambio de nutricionista</td>
   </tr>
   <tr>
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como nutricionista, deseo revocar un vínculo de cuidado cuando la relación de seguimiento deba finalizar sin registrar un alta clínica, para impedir nuevos accesos mediante dicho vínculo.</td>
+    <td colspan="8">Como paciente, deseo vincularme con otro nutricionista cuando decida cambiar de profesional, para continuar mi seguimiento sin mantener dos vínculos activos al mismo tiempo.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Revocación de vínculo activo</strong><br>Dado que el nutricionista mantiene un vínculo de cuidado activo<br>Cuando el nutricionista solicita revocar el vínculo de cuidado<br>Entonces el sistema registra el vínculo como revocado.<br><br><strong>Escenario 2: Acceso mediante vínculo revocado</strong><br>Dado que el nutricionista tiene un vínculo que se encuentra revocado<br>Cuando el nutricionista solicita acceder a información protegida mediante el vínculo revocado<br>Entonces el sistema rechaza el acceso.</td>
+    <td colspan="8"><strong>Escenario 1: Cambio confirmado</strong><br>Dado que el paciente mantiene un vínculo activo con un nutricionista y posee una invitación válida de otro nutricionista<br>Cuando el paciente confirma de forma explícita que desea cambiar de nutricionista y utiliza la nueva invitación<br>Entonces el sistema revoca el vínculo anterior, conserva su historial y establece el vínculo con el nuevo nutricionista.<br><br><strong>Escenario 2: Cambio sin confirmación</strong><br>Dado que el paciente mantiene un vínculo activo y utiliza la invitación de otro nutricionista<br>Cuando el paciente no confirma que desea reemplazar su vínculo actual<br>Entonces el sistema rechaza la operación y conserva el vínculo vigente.<br><br><strong>Escenario 3: Acceso del nutricionista anterior</strong><br>Dado que el paciente ha cambiado de nutricionista<br>Cuando el nutricionista anterior solicita acceder a información protegida del paciente<br>Entonces el sistema rechaza el acceso mediante el vínculo revocado.</td>
   </tr>
 </table>
 <br>
 
 ### EP02 — Gestión de Ingesta Alimentaria
 
-<br>***US08 — Registro de comida por fotografía***
+<p class="caption"><strong>Tabla 34</strong><br><em>Historia de usuario US08: Registro de comida por fotografía</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -900,11 +908,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Fotografía procesable</strong><br>Dado que el paciente proporciona una fotografía válida de una comida<br>Cuando el paciente solicita procesar la fotografía de la comida<br>Entonces el sistema genera una propuesta de alimentos y porciones estimadas para su confirmación.<br><br><strong>Escenario 2: Estimación con procedencia</strong><br>Dado que el paciente tiene una estimación generada a partir de una fotografía<br>Cuando el paciente revisa la propuesta generada a partir de la fotografía<br>Entonces el sistema conserva la procedencia y nivel de confianza asociados a la estimación.<br><br><strong>Escenario 3: Fotografía no procesable</strong><br>Dado que el paciente proporciona una fotografía cuya información no permite obtener una estimación utilizable<br>Cuando el paciente solicita procesar una fotografía que no permite obtener una estimación válida<br>Entonces el sistema informa que no se obtuvo una estimación válida y permite continuar mediante registro manual.</td>
+    <td colspan="8"><strong>Escenario 1: Fotografía procesable</strong><br>Dado que el paciente proporciona una fotografía válida de una comida<br>Cuando el paciente solicita procesar la fotografía de la comida<br>Entonces el sistema genera una propuesta de alimentos y porciones estimadas para su confirmación.<br><br><strong>Escenario 2: Estimación con procedencia</strong><br>Dado que el paciente tiene una estimación generada a partir de una fotografía<br>Cuando el paciente revisa la propuesta generada a partir de la fotografía<br>Entonces el sistema conserva la procedencia y nivel de confianza asociados a la estimación.<br><br><strong>Escenario 3: Fotografía no procesable</strong><br>Dado que el paciente proporciona una fotografía cuya información no permite obtener una estimación utilizable<br>Cuando el paciente solicita procesar una fotografía que no permite obtener una estimación válida<br>Entonces el sistema informa que no se obtuvo una estimación válida y permite continuar mediante registro manual.<br><br><strong>Escenario 4: Reconocimiento sujeto al consentimiento de IA</strong><br>Dado que el paciente no ha otorgado el consentimiento para funciones con IA o ha desactivado el reconocimiento de comidas por fotografía<br>Cuando el paciente solicita procesar una fotografía de una comida<br>Entonces el sistema no procesa la fotografía y permite continuar mediante registro manual.<br><br><strong>Escenario 5: Protección de la fotografía</strong><br>Dado que el paciente ha enviado una fotografía para su reconocimiento<br>Cuando el sistema finaliza el procesamiento<br>Entonces el sistema no conserva la fotografía ni la procesa con datos que identifiquen al paciente.</td>
   </tr>
 </table>
 
-<br>***US09 — Confirmación o ajuste de estimación de porción***
+<p class="caption"><strong>Tabla 35</strong><br><em>Historia de usuario US09: Confirmación o ajuste de estimación de porción</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -936,7 +945,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US10 — Registro manual de comida mediante catálogo***
+<p class="caption"><strong>Tabla 36</strong><br><em>Historia de usuario US10: Registro manual de comida mediante catálogo</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -968,7 +978,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US11 — Registro de consumo fuera del plan***
+<p class="caption"><strong>Tabla 37</strong><br><em>Historia de usuario US11: Indicación de adherencia al plan en un registro</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -984,26 +995,60 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
   <tr>
     <th colspan="2">Title</th>
-    <td colspan="6">Registro de consumo fuera del plan</td>
+    <td colspan="6">Indicación de adherencia al plan en un registro</td>
   </tr>
   <tr>
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como paciente, deseo registrar que consumí algo fuera de mi plan sin tener que proporcionar información detallada, para mantener un registro más completo de mi alimentación.</td>
+    <td colspan="8">Como paciente, deseo indicar si una comida que registro estaba dentro de mi plan, sin tener que justificarme, para mantener un registro honesto de mi alimentación.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Registro del consumo</strong><br>Dado que el paciente desea declarar un consumo fuera del plan<br>Cuando el paciente registra el consumo fuera del plan<br>Entonces el sistema conserva la declaración con su fecha y hora sin exigir el detalle del alimento consumido.<br><br><strong>Escenario 2: Tratamiento no punitivo</strong><br>Dado que el paciente tiene un consumo fuera del plan registrado<br>Cuando el paciente consulta posteriormente el consumo registrado fuera del plan<br>Entonces el sistema conserva el dato sin asignarle una valoración punitiva.</td>
+    <td colspan="8"><strong>Escenario 1: Indicación al registrar</strong><br>Dado que el paciente confirma una comida registrada por fotografía o la registra manualmente<br>Cuando el paciente indica si la comida estaba dentro o fuera de su plan<br>Entonces el sistema conserva la indicación junto con la ingesta registrada.<br><br><strong>Escenario 2: Indicación obligatoria</strong><br>Dado que el paciente confirma o registra una comida<br>Cuando el paciente intenta guardarla sin indicar si estaba dentro de su plan<br>Entonces el sistema rechaza el registro e identifica la información faltante.<br><br><strong>Escenario 3: Tratamiento no punitivo</strong><br>Dado que el paciente tiene registradas comidas indicadas como fuera de su plan<br>Cuando el paciente consulta posteriormente sus registros<br>Entonces el sistema conserva el dato sin asignarle una valoración punitiva.</td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 38</strong><br><em>Historia de usuario US44: Alimentos locales del catálogo</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">US44</td>
+    <td colspan="2">Nutricionista</td>
+    <td colspan="2">Baja</td>
+    <td colspan="2">EP02</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Alimentos locales del catálogo</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como nutricionista, deseo consultar el catálogo de alimentos y agregar alimentos locales cuando no exista el que necesito, para que el registro de mis pacientes refleje los platos que realmente consumen.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Consulta del catálogo</strong><br>Dado que el nutricionista consulta el catálogo de alimentos<br>Cuando el nutricionista busca un alimento por nombre<br>Entonces el sistema presenta los alimentos que coinciden con sus valores nutricionales por cada 100 g.<br><br><strong>Escenario 2: Alimento local agregado</strong><br>Dado que el nutricionista no encuentra un alimento en el catálogo<br>Cuando el nutricionista registra un alimento local con su nombre y sus valores de energía y macronutrientes<br>Entonces el sistema lo incorpora al catálogo y evita que una actualización posterior de las fuentes externas lo sobrescriba.<br><br><strong>Escenario 3: Datos inválidos o duplicados</strong><br>Dado que el nutricionista registra un alimento local<br>Cuando omite el nombre o los valores nutricionales, o el nombre ya existe como alimento local<br>Entonces el sistema rechaza el registro e identifica el motivo.</td>
   </tr>
 </table>
 <br>
 
 ### EP03 — Seguimiento de Respuesta Corporal
 
-<br>***US12 — Registro de autopesaje***
+<p class="caption"><strong>Tabla 39</strong><br><em>Historia de usuario US12: Registro de autopesaje</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1035,7 +1080,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US13 — Visualización de tendencia de peso***
+<p class="caption"><strong>Tabla 40</strong><br><em>Historia de usuario US13: Visualización de tendencia de peso</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
