@@ -38,6 +38,22 @@ Container_Boundary(api, "Healthify Platform API") {
     Component(consistencyHostedService, "ConsistencyEscalationHostedService", "ASP.NET Core BackgroundService", "Escalates alerts already shown")
     Component(gapHostedService, "LoggingGapDetectionHostedService", "ASP.NET Core BackgroundService", "Detects days with no logging")
     Component(followUpHostedService, "MissedFollowUpHostedService", "ASP.NET Core BackgroundService", "Marks overdue follow-ups as missed")
+
+    Component(checkInController, "FollowUpCheckInController", "ASP.NET Core REST Controller", "api/v1/scheduled-follow-ups/{id}/check-in. Pre-visit check-in of the patient")
+    Component(patientFollowUpsController, "PatientScheduledFollowUpsController", "ASP.NET Core REST Controller", "api/v1/patients/{id}/scheduled-follow-ups. Next and past visits of a patient")
+    Component(promptController, "ConsistencyPromptController", "ASP.NET Core REST Controller", "api/v1/patients/{id}/consistency-index/prompt-acknowledgement. Patient acknowledges the prompt")
+    Component(aiSummariesController, "PatientAiSummariesController", "ASP.NET Core REST Controller", "Weekly summary and suggested questions of the patient")
+    Component(checkInCmdService, "PreVisitCheckInCommandService", "C# Application Service (CQRS command side)", "Submits and edits the check-in until the visit starts")
+    Component(weeklySummaryCmdService, "WeeklySummaryCommandService", "C# Application Service (CQRS command side)", "Generates the weekly summary from deterministic facts")
+    Component(questionsCmdService, "SuggestedQuestionsCommandService", "C# Application Service (CQRS command side)", "Suggests questions for the next consultation")
+    Component(summaryCmdService, "MonitoringSummaryCommandService", "C# Application Service (CQRS command side)", "Summarises a period for the practitioner")
+    Component(onConsultationCompleted, "OnConsultationCompletedHandler", "Cortex.Mediator IEventHandler of ConsultationCompleted", "Marks the follow-up as completed")
+    Component(onDischarged, "OnTreatmentDischargedHandler", "Cortex.Mediator IEventHandler of TreatmentDischarged", "Cancels future follow-ups of the patient")
+    Component(onMealGroup, "OnMealGroupLoggedHandler", "Cortex.Mediator IEventHandler of MealGroupLogged", "Evaluates the day once for a group of entries")
+    Component(onAiConsentMon, "OnAiProcessingConsentChangedMonitoringHandler", "Cortex.Mediator IEventHandler of AiProcessingConsentChanged", "Purges summaries and questions when AI is switched off")
+    Component(checkInAggregate, "PreVisitCheckIn", "C# Aggregate Root", "Feeling, difficulties and questions sent before a visit")
+    Component(weeklySummaryAggregate, "WeeklySummary", "C# Aggregate Root", "Weekly summary of a patient, purged after 180 days")
+    Component(weeklySummaryHostedService, "WeeklySummaryHostedService", "ASP.NET Core BackgroundService", "Generates each weekly summary on Monday")
 }
 
 ContainerDb(db, "Healthify Database", "MySQL 8.4", "Owns the evaluation window, deviation, consistency index, referral, follow-up and audit tables")
@@ -46,6 +62,8 @@ Container_Ext(careRelCtx, "Care Relationship", "Sibling bounded context", "Publi
 Container_Ext(intakeCtx, "Intake and Body Response", "Sibling bounded context", "Publishes the diary and weight events, and serves the daily summaries through its Open Host Service")
 Container_Ext(nutritionalCareCtx, "Nutritional Care", "Sibling bounded context", "Publishes ActiveTargetsUpdated and ClinicalMeasurementTaken; receives SustainedDeviationDetected and AlertEscalatedToPractitioner as review items")
 Container_Ext(readModelsCtx, "Read Models", "Composition layer of the same container", "Composes the patient monitoring panel from this and the sibling facades")
+
+Container_Ext(aiModule, "AI module (Shared)", "Technical module", "Generates content with a generative model behind consent, validation and quota controls; switched off by default")
 
 Rel(practitioner, mobile, "Reads the panel, refers and schedules follow-ups", "Touch")
 Rel(patient, mobile, "Sees the consistency alert and answers it", "Touch")
@@ -99,5 +117,23 @@ Rel(followUpCmdService, careRelCtx, "Confirms the care link is active", "in-proc
 Rel(deviationCmdService, nutritionalCareCtx, "Publishes SustainedDeviationDetected: notifies, never modifies the plan", "Cortex.Mediator, in-process")
 Rel(consistencyCmdService, nutritionalCareCtx, "Publishes AlertEscalatedToPractitioner", "Cortex.Mediator, in-process")
 Rel(readModelsCtx, monFacade, "Composes the monitoring panel from", "in-process ACL call")
+
+Rel(mobile, checkInController, "Sends and reads the check-in", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, patientFollowUpsController, "Reads the next visit", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, promptController, "Acknowledges the consistency prompt", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, aiSummariesController, "Reads the weekly summary and suggested questions", "JSON/HTTPS, Bearer JWT")
+Rel(checkInController, checkInCmdService, "Sends SubmitPreVisitCheckInCommand", "in-process")
+Rel(aiSummariesController, weeklySummaryCmdService, "Reads the latest summary through", "in-process")
+Rel(aiSummariesController, questionsCmdService, "Requests suggested questions through", "in-process")
+Rel(checkInCmdService, checkInAggregate, "Records", "in-process")
+Rel(weeklySummaryCmdService, weeklySummaryAggregate, "Records", "in-process")
+Rel(weeklySummaryHostedService, weeklySummaryCmdService, "Triggers the generation", "in-process")
+Rel(weeklySummaryCmdService, aiModule, "Writes the text through", "in-process, own pipeline")
+Rel(questionsCmdService, aiModule, "Writes the questions through", "in-process, own pipeline")
+Rel(summaryCmdService, aiModule, "Writes the summary through", "in-process, own pipeline")
+Rel(nutritionalCareCtx, onConsultationCompleted, "Publishes ConsultationCompleted", "Cortex.Mediator, in-process")
+Rel(careRelCtx, onDischarged, "Publishes TreatmentDischarged", "Cortex.Mediator, in-process")
+Rel(careRelCtx, onAiConsentMon, "Publishes AiProcessingConsentChanged", "Cortex.Mediator, in-process")
+Rel(intakeCtx, onMealGroup, "Publishes MealGroupLogged", "Cortex.Mediator, in-process")
 
 @enduml
