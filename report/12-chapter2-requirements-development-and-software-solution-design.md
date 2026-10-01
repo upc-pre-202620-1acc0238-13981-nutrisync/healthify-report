@@ -1,3 +1,4 @@
+
 # CAPÍTULO II: REQUIREMENTS DEVELOPMENT AND SOFTWARE SOLUTION DESIGN
 
 ## 2.1. Competidores
@@ -11,6 +12,8 @@ Nutrium es una plataforma de gestión de la práctica nutricional con presencia 
 MacroFactor es una aplicación de seguimiento nutricional dirigida al consumidor final, sin intervención de un profesional de la salud. Su diferencial es un algoritmo adaptativo que estima el gasto energético total a partir de la relación entre la ingesta registrada y la tendencia de peso del usuario, ajustando las metas calóricas de forma semanal. Constituye un competidor indirecto relevante porque valida técnicamente el mismo mecanismo de contraste entre lo declarado y la respuesta corporal que Healthify incorpora, aunque prescindiendo por completo del profesional que en Healthify conserva la decisión clínica.
 
 ### 2.1.1. Análisis competitivo
+
+<p class="caption"><strong>Tabla 16</strong><br><em>Competitive Analysis Landscape: Healthify frente a Nutrimind, Nutrium y MacroFactor</em></p>
 
 <table>
 <tr>
@@ -210,6 +213,8 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 
 ### 2.2.2. Registro de entrevistas
 
+<p class="caption"><strong>Tabla 17</strong><br><em>Registro de la entrevista #1 al segmento nutricionista</em></p>
+
 | Segmento: Nutricionista | Entrevista #1 |
 | --- | --- |
 | Nombres y Apellidos | Willyan Guerrero Ortega |
@@ -224,6 +229,8 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 | Resumen | Willyan tiene 30 años y cuatro de ejercicio profesional. Trabaja en el Centro de Salud La Rama y antes trabajó en EsSalud en Huaraz. En clínicas atiende entre cinco y seis pacientes activos. Con un paciente nuevo sigue las fases de la consulta nutricional: evaluación (hábitos alimentarios, antecedentes médicos, actividad física, peso, talla, perímetro abdominal, pliegues y análisis bioquímicos como perfil lipídico y glucosa), diagnóstico, intervención con un plan de alimentación personalizado y, por último, monitoreo y seguimiento. Entre consultas hace el monitoreo de forma virtual, con una frecuencia que ajusta a cada paciente, y en algunos casos lo sigue día por día. Cuando el paciente regresa, para saber qué consumió debe hacerle **nuevamente una entrevista sobre sus hábitos**. En ese periodo los pacientes también le consultan sustituciones por antojos, y él les responde con equivalencias en gramos y calorías (por ejemplo, cambiar camote por papa, yuca u olluco). Si un paciente no progresa, hace ajustes, vuelve a preguntar y, según la evaluación, lo deriva a un endocrinólogo, porque los factores hormonales pueden influir. No considera repetitivo su trabajo, ya que cada plan es individualizado. Usa Nutrimind, un software con app en su celular, para diseñar el régimen alimentario y registrar datos y medidas del paciente. Sin embargo, lo que el paciente come entre consultas lo sigue obteniendo mediante entrevista y contacto virtual. |
 
 <div style="page-break-after: always"></div>
+
+<p class="caption"><strong>Tabla 18</strong><br><em>Registro de la entrevista #2 al segmento nutricionista</em></p>
 
 | Segmento: Nutricionista | Entrevista #2 |
 | --- | --- |
@@ -240,6 +247,8 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 
 <div style="page-break-after: always"></div>
 
+<p class="caption"><strong>Tabla 19</strong><br><em>Registro de la entrevista #1 al segmento paciente en tratamiento nutricional activo</em></p>
+
 | Segmento: Paciente en tratamiento nutricional activo | Entrevista #1 |
 | --- | --- |
 | Nombres y Apellidos | Evelyn Del Aguila |
@@ -254,6 +263,8 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 | Resumen | Evelyn tiene 52 años, vive con su madre, quien suele cocinar, y en ocasiones piden comida por delivery. Llegó al nutricionista por recomendación tras un examen de salud ocupacional que mostró triglicéridos y glucosa elevados. Recibe su plan por WhatsApp como un cronograma semanal de tres comidas diarias, que mantiene impreso y en el celular. Su nutricionista le pide **enviar todos los días, de lunes a domingo, la foto de su desayuno, almuerzo y cena** para evaluar lo que consume. Ese chat de WhatsApp es el único registro de su alimentación y el lugar donde ella misma revisa su nivel de cumplimiento. Recibe sus análisis y medidas y se los lleva al nutricionista en la cita para que los interprete. Cuando come fuera del plan por compromisos laborales o familiares (por ejemplo, makis en una reunión con colegas), igual envía la foto y explica la situación por escrito. Se pesa cada dos semanas por decisión propia. Ha usado apps de delivery con información nutricional, pero ninguna dedicada al registro de comidas. Afirmó que usaría a diario el registro por foto, "porque igual a diario tengo que enviar el reporte", siempre que la app sea eficiente. También usaría el botón de "comí fuera del plan", ya que por el trabajo le cuesta tomarse tiempo para escribirle detalles al nutricionista. Lo que más le gustaría cambiar es poder enviar sus fotos con un mensaje ya predefinido. |
 
 <div style="page-break-after: always"></div>
+
+<p class="caption"><strong>Tabla 20</strong><br><em>Registro de la entrevista #2 al segmento paciente en tratamiento nutricional activo</em></p>
 
 | Segmento: Paciente en tratamiento nutricional activo | Entrevista #2 |
 | --- | --- |
@@ -328,9 +339,13 @@ Esta sección presenta las fichas de User Persona elaboradas en UXPressia, una p
 
 #### Segmento 1: Nutricionista
 
+<p class="caption"><strong>Figura 4</strong><br><em>User persona de Willyan</em></p>
+
 ![Willyan User Persona](../assets/img/chapter2/willyan-user-persona.png)
 
 #### Segmento 2: Paciente en tratamiento nutricional activo
+
+<p class="caption"><strong>Figura 5</strong><br><em>User persona de Evelyn</em></p>
 
 ![Evelyn User Persona](../assets/img/chapter2/evelyn-user-persona.png)
 
@@ -339,6 +354,8 @@ Esta sección presenta las fichas de User Persona elaboradas en UXPressia, una p
 Esta sección presenta el User Task Matrix de los dos segmentos objetivo de Healthify, construido a partir de las cuatro entrevistas realizadas: Willyan Guerrero y Tatiana Mozombite, nutricionistas, y Evelyn Del Aguila y Larisa Ramírez, pacientes en tratamiento nutricional activo. La matriz concentra las tareas que cada entrevistado realiza actualmente para cumplir sus objetivos, con independencia de la existencia de la solución propuesta. Para cada tarea se consigna la frecuencia con que se ejecuta y la importancia que reviste para el usuario correspondiente.
 
 #### Segmento 1: Nutricionista
+
+<p class="caption"><strong>Tabla 21</strong><br><em>User Task Matrix del segmento nutricionista</em></p>
 
 <table>
 <tr>
@@ -400,6 +417,8 @@ Esta sección presenta el User Task Matrix de los dos segmentos objetivo de Heal
 </table>
 
 #### Segmento 2: Paciente en tratamiento nutricional activo
+
+<p class="caption"><strong>Tabla 22</strong><br><em>User Task Matrix del segmento paciente en tratamiento nutricional activo</em></p>
 
 <table>
 <tr>
@@ -469,9 +488,13 @@ Esta sección presenta los User Journey Maps elaborados en UXPressia, uno por ca
 
 #### Segmento 1: Nutricionista
 
+<p class="caption"><strong>Figura 6</strong><br><em>User journey mapping de Willyan</em></p>
+
 ![Willyan User Journey Mapping](../assets/img/chapter2/willyan-user-journey-mapping.png)
 
 #### Segmento 2: Paciente en tratamiento nutricional activo
+
+<p class="caption"><strong>Figura 7</strong><br><em>User journey mapping de Evelyn</em></p>
 
 ![Evelyn User Journey Mapping](../assets/img/chapter2/evelyn-user-journey-mapping.png)
 
@@ -481,9 +504,13 @@ Esta sección presenta los Empathy Maps elaborados en UXPressia para cada uno de
 
 #### Segmento 1: Nutricionista
 
+<p class="caption"><strong>Figura 8</strong><br><em>Mapa de empatía de Willyan</em></p>
+
 ![Willyan Empathy Map](../assets/img/chapter2/willyan-empathy-map.png)
 
 #### Segmento 2: Paciente en tratamiento nutricional activo
+
+<p class="caption"><strong>Figura 9</strong><br><em>Mapa de empatía de Evelyn</em></p>
 
 ![Evelyn Empathy Map](../assets/img/chapter2/evelyn-empathy-map.png)
 
@@ -495,6 +522,8 @@ El proceso se desarrolló en cuatro momentos. En el primero, el equipo realizó 
 
 **Convención de notas utilizada en el tablero:**
 
+<p class="caption"><strong>Tabla 23</strong><br><em>Convención de notas del tablero de Big Picture EventStorming</em></p>
+
 | Nota | Elemento | Significado en el modelo |
 |---|---|---|
 | Amarillo claro | Actor | `Patient` o `Practitioner`, nunca un usuario genérico |
@@ -502,33 +531,47 @@ El proceso se desarrolló en cuatro momentos. En el primero, el equipo realizó 
 | Morado | Policy | Reacción automática del tipo cuando X entonces Y |
 | Verde claro | Read Model | Vista que alguien consulta para decidir |
 
+<p class="caption"><strong>Figura 10</strong><br><em>Tablero completo del Big Picture EventStorming</em></p>
+
 ![Big Picture EventStorming - Tablero completo](../assets/img/artifacts/event-storming/big-picture-eventstorming-completo.png)
 
 El tablero resultante quedó organizado en cinco fases narrativas, que se describen a continuación.
 
 **Fase 1 — Vinculación, dentro de la consulta.** El profesional crea su cuenta y emite una invitación; el paciente la redime escaneando el código QR durante la consulta presencial y otorga su consentimiento. Los hechos relevantes son `Invitation Issued`, `Invitation Redeemed`, `Care Link Established` y `Consent Granted`. Aquí aparece la primera política del tablero: cuando se establece el vínculo, se abre automáticamente una ventana de evaluación para ese paciente.
 
+<p class="caption"><strong>Figura 11</strong><br><em>Fase 1 del Big Picture EventStorming: vinculación y consentimiento</em></p>
+
 ![Fase 1 - Vinculación y consentimiento](../assets/img/artifacts/event-storming/big-picture-fase1-vinculacion.png)
 
 **Fase 2 — El acto clínico, dentro de la consulta.** Ocurre con un solo actor presente, el profesional, y reproduce las tres primeras fases que los nutricionistas entrevistados describieron como su proceso de trabajo: evaluación, diagnóstico e intervención. La cadena de hechos va de `Nutritional Assessment Recorded` y `Clinical Measurement Taken` hasta `Nutritional Diagnosis Issued`, `Targets Proposed`, `Targets Accepted As Proposed` o `Targets Overridden`, y culmina en `Nutrition Plan Published` y `Active Targets Updated`. Este último hecho es el que más consecuencias tiene en el resto del tablero, porque desencadena tres políticas simultáneas en zonas distintas del dominio.
+
+<p class="caption"><strong>Figura 12</strong><br><em>Fase 2 del Big Picture EventStorming: acto clínico</em></p>
 
 ![Fase 2 - Acto clínico](../assets/img/artifacts/event-storming/big-picture-fase2-acto-clinico.png)
 
 **Fase 3 — Entre consultas.** Es la zona del tablero donde vive el enunciado del problema. Participan los dos actores de manera asíncrona, sin estar en el mismo lugar ni en el mismo momento, y con conectividad intermitente. El paciente produce `Meal Logged`, `Estimate Confirmed By Patient`, `Off Plan Entry Logged`, `Self Weigh In Recorded` y `Entry Queued Offline`; el sistema reacciona con `Day Evaluated`, `Daily Compliance Computed`, `Deviation Detected`, `Sustained Deviation Detected` y `Consistency Index Recomputed`. Durante la sesión se identificó aquí una decisión de diseño que el equipo dejó explícita en el tablero: la alerta de consistencia notifica primero al paciente mediante `Patient Prompted About Consistency` y solo escala al profesional después de tres semanas sostenidas, mientras que `Logging Gap Detected` nunca escala ni cuenta como incumplimiento.
 
+<p class="caption"><strong>Figura 13</strong><br><em>Fase 3 del Big Picture EventStorming: periodo entre consultas</em></p>
+
 ![Fase 3 - Periodo entre consultas](../assets/img/artifacts/event-storming/big-picture-fase3-entre-consultas.png)
 
 **Fase 4 — La decisión clínica.** El profesional recibe la señal en su bandeja de revisión y decide. Los hechos son `Review Item Created`, `Nutrition Plan Adjusted`, `Plan Version Superseded` y `Review Item Resolved`. La sesión hizo visible que ninguna política conecta la señal con el ajuste del plan: la automatización se detiene en la bandeja y es un humano quien continúa la cadena.
 
+<p class="caption"><strong>Figura 14</strong><br><em>Fase 4 del Big Picture EventStorming: decisión clínica del profesional</em></p>
+
 ![Fase 4 - Decisión clínica del profesional](../assets/img/artifacts/event-storming/big-picture-fase4-decision-clinica.png)
 
 **Fase 5 — Cierre.** Comprende `Referral Recorded`, `Treatment Discharged`, `Consent Withdrawn` y `Care Link Revoked`, con la política que cierra la ventana de evaluación cuando el vínculo se revoca.
+
+<p class="caption"><strong>Figura 15</strong><br><em>Fase 5 del Big Picture EventStorming: cierre del tratamiento</em></p>
 
 ![Fase 5 - Cierre del tratamiento](../assets/img/artifacts/event-storming/big-picture-fase5-cierre.png)
 
 ### 2.3.6. Ubiquitous Language
 
 Esta sección presenta el glosario de términos del dominio nutricional que el equipo utiliza de manera uniforme en las entrevistas, en el modelado, en la documentación y en el código. Los términos se expresan en inglés, acompañados de su equivalente en español, y su definición corresponde al significado que tienen en el dominio del negocio y no a su implementación técnica. El glosario se construyó a partir del análisis lingüístico de las entrevistas y del Big Picture EventStorming, y es normativo: un término que aparezca en el modelo y no figure en esta tabla no existe en el dominio.
+
+<p class="caption"><strong>Tabla 24</strong><br><em>Términos del Ubiquitous Language de Healthify</em></p>
 
 | Término (inglés) | Equivalente en español | Definición |
 |---|---|---|
@@ -564,6 +607,8 @@ Esta sección presenta el glosario de términos del dominio nutricional que el e
 | `Reference Food` | Alimento de referencia | Ítem del catálogo nutricional traducido al dominio desde una fuente externa |
 
 Del análisis lingüístico surgieron además cinco expresiones que el equipo decidió prohibir porque introducen ambigüedad o contradicen decisiones de producto ya tomadas.
+
+<p class="caption"><strong>Tabla 25</strong><br><em>Expresiones prohibidas del Ubiquitous Language</em></p>
 
 | Expresión prohibida | Razón | Término que la reemplaza |
 |---|---|---|
@@ -2206,12 +2251,18 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 ### 2.4.2. Impact Mapping
 
 ### Impact Mapping - Paciente
+
+<p class="caption"><strong>Figura 16</strong><br><em>Impact Mapping del paciente</em></p>
+
 ![Impact Mapping Paciente](../assets/img/chapter2/ImpactmapPaciente.png)
 
 El Impact Mapping del paciente se orienta a promover un registro continuo de información durante el tratamiento nutricional. Para alcanzar este objetivo, se consideran como impactos principales el registro frecuente de la alimentación, el seguimiento de la evolución corporal, la consulta del seguimiento del plan nutricional y la continuidad de los registros sin conexión. Estos comportamientos se apoyan en los Deliverables y User Stories definidos previamente.
 <br>
 
 ### Impact Mapping - Nutricionista
+
+<p class="caption"><strong>Figura 17</strong><br><em>Impact Mapping del nutricionista</em></p>
+
 ![Impact Mapping Nutricionista](../assets/img/chapter2/ImpactmapNutri.png)
 
 El Impact Mapping del nutricionista se orienta al uso recurrente de la información registrada para el seguimiento de los pacientes entre consultas. Los impactos considerados comprenden la consulta de la evolución del paciente, la revisión de situaciones que requieren atención profesional, la gestión del plan nutricional y la consulta de una visión continua del tratamiento.
