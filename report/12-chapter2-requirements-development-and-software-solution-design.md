@@ -1116,7 +1116,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 
 ### EP04 — Monitoreo y Seguimiento del Plan Nutricional
 
-<br>***US14 — Consulta del cumplimiento nutricional diario***
+<p class="caption"><strong>Tabla 41</strong><br><em>Historia de usuario US14: Consulta del cumplimiento nutricional diario</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1148,7 +1149,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US15 — Visualización de señal de consistencia***
+<p class="caption"><strong>Tabla 42</strong><br><em>Historia de usuario US15: Visualización de señal de consistencia</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1180,7 +1182,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US16 — Consulta del monitoreo del paciente***
+<p class="caption"><strong>Tabla 43</strong><br><em>Historia de usuario US16: Consulta del monitoreo del paciente</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1208,11 +1211,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Información disponible</strong><br>Dado que el nutricionista atiende a un paciente con vínculo activo que ha generado información de seguimiento<br>Cuando el nutricionista consulta el monitoreo del paciente<br>Entonces el sistema proporciona la tendencia de peso, cumplimiento, registros de alimentación y demás datos autorizados disponibles.<br><br><strong>Escenario 2: Procedencia de registros estimados</strong><br>Dado que el nutricionista consulta una ingesta que proviene de una estimación<br>Cuando el nutricionista consulta una ingesta estimada dentro del monitoreo<br>Entonces el sistema conserva su procedencia y nivel de confianza.<br><br><strong>Escenario 3: Ausencia de información</strong><br>Dado que el nutricionista consulta un periodo sin suficientes registros<br>Cuando el nutricionista consulta el seguimiento del periodo<br>Entonces el sistema distingue la ausencia de datos de una desviación del tratamiento.</td>
+    <td colspan="8"><strong>Escenario 1: Información disponible</strong><br>Dado que el nutricionista atiende a un paciente con vínculo activo que ha generado información de seguimiento<br>Cuando el nutricionista consulta el monitoreo del paciente<br>Entonces el sistema proporciona la tendencia de peso, cumplimiento, registros de alimentación y demás datos autorizados disponibles.<br><br><strong>Escenario 2: Procedencia de registros estimados</strong><br>Dado que el nutricionista consulta una ingesta que proviene de una estimación<br>Cuando el nutricionista consulta una ingesta estimada dentro del monitoreo<br>Entonces el sistema conserva su procedencia y nivel de confianza.<br><br><strong>Escenario 3: Ausencia de información</strong><br>Dado que el nutricionista consulta un periodo sin suficientes registros<br>Cuando el nutricionista consulta el seguimiento del periodo<br>Entonces el sistema distingue la ausencia de datos de una desviación del tratamiento.<br><br><strong>Escenario 4: Resumen del periodo con apoyo de IA</strong><br>Dado que el nutricionista consulta el seguimiento de un paciente con registros en el periodo<br>Cuando el nutricionista solicita el resumen del periodo<br>Entonces el sistema presenta los datos del periodo y, si la IA está habilitada y existe consentimiento, un texto que los resume; en caso contrario presenta solo los datos, sin error.</td>
   </tr>
 </table>
 
-<br>***US17 — Revisión y resolución de señales de seguimiento***
+<p class="caption"><strong>Tabla 44</strong><br><em>Historia de usuario US17: Revisión y resolución de señales de seguimiento</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1240,14 +1244,81 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Situación disponible para revisión</strong><br>Dado que el nutricionista tiene una condición de seguimiento que cumple la regla vigente de escalamiento<br>Cuando el nutricionista consulta los elementos pendientes de revisión<br>Entonces el sistema incluye la situación correspondiente.<br><br><strong>Escenario 2: Resolución sin cambio del plan</strong><br>Dado que el nutricionista revisa una situación y determina que no requiere modificación del tratamiento<br>Cuando el nutricionista registra su decisión<br>Entonces el sistema conserva la resolución sin alterar el plan vigente.<br><br><strong>Escenario 3: Resolución con ajuste</strong><br>Dado que el nutricionista determina que corresponde ajustar el tratamiento<br>Cuando el nutricionista inicia el ajuste del plan<br>Entonces el sistema procesa el cambio mediante una nueva versión del plan con su motivo correspondiente.<br><br><strong>Escenario 4: Ausencia de modificación automática</strong><br>Dado que el nutricionista tiene una señal de seguimiento generada por el sistema<br>Cuando el nutricionista consulta una señal de seguimiento escalada para revisión<br>Entonces el sistema mantiene el plan sin cambios hasta que exista una decisión profesional.</td>
+    <td colspan="8"><strong>Escenario 1: Situación disponible para revisión</strong><br>Dado que el nutricionista tiene una condición de seguimiento que cumple la regla vigente de escalamiento<br>Cuando el nutricionista consulta los elementos pendientes de revisión<br>Entonces el sistema incluye la situación correspondiente.<br><br><strong>Escenario 2: Resolución sin cambio del plan</strong><br>Dado que el nutricionista revisa una situación y determina que no requiere modificación del tratamiento<br>Cuando el nutricionista registra su decisión<br>Entonces el sistema conserva la resolución sin alterar el plan vigente.<br><br><strong>Escenario 3: Resolución con ajuste</strong><br>Dado que el nutricionista determina que corresponde ajustar el tratamiento<br>Cuando el nutricionista inicia el ajuste del plan<br>Entonces el sistema procesa el cambio mediante una nueva versión del plan con su motivo correspondiente.<br><br><strong>Escenario 4: Ausencia de modificación automática</strong><br>Dado que el nutricionista tiene una señal de seguimiento generada por el sistema<br>Cuando el nutricionista consulta una señal de seguimiento escalada para revisión<br>Entonces el sistema mantiene el plan sin cambios hasta que exista una decisión profesional.<br><br><strong>Escenario 5: Propuesta de plan con apoyo de IA</strong><br>Dado que el nutricionista abre una señal de desviación sostenida<br>Cuando el sistema dispone de una propuesta de plan generada con IA<br>Entonces el sistema la presenta para que el nutricionista la acepte con ediciones o la descarte, sin asignarla al paciente hasta que exista su decisión.</td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 45</strong><br><em>Historia de usuario US39: Agenda de consultas</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">US39</td>
+    <td colspan="2">Nutricionista</td>
+    <td colspan="2">Alta</td>
+    <td colspan="2">EP04</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Agenda de consultas</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como nutricionista, deseo agendar, reprogramar y cancelar las consultas de mis pacientes, para organizar el seguimiento entre consultas y preparar cada atención.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Consulta agendada</strong><br>Dado que el nutricionista mantiene un vínculo activo con el paciente<br>Cuando el nutricionista agenda una consulta en una fecha y hora futuras, con su modalidad e indicaciones de preparación<br>Entonces el sistema registra la consulta en la agenda del nutricionista y la deja visible para el paciente.<br><br><strong>Escenario 2: Fecha no futura</strong><br>Dado que el nutricionista intenta agendar una consulta<br>Cuando indica una fecha y hora que no son futuras<br>Entonces el sistema rechaza el registro e informa que la fecha debe ser posterior al momento actual.<br><br><strong>Escenario 3: Consulta ya agendada</strong><br>Dado que el paciente ya tiene una consulta agendada pendiente<br>Cuando el nutricionista intenta agendar otra consulta para el mismo paciente<br>Entonces el sistema rechaza la operación y conserva la consulta vigente.<br><br><strong>Escenario 4: Reprogramación o cancelación</strong><br>Dado que el nutricionista tiene una consulta agendada<br>Cuando el nutricionista la reprograma o la cancela<br>Entonces el sistema actualiza la agenda, conserva la respuesta previa del paciente cuando se reprograma y retira la consulta de las próximas cuando se cancela.<br><br><strong>Escenario 5: Consulta no acudida</strong><br>Dado que una consulta agendada ha vencido sin completarse<br>Cuando transcurre el periodo de revisión del sistema<br>Entonces el sistema la marca como no acudida y la conserva en la agenda sin finalizar el vínculo de cuidado.</td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 46</strong><br><em>Historia de usuario US40: Preparación y respuesta previa a la consulta</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">US40</td>
+    <td colspan="2">Paciente</td>
+    <td colspan="2">Media</td>
+    <td colspan="2">EP04</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Preparación y respuesta previa a la consulta</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como paciente, deseo conocer cómo prepararme para mi próxima consulta y contarle a mi nutricionista cómo me ha ido antes de ella, para aprovechar mejor la cita.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Indicaciones de preparación</strong><br>Dado que el paciente tiene una próxima consulta agendada<br>Cuando el paciente consulta los detalles de su próxima consulta<br>Entonces el sistema presenta la fecha, la modalidad y las indicaciones de preparación definidas por el nutricionista, o informa que no existen indicaciones.<br><br><strong>Escenario 2: Respuesta previa enviada</strong><br>Dado que el paciente tiene una consulta pendiente<br>Cuando el paciente indica cómo se sintió, las dificultades que tuvo y hasta tres preguntas propias, y las envía<br>Entonces el sistema conserva una sola respuesta para esa consulta y la deja visible para el nutricionista.<br><br><strong>Escenario 3: Edición hasta la hora de la consulta</strong><br>Dado que el paciente ha enviado su respuesta previa<br>Cuando el paciente intenta editarla antes o después de la hora de la consulta<br>Entonces el sistema permite la edición mientras la consulta no haya llegado a su hora y la rechaza después.<br><br><strong>Escenario 4: Respuesta sin señal</strong><br>Dado que el paciente ha enviado su respuesta previa<br>Cuando el sistema la registra<br>Entonces el sistema no genera una señal de seguimiento a partir de la respuesta.</td>
   </tr>
 </table>
 <br>
 
 ### EP05 — Expediente y Continuidad del Cuidado
 
-<br>***US18 — Acceso al expediente personal unificado***
+<p class="caption"><strong>Tabla 47</strong><br><em>Historia de usuario US18: Acceso al expediente personal unificado</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1279,7 +1350,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US19 — Registro de derivación a otro especialista***
+<p class="caption"><strong>Tabla 48</strong><br><em>Historia de usuario US19: Registro de derivación a otro especialista</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1307,11 +1379,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Derivación válida</strong><br>Dado que el nutricionista atiende a un paciente con tratamiento activo<br>Cuando el nutricionista registra una derivación con el motivo correspondiente<br>Entonces el sistema conserva la derivación asociada al expediente del paciente.<br><br><strong>Escenario 2: Consulta histórica</strong><br>Dado que el nutricionista ha registrado una derivación<br>Cuando el nutricionista consulta posteriormente el expediente autorizado del paciente<br>Entonces el sistema conserva la derivación como parte del historial.</td>
+    <td colspan="8"><strong>Escenario 1: Derivación válida</strong><br>Dado que el nutricionista atiende a un paciente con tratamiento activo<br>Cuando el nutricionista registra una derivación con el motivo correspondiente<br>Entonces el sistema conserva la derivación asociada al expediente del paciente.<br><br><strong>Escenario 2: Consulta histórica</strong><br>Dado que el nutricionista ha registrado una derivación<br>Cuando el nutricionista consulta posteriormente el expediente autorizado del paciente<br>Entonces el sistema conserva la derivación como parte del historial.<br><br><strong>Escenario 3: Cierre de la derivación</strong><br>Dado que el nutricionista tiene una derivación abierta de un paciente<br>Cuando el nutricionista registra el cierre de la derivación<br>Entonces el sistema marca la derivación como cerrada y conserva su historial.</td>
   </tr>
 </table>
 
-<br>***US20 — Acceso al expediente unificado del paciente***
+<p class="caption"><strong>Tabla 49</strong><br><em>Historia de usuario US20: Acceso al expediente unificado del paciente</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
