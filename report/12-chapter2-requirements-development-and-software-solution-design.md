@@ -1419,7 +1419,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 
 ### EP06 — Evaluación y Diagnóstico Nutricional
 
-<br>***US21 — Registro y finalización de la evaluación nutricional***
+<p class="caption"><strong>Tabla 50</strong><br><em>Historia de usuario US21: Registro y finalización de la evaluación nutricional</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1447,11 +1448,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Creación de evaluación</strong><br>Dado que el nutricionista mantiene un vínculo de cuidado activo y autorizado con el paciente<br>Cuando el nutricionista inicia una nueva evaluación nutricional<br>Entonces el sistema registra una nueva evaluación asociada al paciente.<br><br><strong>Escenario 2: Incorporación de mediciones</strong><br>Dado que el nutricionista tiene una evaluación abierta<br>Cuando el nutricionista registra una medición clínica válida<br>Entonces el sistema incorpora la medición clínica a la evaluación nutricional.<br><br><strong>Escenario 3: Cierre de evaluación</strong><br>Dado que el nutricionista ha completado la información requerida de una evaluación<br>Cuando el nutricionista finaliza la evaluación nutricional<br>Entonces el sistema registra la evaluación como cerrada.<br><br><strong>Escenario 4: Modificación posterior al cierre</strong><br>Dado que el nutricionista tiene una evaluación cerrada<br>Cuando el nutricionista intenta modificar una evaluación cerrada<br>Entonces el sistema conserva la evaluación cerrada sin alteraciones y requiere un nuevo registro para una corrección posterior.</td>
+    <td colspan="8"><strong>Escenario 1: Creación de evaluación</strong><br>Dado que el nutricionista mantiene un vínculo de cuidado activo y autorizado con el paciente<br>Cuando el nutricionista inicia una nueva evaluación nutricional<br>Entonces el sistema registra una nueva evaluación asociada al paciente.<br><br><strong>Escenario 2: Incorporación de mediciones</strong><br>Dado que el nutricionista tiene una evaluación abierta<br>Cuando el nutricionista registra una medición clínica válida<br>Entonces el sistema incorpora la medición clínica a la evaluación nutricional.<br><br><strong>Escenario 3: Cierre de evaluación</strong><br>Dado que el nutricionista ha completado la información requerida de una evaluación<br>Cuando el nutricionista finaliza la evaluación nutricional<br>Entonces el sistema registra la evaluación como cerrada.<br><br><strong>Escenario 4: Modificación posterior al cierre</strong><br>Dado que el nutricionista tiene una evaluación cerrada<br>Cuando el nutricionista intenta modificar una evaluación cerrada<br>Entonces el sistema conserva la evaluación cerrada sin alteraciones y requiere un nuevo registro para una corrección posterior.<br><br><strong>Escenario 5: Datos base del paciente</strong><br>Dado que el nutricionista atiende a un paciente que aún no tiene datos base<br>Cuando el nutricionista registra los datos base del paciente, como fecha de nacimiento, sexo, talla y antecedentes<br>Entonces el sistema los conserva una sola vez y los reutiliza en las evaluaciones posteriores sin volver a solicitarlos.<br><br><strong>Escenario 6: Evaluación reanudable</strong><br>Dado que el nutricionista tiene una consulta en curso que ha interrumpido<br>Cuando el nutricionista vuelve a la consulta del paciente<br>Entonces el sistema le permite reanudarla desde el paso en que quedó, sin perder la información ingresada.</td>
   </tr>
 </table>
 
-<br>***US22 — Emisión del diagnóstico nutricional***
+<p class="caption"><strong>Tabla 51</strong><br><em>Historia de usuario US22: Emisión del diagnóstico nutricional</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1479,14 +1481,15 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Diagnóstico con fundamento</strong><br>Dado que el nutricionista dispone de una evaluación del paciente<br>Cuando el nutricionista registra un diagnóstico con su justificación<br>Entonces el sistema conserva ambos elementos asociados al tratamiento.<br><br><strong>Escenario 2: Diagnóstico sin fundamento requerido</strong><br>Dado que el nutricionista registra un diagnóstico que requiere justificación clínica<br>Cuando el nutricionista intenta registrar el diagnóstico sin proporcionar la justificación clínica requerida<br>Entonces el sistema rechaza el registro.<br><br><strong>Escenario 3: Conservación histórica</strong><br>Dado que el nutricionista tiene un diagnóstico previamente registrado<br>Cuando el nutricionista registra una nueva evaluación o un nuevo diagnóstico<br>Entonces el sistema conserva los antecedentes anteriores.</td>
+    <td colspan="8"><strong>Escenario 1: Diagnóstico con fundamento</strong><br>Dado que el nutricionista dispone de una evaluación del paciente<br>Cuando el nutricionista registra un diagnóstico con su justificación<br>Entonces el sistema conserva ambos elementos asociados al tratamiento.<br><br><strong>Escenario 2: Diagnóstico sin fundamento requerido</strong><br>Dado que el nutricionista registra un diagnóstico que requiere justificación clínica<br>Cuando el nutricionista intenta registrar el diagnóstico sin proporcionar la justificación clínica requerida<br>Entonces el sistema rechaza el registro.<br><br><strong>Escenario 3: Conservación histórica</strong><br>Dado que el nutricionista tiene un diagnóstico previamente registrado<br>Cuando el nutricionista registra una nueva evaluación o un nuevo diagnóstico<br>Entonces el sistema conserva los antecedentes anteriores.<br><br><strong>Escenario 4: Sugerencia de diagnóstico</strong><br>Dado que el nutricionista ha registrado la medición de la consulta<br>Cuando el nutricionista solicita una sugerencia de diagnóstico<br>Entonces el sistema propone un diagnóstico apoyado en la medición y, si la IA no está disponible, en una regla determinista, sin registrarlo hasta que el nutricionista lo acepte y se conserve su origen.</td>
   </tr>
 </table>
 <br>
 
 ### EP07 — Prescripción y Gestión del Plan Nutricional
 
-<br>***US23 — Visualización de metas nutricionales vigentes***
+<p class="caption"><strong>Tabla 52</strong><br><em>Historia de usuario US23: Visualización de metas nutricionales vigentes</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1514,11 +1517,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Existen metas vigentes</strong><br>Dado que el paciente posee un plan nutricional activo<br>Cuando el paciente consulta sus metas<br>Entonces el sistema proporciona las metas correspondientes a la versión vigente del plan.<br><br><strong>Escenario 2: No existe plan activo</strong><br>Dado que el paciente no posee un plan nutricional activo<br>Cuando el paciente solicita sus metas<br>Entonces el sistema informa que no existen metas vigentes.<br><br><strong>Escenario 3: Protección de las metas prescritas</strong><br>Dado que el paciente tiene metas prescritas por el nutricionista<br>Cuando el paciente consulta la información<br>Entonces el sistema no permite que el paciente modifique los valores prescritos.</td>
+    <td colspan="8"><strong>Escenario 1: Existen metas vigentes</strong><br>Dado que el paciente posee un plan nutricional activo<br>Cuando el paciente consulta sus metas<br>Entonces el sistema proporciona las metas correspondientes a la versión vigente del plan.<br><br><strong>Escenario 2: No existe plan activo</strong><br>Dado que el paciente no posee un plan nutricional activo<br>Cuando el paciente solicita sus metas<br>Entonces el sistema informa que no existen metas vigentes.<br><br><strong>Escenario 3: Protección de las metas prescritas</strong><br>Dado que el paciente tiene metas prescritas por el nutricionista<br>Cuando el paciente consulta la información<br>Entonces el sistema no permite que el paciente modifique los valores prescritos.<br><br><strong>Escenario 4: Versiones anteriores del plan</strong><br>Dado que el paciente tiene un plan con versiones anteriores a la vigente<br>Cuando el paciente consulta las versiones anteriores de su plan<br>Entonces el sistema las presenta como historial de solo lectura, distinguiéndolas de la versión vigente.</td>
   </tr>
 </table>
 
-<br>***US24 — Confirmación de recepción de nuevas metas nutricionales***
+<p class="caption"><strong>Tabla 53</strong><br><em>Historia de usuario US24: Confirmación de recepción de nuevas metas nutricionales</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1550,7 +1554,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US25 — Obtención de propuesta de metas nutricionales calculadas***
+<p class="caption"><strong>Tabla 54</strong><br><em>Historia de usuario US25: Obtención de propuesta de metas nutricionales calculadas</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1582,7 +1587,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US26 — Prescripción y publicación del plan nutricional***
+<p class="caption"><strong>Tabla 55</strong><br><em>Historia de usuario US26: Prescripción y publicación del plan nutricional</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1610,11 +1616,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Publicación válida</strong><br>Dado que el nutricionista atiende a un paciente que cuenta con diagnóstico y base de cálculo requeridos<br>Cuando el nutricionista publica el plan nutricional<br>Entonces el sistema registra una versión activa con sus metas, pautas y restricciones.<br><br><strong>Escenario 2: Ausencia de diagnóstico</strong><br>Dado que el nutricionista atiende a un paciente que no cuenta con el diagnóstico requerido<br>Cuando el nutricionista intenta publicar el plan nutricional<br>Entonces el sistema rechaza la publicación.<br><br><strong>Escenario 3: Ausencia de base de cálculo</strong><br>Dado que el nutricionista no ha registrado la base de cálculo necesaria para sustentar las metas<br>Cuando el nutricionista intenta publicar el plan nutricional<br>Entonces el sistema rechaza la publicación.<br><br><strong>Escenario 4: Única versión activa</strong><br>Dado que el nutricionista tiene una versión activa del plan<br>Cuando el nutricionista publica una nueva versión válida del plan<br>Entonces el sistema mantiene una sola versión como vigente y conserva las versiones anteriores en el historial.</td>
+    <td colspan="8"><strong>Escenario 1: Publicación válida</strong><br>Dado que el nutricionista atiende a un paciente que cuenta con diagnóstico y base de cálculo requeridos<br>Cuando el nutricionista publica el plan nutricional<br>Entonces el sistema registra una versión activa con sus metas, pautas y restricciones.<br><br><strong>Escenario 2: Ausencia de diagnóstico</strong><br>Dado que el nutricionista atiende a un paciente que no cuenta con el diagnóstico requerido<br>Cuando el nutricionista intenta publicar el plan nutricional<br>Entonces el sistema rechaza la publicación.<br><br><strong>Escenario 3: Ausencia de base de cálculo</strong><br>Dado que el nutricionista no ha registrado la base de cálculo necesaria para sustentar las metas<br>Cuando el nutricionista intenta publicar el plan nutricional<br>Entonces el sistema rechaza la publicación.<br><br><strong>Escenario 4: Única versión activa</strong><br>Dado que el nutricionista tiene una versión activa del plan<br>Cuando el nutricionista publica una nueva versión válida del plan<br>Entonces el sistema mantiene una sola versión como vigente y conserva las versiones anteriores en el historial.<br><br><strong>Escenario 5: Indicaciones sugeridas</strong><br>Dado que el nutricionista ha registrado el diagnóstico de la consulta<br>Cuando el nutricionista solicita indicaciones sugeridas para el plan<br>Entonces el sistema propone indicaciones de un catálogo cerrado, o de una tabla predefinida si la IA no está disponible, que el nutricionista puede modificar antes de publicar.</td>
   </tr>
 </table>
 
-<br>***US27 — Ajuste del plan nutricional entre consultas***
+<p class="caption"><strong>Tabla 56</strong><br><em>Historia de usuario US27: Ajuste del plan nutricional entre consultas</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
