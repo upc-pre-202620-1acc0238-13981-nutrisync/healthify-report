@@ -32,6 +32,8 @@ Container_Boundary(api, "Healthify Platform API") {
     Component(fcEfcConfig, "ReferenceFood EntityTypeConfiguration", "EF Core 10 Fluent API", "Maps table, search index and hash")
     Component(fcSeeder, "ReferenceFoodSeeder", "C# EF Core seeder", "Seeds the baseline catalog at startup")
     Component(importHostedService, "CatalogImportHostedService", "ASP.NET Core BackgroundService", "Imports catalog snapshots periodically")
+
+    Component(foodMatcher, "FoodNameMatcher / NutrientCoherence", "C# Domain Services", "Matches names and checks AI nutrients against the catalog")
 }
 
 ContainerDb(db, "Healthify Database", "MySQL 8.4", "Owns the reference_foods table and its audit table")
@@ -73,5 +75,8 @@ Rel(fcRepo, fcEfcConfig, "Is mapped by", "EF Core model")
 Rel(fcRepo, db, "Reads from and writes to", "EF Core 10 / MySQL, TCP 3306")
 
 Rel(intakeCtx, fcFacade, "Resolves the food of a diary entry", "in-process ACL call")
+
+Rel(foodCmdService, foodMatcher, "Matches and validates foods through", "in-process")
+Rel(intakeCtx, fcFacade, "Resolves foods by name and creates AI-estimated foods", "in-process ACL call")
 
 @enduml
