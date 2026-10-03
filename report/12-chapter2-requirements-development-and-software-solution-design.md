@@ -628,6 +628,8 @@ Adicionalmente, se consideran Technical Stories para representar capacidades té
 
 Los criterios de aceptación se expresan mediante escenarios Given–When–Then y describen comportamientos verificables del sistema sin establecer detalles específicos de presentación de la interfaz.
 
+<p class="caption"><strong>Tabla 26</strong><br><em>Épicas del producto</em></p>
+
 | Epic ID | Title | Description |
 |---|---|---|
 | **EP01** | Gestión de la Relación de Cuidado | Agrupa las capacidades necesarias para establecer, mantener y finalizar el vínculo entre un Paciente y un Nutricionista, incluyendo invitaciones, consentimiento y control del acceso a la información. |
@@ -640,6 +642,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 | **EP08** | Identidad y Acceso | Agrupa las capacidades relacionadas con creación de cuentas, autenticación, autorización y administración de sesiones. |
 | **EP09** | Offline y Sincronización | Comprende la continuidad del registro cuando no existe conectividad y la posterior sincronización segura de los datos. |
 | **EP10** | Landing Page | Agrupa las funcionalidades públicas destinadas a presentar Healthify, informar sobre sus capacidades y facilitar el acceso y contacto con la solución. |
+| **EP11** | Asistencia con IA | Agrupa las funcionalidades que utilizan IA como apoyo, siempre con consentimiento del paciente y sin sustituir la decisión del profesional: resumen semanal, ideas de comidas y preguntas sugeridas. |
 | **EP_TS** | RESTful API — Technical Stories | Agrupa las Technical Stories necesarias para implementar los servicios RESTful que soportan las funcionalidades de Healthify y permiten la comunicación entre las aplicaciones cliente y el backend. |
 | **EP_SS** | Spike Stories | Agrupa las investigaciones, análisis y pruebas de viabilidad técnica necesarias para reducir incertidumbre antes de implementar funcionalidades o integraciones de Healthify. |
 
@@ -1656,7 +1659,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 
 ### EP08 — Identidad y Acceso
 
-<br>***US28 — Creación de cuenta***
+<p class="caption"><strong>Tabla 57</strong><br><em>Historia de usuario US28: Creación de cuenta</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1688,7 +1692,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US29 — Inicio de sesión***
+<p class="caption"><strong>Tabla 58</strong><br><em>Historia de usuario US29: Inicio de sesión</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1716,11 +1721,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Credenciales válidas</strong><br>Dado que el paciente o el nutricionista posee una cuenta activa con credenciales válidas<br>Cuando el paciente o el nutricionista proporciona las credenciales correctas<br>Entonces el sistema autentica la cuenta y habilita las operaciones correspondientes al rol asociado.<br><br><strong>Escenario 2: Credenciales inválidas</strong><br>Dado que el paciente o el nutricionista proporciona credenciales no válidas<br>Cuando el paciente o el nutricionista solicita la autenticación con credenciales no válidas<br>Entonces el sistema rechaza el inicio de sesión sin crear una sesión autorizada.<br><br><strong>Escenario 3: Operación no permitida por rol</strong><br>Dado que el paciente o el nutricionista tiene una cuenta autenticada<br>Cuando el paciente o el nutricionista intenta realizar una operación no permitida para su rol<br>Entonces el sistema rechaza la operación.</td>
+    <td colspan="8"><strong>Escenario 1: Credenciales válidas</strong><br>Dado que el paciente o el nutricionista posee una cuenta activa con credenciales válidas<br>Cuando el paciente o el nutricionista proporciona las credenciales correctas<br>Entonces el sistema autentica la cuenta y habilita las operaciones correspondientes al rol asociado.<br><br><strong>Escenario 2: Credenciales inválidas</strong><br>Dado que el paciente o el nutricionista proporciona credenciales no válidas<br>Cuando el paciente o el nutricionista solicita la autenticación con credenciales no válidas<br>Entonces el sistema rechaza el inicio de sesión sin crear una sesión autorizada.<br><br><strong>Escenario 3: Operación no permitida por rol</strong><br>Dado que el paciente o el nutricionista tiene una cuenta autenticada<br>Cuando el paciente o el nutricionista intenta realizar una operación no permitida para su rol<br>Entonces el sistema rechaza la operación.<br><br><strong>Escenario 4: Renovación de la sesión</strong><br>Dado que el paciente o el nutricionista tiene una sesión vencida y una credencial de renovación vigente<br>Cuando la aplicación solicita renovar la sesión<br>Entonces el sistema emite una nueva sesión sin solicitar de nuevo las credenciales y, si la credencial de renovación no es válida, exige iniciar sesión otra vez.<br><br><strong>Escenario 5: Cuenta bloqueada</strong><br>Dado que el paciente o el nutricionista ha excedido el número permitido de intentos fallidos<br>Cuando intenta iniciar sesión<br>Entonces el sistema rechaza el inicio de sesión e informa que la cuenta está bloqueada temporalmente.</td>
   </tr>
 </table>
 
-<br>***US30 — Cierre de sesión***
+<p class="caption"><strong>Tabla 59</strong><br><em>Historia de usuario US30: Cierre de sesión</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1751,11 +1757,45 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <td colspan="8"><strong>Escenario 1: Cierre de sesión exitoso</strong><br>Dado que el paciente o el nutricionista mantiene una sesión autenticada<br>Cuando el paciente o el nutricionista solicita cerrar sesión<br>Entonces el sistema finaliza el acceso asociado a la sesión.<br><br><strong>Escenario 2: Acceso posterior</strong><br>Dado que el paciente o el nutricionista ha finalizado previamente su sesión<br>Cuando el paciente o el nutricionista intenta acceder a una operación que requiere autenticación<br>Entonces el sistema exige una nueva autenticación.</td>
   </tr>
 </table>
+
+<p class="caption"><strong>Tabla 60</strong><br><em>Historia de usuario US43: Preferencias de la cuenta: idioma y recordatorios</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">US43</td>
+    <td colspan="2">Paciente / Nutricionista</td>
+    <td colspan="2">Media</td>
+    <td colspan="2">EP08</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Preferencias de la cuenta: idioma y recordatorios</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como paciente o nutricionista, deseo elegir el idioma de mi cuenta y, como paciente, configurar recordatorios de registro, para usar Healthify en el idioma que prefiero y no olvidar mis registros.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Cambio de idioma de la cuenta</strong><br>Dado que el paciente o el nutricionista tiene una sesión iniciada<br>Cuando el paciente o el nutricionista selecciona español o inglés como idioma<br>Entonces el sistema muestra la aplicación en ese idioma y conserva la preferencia en la cuenta.<br><br><strong>Escenario 2: Preferencia sin conexión</strong><br>Dado que el paciente o el nutricionista cambia el idioma sin conexión a Internet<br>Cuando la conexión se restablece<br>Entonces el sistema registra la preferencia en la cuenta sin que el usuario deba repetir la acción.<br><br><strong>Escenario 3: Recordatorios de registro</strong><br>Dado que el paciente ha autorizado las notificaciones del dispositivo<br>Cuando el paciente configura un recordatorio de registro<br>Entonces el sistema programa el aviso en el dispositivo sin enviar información a servicios externos.<br><br><strong>Escenario 4: Recordatorios sin autorización</strong><br>Dado que el paciente no ha autorizado las notificaciones del dispositivo<br>Cuando el paciente intenta activar un recordatorio<br>Entonces el sistema solicita la autorización y, si no se concede, no programa el aviso.</td>
+  </tr>
+</table>
 <br>
 
 ### EP09 — Offline y Sincronización
 
-<br>***US31 — Registro y sincronización sin conexión***
+<p class="caption"><strong>Tabla 61</strong><br><em>Historia de usuario US31: Registro y sincronización sin conexión</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
