@@ -1,0 +1,36 @@
+@startuml Healthify - Intake and Body Response - Infrastructure (part 2 of 2)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Intake and Body Response - Infrastructure layer (part 2 of 2)
+
+package "Healthify.Platform.IntakeBodyResponse.Infrastructure" {
+
+  package "Persistence.EFC.Repositories" {
+    class MealPhotoAnalysisRepository {
+      +FindByIdAsync(analysisId: Guid, ct): Task<MealPhotoAnalysis?>
+      +DeleteByPatientIdAsync(patientId: int, ct): Task<int>
+      +DeleteExpiredAsync(now: DateTimeOffset, ct): Task<int>
+    }
+  }
+  package "Protocols" {
+    class ConfiguredSelfWeighInProtocolProvider {
+      +Current: SelfWeighInProtocol
+    }
+  }
+  package "Scheduling" {
+    class MealPhotoAnalysisPurgeHostedService {
+      +DefaultIntervalMinutes: int
+      +RunCycleAsync(ct): Task
+    }
+  }
+}
+
+ConfiguredSelfWeighInProtocolProvider -[hidden]down-> MealPhotoAnalysisPurgeHostedService
+MealPhotoAnalysisRepository -[hidden]down-> ConfiguredSelfWeighInProtocolProvider
+
+@enduml
