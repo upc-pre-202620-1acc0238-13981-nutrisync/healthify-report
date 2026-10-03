@@ -85,9 +85,84 @@ El espaciado sigue una escala de **múltiplos de 4 y 8 dp**: 0, 4, 8, 12, 16, 24
 
 ### 3.1.2. Information Architecture
 
+La arquitectura de información de Healthify atiende dos experiencias distintas: el **landing page**, un sitio estático dirigido a nutricionistas que evalúan la herramienta y a pacientes invitados, y la **aplicación móvil**, usada a diario por dos roles, **paciente** y **nutricionista**, cada uno con su propio conjunto de pantallas.
+
 #### 3.1.2.1. Organization Systems
 
+**Landing Page**
+
+Se aplica una **organización jerárquica** (visual hierarchy). La página principal ordena sus secciones de mayor a menor peso en la decisión del visitante:
+
+1. Héroe (carrusel con propuesta de valor, video del producto y del equipo)
+2. Problema que resuelve Healthify
+3. Para el paciente
+4. Para el nutricionista
+5. Cómo funciona
+6. Preguntas frecuentes
+7. Pie de página (navegación, legal, redes y contacto)
+
+La secuencia sigue un recorrido de persuasión: se plantea el problema, se muestra la solución para cada rol y se resuelven las dudas antes de invitar a la acción. Dentro de «Cómo funciona» se usa una **organización secuencial** (paso a paso) en cuatro pasos: *Medición de hoy*, *Diagnóstico con apoyo de IA*, *Metas calculadas* e *Indicaciones y publicación*. Las páginas secundarias (Nosotros, Contacto y Términos y condiciones) se organizan **por tópicos**: historia, misión y visión, valores y equipo en Nosotros; datos de contacto y formulario en Contacto; y una cláusula por tema en Términos.
+
+La categorización del contenido combina dos esquemas: **según audiencia** (secciones «Paciente» y «Nutricionista», con el mismo patrón de presentación para comparar) y **por tópicos** en las preguntas frecuentes, filtradas por *Todas*, *Pacientes*, *Nutricionistas*, *Privacidad* e *IA*.
+
+**Aplicación móvil**
+
+Los módulos de la aplicación se agrupan **según audiencia** (paciente o nutricionista) y, dentro de cada rol, **por tópicos** mediante la barra de navegación inferior. En cada pantalla se combinan tres sistemas:
+
+<p class="caption"><strong>Tabla 175</strong><br><em>Sistemas de organización de la información</em></p>
+
+| Sistema | Dónde se aplica |
+|---|---|
+| **Jerárquico** | *Inicio* del paciente: primero la meta del día (calorías y macros) y el botón naranja «Registrar comida», y debajo «Cómo voy hoy», «Próxima consulta» y avisos. En la ficha del paciente (nutricionista): identidad y estado del plan, próxima consulta, indicadores desde la última consulta y, al final, las acciones de gestión. |
+| **Secuencial** | Registro de cuenta (elegir rol, completar datos); vinculación (escanear invitación, consentimiento y alcance); registro por foto (cámara, previsualización, estimación propuesta, confirmar o ajustar); y la **consulta guiada** del nutricionista en cuatro pasos (medición, diagnóstico con IA, metas, indicaciones y publicación). |
+| **Matricial** | Las tarjetas de indicadores en pares, como «Peso (autopesaje)» y «Cumplimiento» en la ficha del paciente, y la cuadrícula de proteína, carbohidratos y grasa en Inicio, que permiten comparar métricas de un vistazo. |
+
+Para ordenar listas se usan dos criterios de categorización: **cronológico** (el diario por día, las próximas consultas en la agenda, la bandeja por fecha de recepción y las versiones del plan de la más reciente a la más antigua) y **por estado** (ítems de revisión abiertos o resueltos, vínculo vigente o dado de alta, consulta próxima o completada). La cartera de pacientes se presenta por vínculo, con la fecha desde la que el paciente está vinculado.
+
 #### 3.1.2.2. Labelling Systems
+
+Las etiquetas de Healthify son **breves (una o dos palabras), en español neutro y con el vocabulario del usuario**: se evitan términos técnicos como *care link* o *review item*, y se dice «Vinculación» y «Señal». Cada etiqueta de navegación se acompaña de un ícono del sistema para reconocerla sin leer. El landing page admite además la versión en inglés (ES / EN).
+
+**Landing Page**
+
+<p class="caption"><strong>Tabla 176</strong><br><em>Sistema de etiquetado: Landing Page</em></p>
+
+| Etiqueta | Contenido que representa |
+|---|---|
+| Paciente | Funcionalidades para el paciente: registro por foto, tendencia, plan y consultas |
+| Nutricionista | Funcionalidades para el profesional: señales, consulta guiada y publicación del plan |
+| Cómo funciona | Los cuatro pasos de la consulta guiada y el seguimiento entre citas |
+| Nosotros | Historia, misión, visión, valores y equipo |
+| Contacto | Correo, teléfono y formulario para escribir al equipo |
+| Iniciar sesión | Acceso a la aplicación |
+| Soy nutricionista | Acción principal: solicitar la prueba de la herramienta |
+| ES / EN | Selector de idioma |
+
+**Aplicación del paciente**
+
+<p class="caption"><strong>Tabla 177</strong><br><em>Sistema de etiquetado: Aplicación del paciente</em></p>
+
+| Etiqueta | Contenido que representa |
+|---|---|
+| Inicio | Meta del día, registro rápido, «Cómo voy hoy», próxima consulta y avisos |
+| Diario | Comidas registradas por día, ideas para hoy y pendientes de enviar |
+| Progreso | Tendencia de peso, autopesaje y «Tu semana» (resumen con IA) |
+| Expediente | Mis números, mi plan y mis consultas |
+| Ajustes | Cuenta, idioma, funciones con IA, recordatorios, consentimiento y cierre de sesión |
+
+**Aplicación del nutricionista**
+
+<p class="caption"><strong>Tabla 178</strong><br><em>Sistema de etiquetado: Aplicación del nutricionista</em></p>
+
+| Etiqueta | Contenido que representa |
+|---|---|
+| Pacientes | Cartera de pacientes vinculados e invitación de nuevos pacientes |
+| Bandeja | Señales por revisar (por ejemplo «desviación sostenida» o «señal de consistencia») |
+| Agenda | Próximas consultas, agendar, reprogramar y cancelar |
+| Ajustes | Cuenta, idioma y cierre de sesión |
+| Resumen · Seguimiento · Expediente · Plan | Pestañas de la ficha de cada paciente |
+
+Los títulos dentro de cada pantalla mantienen la misma concisión («Mis pacientes», «Bandeja», «Registrar a mano», «Buscar alimento») y los botones comienzan con un verbo («Invitar paciente», «Iniciar consulta», «Registrar comida»). Las imágenes e íconos llevan texto alternativo para lectores de pantalla.
 
 #### 3.1.2.3. SEO Tags and Meta Tags
 
