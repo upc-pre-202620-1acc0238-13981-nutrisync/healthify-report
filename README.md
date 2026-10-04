@@ -38,11 +38,14 @@
 <br>
 
 <p align="center"><strong>Período 202620</strong></p>
-<p align="center"><strong>Septiembre 2026</strong></p>
+<p align="center"><strong>Octubre 2026</strong></p>
 
 <div style="page-break-after: always"></div>
 
 ## REGISTRO DE VERSIONES DEL INFORME
+
+<p class="caption"><strong>Tabla 1</strong><br><em>Registro de versiones del informe</em></p>
+
 | Versión | Fecha | Autor | Descripción de modificación |
 | :---: | :---: | :---: | :---: |
 | 0.1.0 | 28/08/2026 | Angel Villarreal | Commit inicial del repositorio (`main`) |
