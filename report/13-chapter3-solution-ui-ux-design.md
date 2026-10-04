@@ -166,6 +166,65 @@ Los títulos dentro de cada pantalla mantienen la misma concisión («Mis pacien
 
 #### 3.1.2.3. SEO Tags and Meta Tags
 
+A continuación se detallan los valores asignados a las páginas del landing page, tomados del código del sitio. Todas las páginas incluyen `charset="UTF-8"`, `viewport`, `robots: index, follow`, `theme-color` y etiquetas Open Graph y Twitter Card para compartir el enlace, además del atributo `lang="es-419"` con `es_419` como idioma principal y `en_US` como alternativo.
+
+**Landing Page · Inicio (`index.html`)**
+
+<p class="caption"><strong>Tabla 179</strong><br><em>Etiquetas SEO y meta tags: Landing Page · Inicio (index.html)</em></p>
+
+| Tag | Valor |
+|---|---|
+| Title | Healthify: lo que pasa entre consultas, ahora sí se ve |
+| Description | Healthify es la herramienta clínica que conecta al nutricionista con su paciente entre consultas: registro por foto, tendencias en lugar de cifras sueltas y decisiones siempre en manos del profesional. |
+| Keywords | Healthify, nutricionista, paciente, seguimiento nutricional, registro de comidas, registro por foto, autopesaje, expediente clínico, nutrición |
+| Author | Healthify Team |
+
+**Landing Page · Nosotros (`about-us.html`)**
+
+<p class="caption"><strong>Tabla 180</strong><br><em>Etiquetas SEO y meta tags: Landing Page · Nosotros (about-us.html)</em></p>
+
+| Tag | Valor |
+|---|---|
+| Title | Nosotros \| Healthify |
+| Description | Conoce Healthify: nuestra historia, misión, visión, los principios que nos guían y el equipo detrás de la herramienta de seguimiento nutricional entre consultas. |
+| Keywords | Healthify, nutricionista, paciente, seguimiento nutricional, registro de comidas, registro por foto, autopesaje, expediente clínico, nutrición |
+| Author | Healthify Team |
+
+**Landing Page · Contacto (`contact.html`)**
+
+<p class="caption"><strong>Tabla 181</strong><br><em>Etiquetas SEO y meta tags: Landing Page · Contacto (contact.html)</em></p>
+
+| Tag | Valor |
+|---|---|
+| Title | Contacto \| Healthify |
+| Description | ¿Eres nutricionista y quieres probar Healthify con tus pacientes? Escríbenos y te respondemos en menos de 48 horas hábiles. |
+| Keywords | Healthify, nutricionista, paciente, seguimiento nutricional, registro de comidas, registro por foto, autopesaje, expediente clínico, nutrición |
+| Author | Healthify Team |
+
+**Landing Page · Términos y condiciones (`terms.html`)**
+
+<p class="caption"><strong>Tabla 182</strong><br><em>Etiquetas SEO y meta tags: Landing Page · Términos y condiciones (terms.html)</em></p>
+
+| Tag | Valor |
+|---|---|
+| Title | Términos y condiciones \| Healthify |
+| Description | Términos y condiciones de uso de Healthify: consentimiento, datos compartidos, privacidad y derechos del paciente y del nutricionista. |
+| Keywords | Healthify, nutricionista, paciente, seguimiento nutricional, registro de comidas, registro por foto, autopesaje, expediente clínico, nutrición |
+| Author | Healthify Team |
+
+**Aplicación móvil (Android) · ASO (App Store Optimization)**
+
+Healthify es una aplicación nativa de Android (`pe.edu.upc.healthify`) que, al momento de este informe, aún no se publica en Google Play. Los siguientes elementos ASO quedan definidos para la ficha de publicación:
+
+<p class="caption"><strong>Tabla 183</strong><br><em>Etiquetas de la aplicación móvil</em></p>
+
+| Elemento | Valor |
+|---|---|
+| App Title | Healthify: seguimiento nutricional |
+| App Subtitle (descripción breve) | Tu nutrición y tu nutricionista, en un solo lugar. |
+| App Keywords | seguimiento nutricional, nutricionista, registro de comidas, registro por foto, autopesaje, metas nutricionales, plan alimenticio, consulta nutricional, calorías |
+| App Description | Healthify conecta a pacientes y nutricionistas entre consultas. Si eres paciente, registra tus comidas con una foto o a mano, anota tu peso y mira tu tendencia sin juicios ni culpa. Si eres nutricionista, recibe señales cuando algo no cuadra, conduce la consulta guiada con apoyo de IA y publica el plan para tu paciente. La IA sugiere; tú decides. |
+
 #### 3.1.2.4. Searching Systems
 
 #### 3.1.2.5. Navigation Systems
