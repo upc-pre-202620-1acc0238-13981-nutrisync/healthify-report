@@ -235,6 +235,61 @@ Guías: *Kotlin Coding Conventions* y *Android Kotlin Style Guide*.
 
 ### 4.1.4. Software Deployment Configuration
 
+Cada producto digital tiene su propio proceso de publicación a partir de su repositorio.
+
+**Landing Page**
+
+El landing page es un sitio estático (HTML, CSS y JavaScript) que se publica con **GitHub Pages** desde la rama `main` del repositorio `healthify-website`, con el dominio propio `landing.healthify.lat` definido en un archivo `CNAME`.
+
+1. El cambio se integra en `develop` mediante un pull request.
+2. Se integra `develop` en `main` con otro pull request y se crea el tag de la versión (`v1.0.0`, `v1.0.1`).
+3. GitHub Pages publica el contenido de `main` en el dominio configurado.
+4. Para revisarlo en local: `npx serve -l 4173 .`
+
+**Web Services (backend)**
+
+El backend se empaqueta en una imagen de Docker de dos etapas (`Dockerfile`): la primera usa `dotnet/sdk:10.0` para restaurar y publicar en modo *Release*, y la segunda copia el resultado a `dotnet/aspnet:10.0` y expone el puerto 8080. El archivo `docker-compose.yml` levanta dos contenedores: `healthify-api` y `healthify-mysql` (MySQL 8.4 con volumen persistente y comprobación de salud). El API espera a que la base de datos esté disponible y aplica las migraciones al iniciar.
+
+1. En la máquina virtual de Oracle Cloud se clona el repositorio en la rama `main`.
+2. Se definen las variables de entorno, sin guardarlas en el repositorio:
+
+   <p class="caption"><strong>Tabla 229</strong><br><em>Variables de entorno de despliegue</em></p>
+
+   | Variable | Significado |
+   |---|---|
+   | `JWT_SECRET` | Clave de firma de los tokens, de al menos 32 caracteres (obligatoria; sin ella el API no inicia). |
+   | `DATABASE_PASSWORD`, `DATABASE_SCHEMA`, `DATABASE_USER`, `DATABASE_HOST` | Credenciales y esquema de MySQL. |
+   | `USDA_API_KEY` | Clave de USDA FoodData Central; vacía desactiva ese proveedor. |
+   | `Ai__Enabled`, `Ai__Gemini__ApiKey` | Activan las funciones con IA, desactivadas por defecto. |
+
+3. Se ejecuta `docker compose up --build -d`.
+4. El API queda disponible en `https://platform.healthify.lat` y su documentación en `/swagger`.
+
+Además, el flujo de GitHub Actions `Release` (`.github/workflows/release.yml`) se ejecuta con cada push a `main`: restaura y compila la solución en *Release*, lee `<Version>` de `Healthify.Platform.csproj` y crea el release `v<versión>` con las notas generadas automáticamente.
+
+**Mobile Application (Android)**
+
+La aplicación se compila con Gradle. La dirección del backend (`BASE_URL`) se fija en cada tipo de compilación a `https://platform.healthify.lat/api/v1/`.
+
+<p class="caption"><strong>Tabla 230</strong><br><em>Pasos de compilación de la aplicación móvil</em></p>
+
+| Paso | Comando |
+|---|---|
+| Pruebas de JVM | `./gradlew :app:testDebugUnitTest` |
+| Análisis estático | `./gradlew :app:lintDebug` |
+| APK de depuración | `./gradlew :app:assembleDebug` |
+| APK de publicación | `./gradlew :app:assembleRelease` |
+
+El APK resultante (`app/build/outputs/apk/`) se instala en los dispositivos Android con versión 7.0 (API 24) o superior. Los datos de sesión se guardan cifrados en el dispositivo y la aplicación funciona sin conexión para registrar comidas y autopesajes, que se sincronizan al recuperar la red.
+
+**Deployment Diagram (C4 Model)**
+
+El diagrama de despliegue muestra los nodos donde se ejecuta cada artefacto: el dispositivo móvil del usuario, GitHub Pages para el landing page, y la máquina virtual de Oracle Cloud con Docker Engine, que aloja los contenedores del API (ASP.NET Core 10) y de la base de datos (MySQL 8.4). El dispositivo móvil consume el API por JSON sobre HTTPS, y el API se conecta a la base de datos por la red interna de Docker.
+
+<p class="caption"><strong>Figura 143</strong><br><em>Diagrama de despliegue de Healthify</em></p>
+
+![Deployment Diagram](../assets/img/artifacts/healthify-DeploymentDiagram.png)
+
 ## 4.2. Landing Page & Mobile Application Implementation
 
 ### 4.2.1. Sprint 1
