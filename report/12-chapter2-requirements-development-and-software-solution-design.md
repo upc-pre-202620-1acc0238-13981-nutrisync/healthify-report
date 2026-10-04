@@ -1830,7 +1830,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 
 ### EP10 — Landing Page
 
-<br>***US32 — Visualización de la propuesta de valor de Healthify***
+<p class="caption"><strong>Tabla 62</strong><br><em>Historia de usuario US32: Visualización de la propuesta de valor de Healthify</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1862,7 +1863,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US33 — Consulta de las principales funcionalidades de Healthify***
+<p class="caption"><strong>Tabla 63</strong><br><em>Historia de usuario US33: Consulta de las principales funcionalidades de Healthify</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1890,11 +1892,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Funcionalidades disponibles</strong><br>Dado que el visitante consulta la información del producto<br>Cuando el visitante solicita conocer sus principales capacidades<br>Entonces el sistema proporciona una descripción de las funcionalidades más relevantes de Healthify.<br><br><strong>Escenario 2: Funcionalidades de ambos segmentos</strong><br>Dado que el visitante consulta información de Healthify dirigida a pacientes y nutricionistas<br>Cuando el visitante consulta las capacidades de la solución<br>Entonces el sistema proporciona información que permite distinguir el valor ofrecido a cada segmento.</td>
+    <td colspan="8"><strong>Escenario 1: Funcionalidades disponibles</strong><br>Dado que el visitante consulta la información del producto<br>Cuando el visitante solicita conocer sus principales capacidades<br>Entonces el sistema proporciona una descripción de las funcionalidades más relevantes de Healthify.<br><br><strong>Escenario 2: Funcionalidades de ambos segmentos</strong><br>Dado que el visitante consulta información de Healthify dirigida a pacientes y nutricionistas<br>Cuando el visitante consulta las capacidades de la solución<br>Entonces el sistema proporciona información que permite distinguir el valor ofrecido a cada segmento.<br><br><strong>Escenario 3: Funcionamiento del proceso</strong><br>Dado que el visitante consulta la información del producto<br>Cuando el visitante solicita conocer cómo funciona Healthify<br>Entonces el sistema describe la consulta guiada en cuatro pasos y el seguimiento que continúa entre consultas.</td>
   </tr>
 </table>
 
-<br>***US34 — Conocimiento de la startup, misión y visión***
+<p class="caption"><strong>Tabla 64</strong><br><em>Historia de usuario US34: Conocimiento de la startup, misión y visión</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1926,7 +1929,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US35 — Cambio de idioma del Landing Page***
+<p class="caption"><strong>Tabla 65</strong><br><em>Historia de usuario US35: Cambio de idioma del Landing Page</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1958,7 +1962,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US36 — Acceso a la descarga de Healthify desde el Landing Page***
+<p class="caption"><strong>Tabla 66</strong><br><em>Historia de usuario US36: Acceso al inicio de uso de Healthify desde el Landing Page</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1974,23 +1979,24 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
   <tr>
     <th colspan="2">Title</th>
-    <td colspan="6">Acceso a la descarga de Healthify desde el Landing Page</td>
+    <td colspan="6">Acceso al inicio de uso de Healthify desde el Landing Page</td>
   </tr>
   <tr>
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como visitante, deseo acceder desde el Landing Page al medio de distribución de Healthify, para obtener la aplicación móvil cuando decida utilizar la solución.</td>
+    <td colspan="8">Como visitante, deseo identificar desde el Landing Page cómo comenzar a usar Healthify según mi rol, para acceder a la solución cuando decida utilizarla.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Acceso al medio de distribución</strong><br>Dado que el visitante consulta el Landing Page<br>Cuando el visitante selecciona la opción para obtener Healthify<br>Entonces el sistema lo dirige al medio de distribución disponible de la aplicación móvil.<br><br><strong>Escenario 2: Aplicación no disponible para distribución</strong><br>Dado que el visitante desea obtener la aplicación móvil Healthify<br>Cuando el visitante selecciona la opción correspondiente y no existe una versión disponible para distribución<br>Entonces el sistema informa que la aplicación aún no se encuentra disponible para su descarga.</td>
+    <td colspan="8"><strong>Escenario 1: Nutricionista interesado</strong><br>Dado que el visitante consulta el Landing Page y es nutricionista<br>Cuando el visitante selecciona la opción dirigida a nutricionistas<br>Entonces el sistema lo dirige al formulario de contacto con el rol de nutricionista preseleccionado.<br><br><strong>Escenario 2: Paciente invitado</strong><br>Dado que el visitante consulta el Landing Page y fue invitado por su nutricionista<br>Cuando el visitante selecciona la opción dirigida a pacientes invitados<br>Entonces el sistema le presenta la información dirigida al paciente sobre cómo registrar su alimentación y vincularse con su invitación.</td>
   </tr>
 </table>
 
-<br>***US37 — Envío de consulta mediante formulario de contacto***
+<p class="caption"><strong>Tabla 67</strong><br><em>Historia de usuario US37: Envío de consulta mediante formulario de contacto</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2022,7 +2028,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US38 — Consulta de términos y políticas de Healthify***
+<p class="caption"><strong>Tabla 68</strong><br><em>Historia de usuario US38: Consulta de términos y políticas de Healthify</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2051,6 +2058,108 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
   <tr>
     <td colspan="8"><strong>Escenario 1: Documentos vigentes disponibles</strong><br>Dado que el visitante solicita consultar los términos o políticas<br>Cuando el visitante accede a la información legal<br>Entonces el sistema proporciona la versión vigente de los documentos disponibles.<br><br><strong>Escenario 2: Correspondencia con el idioma activo</strong><br>Dado que el visitante ha seleccionado un idioma para el que existe una versión del documento<br>Cuando el visitante solicita consultar el documento<br>Entonces el sistema proporciona el documento correspondiente a dicho idioma.</td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 69</strong><br><em>Historia de usuario US45: Consulta de preguntas frecuentes</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">US45</td>
+    <td colspan="2">Visitante</td>
+    <td colspan="2">Media</td>
+    <td colspan="2">EP10</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Consulta de preguntas frecuentes</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como visitante, deseo consultar las preguntas frecuentes de Healthify por tema, para resolver mis dudas sobre el uso, la privacidad y la IA antes de contactar al equipo.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Preguntas disponibles</strong><br>Dado que el visitante consulta el Landing Page<br>Cuando el visitante accede a las preguntas frecuentes<br>Entonces el sistema presenta las preguntas con su respuesta, que el visitante puede abrir o cerrar.<br><br><strong>Escenario 2: Filtro por tema</strong><br>Dado que el visitante consulta las preguntas frecuentes<br>Cuando el visitante selecciona un tema, como pacientes, nutricionistas, privacidad o IA<br>Entonces el sistema muestra solo las preguntas del tema seleccionado.<br><br><strong>Escenario 3: Duda no resuelta</strong><br>Dado que el visitante no encuentra la respuesta que busca<br>Cuando el visitante selecciona la opción para escribir al equipo<br>Entonces el sistema lo dirige al formulario de contacto.</td>
+  </tr>
+</table>
+<br>
+
+### EP11 — Asistencia con IA
+
+<p class="caption"><strong>Tabla 70</strong><br><em>Historia de usuario US41: Control de las funciones con IA</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">US41</td>
+    <td colspan="2">Paciente</td>
+    <td colspan="2">Alta</td>
+    <td colspan="2">EP11</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Control de las funciones con IA</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como paciente, deseo decidir si autorizo el uso de IA sobre mis datos y qué funciones con IA utilizo, para mantener el control sobre cómo se procesa mi información.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Consentimiento de IA otorgado</strong><br>Dado que el paciente tiene un vínculo activo con su nutricionista<br>Cuando el paciente otorga su consentimiento para las funciones con IA, al consentir el vínculo o después<br>Entonces el sistema habilita las funciones con IA y activa sus preferencias, que el paciente puede modificar una por una.<br><br><strong>Escenario 2: Activación sin consentimiento</strong><br>Dado que el paciente no ha otorgado el consentimiento para las funciones con IA<br>Cuando el paciente intenta activar una función con IA<br>Entonces el sistema rechaza la activación e informa que requiere su consentimiento.<br><br><strong>Escenario 3: Desactivación de una función</strong><br>Dado que el paciente tiene una función con IA activa<br>Cuando el paciente la desactiva<br>Entonces el sistema deja de generar ese contenido y elimina el que ya se había generado.<br><br><strong>Escenario 4: Retiro del consentimiento o alta</strong><br>Dado que el paciente retira su consentimiento, se revoca el vínculo o el nutricionista registra el alta<br>Cuando el sistema cierra el acceso del vínculo<br>Entonces el sistema desactiva las funciones con IA de ese vínculo y elimina el contenido generado a partir de los datos del paciente.</td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 71</strong><br><em>Historia de usuario US42: Resumen semanal, ideas de comidas y preguntas sugeridas con IA</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">US42</td>
+    <td colspan="2">Paciente</td>
+    <td colspan="2">Media</td>
+    <td colspan="2">EP11</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Resumen semanal, ideas de comidas y preguntas sugeridas con IA</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como paciente, deseo recibir un resumen de mi semana, ideas de comidas acordes a mi plan y preguntas sugeridas para mi consulta, para entender mi progreso y decidir qué comer sin presión.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Resumen semanal disponible</strong><br>Dado que el paciente tiene el consentimiento de IA y registros suficientes en la semana terminada<br>Cuando el paciente consulta su resumen semanal<br>Entonces el sistema presenta un resumen con un tono de invitación, cuyas cifras provienen de sus registros y no de la IA, sin diagnósticos ni juicios.<br><br><strong>Escenario 2: Datos insuficientes</strong><br>Dado que el paciente tiene menos de tres días registrados en la semana<br>Cuando el paciente consulta su resumen semanal<br>Entonces el sistema informa que aún no existe información suficiente para generarlo.<br><br><strong>Escenario 3: Ideas de comidas acordes al plan</strong><br>Dado que el paciente tiene metas activas y energía restante en el día<br>Cuando el paciente solicita ideas de comidas<br>Entonces el sistema propone ideas que caben en lo restante del día y respetan sus restricciones.<br><br><strong>Escenario 4: Registro desde una idea</strong><br>Dado que el paciente tiene ideas de comidas disponibles<br>Cuando el paciente registra una de ellas<br>Entonces el sistema crea las entradas manuales de sus ingredientes en una sola operación y evalúa el día una vez.<br><br><strong>Escenario 5: Preguntas sugeridas para la consulta</strong><br>Dado que el paciente tiene una consulta agendada y registros en el periodo<br>Cuando el paciente solicita preguntas sugeridas<br>Entonces el sistema propone preguntas con tono de invitación que el paciente puede llevar a su respuesta previa.<br><br><strong>Escenario 6: Función no disponible</strong><br>Dado que la IA no está habilitada o el paciente no ha dado su consentimiento<br>Cuando el paciente intenta usar una función con IA<br>Entonces el sistema informa que la función no está disponible sin afectar el resto de sus registros.</td>
   </tr>
 </table>
 <br>
