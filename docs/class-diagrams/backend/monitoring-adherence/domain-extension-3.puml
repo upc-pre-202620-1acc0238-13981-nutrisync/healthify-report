@@ -1,0 +1,89 @@
+@startuml Healthify - Monitoring and Adherence - Domain (part 3 of 4)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Monitoring and Adherence - Domain layer (part 3 of 4)
+
+package "Healthify.Platform.MonitoringAdherence.Domain" {
+
+  package "Model.ValueObjects" {
+    class MonitoringPeriodFacts <<record>> {
+      +MonitoringPeriodFacts(from: DateOnly, to: DateOnly, metDays: int, exceededDays: int, shortDays: int, unloggedDays: int, offPlanEntryCount: int, offPlanDays: int, mealSlotDays: MealSlotDays, shortWeekdays: IReadOnlyList<string>, dominantMissingSlotOnShortDays: string?, weightChangeKg: decimal?, weightSlopeKgPerWeek: decimal?, selfWeighInCount: int, days: IReadOnlyList<PeriodDayFact>)
+      +From: DateOnly
+      +To: DateOnly
+      +TotalDays: int
+      +MetDays: int
+      +ExceededDays: int
+      +ShortDays: int
+      +UnloggedDays: int
+      +LoggedDays: int
+      +OffPlanEntryCount: int
+      +OffPlanDays: int
+      +MealSlotDays: MealSlotDays
+    }
+    class PatientQuestion <<record>> {
+      +MinimumLength: int
+      +MaximumLength: int
+      +PatientQuestion(text: string, origin: string?, aiGenerationId: long?, language: string?)
+      +Text: string
+      +Origin: string
+      +AiGenerationId: long?
+      +Language: string?
+    }
+    class PeriodDayFact <<record>> {
+      -Date: DateOnly
+      -Weekday: string
+      -Outcome: string
+      -EnergyKcal: decimal?
+      -TargetEnergyKcal: decimal?
+      -OffPlanEntryCount: int
+      -Slots: IReadOnlyList<string>
+    }
+    class PlanFeeling <<record>> {
+      +Good: string
+      +Fair: string
+      +Hard: string
+      +MaximumLength: int
+      +PlanFeeling(value: string?)
+      +Value: string
+      +ToString(): string
+    }
+    class PreVisitCheckInId <<record>> {
+      +PreVisitCheckInId(value: int)
+      +Value: int
+      +{static} FromRaw(value: int): PreVisitCheckInId
+      +ToString(): string
+    }
+    class PreparationInstruction <<record>> {
+      +Fasting: string
+      +LightClothing: string
+      +BringBloodTests: string
+      +EmptyBladder: string
+      +PreparationInstruction(value: string)
+      +Value: string
+      +{static} ListOf(values: IEnumerable<string>?): IReadOnlyList<PreparationInstruction>
+      +ToString(): string
+    }
+    class QuestionOrigin <<record>> {
+      +Patient: string
+      +AiSuggested: string
+      +QuestionOrigin(value: string?)
+      +Value: string
+      +IsAiSuggested: bool
+      +ToString(): string
+    }
+    class WeeklySummaryId <<record>> {
+      +WeeklySummaryId(value: int)
+      +Value: int
+      +{static} FromRaw(value: int): WeeklySummaryId
+      +ToString(): string
+    }
+  }
+}
+
+
+@enduml

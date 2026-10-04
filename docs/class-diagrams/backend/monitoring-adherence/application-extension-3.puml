@@ -1,0 +1,59 @@
+@startuml Healthify - Monitoring and Adherence - Application (part 3 of 5)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Monitoring and Adherence - Application layer (part 3 of 5)
+
+package "Healthify.Platform.MonitoringAdherence.Application" {
+
+  package "Internal" {
+    class SuggestedQuestion <<record>> {
+      -Id: string
+      -Text: string
+    }
+    class SuggestedQuestionsOutput <<record>> {
+      -Questions: IReadOnlyList<string>
+    }
+    class SuggestedQuestionsOutputValidator {
+      +MinimumQuestions: int
+      +MaximumQuestions: int
+      +MinimumLength: int
+      +MaximumLength: int
+      +Validate(output: SuggestedQuestionsOutput): IReadOnlyList<string>
+    }
+    class SuggestedQuestionsView <<record>> {
+      -Questions: IReadOnlyList<SuggestedQuestion>
+      -AiGenerationId: long
+      -BasedOnFrom: DateOnly
+      -BasedOnTo: DateOnly
+      -GeneratedAt: DateTimeOffset
+      -Language: string?
+    }
+    class WeeklySummaryOutput <<record>> {
+      -Headline: string
+      -WentWell: IReadOnlyList<string>
+      -WatchOut: IReadOnlyList<string>
+    }
+    class WeeklySummaryOutputValidator {
+      +Validate(output: WeeklySummaryOutput): IReadOnlyList<string>
+    }
+  }
+  package "Internal.CommandServices" {
+    class MonitoringAiContentCommandService {
+      +Handle(command: PurgeMonitoringAiContentCommand, ct): Task<Result<int, MonitoringError>>
+    }
+    class MonitoringSummaryCommandService {
+      +DefaultRangeDays: int
+      +Handle(command: SummarizeMonitoringCommand, ct): Task<Result<MonitoringSummaryView, MonitoringAiFailure>>
+      +{static} InputOf(facts: MonitoringPeriodFacts, consistencyState: string?): object
+    }
+  }
+}
+
+SuggestedQuestion -[hidden]down-> MonitoringAiContentCommandService
+
+@enduml

@@ -1,0 +1,76 @@
+@startuml Healthify - Monitoring and Adherence - Infrastructure (part 1 of 2)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Monitoring and Adherence - Infrastructure layer (part 1 of 2)
+
+package "Healthify.Platform.MonitoringAdherence.Infrastructure" {
+
+
+  package "Ai.Caching" {
+    class InMemoryMonitoringAiCache {
+      +SweepThreshold: int
+      +TryGet(feature: AiFeature, patientId: int, key: string, value: out T?): bool
+      +Set(feature: AiFeature, patientId: int, key: string, value: T, lifetime: TimeSpan): void
+      +Evict(patientId: int, feature: AiFeature?): int
+    }
+  }
+  package "Ai.Lexicon" {
+    class EmbeddedAiLanguageLexicon {
+      +ResourceName: string
+      +{static} Instance: EmbeddedAiLanguageLexicon
+      +AccusatoryTerms: IReadOnlyCollection<string>
+      +DiagnosisTerms: IReadOnlyCollection<string>
+      +ConsistencyTerms: IReadOnlyCollection<string>
+    }
+  }
+  package "Clock" {
+    class ClinicalTimeZoneFollowUpCalendar {
+      +DefaultTimeZoneId: string
+      +ClinicalTimeZoneFollowUpCalendar(configuration: IConfiguration, logger: ILogger<ClinicalTimeZoneFollowUpCalendar>)
+      +ClinicalTimeZoneFollowUpCalendar(timeZone: TimeZoneInfo)
+    }
+  }
+  package "Persistence.EFC.Configuration" {
+    class PreVisitCheckInEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<PreVisitCheckIn>): void
+    }
+    class WeeklySummaryEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<WeeklySummary>): void
+    }
+  }
+  package "Persistence.EFC.Repositories" {
+    class PreVisitCheckInRepository {
+      +FindByIdAsync(id: int, ct): Task<PreVisitCheckIn?>
+      +FindByFollowUpIdAsync(followUpId: int, ct): Task<PreVisitCheckIn?>
+      +ListByFollowUpIdsAsync(followUpIds: IReadOnlyCollection<int>, ct): Task<IEnumerable<PreVisitCheckIn>>
+    }
+    class WeeklySummaryRepository {
+      +FindByIdAsync(id: int, ct): Task<WeeklySummary?>
+      +FindLatestByPatientIdAsync(patientId: int, ct): Task<WeeklySummary?>
+      +FindByPatientIdAndWeekStartAsync(patientId: int, weekStart: DateOnly, ct): Task<WeeklySummary?>
+      +ListByPatientIdAsync(patientId: int, ct): Task<IEnumerable<WeeklySummary>>
+      +ListGeneratedBeforeAsync(cut: DateTimeOffset, batchSize: int, ct): Task<IEnumerable<WeeklySummary>>
+    }
+  }
+  package "Scheduling" {
+    class CronSchedule {
+      +Expression: string
+      +{static} Parse(expression: string): CronSchedule
+      +NextAfter(after: DateTimeOffset, timeZone: TimeZoneInfo): DateTimeOffset?
+      +PreviousAtOrBefore(now: DateTimeOffset, window: TimeSpan, timeZone: TimeZoneInfo): DateTimeOffset?
+    }
+  }
+}
+
+ClinicalTimeZoneFollowUpCalendar -[hidden]down-> PreVisitCheckInEntityTypeConfiguration
+EmbeddedAiLanguageLexicon -[hidden]down-> ClinicalTimeZoneFollowUpCalendar
+InMemoryMonitoringAiCache -[hidden]down-> EmbeddedAiLanguageLexicon
+PreVisitCheckInEntityTypeConfiguration -[hidden]down-> PreVisitCheckInRepository
+PreVisitCheckInRepository -[hidden]down-> CronSchedule
+
+@enduml
