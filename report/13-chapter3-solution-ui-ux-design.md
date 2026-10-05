@@ -227,7 +227,88 @@ Healthify es una aplicación nativa de Android (`pe.edu.upc.healthify`) que, al 
 
 #### 3.1.2.4. Searching Systems
 
+En Healthify el volumen de información por usuario es acotado, por lo que los sistemas de búsqueda se concentran donde el usuario más lo necesita, que es la búsqueda de alimentos al registrar una comida. En el resto de módulos se prefiere **filtrar por periodo, estado o fecha** en lugar de ofrecer un buscador de texto libre.
+
+**Búsqueda de alimentos (paciente y nutricionista)**
+
+En «Registrar a mano» el paciente cuenta con un campo «Buscar alimento» con el ejemplo «Ej. arroz, pollo, quinua…» y la ayuda «Busca primero en el catálogo guardado en tu teléfono». La búsqueda funciona así:
+
+- **Texto libre por nombre**: los resultados se actualizan a medida que se escribe y se limitan a 25 como máximo.
+- **Catálogo local primero**: se consulta el catálogo guardado en el teléfono, lo que permite buscar sin conexión, y luego el catálogo de referencia del servidor.
+- **Sin resultados**: se ofrece buscar de nuevo o registrar el alimento manualmente.
+- **Foto del plato**: es un camino alternativo a la búsqueda. La estimación propuesta puede corregirse con «¿No es este plato?», que abre la búsqueda.
+
+Cada resultado se muestra como una tarjeta con el **nombre del alimento** y su **aporte energético por 100 g** («Arroz blanco cocido · 130 kcal / 100 g»). Al elegir un alimento, el paciente indica la porción en gramos y el momento de la comida, hasta 48 horas hacia atrás. El nutricionista accede al mismo catálogo desde sus Ajustes y puede **agregar alimentos locales** cuando no encuentra uno.
+
+<p class="caption"><strong>Figura 116</strong><br><em>Pantallas de búsqueda de alimentos: campo de búsqueda vacío y con teclado abierto</em></p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/information-architecture/search-systems-patient.png" alt="Pantallas de búsqueda de alimentos: campo de búsqueda vacío y con teclado abierto" width="560" />
+</p>
+
+**Filtros por periodo, fecha y estado**
+
+<p class="caption"><strong>Tabla 184</strong><br><em>Filtros de búsqueda por periodo, fecha y estado</em></p>
+
+| Módulo | Filtro | Cómo luce el resultado |
+|---|---|---|
+| Diario (paciente) | Selección de **fecha** | Lista de comidas del día, con los pendientes de envío identificados |
+| Progreso (paciente) | **Periodo** de la tendencia de peso (4 semanas) | Gráfico de tendencia y tarjeta «Tu semana» |
+| Expediente (paciente y nutricionista) | **Periodo** de los últimos 30 días | Secciones con números, plan y consultas |
+| Seguimiento (nutricionista) | **Semana** de 7 días | Panel de cumplimiento por día y resumen con IA |
+| Bandeja (nutricionista) | **Estado**: abiertas o resueltas | Tarjetas con paciente, tipo de señal y fecha de recepción |
+| Agenda (nutricionista) | **Estado** y fecha de las consultas | Lista cronológica de próximas consultas |
+
+**Landing Page**
+
+Al ser un sitio de pocas páginas, no incluye un buscador de texto. La única herramienta de filtrado son los **chips de las preguntas frecuentes** (*Todas*, *Pacientes*, *Nutricionistas*, *Privacidad*, *IA*), que muestran solo las respuestas del tema elegido. La página de Términos y condiciones incluye un **índice de cláusulas** para saltar a cada apartado.
+
 #### 3.1.2.5. Navigation Systems
+
+**Landing Page**
+
+La navegación se articula con una **barra superior fija** (sticky navbar) que permanece visible durante el recorrido, con el logotipo (que lleva al inicio), los enlaces *Paciente*, *Nutricionista*, *Cómo funciona*, *Nosotros* y *Contacto*, el selector de idioma, el acceso «Iniciar sesión» y la llamada a la acción naranja «Soy nutricionista». Los primeros tres enlaces son **anclas** a secciones de la página principal, y los demás abren páginas. En pantallas pequeñas la barra se reemplaza por un **menú desplegable** (hamburguesa). Se añaden otras técnicas de recorrido:
+
+- **Recorrido por secciones**: en escritorio, cada gesto de scroll o las teclas de flecha avanzan de una sección a la siguiente (scroll *snap*); en tablet y móvil el scroll es libre.
+- **Carrusel del héroe** con flechas, puntos, deslizamiento y avance automático que se detiene al interactuar.
+- **Pie de página** con enlaces de navegación, legales (Términos y Aviso de privacidad), redes sociales y datos de contacto, accesible desde cualquier página.
+- **Enlace «Saltar al contenido principal»** para usuarios de teclado y lectores de pantalla.
+- **Llamadas a la acción** consistentes: «Soy nutricionista» lleva al formulario de contacto con el rol preseleccionado.
+
+<p class="caption"><strong>Figura 117</strong><br><em>Barra de navegación del landing page de Healthify</em></p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/information-architecture/landing-home.png" alt="Barra de navegación del landing page de Healthify" width="720" />
+</p>
+
+**Aplicación móvil**
+
+Tras iniciar sesión, la aplicación resuelve el rol de la persona y carga el *shell* de navegación que le corresponde. Ambos roles usan una **barra de navegación inferior persistente** (bottom navigation) con el ítem activo resaltado en verde claro y en negrita. Permite llegar a cualquier módulo principal con un toque y se mantiene visible al moverse entre ellos.
+
+- **Paciente: 5 pestañas** (*Inicio*, *Diario*, *Progreso*, *Expediente* y *Ajustes*). Las acciones frecuentes están a un toque desde Inicio: «Registrar comida» abre la cámara, y las tarjetas «Cómo voy hoy», «Próxima consulta» y «Algo no cuadra» llevan a su detalle.
+- **Nutricionista: 4 pestañas** (*Pacientes*, *Bandeja*, *Agenda* y *Ajustes*). Desde *Pacientes* se entra a la ficha de cada paciente, que tiene su propia **navegación por pestañas superiores** (*Resumen*, *Seguimiento*, *Expediente* y *Plan*), y desde allí se inicia la consulta guiada.
+
+<p class="caption"><strong>Figura 118</strong><br><em>Barras de navegación inferior del paciente y del nutricionista</em></p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/information-architecture/navbar-patient.png" alt="Barra de navegación inferior del paciente" width="240" /> <img src="../assets/img/chapter3/information-architecture/navbar-practitioner.png" alt="Barra de navegación inferior del nutricionista" width="240" />
+</p>
+
+Las demás técnicas de navegación son:
+
+- **Navegación jerárquica con retroceso**: las pantallas de detalle y los flujos (vinculación, registro de comida, consulta guiada) se abren sobre la barra inferior con una barra superior que incluye la flecha de retroceso y un título.
+- **Flujos paso a paso**, con un botón principal al pie, para el registro de cuenta, la vinculación y la consulta guiada. Al salir de la consulta, el sistema pregunta «¿Salir de la consulta?» y conserva un borrador que se puede reanudar.
+- **Hojas inferiores y diálogos** para decisiones puntuales (idioma, «Tus metas cambiaron», cierre de sesión, confirmaciones), de modo que el usuario no pierde su contexto.
+- **Retroalimentación**: avisos temporales (*snackbar*) tras acciones como «Comida registrada» o «Plan publicado», y un banner persistente de **sin conexión** que indica qué se guardará hasta recuperar la red.
+- **Acceso por código QR**: el nutricionista genera una invitación con un QR y el paciente la escanea con la cámara para vincularse.
+- **Pantallas de arranque**: *Splash*, *Bienvenida*, *Registro* e *Inicio de sesión* anteceden al *shell*, y una pantalla de **sesión expirada** permite volver a entrar sin perder el contexto.
+
+<p class="caption"><strong>Figura 119</strong><br><em>Pantallas del nutricionista: Mis pacientes, Bandeja y ficha del paciente</em></p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/information-architecture/navigation-practitioner.png" alt="Pantallas del nutricionista: Mis pacientes, Bandeja y ficha del paciente" width="820" />
+  <img src="../assets/img/chapter3/information-architecture/navigation-patient.png" alt="Pantalla Inicio del paciente con barra de navegación inferior" width="200" />
+</p>
 
 ### 3.1.3. Landing Page UI Design
 
