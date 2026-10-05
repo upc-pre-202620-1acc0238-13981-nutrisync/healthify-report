@@ -296,7 +296,180 @@ El diagrama de despliegue muestra los nodos donde se ejecuta cada artefacto: el 
 
 #### 4.2.1.1. Sprint Planning 1
 
+El Sprint 1 es el primer sprint de implementación. Se desarrolló entre el 27/09/2026 y el 09/10/2026 y cubre los tres productos digitales: el **landing page**, los **RESTful Web Services** (backend) y la **aplicación móvil Android**. Las historias incluidas son las ocho historias de usuario del épico EP10 (Landing Page), las diez historias técnicas del épico EP_TS (RESTful API) y las 37 historias de usuario de la aplicación (US01 a US31 y US39 a US44), definidas en la sección 2.4.1.
+
+<p class="caption"><strong>Tabla 231</strong><br><em>Datos de la reunión de Sprint Planning 1</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Sprint #</th>
+    <th colspan="2">Sprint 1</th>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint Planning Background</th>
+  </tr>
+  <tr>
+    <td colspan="2">Date</td>
+    <td colspan="2">2026-09-27</td>
+  </tr>
+  <tr>
+    <td colspan="2">Time</td>
+    <td colspan="2">10:00 AM (GMT-5)</td>
+  </tr>
+  <tr>
+    <td colspan="2">Location</td>
+    <td colspan="2">Reunión virtual</td>
+  </tr>
+  <tr>
+    <td colspan="2">Prepared By</td>
+    <td colspan="2">Villarreal Bazan, Angel Martin</td>
+  </tr>
+  <tr>
+    <td colspan="2">Attendees (to planning meeting)</td>
+    <td colspan="2">Del Aguila Del Aguila, Olenka Priscilla / Espinoza Cruz, Angela Milagros / Mora Rivera, Joel Fernando / Vergaray Calderon, Rose Almendra / Villarreal Bazan, Angel Martin</td>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint Goal &amp; User Stories</th>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 1 Goal</td>
+    <td colspan="2">Nuestro enfoque está en publicar el landing page de Healthify en español e inglés, entregar el backend completo de la plataforma con sus seis bounded contexts y sus endpoints documentados en Swagger, y construir la aplicación móvil Android que los consume. Creemos que esto da a los nutricionistas y pacientes que visitan el sitio una explicación clara de la propuesta de valor, y da a los pacientes una app para registrar su ingesta y su peso entre consultas, incluso sin conexión, y a los nutricionistas una app para conducir la consulta guiada, publicar el plan y revisar el seguimiento. Esto se confirmará cuando un visitante recorra todas las secciones de https://landing.healthify.lat en ambos idiomas y envíe el formulario de contacto; cuando un cliente HTTP ejecute los flujos de consulta guiada, registro de ingesta y seguimiento contra https://platform.healthify.lat/swagger; y cuando un paciente inicie sesión en la app instalada en un dispositivo Android, se vincule con su nutricionista, registre comidas y autopesajes y vea sus metas y su progreso, con las suites de pruebas del backend y de la app en verde.</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 1 Velocity</td>
+    <td colspan="2">236 Story Points</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sum of Story Points</td>
+    <td colspan="2">236 Story Points (17 del landing page, 62 del backend y 157 de la aplicación móvil)</td>
+  </tr>
+</table>
+
+Historias incluidas en el Sprint 1:
+
+<p class="caption"><strong>Tabla 232</strong><br><em>Historias de usuario incluidas en el Sprint 1</em></p>
+
+| Épico | Story ID | Título | Story Points |
+|---|---|---|:---:|
+| EP10 | US32 | Visualización de la propuesta de valor de Healthify | 2 |
+| EP10 | US33 | Consulta de las principales funcionalidades de Healthify | 2 |
+| EP10 | US34 | Conocimiento de la startup, misión y visión | 1 |
+| EP10 | US35 | Cambio de idioma del Landing Page | 3 |
+| EP10 | US36 | Acceso al inicio de uso de Healthify desde el Landing Page | 2 |
+| EP10 | US37 | Envío de consulta mediante formulario de contacto | 3 |
+| EP10 | US38 | Consulta de términos y políticas de Healthify | 2 |
+| EP10 | US45 | Consulta de preguntas frecuentes | 2 |
+| EP_TS | TS01 | Servicios de registro, autenticación y autorización | 5 |
+| EP_TS | TS02 | Servicios de gestión de vínculos de cuidado | 5 |
+| EP_TS | TS03 | Servicios de evaluación y diagnóstico nutricional | 5 |
+| EP_TS | TS04 | Servicios de prescripción y gestión del plan nutricional | 8 |
+| EP_TS | TS05 | Servicios de registro de ingesta alimentaria | 5 |
+| EP_TS | TS06 | Servicios de autopesaje y seguimiento corporal | 5 |
+| EP_TS | TS07 | Servicios de monitoreo y expediente del paciente | 8 |
+| EP_TS | TS08 | Sincronización de registros offline | 8 |
+| EP_TS | TS09 | Servicios de asistencia con IA | 8 |
+| EP_TS | TS10 | Servicios de agenda y respuesta previa a la consulta | 5 |
+| EP01 | US01 | Vinculación mediante invitación QR | 5 |
+| EP01 | US02 | Otorgamiento de consentimiento para compartir información | 3 |
+| EP01 | US03 | Revocación del consentimiento | 2 |
+| EP01 | US04 | Generación de invitación QR para un nuevo paciente | 5 |
+| EP01 | US05 | Consulta de pacientes con vínculo activo | 3 |
+| EP01 | US06 | Alta del paciente al finalizar el tratamiento | 2 |
+| EP01 | US07 | Cambio de nutricionista | 2 |
+| EP02 | US08 | Registro de comida por fotografía | 8 |
+| EP02 | US09 | Confirmación o ajuste de estimación de porción | 3 |
+| EP02 | US10 | Registro manual de comida mediante catálogo | 5 |
+| EP02 | US11 | Indicación de adherencia al plan en un registro | 2 |
+| EP03 | US12 | Registro de autopesaje | 3 |
+| EP03 | US13 | Visualización de tendencia de peso | 5 |
+| EP04 | US14 | Consulta del cumplimiento nutricional diario | 5 |
+| EP04 | US15 | Visualización de señal de consistencia | 8 |
+| EP04 | US16 | Consulta del monitoreo del paciente | 5 |
+| EP04 | US17 | Revisión y resolución de señales de seguimiento | 5 |
+| EP05 | US18 | Acceso al expediente personal unificado | 5 |
+| EP05 | US19 | Registro de derivación a otro especialista | 2 |
+| EP05 | US20 | Acceso al expediente unificado del paciente | 5 |
+| EP06 | US21 | Registro y finalización de la evaluación nutricional | 5 |
+| EP06 | US22 | Emisión del diagnóstico nutricional | 5 |
+| EP07 | US23 | Visualización de metas nutricionales vigentes | 3 |
+| EP07 | US24 | Confirmación de recepción de nuevas metas nutricionales | 2 |
+| EP07 | US25 | Obtención de propuesta de metas nutricionales calculadas | 5 |
+| EP07 | US26 | Prescripción y publicación del plan nutricional | 8 |
+| EP07 | US27 | Ajuste del plan nutricional entre consultas | 5 |
+| EP08 | US28 | Creación de cuenta | 3 |
+| EP08 | US29 | Inicio de sesión | 3 |
+| EP08 | US30 | Cierre de sesión | 1 |
+| EP09 | US31 | Registro y sincronización sin conexión | 8 |
+| EP04 | US39 | Agenda de consultas | 5 |
+| EP04 | US40 | Preparación y respuesta previa a la consulta | 3 |
+| EP11 | US41 | Control de las funciones con IA | 5 |
+| EP11 | US42 | Resumen semanal, ideas de comidas y preguntas sugeridas con IA | 8 |
+| EP08 | US43 | Preferencias de la cuenta: idioma y recordatorios | 3 |
+| EP02 | US44 | Alimentos locales del catálogo | 2 |
+| | | **Total** | **236** |
+
 #### 4.2.1.2. Aspect Leaders and Collaborators
+
+Los aspectos del Sprint 1 corresponden a las partes en que el equipo dividió cada producto. En el landing page, cada aspecto es un grupo de secciones; en el backend y en la aplicación móvil, cada aspecto es un bounded context o un bloque transversal. Cada integrante lidera al menos un aspecto de cada producto. La columna de un aspecto marca con **L** al líder, que responde por su diseño, sus commits y su pull request, y con **C** a quienes colaboran por depender de él o por aportar a su contenido.
+
+**Landing Page**
+
+- **Foundation & i18n:** design tokens, estructura de página con navegación, menú móvil y footer, motor de traducción español/inglés y botones de acceso según el rol.
+- **Hero & Problem:** carrusel del hero y sección del problema que Healthify resuelve.
+- **Showcases:** secciones «Para el paciente» y «Para el nutricionista», con la lista de funciones y sus pantallas.
+- **How it works, FAQ & Terms:** sección «Cómo funciona», preguntas frecuentes con filtros y página de términos y condiciones.
+- **About & Contact:** página «Nosotros» con misión, visión, valores y equipo, y página de contacto con su formulario.
+
+<p class="caption"><strong>Tabla 233</strong><br><em>Líderes y colaboradores del aspecto About &amp; Contact</em></p>
+
+| Team Member (Last Name, First Name) | GitHub Username | Foundation & i18n | Hero & Problem | Showcases | How it works, FAQ & Terms | About & Contact |
+|---|---|:---:|:---:|:---:|:---:|:---:|
+| Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | C | L | C | C | C |
+| Espinoza Cruz, Angela Milagros | Emy127 | C | C | C | C | L |
+| Mora Rivera, Joel Fernando | xJoelFMRx | C | C | L | C | C |
+| Vergaray Calderon, Rose Almendra | rosealmendra | C | C | C | L | C |
+| Villarreal Bazan, Angel Martin | Nevatrix | L | C | C | C | C |
+
+**Backend (RESTful Web Services)**
+
+- **Platform Foundation & AI:** solución, núcleo compartido (eventos, resultados, repositorio base, EF Core), manejo de errores con Problem Details, límite de solicitudes, composición de dependencias y el módulo técnico de IA con su pipeline de guardas y su cliente de Gemini (TS09).
+- **IAM & Care Relationship:** cuentas, sesiones y roles (TS01); invitaciones, vínculos de cuidado y consentimiento, incluido el consentimiento para IA (TS02).
+- **Nutritional Care:** datos base, consulta guiada, evaluación, diagnóstico (TS03), metas, publicación y versiones del plan, y bandeja de revisión (TS04).
+- **Food Catalog & Intake:** catálogo de alimentos con Open Food Facts y USDA, diario, registro por foto, autopesaje y tendencia de peso (TS05, TS06) y sincronización de lo registrado sin conexión (TS08).
+- **Monitoring & Read Models:** ventanas de evaluación, desviaciones, índice de consistencia, seguimientos, derivaciones y resúmenes (TS07, TS10), y las vistas compuestas que arman el expediente, el panel y el listado de pacientes.
+- **Deployment & Release:** Dockerfile, `docker-compose`, flujo de GitHub Actions, versionado, README y publicación en el dominio propio.
+
+<p class="caption"><strong>Tabla 234</strong><br><em>Líderes y colaboradores del aspecto Deployment &amp; Release</em></p>
+
+| Team Member (Last Name, First Name) | GitHub Username | Platform Foundation & AI | IAM & Care Relationship | Nutritional Care | Food Catalog & Intake | Monitoring & Read Models | Deployment & Release |
+|---|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | C | L | C | | C | |
+| Espinoza Cruz, Angela Milagros | Emy127 | C | C | C | C | L | |
+| Mora Rivera, Joel Fernando | xJoelFMRx | C | C | C | L | C | C |
+| Vergaray Calderon, Rose Almendra | rosealmendra | C | C | L | C | C | |
+| Villarreal Bazan, Angel Martin | Nevatrix | L | C | C | C | C | L |
+
+Las marcas **C** del backend siguen las dependencias entre bounded contexts. Nutritional Care, Food Catalog & Intake y Monitoring & Read Models consultan el vínculo de cuidado por la fachada ACL de Care Relationship; Food Catalog & Intake recibe las metas vigentes que publica Nutritional Care; Monitoring & Read Models lee lo que registra Food Catalog & Intake y abre elementos en la bandeja de Nutritional Care. Nevatrix integra todas las ramas a `develop` y `main`.
+
+**Mobile Application (Android)**
+
+- **Foundation & Design System:** proyecto Gradle, recursos (fuentes, íconos, textos en español e inglés, configuración de seguridad), núcleo compartido (kernel, red, inyección de dependencias y cola de sincronización sin conexión) y el sistema de diseño Healthify M3 con su catálogo de depuración.
+- **IAM & Care Relationship:** splash, bienvenida, registro e inicio de sesión (US28, US29); sesión cifrada con renovación de token; canje de invitación por QR, consentimiento, cambio de nutricionista y preferencias de IA (US01, US02, US03, US07, US41, US24); invitación, listado y alta de pacientes para el nutricionista (US04, US05, US06).
+- **Monitoring & Food Catalog:** catálogo de alimentos con caché local y alimentos locales (US10, US44); progreso del día, señal de consistencia, resumen semanal, consultas, respuesta previa, agenda, derivaciones y monitoreo del paciente (US14 a US16, US18, US19, US39, US40, US42).
+- **Intake & Diary:** diario, registro por foto y a mano, confirmación y ajuste de estimaciones, adherencia al plan, autopesaje, tendencia de peso, ideas de comida con IA, recordatorios y cola de sincronización (US08 a US13, US31, US42, US43).
+- **Nutritional Care & App Shell:** datos base, consulta guiada (evaluación, diagnóstico, metas y publicación), ajuste del plan, bandeja de revisión, expediente y mi plan (US17, US18, US20 a US27), y la navegación de paciente y nutricionista con la base de datos Room (US30, US43).
+
+<p class="caption"><strong>Tabla 235</strong><br><em>Líderes y colaboradores del aspecto Nutritional Care &amp; App Shell</em></p>
+
+| Team Member (Last Name, First Name) | GitHub Username | Foundation & Design System | IAM & Care Relationship | Monitoring & Food Catalog | Intake & Diary | Nutritional Care & App Shell |
+|---|---|:---:|:---:|:---:|:---:|:---:|
+| Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | C | L | C | C | C |
+| Espinoza Cruz, Angela Milagros | Emy127 | C | C | C | C | L |
+| Mora Rivera, Joel Fernando | xJoelFMRx | C | C | L | C | C |
+| Vergaray Calderon, Rose Almendra | rosealmendra | C | C | C | L | C |
+| Villarreal Bazan, Angel Martin | Nevatrix | L | C | C | C | C |
+
+Las marcas **C** de la app siguen sus dependencias. Todas las pantallas usan el sistema de diseño y el núcleo de red y sincronización de Foundation; Intake & Diary busca alimentos en el catálogo de Monitoring & Food Catalog; el módulo de monitoreo lee lo que registra Intake & Diary; y la navegación de Nutritional Care & App Shell integra las pantallas de los demás módulos. Nevatrix integra todas las ramas a `develop` y `main`.
 
 #### 4.2.1.3. Sprint Backlog 1
 
