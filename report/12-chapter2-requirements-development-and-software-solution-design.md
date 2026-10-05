@@ -2166,7 +2166,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 
 ### EP_TS — RESTful API — Technical Stories
 
-<br>***TS01 — Servicios de registro, autenticación y autorización***
+<p class="caption"><strong>Tabla 72</strong><br><em>Historia técnica TS01: Servicios de registro, autenticación y autorización</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2194,11 +2195,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Registro exitoso</strong><br>Dado que el Developer dispone de datos de registro válidos y un correo no registrado<br>Cuando el Developer envía una solicitud de registro con datos válidos y un correo disponible<br>Entonces el sistema responde 201 Created con la identificación de la cuenta creada y su rol.<br><br><strong>Escenario 2: Cuenta duplicada</strong><br>Dado que el Developer dispone de un correo previamente registrado<br>Cuando el Developer envía una solicitud de registro con un correo previamente registrado<br>Entonces el sistema responde 409 Conflict sin crear una segunda cuenta.<br><br><strong>Escenario 3: Autenticación válida</strong><br>Dado que el Developer dispone de credenciales válidas de una cuenta existente<br>Cuando el Developer envía una solicitud de autenticación con credenciales válidas<br>Entonces el sistema responde 200 OK con una credencial de acceso que identifica el rol autorizado.<br><br><strong>Escenario 4: Operación no autorizada</strong><br>Dado que el Developer dispone de una credencial válida asociada a un rol sin permiso para la operación solicitada<br>Cuando el Developer envía una solicitud para una operación no permitida por el rol autenticado<br>Entonces el sistema responde 403 Forbidden.</td>
+    <td colspan="8"><strong>Escenario 1: Registro exitoso</strong><br>Dado que el Developer dispone de datos de registro válidos y un correo no registrado<br>Cuando el Developer envía una solicitud de registro con datos válidos y un correo disponible<br>Entonces el sistema responde 201 Created con la identificación de la cuenta creada y su rol.<br><br><strong>Escenario 2: Cuenta duplicada</strong><br>Dado que el Developer dispone de un correo previamente registrado<br>Cuando el Developer envía una solicitud de registro con un correo previamente registrado<br>Entonces el sistema responde 409 Conflict sin crear una segunda cuenta.<br><br><strong>Escenario 3: Autenticación válida</strong><br>Dado que el Developer dispone de credenciales válidas de una cuenta existente<br>Cuando el Developer envía una solicitud de autenticación con credenciales válidas<br>Entonces el sistema responde 200 OK con una credencial de acceso que identifica el rol autorizado.<br><br><strong>Escenario 4: Operación no autorizada</strong><br>Dado que el Developer dispone de una credencial válida asociada a un rol sin permiso para la operación solicitada<br>Cuando el Developer envía una solicitud para una operación no permitida por el rol autenticado<br>Entonces el sistema responde 403 Forbidden.<br><br><strong>Escenario 5: Renovación de sesión</strong><br>Dado que el Developer dispone de una credencial de renovación vigente<br>Cuando el Developer envía una solicitud de renovación de la sesión<br>Entonces el sistema responde 200 OK con una nueva credencial de acceso y rota la credencial de renovación; si la credencial ya fue usada fuera del periodo de gracia, el sistema termina la sesión.<br><br><strong>Escenario 6: Cuenta bloqueada</strong><br>Dado que el Developer dispone de una cuenta que excedió el número permitido de intentos fallidos<br>Cuando el Developer envía una solicitud de autenticación mientras dura el bloqueo temporal<br>Entonces el sistema responde 401 Unauthorized con el código AccountLocked.</td>
   </tr>
 </table>
 
-<br>***TS02 — Servicios de gestión de vínculos de cuidado***
+<p class="caption"><strong>Tabla 73</strong><br><em>Historia técnica TS02: Servicios de gestión de vínculos de cuidado</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2226,11 +2228,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Creación de invitación</strong><br>Dado que el Developer dispone de una solicitud autenticada de un Nutricionista autorizado para generar una invitación<br>Cuando el Developer envía una solicitud válida para generar una invitación<br>Entonces el sistema responde 201 Created con una invitación única y vigente.<br><br><strong>Escenario 2: Canje válido</strong><br>Dado que el Developer dispone de una invitación válida, vigente y no utilizada<br>Cuando el Developer envía una solicitud para canjear una invitación válida y no utilizada<br>Entonces el sistema responde con éxito y establece el vínculo correspondiente.<br><br><strong>Escenario 3: Invitación inválida o reutilizada</strong><br>Dado que el Developer dispone de una invitación vencida, ya utilizada o inválida<br>Cuando el Developer envía una solicitud para canjear una invitación vencida, inválida o ya utilizada<br>Entonces el sistema rechaza la operación sin crear un nuevo vínculo.<br><br><strong>Escenario 4: Acceso sin consentimiento vigente</strong><br>Dado que el Developer recibe una solicitud de acceso sin un vínculo activo y consentimiento vigente<br>Cuando el Developer envía una solicitud de acceso a información protegida sin consentimiento vigente<br>Entonces el sistema responde 403 Forbidden.</td>
+    <td colspan="8"><strong>Escenario 1: Creación de invitación</strong><br>Dado que el Developer dispone de una solicitud autenticada de un Nutricionista autorizado para generar una invitación<br>Cuando el Developer envía una solicitud válida para generar una invitación<br>Entonces el sistema responde 201 Created con una invitación única y vigente.<br><br><strong>Escenario 2: Canje válido</strong><br>Dado que el Developer dispone de una invitación válida, vigente y no utilizada<br>Cuando el Developer envía una solicitud para canjear una invitación válida y no utilizada<br>Entonces el sistema responde con éxito y establece el vínculo correspondiente.<br><br><strong>Escenario 3: Invitación inválida o reutilizada</strong><br>Dado que el Developer dispone de una invitación vencida, ya utilizada o inválida<br>Cuando el Developer envía una solicitud para canjear una invitación vencida, inválida o ya utilizada<br>Entonces el sistema rechaza la operación sin crear un nuevo vínculo.<br><br><strong>Escenario 4: Acceso sin consentimiento vigente</strong><br>Dado que el Developer recibe una solicitud de acceso sin un vínculo activo y consentimiento vigente<br>Cuando el Developer envía una solicitud de acceso a información protegida sin consentimiento vigente<br>Entonces el sistema responde 403 Forbidden.<br><br><strong>Escenario 5: Retiro del consentimiento</strong><br>Dado que el Developer dispone de un vínculo activo con consentimiento vigente del paciente<br>Cuando el Developer envía la solicitud de retiro del consentimiento<br>Entonces el sistema responde 204 No Content, revoca el vínculo y desactiva las funciones con IA asociadas.<br><br><strong>Escenario 6: Alta clínica</strong><br>Dado que el Developer dispone de un vínculo activo y de una solicitud de alta del nutricionista<br>Cuando el Developer envía la solicitud de alta con su motivo clínico, o sin él<br>Entonces el sistema responde 200 OK, cierra el vínculo, cancela las consultas futuras y desactiva la IA, y responde 400 Bad Request si falta el motivo.<br><br><strong>Escenario 7: Reemplazo del vínculo</strong><br>Dado que el Developer dispone de la invitación de otro nutricionista para un paciente con vínculo activo<br>Cuando el Developer envía el canje sin indicar el reemplazo, o indicándolo de forma explícita<br>Entonces el sistema responde 409 Conflict sin el reemplazo explícito y, con él, responde 201 Created y revoca el vínculo anterior.</td>
   </tr>
 </table>
 
-<br>***TS03 — Servicios de evaluación y diagnóstico nutricional***
+<p class="caption"><strong>Tabla 74</strong><br><em>Historia técnica TS03: Servicios de evaluación y diagnóstico nutricional</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2252,17 +2255,18 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como Developer, deseo disponer de servicios RESTful para registrar evaluaciones, mediciones y diagnósticos nutricionales, para que el backend mantenga la información clínica y sus reglas de integridad.</td>
+    <td colspan="8">Como Developer, deseo disponer de servicios RESTful para conducir la consulta guiada, con los datos base, la evaluación, las mediciones y el diagnóstico, para que el backend mantenga la información clínica y sus reglas de integridad.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Creación de evaluación</strong><br>Dado que el Developer dispone de una solicitud autenticada con datos válidos para crear una evaluación nutricional<br>Cuando el Developer envía una solicitud válida para crear una evaluación nutricional<br>Entonces el sistema responde 201 Created con la evaluación registrada.<br><br><strong>Escenario 2: Cierre de evaluación</strong><br>Dado que el Developer dispone de una evaluación abierta que contiene la información requerida<br>Cuando el Developer envía una solicitud para cerrar una evaluación que contiene la información requerida<br>Entonces el sistema confirma el cambio de estado y conserva la evaluación como inmutable.<br><br><strong>Escenario 3: Modificación de evaluación cerrada</strong><br>Dado que el Developer dispone de una evaluación nutricional que ya se encuentra cerrada<br>Cuando el Developer envía una solicitud para modificar una evaluación cerrada<br>Entonces el sistema rechaza la operación.<br><br><strong>Escenario 4: Registro de diagnóstico</strong><br>Dado que el Developer dispone de un diagnóstico válido acompañado de su fundamento clínico<br>Cuando el Developer envía una solicitud para registrar un diagnóstico con su fundamento requerido<br>Entonces el sistema responde 201 Created y lo asocia al paciente correspondiente.</td>
+    <td colspan="8"><strong>Escenario 1: Creación de evaluación</strong><br>Dado que el Developer dispone de una solicitud autenticada con datos válidos para crear una evaluación nutricional<br>Cuando el Developer envía una solicitud válida para crear una evaluación nutricional<br>Entonces el sistema responde 201 Created con la evaluación registrada.<br><br><strong>Escenario 2: Cierre de evaluación</strong><br>Dado que el Developer dispone de una evaluación abierta que contiene la información requerida<br>Cuando el Developer envía una solicitud para cerrar una evaluación que contiene la información requerida<br>Entonces el sistema confirma el cambio de estado y conserva la evaluación como inmutable.<br><br><strong>Escenario 3: Modificación de evaluación cerrada</strong><br>Dado que el Developer dispone de una evaluación nutricional que ya se encuentra cerrada<br>Cuando el Developer envía una solicitud para modificar una evaluación cerrada<br>Entonces el sistema rechaza la operación.<br><br><strong>Escenario 4: Registro de diagnóstico</strong><br>Dado que el Developer dispone de un diagnóstico válido acompañado de su fundamento clínico<br>Cuando el Developer envía una solicitud para registrar un diagnóstico con su fundamento requerido<br>Entonces el sistema responde 200 OK y conserva el diagnóstico como pendiente de la consulta; solo pasa a ser el diagnóstico activo cuando se publica el plan.<br><br><strong>Escenario 5: Datos base del paciente</strong><br>Dado que el Developer dispone de datos base válidos de un paciente con vínculo activo<br>Cuando el Developer envía la solicitud de registro de datos base<br>Entonces el sistema responde 201 Created y, si los datos base ya existen, responde 409 Conflict y admite su corrección mediante una actualización.<br><br><strong>Escenario 6: Una consulta en curso por paciente</strong><br>Dado que el Developer dispone de un paciente con una consulta en curso<br>Cuando el Developer solicita iniciar otra consulta para el mismo paciente<br>Entonces el sistema responde 409 Conflict y permite consultar y retomar la consulta en curso.</td>
   </tr>
 </table>
 
-<br>***TS04 — Servicios de prescripción y gestión del plan nutricional***
+<p class="caption"><strong>Tabla 75</strong><br><em>Historia técnica TS04: Servicios de prescripción y gestión del plan nutricional</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2290,11 +2294,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Solicitud de cálculo válida</strong><br>Dado que el Developer dispone de todos los parámetros requeridos para calcular las metas nutricionales<br>Cuando el Developer envía una solicitud de cálculo con todos los parámetros requeridos<br>Entonces el sistema responde 200 OK con los valores calculados y su base de cálculo.<br><br><strong>Escenario 2: Publicación válida del plan</strong><br>Dado que el Developer dispone de un diagnóstico y una base de cálculo válidos para el paciente<br>Cuando el Developer envía una solicitud para publicar un plan con diagnóstico y base de cálculo válidos<br>Entonces el sistema registra una nueva versión activa del plan.<br><br><strong>Escenario 3: Publicación sin requisitos clínicos</strong><br>Dado que el Developer recibe una solicitud de publicación sin diagnóstico o sin la base de cálculo requerida<br>Cuando el Developer envía una solicitud para publicar un plan sin diagnóstico o base de cálculo requeridos<br>Entonces el sistema rechaza la solicitud.<br><br><strong>Escenario 4: Ajuste del plan</strong><br>Dado que el Developer tiene un plan activo<br>Cuando el Developer envía una solicitud de ajuste del plan con el motivo requerido<br>Entonces el sistema crea una nueva versión y conserva las anteriores.</td>
+    <td colspan="8"><strong>Escenario 1: Solicitud de cálculo válida</strong><br>Dado que el Developer dispone de todos los parámetros requeridos para calcular las metas nutricionales<br>Cuando el Developer envía una solicitud de cálculo con todos los parámetros requeridos<br>Entonces el sistema responde 200 OK con los valores calculados y su base de cálculo.<br><br><strong>Escenario 2: Publicación válida del plan</strong><br>Dado que el Developer dispone de un diagnóstico y una base de cálculo válidos para el paciente<br>Cuando el Developer envía una solicitud para publicar un plan con diagnóstico y base de cálculo válidos<br>Entonces el sistema registra una nueva versión activa del plan.<br><br><strong>Escenario 3: Publicación sin requisitos clínicos</strong><br>Dado que el Developer recibe una solicitud de publicación sin diagnóstico o sin la base de cálculo requerida<br>Cuando el Developer envía una solicitud para publicar un plan sin diagnóstico o base de cálculo requeridos<br>Entonces el sistema rechaza la solicitud.<br><br><strong>Escenario 4: Ajuste del plan</strong><br>Dado que el Developer tiene un plan activo<br>Cuando el Developer envía una solicitud de ajuste del plan con el motivo requerido<br>Entonces el sistema crea una nueva versión y conserva las anteriores.<br><br><strong>Escenario 5: Publicación con clave de idempotencia</strong><br>Dado que el Developer envía la publicación de una consulta con una clave de idempotencia<br>Cuando el Developer reenvía la misma publicación con la misma clave, o con una clave inválida<br>Entonces el sistema procesa la publicación una sola vez sin crear una segunda versión, y rechaza la clave inválida con 400 Bad Request.<br><br><strong>Escenario 6: Versiones del plan para el paciente</strong><br>Dado que el Developer dispone de un paciente con versiones anteriores de su plan<br>Cuando el Developer solicita el historial de versiones como Paciente<br>Entonces el sistema responde 200 OK con las versiones sin el diagnóstico ni la base de cálculo.</td>
   </tr>
 </table>
 
-<br>***TS05 — Servicios de registro de ingesta alimentaria***
+<p class="caption"><strong>Tabla 76</strong><br><em>Historia técnica TS05: Servicios de registro de ingesta alimentaria</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2316,17 +2321,18 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como Developer, deseo disponer de servicios RESTful para registrar y consultar las ingestas alimentarias del paciente, para soportar los registros manuales, estimados y fuera del plan sin perder su procedencia.</td>
+    <td colspan="8">Como Developer, deseo disponer de servicios RESTful para registrar y consultar las ingestas alimentarias del paciente, para soportar los registros manuales y estimados, con su adherencia al plan, sin perder su procedencia.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Registro válido de ingesta</strong><br>Dado que el Developer dispone de datos válidos para registrar una ingesta alimentaria<br>Cuando el Developer envía una solicitud válida para registrar una ingesta<br>Entonces el sistema responde 201 Created y conserva fecha, hora y procedencia del registro.<br><br><strong>Escenario 2: Confirmación de estimación</strong><br>Dado que el Developer dispone de una estimación de ingesta pendiente de confirmación<br>Cuando el Developer envía una solicitud con los valores confirmados o corregidos de una estimación<br>Entonces el sistema registra la ingesta confirmada conservando la procedencia de la estimación.<br><br><strong>Escenario 3: Consumo fuera del plan</strong><br>Dado que el Developer dispone de una solicitud válida para registrar un consumo fuera del plan<br>Cuando el Developer envía una solicitud válida para registrar un consumo fuera del plan<br>Entonces el sistema registra el evento sin exigir un detalle nutricional adicional.<br><br><strong>Escenario 4: Eliminación del historial</strong><br>Dado que el Developer dispone de una entrada histórica de ingesta confirmada<br>Cuando el Developer envía una solicitud para eliminar una entrada histórica perdiendo su trazabilidad<br>Entonces el sistema rechaza la operación de acuerdo con las reglas de integridad del diario.</td>
+    <td colspan="8"><strong>Escenario 1: Registro válido de ingesta</strong><br>Dado que el Developer dispone de datos válidos para registrar una ingesta alimentaria<br>Cuando el Developer envía una solicitud válida para registrar una ingesta<br>Entonces el sistema responde 201 Created y conserva fecha, hora y procedencia del registro.<br><br><strong>Escenario 2: Confirmación de estimación</strong><br>Dado que el Developer dispone de una estimación de ingesta pendiente de confirmación<br>Cuando el Developer envía una solicitud con los valores confirmados o corregidos de una estimación<br>Entonces el sistema registra la ingesta confirmada conservando la procedencia de la estimación.<br><br><strong>Escenario 3: Adherencia al plan</strong><br>Dado que el Developer dispone de una solicitud de registro de ingesta que indica si la comida estaba dentro del plan<br>Cuando el Developer envía una solicitud sin la indicación de adherencia al plan<br>Entonces el sistema responde 400 Bad Request e identifica la información faltante.<br><br><strong>Escenario 4: Eliminación del historial</strong><br>Dado que el Developer dispone de una entrada histórica de ingesta confirmada<br>Cuando el Developer intenta eliminar la entrada<br>Entonces el sistema no expone una operación de eliminación y conserva la entrada.<br><br><strong>Escenario 5: Análisis de fotografía</strong><br>Dado que el Developer dispone de una fotografía de una comida en formato admitido<br>Cuando el Developer envía la fotografía para su análisis<br>Entonces el sistema responde 201 Created con la propuesta de estimación, y rechaza con 413 Payload Too Large una fotografía que supera el tamaño permitido o con 400 Bad Request un formato no admitido.<br><br><strong>Escenario 6: Reenvío idempotente</strong><br>Dado que el Developer reenvía un registro con el mismo identificador de cliente<br>Cuando el sistema recibe el registro<br>Entonces el sistema devuelve la misma entrada sin duplicarla y responde con conflicto si el identificador pertenece a otro paciente.<br><br><strong>Escenario 7: Registro por lote desde una idea de comida</strong><br>Dado que el Developer dispone de entre 1 y 10 ingredientes de una idea de comida<br>Cuando el Developer envía el lote de registros manuales<br>Entonces el sistema responde 201 Created, crea las entradas como un solo grupo y rechaza el lote con cantidades fuera de ese rango.</td>
   </tr>
 </table>
 
-<br>***TS06 — Servicios de autopesaje y seguimiento corporal***
+<p class="caption"><strong>Tabla 77</strong><br><em>Historia técnica TS06: Servicios de autopesaje y seguimiento corporal</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2354,11 +2360,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Autopesaje válido</strong><br>Dado que el Developer dispone de un autopesaje con valor válido y condiciones de protocolo cumplidas<br>Cuando el Developer envía una solicitud de autopesaje con valor válido y condiciones de protocolo cumplidas<br>Entonces el sistema responde 201 Created y lo clasifica como elegible para la tendencia.<br><br><strong>Escenario 2: Registro fuera del protocolo</strong><br>Dado que el Developer dispone de un autopesaje con valor válido que no cumple las condiciones del protocolo<br>Cuando el Developer envía una solicitud de autopesaje válido que no cumple el protocolo<br>Entonces el sistema conserva el registro y lo marca como no elegible para el cálculo de tendencia.<br><br><strong>Escenario 3: Consulta de tendencia</strong><br>Dado que el Developer dispone de suficientes registros elegibles para calcular la tendencia de peso<br>Cuando el Developer envía una solicitud para consultar la tendencia de peso del periodo<br>Entonces el sistema responde 200 OK con los datos derivados de los registros elegibles.</td>
+    <td colspan="8"><strong>Escenario 1: Autopesaje válido</strong><br>Dado que el Developer dispone de un autopesaje con valor válido y condiciones de protocolo cumplidas<br>Cuando el Developer envía una solicitud de autopesaje con valor válido y condiciones de protocolo cumplidas<br>Entonces el sistema responde 201 Created y lo clasifica como elegible para la tendencia.<br><br><strong>Escenario 2: Registro fuera del protocolo</strong><br>Dado que el Developer dispone de un autopesaje con valor válido que no cumple las condiciones del protocolo<br>Cuando el Developer envía una solicitud de autopesaje válido que no cumple el protocolo<br>Entonces el sistema conserva el registro y lo marca como no elegible para el cálculo de tendencia.<br><br><strong>Escenario 3: Consulta de tendencia</strong><br>Dado que el Developer dispone de suficientes registros elegibles para calcular la tendencia de peso<br>Cuando el Developer envía una solicitud para consultar la tendencia de peso del periodo<br>Entonces el sistema responde 200 OK con los datos derivados de los registros elegibles.<br><br><strong>Escenario 4: Tendencia sin datos suficientes</strong><br>Dado que el Developer no dispone de registros elegibles suficientes para calcular la tendencia<br>Cuando el Developer envía una solicitud para consultar la tendencia de peso<br>Entonces el sistema responde 404 Not Found e indica que aún no existe una tendencia.<br><br><strong>Escenario 5: Valor de peso implausible</strong><br>Dado que el Developer dispone de un autopesaje con un valor fuera del rango plausible<br>Cuando el Developer envía la solicitud de autopesaje<br>Entonces el sistema responde 400 Bad Request y no registra el valor.</td>
   </tr>
 </table>
 
-<br>***TS07 — Servicios de monitoreo y expediente del paciente***
+<p class="caption"><strong>Tabla 78</strong><br><em>Historia técnica TS07: Servicios de monitoreo y expediente del paciente</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2386,11 +2393,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Consulta autorizada del nutricionista</strong><br>Dado que el Developer recibe una solicitud autenticada de un Nutricionista con vínculo activo y consentimiento vigente<br>Cuando el Developer envía una solicitud autorizada para consultar la información del paciente como Nutricionista<br>Entonces el sistema responde 200 OK con la información clínica y de seguimiento correspondiente.<br><br><strong>Escenario 2: Consulta autorizada del paciente</strong><br>Dado que el Developer recibe una solicitud autenticada del Paciente para consultar su propio expediente<br>Cuando el Developer envía una solicitud autenticada para consultar el expediente como Paciente<br>Entonces el sistema responde 200 OK con la información permitida para el rol Paciente.<br><br><strong>Escenario 3: Consulta sin autorización</strong><br>Dado que el Developer recibe una solicitud para consultar un expediente sin autorización vigente<br>Cuando el Developer envía una solicitud de expediente sin autorización vigente<br>Entonces el sistema responde 403 Forbidden.<br><br><strong>Escenario 4: Resolución de una situación de revisión</strong><br>Dado que el Developer dispone de una situación de seguimiento pendiente de revisión profesional<br>Cuando el Developer envía una solicitud para registrar la resolución de una situación de revisión<br>Entonces el sistema conserva la decisión sin modificar automáticamente el plan nutricional.</td>
+    <td colspan="8"><strong>Escenario 1: Consulta autorizada del nutricionista</strong><br>Dado que el Developer recibe una solicitud autenticada de un Nutricionista con vínculo activo y consentimiento vigente<br>Cuando el Developer envía una solicitud autorizada para consultar la información del paciente como Nutricionista<br>Entonces el sistema responde 200 OK con la información clínica y de seguimiento correspondiente.<br><br><strong>Escenario 2: Consulta autorizada del paciente</strong><br>Dado que el Developer recibe una solicitud autenticada del Paciente para consultar su propio expediente<br>Cuando el Developer envía una solicitud autenticada para consultar el expediente como Paciente<br>Entonces el sistema responde 200 OK con la información permitida para el rol Paciente.<br><br><strong>Escenario 3: Consulta sin autorización</strong><br>Dado que el Developer recibe una solicitud para consultar un expediente sin autorización vigente<br>Cuando el Developer envía una solicitud de expediente sin autorización vigente<br>Entonces el sistema responde 403 Forbidden.<br><br><strong>Escenario 4: Resolución de una situación de revisión</strong><br>Dado que el Developer dispone de una situación de seguimiento pendiente de revisión profesional<br>Cuando el Developer envía una solicitud para registrar la resolución de una situación de revisión<br>Entonces el sistema conserva la decisión sin modificar automáticamente el plan nutricional.<br><br><strong>Escenario 5: Indicador de consistencia y acuse</strong><br>Dado que el Developer dispone de un paciente con un aviso de consistencia pendiente de mostrar<br>Cuando el Developer consulta el indicador y envía el acuse de que el paciente lo vio<br>Entonces el sistema responde 200 OK con el indicador y 204 No Content al acuse, que habilita la escalación al profesional solo después de ese aviso.<br><br><strong>Escenario 6: Cartera y resumen de pacientes</strong><br>Dado que el Developer recibe una solicitud autenticada de un Nutricionista con pacientes vinculados<br>Cuando el Developer envía la solicitud de la cartera o del resumen de un paciente<br>Entonces el sistema responde 200 OK solo con los pacientes y datos del nutricionista autenticado.</td>
   </tr>
 </table>
 
-<br>***TS08 — Sincronización de registros offline***
+<p class="caption"><strong>Tabla 79</strong><br><em>Historia técnica TS08: Sincronización de registros offline</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2418,14 +2426,81 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Sincronización de registros pendientes</strong><br>Dado que el Developer dispone de registros locales válidos pendientes de sincronización<br>Cuando el Developer envía una solicitud con registros locales pendientes válidos<br>Entonces el sistema responde con el estado de sincronización correspondiente a cada registro.<br><br><strong>Escenario 2: Reenvío del mismo registro</strong><br>Dado que el Developer recibe nuevamente una operación de sincronización que ya fue procesada<br>Cuando el Developer reenvía una operación que ya fue procesada previamente<br>Entonces el sistema evita crear un registro duplicado y devuelve un resultado consistente.<br><br><strong>Escenario 3: Fallo parcial</strong><br>Dado que el Developer recibe una solicitud de sincronización que contiene registros válidos y registros que no pueden ser procesados<br>Cuando el Developer envía una solicitud de sincronización que contiene registros válidos y registros con error<br>Entonces el sistema identifica los registros sincronizados y aquellos que permanecen pendientes.<br><br><strong>Escenario 4: Conflicto de información</strong><br>Dado que el Developer recibe una solicitud de sincronización con un conflicto entre la versión local y la información disponible en el servidor<br>Cuando el Developer envía una solicitud de sincronización que presenta un conflicto con la información del servidor<br>Entonces el sistema aplica la política de resolución de conflictos vigente y devuelve el resultado al cliente.</td>
+    <td colspan="8"><strong>Escenario 1: Sincronización de registros pendientes</strong><br>Dado que el Developer dispone de registros locales válidos pendientes de sincronización<br>Cuando el Developer envía una solicitud con registros locales pendientes válidos, ya sean comidas o autopesajes<br>Entonces el sistema responde con el estado de sincronización correspondiente a cada registro.<br><br><strong>Escenario 2: Reenvío del mismo registro</strong><br>Dado que el Developer recibe nuevamente una operación de sincronización que ya fue procesada<br>Cuando el Developer reenvía una operación que ya fue procesada previamente<br>Entonces el sistema evita crear un registro duplicado y devuelve un resultado consistente.<br><br><strong>Escenario 3: Fallo parcial</strong><br>Dado que el Developer recibe una solicitud de sincronización que contiene registros válidos y registros que no pueden ser procesados<br>Cuando el Developer envía una solicitud de sincronización que contiene registros válidos y registros con error<br>Entonces el sistema identifica los registros sincronizados y aquellos que permanecen pendientes.<br><br><strong>Escenario 4: Conflicto de información</strong><br>Dado que el Developer recibe una solicitud de sincronización con un conflicto entre la versión local y la información disponible en el servidor<br>Cuando el Developer envía una solicitud de sincronización que presenta un conflicto con la información del servidor<br>Entonces el sistema aplica la política de resolución de conflictos vigente, en la que la última escritura prevalece solo sobre la estimación y el momento declarado por el paciente nunca se reescribe, y devuelve el resultado al cliente.</td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 80</strong><br><em>Historia técnica TS09: Servicios de asistencia con IA</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">TS09</td>
+    <td colspan="2">Developer</td>
+    <td colspan="2">Alta</td>
+    <td colspan="2">EP_TS</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Servicios de asistencia con IA</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como Developer, deseo disponer de un módulo técnico de IA con controles de uso, para que las funciones con IA se ofrezcan solo con consentimiento, con salidas validadas y sin exponer datos identificatorios.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Funciones deshabilitadas por defecto</strong><br>Dado que el Developer opera el backend con la IA deshabilitada<br>Cuando el Developer solicita una función con IA del paciente<br>Entonces el sistema responde 503 Service Unavailable, y las funciones del nutricionista responden con su alternativa determinista.<br><br><strong>Escenario 2: Consentimiento verificado</strong><br>Dado que el paciente no ha otorgado el consentimiento o desactivó la función<br>Cuando el Developer solicita la función con IA<br>Entonces el sistema responde 403 Forbidden sin invocar al proveedor de IA.<br><br><strong>Escenario 3: Salida validada</strong><br>Dado que el proveedor de IA devuelve una salida que no cumple el formato o las reglas definidas<br>Cuando el sistema valida la salida<br>Entonces el sistema responde 502 Bad Gateway, no guarda el contenido y registra el rechazo.<br><br><strong>Escenario 4: Límite de uso</strong><br>Dado que el usuario ha agotado su cuota de generaciones<br>Cuando el Developer solicita una nueva generación<br>Entonces el sistema responde 429 Too Many Requests.</td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 81</strong><br><em>Historia técnica TS10: Servicios de agenda y respuesta previa a la consulta</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">TS10</td>
+    <td colspan="2">Developer</td>
+    <td colspan="2">Media</td>
+    <td colspan="2">EP_TS</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Servicios de agenda y respuesta previa a la consulta</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como Developer, deseo disponer de servicios RESTful para gestionar la agenda de consultas y la respuesta previa del paciente, para que las aplicaciones cliente organicen el seguimiento entre consultas.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Consulta agendada</strong><br>Dado que el Developer dispone de una solicitud válida con una fecha futura para un paciente con vínculo activo<br>Cuando el Developer envía la solicitud de agendamiento<br>Entonces el sistema responde 201 Created y registra la consulta en estado programado.<br><br><strong>Escenario 2: Fecha no futura o consulta duplicada</strong><br>Dado que el Developer envía una solicitud con una fecha no futura o para un paciente que ya tiene una consulta agendada<br>Cuando el sistema valida la solicitud<br>Entonces el sistema rechaza la operación y conserva la agenda sin cambios.<br><br><strong>Escenario 3: Respuesta previa fuera de plazo</strong><br>Dado que el Developer envía la respuesta previa de una consulta cuya hora ya pasó<br>Cuando el sistema valida la solicitud<br>Entonces el sistema responde 409 Conflict y conserva la respuesta anterior.<br><br><strong>Escenario 4: Reprogramación y cancelación</strong><br>Dado que el Developer dispone de una consulta agendada del nutricionista autenticado<br>Cuando el Developer envía la solicitud de reprogramación o de cancelación<br>Entonces el sistema responde 200 OK con la nueva fecha en la reprogramación y 204 No Content en la cancelación, conservando la respuesta previa del paciente.</td>
   </tr>
 </table>
 <br>
 
 ### EP_SS — Spike Stories
 
-<br>***SS01 — Investigación de Google ML Kit para el reconocimiento de alimentos***
+<p class="caption"><strong>Tabla 82</strong><br><em>Spike SS01: Investigación de tecnologías para el reconocimiento de alimentos</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2441,23 +2516,24 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
   <tr>
     <th colspan="2">Title</th>
-    <td colspan="6">Investigación de Google ML Kit para el reconocimiento de alimentos</td>
+    <td colspan="6">Investigación de tecnologías para el reconocimiento de alimentos</td>
   </tr>
   <tr>
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como equipo de desarrollo, deseamos investigar y prototipar el uso de Google ML Kit para apoyar el reconocimiento de alimentos a partir de fotografías, para determinar su viabilidad, limitaciones y el esfuerzo requerido antes de implementar el registro fotográfico de comidas en Healthify.</td>
+    <td colspan="8">Como equipo de desarrollo, deseamos investigar y prototipar el uso de Google ML Kit y de modelos de IA generativa para apoyar el reconocimiento de alimentos a partir de fotografías, para determinar su viabilidad, limitaciones y el esfuerzo requerido antes de implementar el registro fotográfico de comidas en Healthify.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Revisión técnica</strong><br>Dado que el equipo de desarrollo necesita conocer las capacidades de Google ML Kit relevantes para el procesamiento de imágenes<br>Cuando el equipo de desarrollo revisa la documentación y las restricciones técnicas aplicables de Google ML Kit<br>Entonces el equipo de desarrollo documenta las capacidades, dependencias y limitaciones identificadas.<br><br><strong>Escenario 2: Prueba de concepto</strong><br>Dado que el equipo de desarrollo ha identificado las capacidades de Google ML Kit potencialmente aplicables<br>Cuando el equipo de desarrollo implementa una prueba de concepto con fotografías representativas<br>Entonces el equipo de desarrollo registra los resultados obtenidos y los casos en los que el reconocimiento no resulta suficiente.<br><br><strong>Escenario 3: Estrategia de contingencia</strong><br>Dado que el equipo de desarrollo ha identificado que el reconocimiento puede producir resultados incompletos o inciertos<br>Cuando el equipo de desarrollo analiza los resultados obtenidos en la prueba de concepto<br>Entonces el equipo de desarrollo documenta una alternativa funcional que permita al paciente confirmar, corregir o registrar manualmente la información.<br><br><strong>Escenario 4: Conclusión del Spike</strong><br>Dado que el equipo de desarrollo ha finalizado la investigación y la prueba de concepto<br>Cuando el equipo de desarrollo consolida los hallazgos de la investigación y del prototipo<br>Entonces el equipo de desarrollo documenta una recomendación sobre viabilidad, riesgos y esfuerzo estimado para la implementación.</td>
+    <td colspan="8"><strong>Escenario 1: Revisión técnica</strong><br>Dado que el equipo de desarrollo necesita conocer las capacidades de Google ML Kit y de los modelos de IA generativa relevantes para el procesamiento de imágenes<br>Cuando el equipo de desarrollo revisa la documentación y las restricciones técnicas aplicables de ambas alternativas<br>Entonces el equipo de desarrollo documenta las capacidades, dependencias y limitaciones identificadas.<br><br><strong>Escenario 2: Prueba de concepto</strong><br>Dado que el equipo de desarrollo ha identificado las capacidades potencialmente aplicables de ambas alternativas<br>Cuando el equipo de desarrollo implementa una prueba de concepto con fotografías representativas<br>Entonces el equipo de desarrollo registra los resultados obtenidos y los casos en los que el reconocimiento no resulta suficiente.<br><br><strong>Escenario 3: Estrategia de contingencia</strong><br>Dado que el equipo de desarrollo ha identificado que el reconocimiento puede producir resultados incompletos o inciertos<br>Cuando el equipo de desarrollo analiza los resultados obtenidos en la prueba de concepto<br>Entonces el equipo de desarrollo documenta una alternativa funcional que permita al paciente confirmar, corregir o registrar manualmente la información.<br><br><strong>Escenario 4: Conclusión del Spike</strong><br>Dado que el equipo de desarrollo ha finalizado la investigación y la prueba de concepto<br>Cuando el equipo de desarrollo consolida los hallazgos de la investigación y del prototipo<br>Entonces el equipo de desarrollo documenta una recomendación sobre viabilidad, riesgos y esfuerzo estimado para la implementación: el reconocimiento de comidas se realiza en el servidor con un modelo de IA generativa, y Google ML Kit se destina a la lectura del código QR de invitación.</td>
   </tr>
 </table>
 
-<br>***SS02 — Investigación de Open Food Facts para el catálogo de alimentos***
+<p class="caption"><strong>Tabla 83</strong><br><em>Spike SS02: Investigación de Open Food Facts y USDA para el catálogo de alimentos</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2473,23 +2549,24 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
   <tr>
     <th colspan="2">Title</th>
-    <td colspan="6">Investigación de Open Food Facts para el catálogo de alimentos</td>
+    <td colspan="6">Investigación de Open Food Facts y USDA para el catálogo de alimentos</td>
   </tr>
   <tr>
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como equipo de desarrollo, deseamos investigar la integración de Open Food Facts como fuente externa del catálogo nutricional, para determinar su cobertura, calidad de información y adecuación para los alimentos relevantes para los usuarios de Healthify.</td>
+    <td colspan="8">Como equipo de desarrollo, deseamos investigar la integración de Open Food Facts y de USDA FoodData Central como fuentes externas del catálogo nutricional, para determinar su cobertura, calidad de información y adecuación para los alimentos relevantes para los usuarios de Healthify.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Revisión de la API</strong><br>Dado que el equipo de desarrollo necesita evaluar Open Food Facts como fuente externa de alimentos<br>Cuando el equipo de desarrollo revisa la documentación disponible de Open Food Facts<br>Entonces el equipo de desarrollo documenta los recursos, campos, restricciones y condiciones de uso relevantes para Healthify.<br><br><strong>Escenario 2: Evaluación de cobertura</strong><br>Dado que el equipo de desarrollo necesita evaluar la cobertura de alimentos relevantes para el contexto peruano<br>Cuando el equipo de desarrollo consulta una muestra representativa de alimentos relevantes para el contexto peruano<br>Entonces el equipo de desarrollo documenta la disponibilidad, completitud y principales vacíos encontrados.<br><br><strong>Escenario 3: Prueba de integración</strong><br>Dado que el equipo de desarrollo ha identificado los recursos necesarios de Open Food Facts<br>Cuando el equipo de desarrollo implementa una prueba de concepto de consulta y transformación de datos<br>Entonces el equipo de desarrollo demuestra que la información puede convertirse al modelo utilizado por Healthify sin depender directamente de los términos internos del proveedor.<br><br><strong>Escenario 4: Conclusión del Spike</strong><br>Dado que el equipo de desarrollo ha evaluado la cobertura y la integración de Open Food Facts<br>Cuando el equipo de desarrollo consolida los resultados de cobertura e integración<br>Entonces el equipo de desarrollo documenta si Open Food Facts resulta suficiente, requiere una fuente complementaria o necesita una estrategia local adicional.</td>
+    <td colspan="8"><strong>Escenario 1: Revisión de la API</strong><br>Dado que el equipo de desarrollo necesita evaluar Open Food Facts como fuente externa de alimentos<br>Cuando el equipo de desarrollo revisa la documentación disponible de Open Food Facts<br>Entonces el equipo de desarrollo documenta los recursos, campos, restricciones y condiciones de uso relevantes para Healthify.<br><br><strong>Escenario 2: Evaluación de cobertura</strong><br>Dado que el equipo de desarrollo necesita evaluar la cobertura de alimentos relevantes para el contexto peruano<br>Cuando el equipo de desarrollo consulta una muestra representativa de alimentos relevantes para el contexto peruano<br>Entonces el equipo de desarrollo documenta la disponibilidad, completitud y principales vacíos encontrados.<br><br><strong>Escenario 3: Prueba de integración</strong><br>Dado que el equipo de desarrollo ha identificado los recursos necesarios de Open Food Facts<br>Cuando el equipo de desarrollo implementa una prueba de concepto de consulta y transformación de datos<br>Entonces el equipo de desarrollo demuestra que la información puede convertirse al modelo utilizado por Healthify sin depender directamente de los términos internos del proveedor.<br><br><strong>Escenario 4: Conclusión del Spike</strong><br>Dado que el equipo de desarrollo ha evaluado la cobertura y la integración de Open Food Facts<br>Cuando el equipo de desarrollo consolida los resultados de cobertura e integración<br>Entonces el equipo de desarrollo documenta si Open Food Facts resulta suficiente, requiere una fuente complementaria, como USDA FoodData Central, o necesita una estrategia local adicional, como los alimentos locales que agrega el nutricionista.</td>
   </tr>
 </table>
 
-<br>***SS03 — Investigación y definición de la lógica de la señal de consistencia***
+<p class="caption"><strong>Tabla 84</strong><br><em>Spike SS03: Investigación y definición de la lógica de la señal de consistencia</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2517,7 +2594,40 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Identificación de variables relevantes</strong><br>Dado que el equipo de desarrollo necesita definir qué información registrada a lo largo del tiempo puede intervenir en la señal de consistencia<br>Cuando el equipo de desarrollo analiza los datos disponibles y las reglas del dominio relacionadas con la consistencia<br>Entonces el equipo de desarrollo documenta qué variables pueden formar parte de la evaluación y cuáles deben excluirse.<br><br><strong>Escenario 2: Tratamiento de información faltante</strong><br>Dado que el equipo de desarrollo ha identificado que pueden existir días con registros incompletos o ausentes<br>Cuando el equipo de desarrollo define reglas candidatas para tratar registros incompletos o ausentes<br>Entonces el equipo de desarrollo documenta cómo se tratarán esos periodos sin clasificarlos automáticamente como desviación.<br><br><strong>Escenario 3: Validación con casos representativos</strong><br>Dado que el equipo de desarrollo dispone de una propuesta de lógica para la señal de consistencia<br>Cuando el equipo de desarrollo aplica la lógica propuesta a casos de prueba representativos<br>Entonces el equipo de desarrollo documenta los resultados, falsos positivos potenciales y situaciones ambiguas identificadas.<br><br><strong>Escenario 4: Conclusión del Spike</strong><br>Dado que el equipo de desarrollo ha evaluado las alternativas propuestas para la señal de consistencia<br>Cuando el equipo de desarrollo consolida las alternativas evaluadas y los resultados de la investigación<br>Entonces el equipo de desarrollo documenta la regla recomendada, sus parámetros pendientes de validación y las condiciones bajo las cuales una señal puede escalarse para revisión profesional, sin modificar automáticamente el tratamiento.</td>
+    <td colspan="8"><strong>Escenario 1: Identificación de variables relevantes</strong><br>Dado que el equipo de desarrollo necesita definir qué información registrada a lo largo del tiempo puede intervenir en la señal de consistencia<br>Cuando el equipo de desarrollo analiza los datos disponibles y las reglas del dominio relacionadas con la consistencia<br>Entonces el equipo de desarrollo documenta qué variables pueden formar parte de la evaluación y cuáles deben excluirse.<br><br><strong>Escenario 2: Tratamiento de información faltante</strong><br>Dado que el equipo de desarrollo ha identificado que pueden existir días con registros incompletos o ausentes<br>Cuando el equipo de desarrollo define reglas candidatas para tratar registros incompletos o ausentes<br>Entonces el equipo de desarrollo documenta cómo se tratarán esos periodos sin clasificarlos automáticamente como desviación.<br><br><strong>Escenario 3: Validación con casos representativos</strong><br>Dado que el equipo de desarrollo dispone de una propuesta de lógica para la señal de consistencia<br>Cuando el equipo de desarrollo aplica la lógica propuesta a casos de prueba representativos<br>Entonces el equipo de desarrollo documenta los resultados, falsos positivos potenciales y situaciones ambiguas identificadas.<br><br><strong>Escenario 4: Conclusión del Spike</strong><br>Dado que el equipo de desarrollo ha evaluado las alternativas propuestas para la señal de consistencia<br>Cuando el equipo de desarrollo consolida las alternativas evaluadas y los resultados de la investigación<br>Entonces el equipo de desarrollo documenta la regla recomendada, sus parámetros pendientes de validación y las condiciones bajo las cuales una señal se muestra primero al paciente y solo después puede escalarse para revisión profesional, sin modificar automáticamente el tratamiento.</td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 85</strong><br><em>Spike SS04: Investigación de los controles de uso de la IA generativa</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">SS04</td>
+    <td colspan="2">Equipo de desarrollo</td>
+    <td colspan="2">Alta</td>
+    <td colspan="2">EP_SS</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Investigación de los controles de uso de la IA generativa</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como equipo de desarrollo, deseamos investigar cómo usar un modelo de IA generativa de forma controlada, para definir las reglas de consentimiento, validación de salidas, privacidad y límites de uso antes de implementar las funciones con IA de Healthify.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Revisión de requisitos de privacidad</strong><br>Dado que el equipo de desarrollo necesita enviar información a un proveedor externo de IA<br>Cuando el equipo de desarrollo revisa qué datos se necesitan y cuáles pueden omitirse<br>Entonces el equipo de desarrollo documenta los datos que pueden enviarse sin identificar al paciente y las condiciones de consentimiento necesarias.<br><br><strong>Escenario 2: Validación de salidas</strong><br>Dado que el equipo de desarrollo ha identificado que una salida de IA puede ser incorrecta o inadecuada<br>Cuando el equipo de desarrollo prueba el formato esperado y las reglas de contenido con casos representativos<br>Entonces el equipo de desarrollo documenta qué salidas se aceptan, cuáles se rechazan y qué alternativa determinista se usa cuando la IA no está disponible.<br><br><strong>Escenario 3: Límites de uso y costo</strong><br>Dado que el equipo de desarrollo necesita acotar el uso del proveedor de IA<br>Cuando el equipo de desarrollo estima el volumen de generaciones por usuario<br>Entonces el equipo de desarrollo documenta las cuotas, el almacenamiento temporal de resultados y la forma de desactivar las funciones.<br><br><strong>Escenario 4: Conclusión del Spike</strong><br>Dado que el equipo de desarrollo ha finalizado la investigación<br>Cuando el equipo de desarrollo consolida los hallazgos<br>Entonces el equipo de desarrollo documenta una recomendación sobre las reglas que deben cumplir todas las funciones con IA.</td>
   </tr>
 </table>
 
