@@ -1,0 +1,80 @@
+@startuml Healthify - Nutritional Care - Application (part 3 of 7)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Application layer (part 3 of 7)
+
+package "Healthify.Platform.NutritionalCare.Application" {
+
+  package "Internal" {
+    class GuidelineSuggestionsOutput <<record>> {
+      -Suggested: IReadOnlyList<string>
+    }
+    class GuidelineSuggestionsOutputValidator {
+      +MaximumSuggestions: int
+      +{static} Instance: GuidelineSuggestionsOutputValidator
+      +Validate(output: GuidelineSuggestionsOutput): IReadOnlyList<string>
+    }
+    interface IPlanProposalGenerationQueue {
+      +TryEnqueue(reviewItemId: int): bool
+      +IsPending(reviewItemId: int): bool
+      +DequeueAsync(ct): ValueTask<int>
+      +Complete(reviewItemId: int): void
+    }
+    class PatientPlanVersion <<record>> {
+      -Version: int
+      -PublishedAt: DateTimeOffset
+      -IsActive: bool
+      -EnergyKcal: decimal
+      -ProteinG: decimal
+      -CarbG: decimal
+      -FatG: decimal
+      -Guidelines: IReadOnlyList<Guideline>
+      -Restrictions: IReadOnlyList<string>
+      -LegacyRestrictions: IReadOnlyList<string>
+      -ChangesFromPrevious: IReadOnlyList<PlanChange>
+      -PatientMessage: string?
+    }
+    class PlanAdjustmentCurrentPlan <<record>> {
+      -Version: int
+      -EnergyKcal: decimal
+      -ProteinG: decimal
+      -CarbG: decimal
+      -FatG: decimal
+      -GuidelineCodes: IReadOnlyList<string>
+      -RestrictionCodes: IReadOnlyList<string>
+    }
+    class PlanAdjustmentEvidence <<record>> {
+      -AveragePercentFromTarget: decimal?
+      -DeviatedDays: int?
+      -LoggedDaysConsidered: int?
+      -Direction: string?
+    }
+    class PlanAdjustmentInput <<record>> {
+      -PatientId: int
+      -PractitionerId: int
+      -Language: string
+      -Evidence: PlanAdjustmentEvidence
+      -MealSlotsOnDeviatedDays: PlanAdjustmentMealSlots
+      -WeightTrend: PlanAdjustmentWeightTrend?
+      -CurrentPlan: PlanAdjustmentCurrentPlan
+      -DiagnosisCode: string?
+      -CalorieFloorKcal: decimal
+      -PractitionerLanguage: string?
+      +PatientLanguage: string
+      +PractitionerReadingLanguage: string
+    }
+    class PlanAdjustmentInputReader {
+      +DeviatedDaysHorizon: int
+      +WeightTrendWeeks: int
+      +BiologicalSexOfAsync(patientId: int, diagnosis: NutritionalDiagnosis?, ct): Task<string?>
+    }
+  }
+}
+
+
+@enduml

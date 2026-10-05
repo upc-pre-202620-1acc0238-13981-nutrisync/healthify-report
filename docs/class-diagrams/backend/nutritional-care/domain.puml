@@ -30,6 +30,17 @@ package "Healthify.Platform.NutritionalCare.Domain" {
       +NutritionalAssessment(command: RecordAssessmentCommand)
       +TakeClinicalMeasurement(command: TakeClinicalMeasurementCommand): ClinicalMeasurement
       +Close(): void
+      +ActivityLevel: ActivityLevel?
+      +MealsPerDay: int?
+      +WaterLitersPerDay: decimal?
+      +MealsOutPerWeek: int?
+      +FastingGlucoseMgDl: decimal?
+      +TotalCholesterolMgDl: decimal?
+      +TriglyceridesMgDl: decimal?
+      +ConditionsSnapshot: IReadOnlyList<string>?
+      +ConsultationId: int?
+      +{static} ForConsultation(consultationId: int, practitionerId: int, baseline: PatientBaseline, consultationDate: DateOnly, activityLevel: ActivityLevel, eatingHabits: EatingHabits?, biochemistry: BiochemistryPanel?, supersedesAssessmentId: int?): NutritionalAssessment
+      +TakeStructuredMeasurement(weightKg: decimal, height: HeightCm, protocolChecks: MeasurementProtocolChecklist, bodyFatPercentage: decimal?, waistCm: decimal?): ClinicalMeasurement
     }
 
     class NutritionalDiagnosis {
@@ -47,6 +58,18 @@ package "Healthify.Platform.NutritionalCare.Domain" {
       #NutritionalDiagnosis()
       +NutritionalDiagnosis(command: IssueDiagnosisCommand)
       +Supersede(): void
+      +Code: DiagnosisCode?
+      +Source: DiagnosisSource?
+      +AiGenerationId: long?
+      +BmiAtIssue: decimal?
+      +PendingConsultationId: int?
+      +DiscardedAt: DateTimeOffset?
+      +IsPending: bool
+      +IsDiscarded: bool
+      +IsPendingFor(consultationId: int): bool
+      +{static} FromConsultation(patientId: int, practitionerId: int, assessmentId: int, code: DiagnosisCode, source: DiagnosisSource, aiGenerationId: long?, rationale: string?, basis: ClinicalMeasurement, pendingForConsultationId: int?): NutritionalDiagnosis
+      +Activate(): void
+      +Discard(): void
     }
 
     class NutritionPlan {
@@ -93,6 +116,25 @@ package "Healthify.Platform.NutritionalCare.Domain" {
       +Publish(guidelines, restrictions): void
       +Supersede(): void
       +CreateAdjustedVersion(command: AdjustNutritionPlanCommand, changeReason: ChangeReason): NutritionPlan
+      +ChangeReasonText: string?
+      +ChangeReasonCode: string?
+      +ChangeReasonData: ChangeReasonData?
+      +Guidelines: IReadOnlyList<Guideline>
+      +Restrictions: IReadOnlyList<string>
+      +LegacyRestrictions: IReadOnlyList<string>
+      +DroppedLegacyRestrictions: IReadOnlyList<string>
+      +ChangesFromPrevious: IReadOnlyList<PlanChange>?
+      +PatientMessage: string?
+      +HasRecordedChanges: bool
+      +DiscardedAt: DateTimeOffset?
+      +IsDiscarded: bool
+      +Recalculate(diagnosisId: int, basis: CalculationBasis, proposal: TargetProposal): void
+      +PublishWith(guidelines: IEnumerable<Guideline>, restrictions: IEnumerable<DietaryRestriction>): void
+      +SetChangeReason(changeReason: ChangeReason): void
+      +SetPatientMessage(message: PatientFacingMessage?): void
+      +RecordLegacyRestrictionsLeftOut(previous: NutritionPlan): void
+      +RecordChangesFromPrevious(previous: NutritionPlan?): void
+      +Discard(): void
     }
 
     class ReviewItem {
@@ -111,6 +153,18 @@ package "Healthify.Platform.NutritionalCare.Domain" {
       #ReviewItem()
       +ReviewItem(command: OpenReviewItemCommand, practitionerId: int)
       +Resolve(resolvedWithAdjustment: bool, note: string?): void
+      +EvidenceData: ReviewItemEvidence?
+      +ResolutionNoteCode: string?
+      +ResolutionNoteData: ResolutionNoteData?
+      +Proposal: PlanAdjustmentProposal?
+      +RecheckDueAt: DateTimeOffset?
+      +RecheckIssuedAt: DateTimeOffset?
+      +HasPlanProposal: bool
+      +IsRecheckPending: bool
+      +AttachProposal(aiGenerationId: long, title: string, energyKcal: decimal, proteinG: decimal, carbG: decimal, fatG: decimal, addedGuidelines: IEnumerable<string>, removedGuidelines: IEnumerable<string>, patientMessage: string, recheckAfterDays: int, rationale: string, generatedAt: DateTimeOffset, practitionerLanguage: string?, patientLanguage: string?): PlanAdjustmentProposal
+      +PurgeUnacceptedProposal(): bool
+      +ResolveByAssigningPlan(planVersion: int, acceptedAsIs: bool): void
+      +MarkRecheckIssued(issuedAt: DateTimeOffset): void
     }
   }
 

@@ -1,0 +1,62 @@
+@startuml Healthify - Nutritional Care - Application (part 1 of 7)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Application layer (part 1 of 7)
+
+package "Healthify.Platform.NutritionalCare.Application" {
+
+
+  package "CommandServices" {
+    interface IConsultationAiCommandService {
+      +Handle(command: SuggestConsultationDiagnosisCommand, ct): Task<Result<DiagnosisSuggestion, NutritionalCareError>>
+      +Handle(command: SuggestConsultationGuidelinesCommand, ct): Task<Result<GuidelineSuggestions, NutritionalCareError>>
+    }
+    interface IConsultationCommandService {
+      +Handle(command: StartConsultationCommand, ct): Task<Result<Consultation, NutritionalCareError>>
+      +Handle(command: RecordConsultationMeasurementCommand, ct): Task<Result<ConsultationMeasurementOutcome, NutritionalCareError>>
+      +Handle(command: IssueConsultationDiagnosisCommand, ct): Task<Result<ConsultationDiagnosisOutcome, NutritionalCareError>>
+      +Handle(command: ProposeConsultationTargetsCommand, ct): Task<Result<ConsultationTargetProposalOutcome, NutritionalCareError>>
+      +Handle(command: PrescribeConsultationTargetsCommand, ct): Task<Result<ConsultationTargetsOutcome, NutritionalCareError>>
+      +Handle(command: PublishFromConsultationCommand, ct): Task<Result<ConsultationPublicationOutcome, NutritionalCareError>>
+      +Handle(command: SaveConsultationPublicationDraftCommand, ct): Task<Result<Consultation, NutritionalCareError>>
+      +Handle(command: AbandonConsultationCommand, ct): Task<Result<Consultation, NutritionalCareError>>
+    }
+    interface IPatientBaselineCommandService {
+      +Handle(command: RecordPatientBaselineCommand, ct): Task<Result<PatientBaseline, NutritionalCareError>>
+      +Handle(command: UpdatePatientBaselineCommand, ct): Task<Result<PatientBaseline, NutritionalCareError>>
+    }
+    interface IPlanAdjustmentProposer {
+      +ProposePlanAdjustment(input: PlanAdjustmentInput, ct): Task<Result<AiGenerationOutcome<PlanAdjustmentProposalOutput>, AiError>>
+    }
+    interface IPlanProposalCommandService {
+      +Handle(command: AcceptPlanProposalCommand, ct): Task<Result<PlanProposalAcceptanceOutcome, NutritionalCareError>>
+    }
+  }
+  package "Internal" {
+    class ConsultationDetails <<record>> {
+      -Consultation: Consultation
+      -Assessment: NutritionalAssessment?
+      -Diagnosis: NutritionalDiagnosis?
+      -Plan: NutritionPlan?
+      -ActivePlanLegacyRestrictions: IReadOnlyList<string>
+      -PatientCheckIn: PreVisitCheckInItem?
+    }
+    class ConsultationDiagnosisOutcome <<record>> {
+      -Consultation: Consultation
+      -Diagnosis: NutritionalDiagnosis
+    }
+    class ConsultationMeasurementOutcome <<record>> {
+      -Consultation: Consultation
+      -Assessment: NutritionalAssessment
+    }
+  }
+}
+
+IConsultationAiCommandService -[hidden]down-> ConsultationDetails
+
+@enduml

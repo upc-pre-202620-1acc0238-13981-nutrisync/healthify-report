@@ -1,0 +1,69 @@
+@startuml Healthify - Nutritional Care - Domain (part 1 of 6)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Domain layer (part 1 of 6)
+
+package "Healthify.Platform.NutritionalCare.Domain" {
+
+  class "Model.Commands (22)" as Model_Commands <<messages>> {
+    AbandonConsultationCommand
+    AcceptPlanProposalCommand
+    AdjustedPlanDto
+    BiochemistryDto
+    EatingHabitsDto
+    GeneratePlanProposalCommand
+    IssueConsultationDiagnosisCommand
+    OpenDueRechecksCommand
+    PrescribeConsultationTargetsCommand
+    ProposeConsultationTargetsCommand
+    PublishFromConsultationCommand
+    PurgeUnacceptedPlanProposalsCommand
+    RecordConsultationMeasurementCommand
+    RecordPatientBaselineCommand
+    RecoverPlanProposalsCommand
+    ReviewItemEvidenceDto
+    SaveConsultationPublicationDraftCommand
+    StartConsultationCommand
+    SuggestConsultationDiagnosisCommand
+    SuggestConsultationGuidelinesCommand
+    TargetParametersDto
+    UpdatePatientBaselineCommand
+  }
+  class "Model.Events (8)" as Model_Events <<messages>> {
+    ConsultationCompleted
+    ConsultationStarted
+    GuidelineItem
+    NutritionalDiagnosisSuperseded
+    PatientBaselineRecorded
+    PatientBaselineUpdated
+    PlanChangeItem
+    PlanProposalAccepted
+  }
+  class "Model.Queries (14)" as Model_Queries <<messages>> {
+    GetActivePlansByPatientIdsQuery
+    GetConsultationByIdQuery
+    GetConsultationDiagnosisSuggestionQuery
+    GetConsultationGuidelineSuggestionsQuery
+    GetConsultationsByPatientIdQuery
+    GetInProgressConsultationByPatientIdQuery
+    GetInProgressConsultationsByPatientIdsQuery
+    GetPatientBaselineByPatientIdQuery
+    GetPatientBaselinesByPatientIdsQuery
+    GetPatientPlanVersionsQuery
+    GetPlanProposalByReviewItemIdQuery
+    GetReviewInboxEntryByIdQuery
+    GetReviewItemExistenceQuery
+    GetReviewItemsByPractitionerIdQuery
+  }
+
+}
+
+Model_Commands -[hidden]down-> Model_Events
+Model_Events -[hidden]down-> Model_Queries
+
+@enduml
