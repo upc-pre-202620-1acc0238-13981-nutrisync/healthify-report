@@ -66,9 +66,21 @@
 ## PROJECT REPORT COLLABORATION INSIGHTS
 
 Repositorio del informe del proyecto en GitHub: [healthify-report](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report)
+Repositorio de la website: [healthify-website](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-website)
+Repositorio de la webservices: [healthify-platform](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform)
+Repositorio de la app en Android Studio: [healthify-android-app](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app)
 
 AV1:<br>
+
+<p class="caption"><strong>Figura 1</strong><br><em>Captura de GitHub Insights del repositorio del informe al cierre del AV1</em></p>
+
 ![Report](./assets/img/insights/av1.png)
+
+TB1:<br>
+
+<p class="caption"><strong>Figura 2</strong><br><em>Captura de GitHub Insights del repositorio del informe al cierre del TB1</em></p>
+
+![Report](./assets/img/insights/tb1.png)
 
 <div style="page-break-after: always"></div>
 
