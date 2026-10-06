@@ -1,0 +1,28 @@
+@startuml Healthify - Care Relationship - Infrastructure (part 1 of 1)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Care Relationship - Infrastructure layer (part 1 of 1)
+
+package "Healthify.Platform.CareRelationship.Infrastructure" {
+
+
+  package "Persistence.EFC.Configuration" {
+    class AiPreferencesEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<AiPreferences>): void
+    }
+  }
+  package "Persistence.EFC.Repositories" {
+    class AiPreferencesRepository {
+      +FindByPatientIdAsync(patientId: int, ct): Task<AiPreferences?>
+    }
+  }
+}
+
+AiPreferencesEntityTypeConfiguration -[hidden]down-> AiPreferencesRepository
+
+@enduml

@@ -1,0 +1,71 @@
+@startuml Healthify - Care Relationship - Application (part 1 of 1)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Care Relationship - Application layer (part 1 of 1)
+
+package "Healthify.Platform.CareRelationship.Application" {
+
+
+  package "Acl" {
+    class CareRelationshipAiConsentPolicy {
+      +IsAllowedAsync(patientId: int, feature: AiFeature, ct): Task<bool>
+    }
+  }
+  package "CommandServices" {
+    interface IAiPreferencesCommandService {
+      +Handle(command: UpdateAiPreferencesCommand, ct): Task<Result<AiPreferencesStatus, CareRelationshipError>>
+      +Handle(command: SyncAiPreferencesWithConsentCommand, ct): Task<Result<AiPreferencesStatus, CareRelationshipError>>
+    }
+  }
+  package "Internal" {
+    class AiPreferencesStatus <<record>> {
+      -PatientId: int
+      -ConsentGranted: bool
+      -WeeklySummaryEnabled: bool
+      -MealIdeasEnabled: bool
+      -SuggestedQuestionsEnabled: bool
+      -MealPhotoRecognitionEnabled: bool
+      +{static} Of(patientId: int, consentGranted: bool, weeklySummary: bool, mealIdeas: bool, suggestedQuestions: bool, mealPhotoRecognition: bool): AiPreferencesStatus
+    }
+  }
+  package "Internal.CommandServices" {
+    class AiPreferencesCommandService {
+      +Handle(command: UpdateAiPreferencesCommand, ct): Task<Result<AiPreferencesStatus, CareRelationshipError>>
+      +Handle(command: SyncAiPreferencesWithConsentCommand, ct): Task<Result<AiPreferencesStatus, CareRelationshipError>>
+    }
+  }
+  package "Internal.EventHandlers" {
+    class OnAiPreferencesChangedHandler {
+      +Handle(notification: AiPreferencesChanged, ct): Task
+    }
+    class OnAiProcessingConsentChangedHandler {
+      +Handle(notification: AiProcessingConsentChanged, ct): Task
+    }
+  }
+  package "Internal.QueryServices" {
+    class AiPreferencesQueryService {
+      +Handle(query: GetAiPreferencesByPatientIdQuery, ct): Task<AiPreferencesStatus>
+    }
+  }
+  package "QueryServices" {
+    interface IAiPreferencesQueryService {
+      +Handle(query: GetAiPreferencesByPatientIdQuery, ct): Task<AiPreferencesStatus>
+    }
+  }
+}
+
+AiPreferencesCommandService -[hidden]down-> OnAiPreferencesChangedHandler
+AiPreferencesCommandService ..|> IAiPreferencesCommandService
+AiPreferencesQueryService -[hidden]down-> IAiPreferencesQueryService
+AiPreferencesQueryService ..|> IAiPreferencesQueryService
+AiPreferencesStatus -[hidden]down-> AiPreferencesCommandService
+CareRelationshipAiConsentPolicy -[hidden]down-> IAiPreferencesCommandService
+IAiPreferencesCommandService -[hidden]down-> AiPreferencesStatus
+OnAiPreferencesChangedHandler -[hidden]down-> AiPreferencesQueryService
+
+@enduml

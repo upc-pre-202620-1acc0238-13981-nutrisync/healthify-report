@@ -1,0 +1,38 @@
+@startuml Healthify - IAM - Infrastructure (part 1 of 1)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title IAM - Infrastructure layer (part 1 of 1)
+
+package "Healthify.Platform.Iam.Infrastructure" {
+
+
+  package "Localization" {
+    class LanguageClaimRequestCultureProvider {
+      +DetermineProviderCultureResult(httpContext: HttpContext): Task<ProviderCultureResult?>
+    }
+  }
+  package "Security" {
+    class ConfiguredSignInLockoutPolicy {
+      +LockoutDuration(): TimeSpan
+    }
+  }
+  package "Tokens.Refresh" {
+    class RefreshTokenService {
+      +Issue(): IssuedRefreshToken
+      +Successor(presentedToken: string): IssuedRefreshToken
+      +Hash(token: string): string
+      +Now(): DateTimeOffset
+      +ReuseGrace(): TimeSpan
+    }
+  }
+}
+
+ConfiguredSignInLockoutPolicy -[hidden]down-> RefreshTokenService
+LanguageClaimRequestCultureProvider -[hidden]down-> ConfiguredSignInLockoutPolicy
+
+@enduml

@@ -1,0 +1,56 @@
+@startuml Healthify - Food Catalog - Domain (part 2 of 2)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Food Catalog - Domain layer (part 2 of 2)
+
+package "Healthify.Platform.FoodCatalog.Domain" {
+
+  package "Model.ValueObjects" {
+    class FoodSource <<record>> {
+      +Imported: string
+      +LocalOverride: string
+      +AiEstimated: string
+      +MaxLength: int
+      +FoodSource(value: string)
+      +Value: string
+      +IsAiEstimated: bool
+      +ToString(): string
+    }
+  }
+  package "Services" {
+    class FoodNameMatcher {
+      +SearchTermLength: int
+      +{static} SearchTermOf(name: string): string?
+      +{static} BestMatch(name: string, candidates: IEnumerable<ReferenceFood>): ReferenceFood?
+      +MinimumSharedWords: int
+      +MaximumExtraWords: int
+      +{static} SearchTermsOf(name: string, max: int): IReadOnlyList<string>
+      +{static} ClearSimilarMatch(name: string, candidates: IEnumerable<ReferenceFood>): ReferenceFood?
+      +{static} Normalize(text: string?): string
+    }
+    class NutrientCoherence {
+      +MaxEnergyKcal: decimal
+      +MaxMacroGrams: decimal
+      +{static} Violations(energyKcal: decimal, proteinG: decimal, carbG: decimal, fatG: decimal, tolerance: NutrientTolerance?): IReadOnlyList<string>
+      +{static} IsCoherent(energyKcal: decimal, proteinG: decimal, carbG: decimal, fatG: decimal, tolerance: NutrientTolerance?): bool
+      +{static} AtwaterEnergy(proteinG: decimal, carbG: decimal, fatG: decimal): decimal
+    }
+    class NutrientTolerance <<record>> {
+      -Percent: decimal
+      -Kcal: decimal
+      +DefaultPercent: decimal
+      +DefaultKcal: decimal
+      +{static} Default: NutrientTolerance
+      +AllowedFor(energyKcal: decimal): decimal
+    }
+  }
+}
+
+FoodSource -[hidden]down-> FoodNameMatcher
+
+@enduml

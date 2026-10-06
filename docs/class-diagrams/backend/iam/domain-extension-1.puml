@@ -1,0 +1,29 @@
+@startuml Healthify - IAM - Domain (part 1 of 2)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title IAM - Domain layer (part 1 of 2)
+
+package "Healthify.Platform.Iam.Domain" {
+
+  class "Model.Commands (2)" as Model_Commands <<messages>> {
+    ChangePreferredLanguageCommand
+    RefreshSessionCommand
+  }
+  class "Model.Events (1)" as Model_Events <<messages>> {
+    RefreshTokenReuseDetected
+  }
+  class "Model.Queries (1)" as Model_Queries <<messages>> {
+    GetUsersByIdsQuery
+  }
+
+}
+
+Model_Commands -[hidden]down-> Model_Events
+Model_Events -[hidden]down-> Model_Queries
+
+@enduml
