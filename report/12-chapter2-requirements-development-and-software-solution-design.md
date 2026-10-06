@@ -2656,59 +2656,74 @@ El Impact Mapping del nutricionista se orienta al uso recurrente de la informaci
 
 ### 2.4.3. Product Backlog
 
+<p class="caption"><strong>Tabla 86</strong><br><em>Product Backlog priorizado de Healthify</em></p>
+
 | **# Order** | **User Story ID** | **Title** | **Story Points** <br>**(1/2/3/5/8)** | **Sprint** |
 | :--- | :--- | :--- | :--- | :--- |
 | 1 | US08 | Registro de comida por fotografía | 8 | Sprint 1 |
-| 2 | SS01 | Investigación de Google ML Kit para el reconocimiento de alimentos | 3 | Sprint 1 |
-| 3 | TS05 | Servicios de registro de ingesta alimentaria | 5 | Sprint 1 |
-| 4 | US10 | Registro manual de comida mediante catálogo | 5 | Sprint 1 |
-| 5 | SS02 | Investigación de Open Food Facts para el catálogo de alimentos | 3 | Sprint 1 |
-| 6 | US09 | Confirmación o ajuste de estimación de porción | 3 | Sprint 1 |
-| 7 | US11 | Registro de consumo fuera del plan | 2 | Sprint 1 |
-| 8 | US23 | Visualización de metas nutricionales vigentes | 3 | Sprint 1 |
-| 9 | US26 | Prescripción y publicación del plan nutricional | 8 | Sprint 2 |
-| 10 | US25 | Obtención de propuesta de metas nutricionales calculadas | 5 | Sprint 2 |
-| 11 | TS04 | Servicios de prescripción y gestión del plan nutricional | 8 | Sprint 1 |
-| 12 | US14 | Consulta del cumplimiento nutricional diario | 5 | Sprint 2 |
-| 13 | US16 | Consulta del monitoreo del paciente | 5 | Sprint 2 |
-| 14 | TS07 | Servicios de monitoreo y expediente del paciente | 8 | Sprint 2 |
-| 15 | US21 | Registro y finalización de la evaluación nutricional | 5 | Sprint 2 |
-| 16 | US22 | Emisión del diagnóstico nutricional | 5 | Sprint 2 |
-| 17 | TS03 | Servicios de evaluación y diagnóstico nutricional | 5 | Sprint 1 |
-| 18 | US01 | Vinculación mediante invitación QR | 5 | Sprint 1 |
-| 19 | US04 | Generación de invitación QR para un nuevo paciente | 5 | Sprint 1 |
-| 20 | US02 | Otorgamiento de consentimiento para compartir información | 3 | Sprint 1 |
-| 21 | TS02 | Servicios de gestión de vínculos de cuidado | 5 | Sprint 1 |
-| 22 | US12 | Registro de autopesaje | 3 | Sprint 2 |
-| 23 | US13 | Visualización de tendencia de peso | 5 | Sprint 2 |
-| 24 | TS06 | Servicios de autopesaje y seguimiento corporal | 5 | Sprint 1 |
-| 25 | US20 | Acceso al expediente unificado del paciente | 5 | Sprint 2 |
-| 26 | US05 | Consulta de pacientes con vínculo activo | 3 | Sprint 2 |
-| 27 | US17 | Revisión y resolución de señales de seguimiento | 5 | Sprint 3 |
-| 28 | SS03 | Investigación y definición de la lógica de la señal de consistencia | 3 | Sprint 3 |
-| 29 | US15 | Visualización de señal de consistencia | 8 | Sprint 3 |
-| 30 | US27 | Ajuste del plan nutricional entre consultas | 5 | Sprint 3 |
-| 31 | US31 | Registro y sincronización sin conexión | 8 | Sprint 2 |
-| 32 | TS08 | Sincronización de registros offline | 8 | Sprint 2 |
-| 33 | US18 | Acceso al expediente personal unificado | 5 | Sprint 3 |
-| 34 | US24 | Confirmación de recepción de nuevas metas nutricionales | 2 | Sprint 2 |
-| 35 | US19 | Registro de derivación a otro especialista | 2 | Sprint 3 |
-| 36 | US06 | Alta del paciente al finalizar el tratamiento | 2 | Sprint 3 |
-| 37 | US07 | Revocación del vínculo de cuidado | 2 | Sprint 3 |
-| 38 | US03 | Revocación del consentimiento | 2 | Sprint 3 |
-| 39 | US28 | Creación de cuenta | 3 | Sprint 1 |
-| 40 | US29 | Inicio de sesión | 3 | Sprint 1 |
-| 41 | US30 | Cierre de sesión | 1 | Sprint 1 |
-| 42 | TS01 | Servicios de registro, autenticación y autorización | 5 | Sprint 1 |
-| 43 | US32 | Visualización de la propuesta de valor de Healthify | 2 | Sprint 1 |
-| 44 | US33 | Consulta de las principales funcionalidades de Healthify | 2 | Sprint 1 |
-| 45 | US36 | Acceso a la descarga de Healthify desde el Landing Page | 2 | Sprint 1 |
-| 46 | US38 | Consulta de términos y políticas de Healthify | 2 | Sprint 1 |
-| 47 | US35 | Cambio de idioma del Landing Page | 3 | Sprint 1 |
-| 48 | US37 | Envío de consulta mediante formulario de contacto | 3 | Sprint 1 |
-| 49 | US34 | Conocimiento de la startup, misión y visión | 1 | Sprint 1 |
+| 2 | SS01 | Investigación de tecnologías para el reconocimiento de alimentos | 3 | Sprint 1 |
+| 3 | SS04 | Investigación de los controles de uso de la IA generativa | 3 | Sprint 1 |
+| 4 | TS09 | Servicios de asistencia con IA | 8 | Sprint 1 |
+| 5 | TS05 | Servicios de registro de ingesta alimentaria | 5 | Sprint 1 |
+| 6 | US10 | Registro manual de comida mediante catálogo | 5 | Sprint 1 |
+| 7 | SS02 | Investigación de Open Food Facts y USDA para el catálogo de alimentos | 3 | Sprint 1 |
+| 8 | US09 | Confirmación o ajuste de estimación de porción | 3 | Sprint 1 |
+| 9 | US11 | Indicación de adherencia al plan en un registro | 2 | Sprint 1 |
+| 10 | US23 | Visualización de metas nutricionales vigentes | 3 | Sprint 1 |
+| 11 | US26 | Prescripción y publicación del plan nutricional | 8 | Sprint 2 |
+| 12 | US25 | Obtención de propuesta de metas nutricionales calculadas | 5 | Sprint 2 |
+| 13 | TS04 | Servicios de prescripción y gestión del plan nutricional | 8 | Sprint 1 |
+| 14 | US14 | Consulta del cumplimiento nutricional diario | 5 | Sprint 2 |
+| 15 | US16 | Consulta del monitoreo del paciente | 5 | Sprint 2 |
+| 16 | TS07 | Servicios de monitoreo y expediente del paciente | 8 | Sprint 2 |
+| 17 | US21 | Registro y finalización de la evaluación nutricional | 5 | Sprint 2 |
+| 18 | US22 | Emisión del diagnóstico nutricional | 5 | Sprint 2 |
+| 19 | TS03 | Servicios de evaluación y diagnóstico nutricional | 5 | Sprint 1 |
+| 20 | US01 | Vinculación mediante invitación QR | 5 | Sprint 1 |
+| 21 | US04 | Generación de invitación QR para un nuevo paciente | 5 | Sprint 1 |
+| 22 | US02 | Otorgamiento de consentimiento para compartir información | 3 | Sprint 1 |
+| 23 | TS02 | Servicios de gestión de vínculos de cuidado | 5 | Sprint 1 |
+| 24 | US12 | Registro de autopesaje | 3 | Sprint 2 |
+| 25 | US13 | Visualización de tendencia de peso | 5 | Sprint 2 |
+| 26 | TS06 | Servicios de autopesaje y seguimiento corporal | 5 | Sprint 1 |
+| 27 | US20 | Acceso al expediente unificado del paciente | 5 | Sprint 2 |
+| 28 | US44 | Alimentos locales del catálogo | 2 | Sprint 2 |
+| 29 | US05 | Consulta de pacientes con vínculo activo | 3 | Sprint 2 |
+| 30 | US39 | Agenda de consultas | 5 | Sprint 2 |
+| 31 | TS10 | Servicios de agenda y respuesta previa a la consulta | 5 | Sprint 2 |
+| 32 | US17 | Revisión y resolución de señales de seguimiento | 5 | Sprint 3 |
+| 33 | SS03 | Investigación y definición de la lógica de la señal de consistencia | 3 | Sprint 3 |
+| 34 | US15 | Visualización de señal de consistencia | 8 | Sprint 3 |
+| 35 | US27 | Ajuste del plan nutricional entre consultas | 5 | Sprint 3 |
+| 36 | US41 | Control de las funciones con IA | 5 | Sprint 2 |
+| 37 | US42 | Resumen semanal, ideas de comidas y preguntas sugeridas con IA | 8 | Sprint 3 |
+| 38 | US31 | Registro y sincronización sin conexión | 8 | Sprint 2 |
+| 39 | TS08 | Sincronización de registros offline | 8 | Sprint 2 |
+| 40 | US18 | Acceso al expediente personal unificado | 5 | Sprint 3 |
+| 41 | US40 | Preparación y respuesta previa a la consulta | 3 | Sprint 3 |
+| 42 | US24 | Confirmación de recepción de nuevas metas nutricionales | 2 | Sprint 2 |
+| 43 | US19 | Registro de derivación a otro especialista | 2 | Sprint 3 |
+| 44 | US06 | Alta del paciente al finalizar el tratamiento | 2 | Sprint 3 |
+| 45 | US07 | Cambio de nutricionista | 2 | Sprint 3 |
+| 46 | US03 | Revocación del consentimiento | 2 | Sprint 3 |
+| 47 | US28 | Creación de cuenta | 3 | Sprint 1 |
+| 48 | US29 | Inicio de sesión | 3 | Sprint 1 |
+| 49 | US30 | Cierre de sesión | 1 | Sprint 1 |
+| 50 | US43 | Preferencias de la cuenta: idioma y recordatorios | 3 | Sprint 2 |
+| 51 | TS01 | Servicios de registro, autenticación y autorización | 5 | Sprint 1 |
+| 52 | US32 | Visualización de la propuesta de valor de Healthify | 2 | Sprint 1 |
+| 53 | US33 | Consulta de las principales funcionalidades de Healthify | 2 | Sprint 1 |
+| 54 | US36 | Acceso al inicio de uso de Healthify desde el Landing Page | 2 | Sprint 1 |
+| 55 | US38 | Consulta de términos y políticas de Healthify | 2 | Sprint 1 |
+| 56 | US45 | Consulta de preguntas frecuentes | 2 | Sprint 3 |
+| 57 | US35 | Cambio de idioma del Landing Page | 3 | Sprint 1 |
+| 58 | US37 | Envío de consulta mediante formulario de contacto | 3 | Sprint 3 |
+| 59 | US34 | Conocimiento de la startup, misión y visión | 1 | Sprint 3 |
 
 A continuación, se presenta el Product Backlog elaborado en Trello:
+
+<p class="caption"><strong>Figura 18</strong><br><em>Product Backlog de Healthify</em></p>
+
 ![Product Backlog](../assets/img/chapter2/ProductBacklog.png)
 
 *Product Backlog URL:* [Healthify Product Backlog](https://trello.com/b/u2pRzwEi/healthify-product-backlog)
