@@ -2738,7 +2738,7 @@ Esta sección documenta el proceso de diseño estratégico con el que el equipo 
 
 Esta sección documenta la segunda sesión de EventStorming, realizada por el equipo en Miro con una duración aproximada de dos horas, orientada a alcanzar el mayor nivel de detalle posible sobre el dominio ya explorado. Mientras que la sesión de Big Picture se limitó a actores, eventos, políticas y algunos read models, esta sesión incorporó los elementos que permiten pasar del relato del negocio a un modelo accionable.
 
-El trabajo consistió en recorrer la línea de tiempo del tablero anterior y, para cada evento de dominio, reconstruir hacia atrás la cadena completa que lo produce. Para cada hecho el equipo se preguntó qué intención humana o automática lo desencadenó, lo que dio origen a los comandos en notas azules; qué pieza del modelo es responsable de aceptarlo o rechazarlo, lo que dio origen a los agregados en notas amarillo intenso; qué regla protege ese agregado, lo que dio origen a las reglas de negocio en notas rojas; y qué vista necesita alguien para tomar la siguiente decisión, lo que dio origen a los read models en notas verdes. Adicionalmente se marcaron en notas rosa claro los servicios externos, que en el tablero fueron cuatro: el proveedor de autenticación, ML Kit para la estimación de porción en el dispositivo, y Open Food Facts y USDA Food Data Central como fuentes del catálogo. En la implementación, el proveedor de autenticación no se integró como un servicio de terceros, sino que quedó resuelto dentro de `IAM` mediante hashing con BCrypt y emisión propia de tokens JWT, por lo que la solución depende únicamente de tres servicios externos.
+El trabajo consistió en recorrer la línea de tiempo del tablero anterior y, para cada evento de dominio, reconstruir hacia atrás la cadena completa que lo produce. Para cada hecho el equipo se preguntó qué intención humana o automática lo desencadenó, lo que dio origen a los comandos en notas azules; qué pieza del modelo es responsable de aceptarlo o rechazarlo, lo que dio origen a los agregados en notas amarillo intenso; qué regla protege ese agregado, lo que dio origen a las reglas de negocio en notas rojas; y qué vista necesita alguien para tomar la siguiente decisión, lo que dio origen a los read models en notas verdes. Adicionalmente se marcaron en notas rosa claro los servicios externos, que en el tablero fueron cuatro: el proveedor de autenticación, ML Kit para la estimación de porción en el dispositivo, y Open Food Facts y USDA Food Data Central como fuentes del catálogo. En la implementación dos de esos cuatro servicios cambiaron. El proveedor de autenticación no se integró como un servicio de terceros, sino que quedó resuelto dentro de `IAM` mediante hashing con BCrypt y emisión propia de tokens JWT. La estimación de porción dejó de hacerse en el dispositivo: la foto se envía al servidor, donde un modelo de IA generativa la analiza en memoria sin guardarla, y ML Kit se reservó para leer el código QR de invitación. Los servicios externos de la solución son, por tanto, Open Food Facts, USDA Food Data Central y el proveedor de IA.
 
 **Convención de composición.** El equipo acordó una regla de encadenamiento que se respeta en todo el tablero y que facilita después la traducción a código:
 
@@ -2751,9 +2751,13 @@ Las reglas de negocio cuelgan siempre del agregado, porque es el agregado quien 
 
 Enlace del Event-Storming: [https://miro.com/welcomeonboard/MU44Nlk4L2dlOVFveWtDZ05SOTU5cThreUNlUUM1SytYY1lJZ29UeU9uWStqbEY4RVBQWWxxNXoxWjhqTXYvMkhIeFVQR1FFNUN2NEtSVWZRVVlDdzd6U0hDZUFBcjhESm5VZ3pkSHh2cEdHRWRJVTVWR3ZEclhJN3hucXdsZzF0R2lncW1vRmFBVnlLcVJzTmdFdlNRPT0hdjE=?share_link_id=478718202765](https://miro.com/welcomeonboard/MU44Nlk4L2dlOVFveWtDZ05SOTU5cThreUNlUUM1SytYY1lJZ29UeU9uWStqbEY4RVBQWWxxNXoxWjhqTXYvMkhIeFVQR1FFNUN2NEtSVWZRVVlDdzd6U0hDZUFBcjhESm5VZ3pkSHh2cEdHRWRJVTVWR3ZEclhJN3hucXdsZzF0R2lncW1vRmFBVnlLcVJzTmdFdlNRPT0hdjE=?share_link_id=478718202765)
 
+<p class="caption"><strong>Figura 19</strong><br><em>Tablero completo del Design Level EventStorming</em></p>
+
 ![Design Level EventStorming - Tablero completo](../assets/img/artifacts/event-storming/design-level-eventstorming-completo.png)
 
 El modelo resultante quedó organizado en treinta y seis subflujos distribuidos en seis contextos, con cincuenta y cinco comandos, dieciocho agregados, ciento veinticinco reglas de negocio, sesenta y cuatro eventos de dominio y treinta políticas.
+
+<p class="caption"><strong>Tabla 87</strong><br><em>Resumen del Design Level EventStorming por bounded context</em></p>
 
 | Bounded context | Agregados | Comandos | Reglas | Eventos | Políticas |
 |---|---|---:|---:|---:|---:|
@@ -2764,6 +2768,8 @@ El modelo resultante quedó organizado en treinta y seis subflujos distribuidos 
 | `Monitoring & Adherence` | 5 | 16 | 33 | 18 | 16 |
 | `Food Catalog` | 1 | 4 | 8 | 6 | 2 |
 | **Total** | **18** | **55** | **125** | **64** | **30** |
+
+<p class="caption"><strong>Figura 20</strong><br><em>Detalle de un subflujo del Design Level EventStorming</em></p>
 
 ![Design Level EventStorming - Detalle de un subflujo](../assets/img/artifacts/event-storming/design-level-eventstorming-detalle-subflujo.png)
 
@@ -2777,6 +2783,8 @@ El equipo recorrió la línea de tiempo buscando los eventos que cambian el esta
 
 El corte más importante quedó entre las fases 2 y 3 del tablero. El equipo verificó que a cada lado de esa línea cambian simultáneamente el número de actores, el requisito de consistencia y el modo de conectividad, lo que confirma que se trata de una frontera real y no de un cambio de pantalla. Sobre esa base se dibujaron las agrupaciones candidatas y cada una se sometió a cinco pruebas.
 
+<p class="caption"><strong>Tabla 88</strong><br><em>Pruebas aplicadas para descubrir los bounded contexts candidatos</em></p>
+
 | # | Prueba | Pregunta que responde |
 |---|---|---|
 | 1 | Lingüística | ¿Alguna palabra significa dos cosas distintas a cada lado de la línea? |
@@ -2788,6 +2796,8 @@ El corte más importante quedó entre las fases 2 y 3 del tablero. El equipo ver
 La prueba lingüística fue la más productiva, porque cada ambigüedad encontrada justifica por sí sola una frontera: el término peso designa la medición clínica del profesional y también el autopesaje del paciente, que solo significa algo como tendencia; el término alimento designa el ítem del catálogo externo y también el evento de consumo de una persona concreta; y el término plan designa el artefacto clínico versionado y también el conjunto de metas del día. La primera ambigüedad separa `Nutritional Care` de `Intake & Body Response`, la segunda justifica el Anticorruption Layer sobre `Food Catalog` y la tercera justifica publicar un contrato reducido en lugar de exponer el plan completo.
 
 El resultado de la sesión fueron seis bounded contexts, clasificados por su aporte a la diferenciación del producto.
+
+<p class="caption"><strong>Tabla 89</strong><br><em>Bounded contexts resultantes y su clasificación</em></p>
 
 | Clasificación | Bounded context | Responsabilidad | Consistencia |
 |---|---|---|---|
@@ -2802,15 +2812,19 @@ La clasificación de `Nutritional Care` como Supporting merece justificación ex
 
 La sesión también descartó explícitamente siete contextos candidatos, decisión que quedó registrada junto con la condición que los haría reaparecer.
 
+<p class="caption"><strong>Tabla 90</strong><br><em>Contextos candidatos descartados y su razón</em></p>
+
 | Candidato descartado | Razón del descarte |
 |---|---|
 | `Patient Record` | Es un read model compuesto que une tres contextos y se compone en el módulo `ReadModels` de la API; confundir una vista con un contexto es uno de los errores más frecuentes en DDD |
 | `Assessment` como contexto propio | Acoplamiento máximo con diagnóstico e intervención y ninguna ambigüedad lingüística en la frontera |
-| `Portion Estimation / AI` | Es una capacidad técnica, no un lenguaje distinto; vive dentro de `Intake & Body Response` |
+| `Portion Estimation / AI` | Es una capacidad técnica, no un lenguaje distinto. En la implementación quedó como un módulo técnico de IA en `Shared`, desactivado por defecto, que los contextos invocan; `Intake & Body Response` lo usa para reconocer el plato |
 | `Target Calculation` | Es aritmética determinista con parámetros elegidos por un humano; son reglas del agregado `Nutrition Plan` |
 | `Notifications` | Infraestructura genérica frente a la cual el sistema es conformista |
 | `Scheduling` | Demasiado delgado; se absorbe como el agregado `Scheduled Follow Up` |
 | `Gamification` | No existe por decisión ética del producto; convertirlo en contexto institucionalizaría algo que el equipo prohibió |
+
+<p class="caption"><strong>Figura 21</strong><br><em>Agrupación de contextos candidatos sobre el EventStorming</em></p>
 
 ![Candidate Context Discovery - Agrupación de contextos sobre el EventStorm](../assets/img/artifacts/event-storming/candidate-context-discovery.png)
 
@@ -2822,17 +2836,25 @@ Se modelaron cuatro escenarios, elegidos por ser los que más fronteras atravies
 
 **Escenario 1 — Vinculación del paciente durante la consulta.** El profesional emite la invitación, el paciente la redime escaneando el código QR y otorga su consentimiento; `Care Relationship` publica `Care Link Established` y `Monitoring & Adherence` reacciona abriendo la ventana de evaluación. El escenario demuestra que el vínculo es condición previa de todo lo demás.
 
+<p class="caption"><strong>Figura 22</strong><br><em>Domain Message Flow: vinculación del paciente</em></p>
+
 ![Domain Message Flow - Vinculación del paciente](../assets/img/artifacts/domain-storytelling/domain-storytelling-vinculacion.svg)
 
 **Escenario 2 — Prescripción y publicación de metas.** El profesional registra la evaluación, emite el diagnóstico, elige la base de cálculo, prescribe las metas y publica el plan; `Nutritional Care` publica `Active Targets Updated`, que es consumido simultáneamente por `Intake & Body Response` para refrescar su caché de metas, por `Monitoring & Adherence` para tomar el snapshot del día y por `Care Relationship` para marcar las metas como pendientes de acuse de recibo. El escenario evidencia que lo que cruza la frontera es el contrato reducido y no el plan clínico: el diagnóstico y la base de cálculo nunca salen de `Nutritional Care`.
 
+<p class="caption"><strong>Figura 23</strong><br><em>Domain Message Flow: prescripción y publicación de metas</em></p>
+
 ![Domain Message Flow - Prescripción y publicación de metas](../assets/img/artifacts/domain-storytelling/domain-storytelling-prescripcion.svg)
 
-**Escenario 3 — Registro de comida entre consultas, con y sin conexión.** El paciente fotografía su comida, ML Kit propone la estimación en el dispositivo, el paciente la confirma o la ajusta y `Intake & Body Response` publica `Meal Logged` y `Estimate Confirmed By Patient`; `Monitoring & Adherence` evalúa el día contra el snapshot correspondiente. La variante sin conexión muestra la entrada encolada y el reprocesamiento de la ventana tras `Entry Synchronized`. El escenario demuestra que el profesional no participa en ningún paso de la cadena.
+**Escenario 3 — Registro de comida entre consultas, con y sin conexión.** El paciente fotografía su comida, el servidor propone la estimación con un modelo de IA a partir de la foto (que no se conserva), el paciente la confirma o la ajusta y `Intake & Body Response` publica `Meal Logged` y `Estimate Confirmed By Patient`; `Monitoring & Adherence` evalúa el día contra el snapshot correspondiente. La variante sin conexión, que por no disponer de la IA se resuelve con registro manual, muestra la entrada encolada y el reprocesamiento de la ventana tras `Entry Synchronized`. El escenario demuestra que el profesional no participa en ningún paso de la cadena.
+
+<p class="caption"><strong>Figura 24</strong><br><em>Domain Message Flow: registro de comida y sincronización</em></p>
 
 ![Domain Message Flow - Registro de comida y sincronización](../assets/img/artifacts/domain-storytelling/domain-storytelling-registro-comida.svg)
 
 **Escenario 4 — Detección de desviación y decisión del profesional.** `Monitoring & Adherence` detecta la desviación sostenida y publica la señal; `Nutritional Care` la recibe mediante una política, crea un ítem de revisión y lo deposita en la bandeja del profesional, quien decide si ajusta el plan o cierra el ítem sin ajustarlo. El escenario es el que más se discutió en la sesión, porque hace visible la decisión de diseño más importante del modelo: la cadena automática entra por una política y muere en una bandeja de entrada, de manera que ningún algoritmo modifica un plan clínico.
+
+<p class="caption"><strong>Figura 25</strong><br><em>Domain Message Flow: detección de desviación y decisión clínica</em></p>
 
 ![Domain Message Flow - Detección de desviación y decisión clínica](../assets/img/artifacts/domain-storytelling/domain-storytelling-desviacion.svg)
 
@@ -2840,31 +2862,43 @@ Se modelaron cuatro escenarios, elegidos por ser los que más fronteras atravies
 
 Esta sección presenta el Bounded Context Canvas de cada uno de los seis contextos identificados. La elaboración siguió el proceso iterativo propuesto por la técnica: se definió primero el Context Overview con el propósito y la clasificación estratégica del contexto, se destilaron después las reglas de negocio y el lenguaje ubicuo propio del contexto, se analizaron sus capabilities distinguiendo los comandos que recibe, las consultas que atiende y los eventos que publica, se capturaron sus dependencias entrantes y salientes con el patrón de relación correspondiente, y finalmente se sometió cada canvas a una crítica de diseño en la que el equipo buscó señales de frontera mal trazada, como un número desproporcionado de dependencias o un lenguaje que se repite en dos contextos.
 
-Los canvases se elaboraron en el orden de importancia estratégica de cada contexto, comenzando por los dos contextos Core.
+Los canvases se elaboraron en el orden de importancia estratégica de cada contexto, comenzando por los dos contextos Core. Cada canvas sigue la versión 5 de la plantilla del DDD Crew (Name, Purpose, Strategic Classification, Domain Roles, Inbound y Outbound Communication, Ubiquitous Language, Business Decisions, Assumptions, Verification Metrics y Open Questions). En las comunicaciones, los mensajes se agrupan por colaborador y se colorean según su tipo: azul para comandos, verde para consultas y amarillo para eventos.
 
 **`Intake & Body Response` (Core).** Su propósito es capturar fielmente lo que el paciente come y cómo responde su cuerpo, sin emitir ningún juicio sobre ello. Es de escritura exclusiva del paciente: no existe ningún comando del profesional en este contexto, y el profesional accede a la información únicamente a través de un read model. Sus reglas más características son que una entrada nunca se elimina, que la procedencia y la marca de tiempo local son obligatorias, que la estimación de la fotografía se almacena solo como propuesta junto con su nivel de confianza, y que el valor diario del autopesaje nunca se expone como titular sino como tendencia.
 
-![Intake & Body Response Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/intake-body-response.puml)
+<p class="caption"><strong>Figura 26</strong><br><em>Bounded Context Canvas de Intake &amp; Body Response</em></p>
+
+![Intake & Body Response Bounded Context Canvas](../assets/img/artifacts/bounded-context-canvas/intake-body-response.png)
 
 **`Monitoring & Adherence` (Core).** Su propósito es comparar lo prescrito contra lo realmente registrado e interpretar la diferencia. Es el contexto que concentra dieciséis de las treinta políticas del modelo, lo que confirma su naturaleza reactiva: casi nadie lo invoca directamente, sino que actúa a partir de lo que ocurre en los demás contextos. Sus reglas más características son que ningún día se evalúa contra metas distintas de las vigentes ese día, que una ventana menor a siete días nunca produce desviación, y que el vacío de registro se excluye del cálculo de desviación y nunca escala al profesional.
 
-![Monitoring & Adherence Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/monitoring-adherence.puml)
+<p class="caption"><strong>Figura 27</strong><br><em>Bounded Context Canvas de Monitoring &amp; Adherence</em></p>
+
+![Monitoring & Adherence Bounded Context Canvas](../assets/img/artifacts/bounded-context-canvas/monitoring-adherence.png)
 
 **`Nutritional Care` (Supporting).** Su propósito es sostener el acto clínico completo: evaluación, diagnóstico, prescripción y ajuste del plan entre consultas. Sus reglas más características son que una evaluación cerrada es inmutable y su corrección genera una evaluación nueva, que no existe plan sin diagnóstico vigente, que todo ajuste exige una razón y que la versión anterior se supersede pero nunca se elimina. Es también el contexto que define el Published Language `Active Targets`.
 
-![Nutritional Care Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/nutritional-care.puml)
+<p class="caption"><strong>Figura 28</strong><br><em>Bounded Context Canvas de Nutritional Care</em></p>
+
+![Nutritional Care Bounded Context Canvas](../assets/img/artifacts/bounded-context-canvas/nutritional-care.png)
 
 **`Care Relationship` (Supporting).** Su propósito es determinar quién puede ver a quién y con qué consentimiento. Publica una única pregunta al resto del sistema, `Is Care Link Active`, y es donde se hace cumplir técnicamente el principio de asimetría entre los dos roles. Sus reglas más características son que la invitación es de un solo uso y con vencimiento, que el paciente no puede autovincularse, que el vínculo nace inactivo hasta que exista consentimiento y que el consentimiento es siempre revocable sin justificación.
 
-![Care Relationship Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/care-relationship.puml)
+<p class="caption"><strong>Figura 29</strong><br><em>Bounded Context Canvas de Care Relationship</em></p>
+
+![Care Relationship Bounded Context Canvas](../assets/img/artifacts/bounded-context-canvas/care-relationship.png)
 
 **`Food Catalog` (Generic).** Su propósito es traducir el catálogo nutricional externo al dominio y mantenerlo disponible localmente. Sus reglas más características son que ningún identificador externo entra al dominio, que la traducción de taxonomía es obligatoria y que la búsqueda cae en la caché local cuando no hay conexión.
 
-![Food Catalog Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/food-catalog.puml)
+<p class="caption"><strong>Figura 30</strong><br><em>Bounded Context Canvas de Food Catalog</em></p>
+
+![Food Catalog Bounded Context Canvas](../assets/img/artifacts/bounded-context-canvas/food-catalog.png)
 
 **`Identity & Access Management (IAM)` (Generic).** Su propósito es autenticar y emitir el claim de rol. Es el único contexto que no publica ningún evento hacia los demás, porque el claim viaja dentro del token de sesión, que es infraestructura y no dominio. Sus reglas más características son que el rol se declara en el registro, que es inmutable durante la sesión y que cambiar de rol exige volver a autenticarse.
 
-![IAM Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/iam.puml)
+<p class="caption"><strong>Figura 31</strong><br><em>Bounded Context Canvas de IAM</em></p>
+
+![IAM Bounded Context Canvas](../assets/img/artifacts/bounded-context-canvas/iam.png)
 
 ### 2.5.2. Context Mapping
 
@@ -2872,11 +2906,15 @@ Esta sección documenta la elaboración del Context Map, que representa las rela
 
 De esa discusión surgieron cuatro decisiones. La primera fue no trasladar el cálculo del índice de consistencia a `Intake & Body Response` pese a que allí están sus dos insumos, porque si el contexto que registra también juzga, el registro deja de ser un lugar seguro para declarar y se incentiva exactamente la omisión selectiva que el producto busca eliminar. La segunda fue mantener la tendencia de peso dentro de `Intake & Body Response`, porque es un suavizado de los datos del propio paciente que no necesita el plan y debe estar disponible sin conexión, a diferencia de la desviación y del índice, que sí requieren el plan y umbrales de interpretación. La tercera fue no crear un contexto compartido de expediente, ya que `Patient Record` es un read model compuesto que se arma en el módulo `ReadModels` de la API a partir de las fachadas ACL de los contextos involucrados. La cuarta fue reducir el shared kernel al mínimo deliberado: únicamente los identificadores `PatientId`, `PractitionerId`, `CareLinkId` y `PlanId`, y las unidades de medida, bajo el criterio de que un shared kernel grande es un bounded context que no se llegó a dibujar.
 
+<p class="caption"><strong>Figura 32</strong><br><em>Context Map de Healthify</em></p>
+
 ![Context Map de Healthify](../assets/img/artifacts/context-map.png)
 
 El mapa se lee de upstream a downstream en el sentido de las flechas, y cada contexto conserva el color de su clasificación estratégica: rojo para los dos contextos Core, azul para los Supporting, gris para los Generic y amarillo para el sistema externo. Las líneas continuas representan dependencias de las que el contexto downstream necesita para operar, ya sea un contrato consultado o datos que alimentan su modelo; las líneas punteadas representan acoplamientos deliberadamente débiles, en los que el downstream solo se conforma con un modelo ajeno o reacciona a una notificación sin depender de ella para funcionar.
 
 Los patrones de relación seleccionados para cada integración son los siguientes.
+
+<p class="caption"><strong>Tabla 91</strong><br><em>Patrones de relación del Context Map</em></p>
 
 | Relación | Patrón | Justificación |
 |---|---|---|
@@ -2911,8 +2949,11 @@ El Diagrama de Contexto (Nivel 1 del modelo C4) representa a Healthify como un s
 - **Patient:** Persona que registra sus comidas y peso entre consultas, y sigue el plan prescrito por su nutricionista.
 - **Practitioner:** Persona que realiza el acto clínico (evaluación, diagnóstico, prescripción) y revisa las señales de adherencia de sus pacientes.
 - **External Systems:**
-	- `ML Kit:` Motor de visión artificial on-device que estima la porción del plato a partir de la foto de la comida, sin salida de red.
+	- `AI Provider (Gemini):` Modelo de IA generativa al que el servidor envía la foto de la comida, a través del módulo técnico de IA, para obtener el plato, la porción estimada y su nivel de confianza. La foto se procesa en memoria y no se conserva. ML Kit se usa únicamente en el dispositivo para leer el código QR de invitación.
 	- `Nutritional Data Providers:` Fuentes externas de catálogo nutricional (Open Food Facts, USDA) consultadas a través del Anticorruption Layer de Food Catalog.
+
+<p class="caption"><strong>Figura 33</strong><br><em>Diagrama de contexto de Healthify (C4, nivel 1)</em></p>
+
 ![Context Diagram](../assets/img/artifacts/healthify-SystemContext.png)
 
 #### 2.5.3.2. Software Architecture Container Level Diagrams
@@ -2930,9 +2971,13 @@ El Diagrama de Contenedores (Nivel 2 del modelo C4) desglosa el sistema Healthif
 - **Database:** Almacena usuarios, vínculos de cuidado, evaluaciones, diagnósticos, planes, entradas del diario y ventanas de monitoreo.
    - **Tecnología:** `MySQL 8.4`.
 - **External Systems:** APIs de terceros que se integran con el backend y con el cliente para extender las capacidades del sistema.
-   - **Tecnología:** `JSON/HTTPS (REST)` para el backend; llamada on-device sin red para ML Kit.
+   - **Tecnología:** `JSON/HTTPS (REST)` para el backend; las llamadas al proveedor de IA y a los catálogos nutricionales las hace el backend. ML Kit se ejecuta en el dispositivo, sin red, solo para leer el código QR.
+
+<p class="caption"><strong>Figura 34</strong><br><em>Diagrama de contenedores de Healthify (C4, nivel 2)</em></p>
 
 ![Container Diagram](../assets/img/artifacts/healthify-ContainerDiagram.png)
+
+<p class="caption"><strong>Figura 35</strong><br><em>Diagrama de contenedores resumido de Healthify</em></p>
 
 ![Container Diagram Summarized](../assets/img/artifacts/healthify-ContainerDiagram1.png)
 
@@ -2946,6 +2991,8 @@ La aplicación Flutter se organiza en 6 Bounded Contexts, cada uno con 4 capas s
 
 El diagrama a continuación muestra todos los componentes de la arquitectura en un único bloque.
 
+<p class="caption"><strong>Figura 36</strong><br><em>Diagrama de componentes del frontend móvil</em></p>
+
 ![Frontend Component Diagram](../assets/img/artifacts/healthify-FrontendBCsDiagram.png)
 
 Cada Bounded Context contiene una capa de Presentation con las pantallas y widgets de Flutter, una capa de Application con los servicios Dart que orquestan la lógica del cliente, una capa de Domain con los modelos del lado cliente, y una capa de Infrastructure con el cliente HTTP Dio que se comunica con el API Application. Todos los BCs del frontend utilizan el Frontend Shared, que provee las utilidades BaseApi, el cliente de Outbox y almacenamiento local, los objetos de valor compartidos como units.record y active-targets-cache.record, y los widgets de presentación transversales como el app shell y el selector de navigation shell.
@@ -2956,15 +3003,21 @@ Para apreciar la separación por capas Domain-Driven Design de cada Bounded Cont
 
 Módulo transversal utilizado por todos los Bounded Contexts del frontend que agrupa las utilidades HTTP base, el almacenamiento local, la cola de sincronización Outbox y los widgets de presentación reutilizables. Se organiza en 3 capas DDD: Presentation, Domain e Infrastructure. No contiene lógica de negocio propia.
 
+<p class="caption"><strong>Figura 37</strong><br><em>Diagrama de componentes del módulo Shared del frontend</em></p>
+
 ![Frontend Shared Diagram](../assets/img/artifacts/healthify-FrontendSharedDiagram.png)
 
 La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter reutilizables a lo largo de toda la aplicación. El detalle de sus vistas y componentes se presenta a continuación:
 
  - **Views:**
 
+   <p class="caption"><strong>Figura 38</strong><br><em>Diagrama de componentes del módulo Shared del frontend: vistas</em></p>
+
    ![Frontend Shared Views Diagram](../assets/img/artifacts/healthify-FrontendSharedViewsDiagram.png)
 
  - **Components:**
+
+   <p class="caption"><strong>Figura 39</strong><br><em>Diagrama de componentes del módulo Shared del frontend: componentes</em></p>
 
    ![Frontend Shared Components Diagram](../assets/img/artifacts/healthify-FrontendSharedComponentsDiagram.png)
 
@@ -2972,15 +3025,21 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 
  - **IAM:** Gestiona las pantallas de inicio de sesión y registro.
 
+   <p class="caption"><strong>Figura 40</strong><br><em>Diagrama de componentes del frontend del bounded context IAM</em></p>
+
    ![IAM Frontend Diagram](../assets/img/artifacts/healthify-IAMFrontendDiagram.png)
 
    La capa Presentation contiene únicamente vistas Flutter para este Bounded Context. El detalle de sus vistas se presenta a continuación:
 
    - **Views:**
 
+     <p class="caption"><strong>Figura 41</strong><br><em>Diagrama de vistas de la capa Presentation del bounded context IAM</em></p>
+
      ![IAM Presentation Views Diagram](../assets/img/artifacts/healthify-IAMPresentationViewsDiagram.png)
 
  - **Care Relationship:** Gestiona el escaneo del código QR de invitación, el consentimiento del paciente y el reconocimiento de metas activas.
+
+   <p class="caption"><strong>Figura 42</strong><br><em>Diagrama de componentes del frontend del bounded context Care Relationship</em></p>
 
    ![Care Relationship Frontend Diagram](../assets/img/artifacts/healthify-CareRelationshipFrontendDiagram.png)
 
@@ -2988,13 +3047,19 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 
    - **Views:**
 
+     <p class="caption"><strong>Figura 43</strong><br><em>Diagrama de vistas de la capa Presentation del bounded context Care Relationship</em></p>
+
      ![Care Relationship Presentation Views Diagram](../assets/img/artifacts/healthify-CareRelationshipPresentationViewsDiagram.png)
 
    - **Components:**
 
+     <p class="caption"><strong>Figura 44</strong><br><em>Diagrama de componentes de la capa Presentation del bounded context Care Relationship</em></p>
+
      ![Care Relationship Presentation Components Diagram](../assets/img/artifacts/healthify-CareRelationshipPresentationComponentsDiagram.png)
 
  - **Nutritional Care:** Gestiona las pantallas de evaluación, diagnóstico y prescripción del plan, usadas por el Practitioner durante la consulta.
+
+   <p class="caption"><strong>Figura 45</strong><br><em>Diagrama de componentes del frontend del bounded context Nutritional Care</em></p>
 
    ![Nutritional Care Frontend Diagram](../assets/img/artifacts/healthify-NutritionalCareFrontendDiagram.png)
 
@@ -3002,13 +3067,19 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 
    - **Views:**
 
+     <p class="caption"><strong>Figura 46</strong><br><em>Diagrama de vistas de la capa Presentation del bounded context Nutritional Care</em></p>
+
      ![Nutritional Care Presentation Views Diagram](../assets/img/artifacts/healthify-NutritionalCarePresentationViewsDiagram.png)
 
    - **Components:**
 
+     <p class="caption"><strong>Figura 47</strong><br><em>Diagrama de componentes de la capa Presentation del bounded context Nutritional Care</em></p>
+
      ![Nutritional Care Presentation Components Diagram](../assets/img/artifacts/healthify-NutritionalCarePresentationComponentsDiagram.png)
 
  - **Intake & Body Response:** Gestiona el registro de comidas por foto, la estimación de porción, el autopesaje y el diario offline. Escritura exclusiva del Patient.
+
+   <p class="caption"><strong>Figura 48</strong><br><em>Diagrama de componentes del frontend del bounded context Intake &amp; Body Response</em></p>
 
    ![Intake Frontend Diagram](../assets/img/artifacts/healthify-IntakeFrontendDiagram.png)
 
@@ -3016,13 +3087,19 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 
    - **Views:**
 
+     <p class="caption"><strong>Figura 49</strong><br><em>Diagrama de vistas de la capa Presentation del bounded context Intake &amp; Body Response</em></p>
+
      ![Intake Presentation Views Diagram](../assets/img/artifacts/healthify-IntakePresentationViewsDiagram.png)
 
    - **Components:**
 
+     <p class="caption"><strong>Figura 50</strong><br><em>Diagrama de componentes de la capa Presentation del bounded context Intake &amp; Body Response</em></p>
+
      ![Intake Presentation Components Diagram](../assets/img/artifacts/healthify-IntakePresentationComponentsDiagram.png)
 
  - **Monitoring & Adherence:** Gestiona el indicador de cumplimiento diario y el panel de monitoreo del paciente.
+
+   <p class="caption"><strong>Figura 51</strong><br><em>Diagrama de componentes del frontend del bounded context Monitoring &amp; Adherence</em></p>
 
    ![Monitoring Frontend Diagram](../assets/img/artifacts/healthify-MonitoringFrontendDiagram.png)
 
@@ -3030,13 +3107,19 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 
    - **Views:**
 
+     <p class="caption"><strong>Figura 52</strong><br><em>Diagrama de vistas de la capa Presentation del bounded context Monitoring &amp; Adherence</em></p>
+
      ![Monitoring Presentation Views Diagram](../assets/img/artifacts/healthify-MonitoringPresentationViewsDiagram.png)
 
    - **Components:**
 
+     <p class="caption"><strong>Figura 53</strong><br><em>Diagrama de componentes de la capa Presentation del bounded context Monitoring &amp; Adherence</em></p>
+
      ![Monitoring Presentation Components Diagram](../assets/img/artifacts/healthify-MonitoringPresentationComponentsDiagram.png)
 
  - **Food Catalog:** Gestiona la búsqueda de alimentos contra el catálogo de referencia cacheado localmente.
+
+   <p class="caption"><strong>Figura 54</strong><br><em>Diagrama de componentes del frontend del bounded context Food Catalog</em></p>
 
    ![Food Catalog Frontend Diagram](../assets/img/artifacts/healthify-FoodCatalogFrontendDiagram.png)
 
@@ -3044,9 +3127,13 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 
    - **Views:**
 
+     <p class="caption"><strong>Figura 55</strong><br><em>Diagrama de vistas de la capa Presentation del bounded context Food Catalog</em></p>
+
      ![Food Catalog Presentation Views Diagram](../assets/img/artifacts/healthify-FoodCatalogPresentationViewsDiagram.png)
 
    - **Components:**
+
+     <p class="caption"><strong>Figura 56</strong><br><em>Diagrama de componentes de la capa Presentation del bounded context Food Catalog</em></p>
 
      ![Food Catalog Presentation Components Diagram](../assets/img/artifacts/healthify-FoodCatalogPresentationComponentsDiagram.png)
 
@@ -3055,6 +3142,8 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 El backend se organiza en 6 Bounded Contexts y un Shared Kernel, cada uno siguiendo el patrón de arquitectura del Domain-Driven Design. Todos los Bounded Contexts comparten una única base de datos MySQL 8.4, accedida a través de los repositorios de Entity Framework Core 10 en la capa de Infrastructure de cada uno.
 
 El diagrama a continuación muestra todos los componentes de la arquitectura en un único bloque.
+
+<p class="caption"><strong>Figura 57</strong><br><em>Diagrama de componentes del backend</em></p>
 
 ![Backend Component Diagram](../assets/img/artifacts/healthify-BackendBCsDiagram.png)
 
@@ -3067,6 +3156,8 @@ El detalle individual se acota a la capa de Interfaces porque es la única que e
 **Shared Kernel:**
 
 Componente transversal utilizado por todos los Bounded Contexts del backend. Es mínimo y deliberado: solo agrupa identificadores (PatientId, PractitionerId, CareLinkId, PlanId) y unidades de medida. No contiene lógica de negocio propia ni acceso a base de datos.
+
+<p class="caption"><strong>Figura 58</strong><br><em>Diagrama de componentes del Shared Kernel</em></p>
 
 ![Shared Kernel Diagram](../assets/img/artifacts/healthify-SharedKernelDiagram.png)
 
@@ -3081,15 +3172,21 @@ Módulo de la API que arma las vistas que necesitan datos de más de un Bounded 
 
  - **IAM:** Maneja la autenticación y la emisión del role claim mediante hashing con BCrypt y tokens JWT propios, sin proveedor de identidad externo.
 
+   <p class="caption"><strong>Figura 59</strong><br><em>Diagrama de componentes del backend del bounded context IAM</em></p>
+
    ![IAM Backend Diagram](../assets/img/artifacts/healthify-IAMBackendDiagram.png)
 
    La capa Interfaces contiene un contrato ACL (`IIamContextFacade`, con el que los demás Bounded Contexts resuelven identidades y roles puntuales) y endpoints REST para este Bounded Context. El detalle de los endpoints REST se presenta a continuación:
 
    - **REST:**
 
+     <p class="caption"><strong>Figura 60</strong><br><em>Diagrama de componentes REST del bounded context IAM</em></p>
+
      ![IAM REST Diagram](../assets/img/artifacts/healthify-IAMRestDiagram.png)
 
  - **Care Relationship:** Única fuente de verdad sobre quién puede ver a quién. Aplica el principio de asimetría entre paciente y profesional.
+
+   <p class="caption"><strong>Figura 61</strong><br><em>Diagrama de componentes del backend del bounded context Care Relationship</em></p>
 
    ![Care Relationship Backend Diagram](../assets/img/artifacts/healthify-CareRelationshipBackendDiagram.png)
 
@@ -3097,13 +3194,19 @@ Módulo de la API que arma las vistas que necesitan datos de más de un Bounded 
 
    - **ACL:**
 
+     <p class="caption"><strong>Figura 62</strong><br><em>Diagrama de componentes ACL del bounded context Care Relationship</em></p>
+
      ![Care Relationship ACL Diagram](../assets/img/artifacts/healthify-CareRelationshipAclDiagram.png)
 
    - **REST:**
 
+     <p class="caption"><strong>Figura 63</strong><br><em>Diagrama de componentes REST del bounded context Care Relationship</em></p>
+
      ![Care Relationship REST Diagram](../assets/img/artifacts/healthify-CareRelationshipRestDiagram.png)
 
  - **Nutritional Care:** Ejecuta el acto clínico completo: evaluación, diagnóstico y prescripción, con versionado y trazabilidad.
+
+   <p class="caption"><strong>Figura 64</strong><br><em>Diagrama de componentes del backend del bounded context Nutritional Care</em></p>
 
    ![Nutritional Care Backend Diagram](../assets/img/artifacts/healthify-NutritionalCareBackendDiagram.png)
 
@@ -3111,13 +3214,19 @@ Módulo de la API que arma las vistas que necesitan datos de más de un Bounded 
 
    - **ACL:**
 
+     <p class="caption"><strong>Figura 65</strong><br><em>Diagrama de componentes ACL del bounded context Nutritional Care</em></p>
+
      ![Nutritional Care ACL Diagram](../assets/img/artifacts/healthify-NutritionalCareAclDiagram.png)
 
    - **REST:**
 
+     <p class="caption"><strong>Figura 66</strong><br><em>Diagrama de componentes REST del bounded context Nutritional Care</em></p>
+
      ![Nutritional Care REST Diagram](../assets/img/artifacts/healthify-NutritionalCareRestDiagram.png)
 
  - **Intake & Body Response:** Persiste el consumo declarado del paciente y su respuesta corporal. Escritura exclusiva del paciente.
+
+   <p class="caption"><strong>Figura 67</strong><br><em>Diagrama de componentes del backend del bounded context Intake &amp; Body Response</em></p>
 
    ![Intake Backend Diagram](../assets/img/artifacts/healthify-IntakeBackendDiagram.png)
 
@@ -3125,13 +3234,19 @@ Módulo de la API que arma las vistas que necesitan datos de más de un Bounded 
 
    - **ACL:**
 
+     <p class="caption"><strong>Figura 68</strong><br><em>Diagrama de componentes ACL del bounded context Intake &amp; Body Response</em></p>
+
      ![Intake ACL Diagram](../assets/img/artifacts/healthify-IntakeAclDiagram.png)
 
    - **REST:**
 
+     <p class="caption"><strong>Figura 69</strong><br><em>Diagrama de componentes REST del bounded context Intake &amp; Body Response</em></p>
+
      ![Intake REST Diagram](../assets/img/artifacts/healthify-IntakeRestDiagram.png)
 
  - **Monitoring & Adherence:** Compara lo prescrito contra lo real e interpreta la diferencia. Nunca escribe directamente sobre Nutritional Care.
+
+   <p class="caption"><strong>Figura 70</strong><br><em>Diagrama de componentes del backend del bounded context Monitoring &amp; Adherence</em></p>
 
    ![Monitoring Backend Diagram](../assets/img/artifacts/healthify-MonitoringBackendDiagram.png)
 
@@ -3139,13 +3254,19 @@ Módulo de la API que arma las vistas que necesitan datos de más de un Bounded 
 
    - **ACL:**
 
+     <p class="caption"><strong>Figura 71</strong><br><em>Diagrama de componentes ACL del bounded context Monitoring &amp; Adherence</em></p>
+
      ![Monitoring ACL Diagram](../assets/img/artifacts/healthify-MonitoringAclDiagram.png)
 
    - **REST:**
 
+     <p class="caption"><strong>Figura 72</strong><br><em>Diagrama de componentes REST del bounded context Monitoring &amp; Adherence</em></p>
+
      ![Monitoring REST Diagram](../assets/img/artifacts/healthify-MonitoringRestDiagram.png)
 
  - **Food Catalog:** Traduce el catálogo externo hacia el dominio y lo cachea. Aplica Anticorruption Layer frente a Open Food Facts y USDA.
+
+   <p class="caption"><strong>Figura 73</strong><br><em>Diagrama de componentes del backend del bounded context Food Catalog</em></p>
 
    ![Food Catalog Backend Diagram](../assets/img/artifacts/healthify-FoodCatalogBackendDiagram.png)
 
@@ -3153,9 +3274,13 @@ Módulo de la API que arma las vistas que necesitan datos de más de un Bounded 
 
    - **ACL:**
 
+     <p class="caption"><strong>Figura 74</strong><br><em>Diagrama de componentes ACL del bounded context Food Catalog</em></p>
+
      ![Food Catalog ACL Diagram](../assets/img/artifacts/healthify-FoodCatalogAclDiagram.png)
 
    - **REST:**
+
+     <p class="caption"><strong>Figura 75</strong><br><em>Diagrama de componentes REST del bounded context Food Catalog</em></p>
 
      ![Food Catalog REST Diagram](../assets/img/artifacts/healthify-FoodCatalogRestDiagram.png)
 
@@ -3178,6 +3303,8 @@ El Deployment Diagram (diagrama suplementario del modelo C4, elaborado en notaci
 - `Mobile Device → Oracle Cloud Infrastructure` (`JSON/HTTPS`): la aplicación móvil consume la API RESTful del backend.
 - `Mobile Device → GitHub Pages` (`HTTPS`): el dispositivo accede al Landing Page como contenido estático.
 - `API Application → Database` (`SQL/TCP`): la API se conecta a MySQL 8.4 a través de la red interna de Docker, pese a correr en contenedores independientes.
+
+<p class="caption"><strong>Figura 76</strong><br><em>Diagrama de despliegue de Healthify</em></p>
 
 ![Deployment Diagram](../assets/img/artifacts/healthify-DeploymentDiagram.png)
 
