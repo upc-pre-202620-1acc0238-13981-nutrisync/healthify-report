@@ -21,6 +21,10 @@ TABLE(active_targets_caches, "active_targets_caches") {
   refreshed_at : DATETIME NOT NULL
   guidelines : JSON NOT NULL
   restrictions : JSON NOT NULL
+  changes_from_previous : JSON
+  guideline_items : JSON NOT NULL
+  legacy_restrictions : JSON NOT NULL
+  patient_message : VARCHAR(500)
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -42,6 +46,11 @@ TABLE(diary_entries, "diary_entries") {
   confirmed_at : DATETIME
   sync_state : VARCHAR(20) NOT NULL
   client_entry_id : CHAR(36)
+  FK(meal_group_id) : CHAR(36)
+  FK(meal_photo_analysis_id) : CHAR(36)
+  origin : VARCHAR(30)
+  plan_adherence : VARCHAR(15) NOT NULL
+  FK(proposed_ai_generation_id) : BIGINT
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -56,6 +65,7 @@ TABLE(self_weigh_ins, "self_weigh_ins") {
   protocol_fasted_state : TINYINT(1) NOT NULL
   protocol_same_time_of_day : TINYINT(1) NOT NULL
   protocol_same_scale : TINYINT(1) NOT NULL
+  client_entry_id : CHAR(36)
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -66,6 +76,20 @@ TABLE(weight_trends, "weight_trends") {
   window_size : INT NOT NULL
   last_recalculated_at : DATETIME NOT NULL
   points : JSON NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(meal_photo_analyses, "meal_photo_analyses") {
+  PK(id) : CHAR(36) NOT NULL
+  --
+  FK(ai_generation_id) : BIGINT NOT NULL
+  alternatives : JSON NOT NULL
+  confidence : DECIMAL(6,4) NOT NULL
+  estimated_grams : DECIMAL(10,2) NOT NULL
+  expires_at : DATETIME NOT NULL
+  FK(patient_id) : INT NOT NULL
+  FK(reference_food_id) : INT NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -82,6 +106,10 @@ EXT(users, "users  (IAM)") {
   role : VARCHAR(20)
 }
 
+EXT(ai_generations, "ai_generations  (Shared)") {
+  PK(id) : INT
+}
+
 users ||..o| active_targets_caches : "patient_id"
 users ||..o{ diary_entries : "patient_id"
 users ||..o{ self_weigh_ins : "patient_id"
@@ -92,5 +120,10 @@ weight_trends ||..o{ self_weigh_ins : "smoothed from readings"
 active_targets_caches ||..o{ diary_entries : "targets the day"
 
 reference_foods ||..o{ diary_entries : "proposed / confirmed food"
+
+users ||..o{ meal_photo_analyses : "patient_id"
+meal_photo_analyses ||..o{ diary_entries : "meal_photo_analysis_id"
+ai_generations ||..o{ diary_entries : "proposed_ai_generation_id"
+ai_generations ||..o{ meal_photo_analyses : "ai_generation_id"
 
 @enduml

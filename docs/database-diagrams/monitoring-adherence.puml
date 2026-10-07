@@ -55,6 +55,7 @@ TABLE(consistency_indices, "consistency_indices") {
   escalated_at : DATETIME
   alert_since_at : DATETIME
   last_recomputed_at : DATETIME NOT NULL
+  prompt_issued_at : DATETIME
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -67,6 +68,8 @@ TABLE(referrals, "referrals") {
   reason : VARCHAR(1000) NOT NULL
   FK(issued_by) : INT NOT NULL
   issued_at : DATETIME NOT NULL
+  closed_at : DATETIME
+  status : VARCHAR(10) NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -79,6 +82,44 @@ TABLE(scheduled_follow_ups, "scheduled_follow_ups") {
   scheduled_for : DATETIME NOT NULL
   state : VARCHAR(20) NOT NULL
   missed_at : DATETIME
+  cancellation_reason : VARCHAR(30)
+  cancelled_at : DATETIME
+  completed_at : DATETIME
+  FK(completed_by_consultation_id) : INT
+  modality : VARCHAR(15) NOT NULL
+  preparation : JSON NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(pre_visit_check_ins, "pre_visit_check_ins") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  difficulties : JSON NOT NULL
+  edited_at : DATETIME
+  feeling : VARCHAR(10) NOT NULL
+  FK(follow_up_id) : INT NOT NULL
+  FK(patient_id) : INT NOT NULL
+  FK(practitioner_id) : INT NOT NULL
+  questions : JSON NOT NULL
+  submitted_at : DATETIME NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(weekly_summaries, "weekly_summaries") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  FK(ai_generation_id) : BIGINT NOT NULL
+  compliance_facts : JSON NOT NULL
+  generated_at : DATETIME NOT NULL
+  headline : VARCHAR(200) NOT NULL
+  language : VARCHAR(5) NOT NULL
+  FK(patient_id) : INT NOT NULL
+  watch_out : JSON NOT NULL
+  week_end : DATE NOT NULL
+  week_start : DATE NOT NULL
+  went_well : JSON NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -96,6 +137,14 @@ EXT(users, "users  (IAM)") {
   role : VARCHAR(20)
 }
 
+EXT(consultations, "consultations  (Nutritional Care)") {
+  PK(id) : INT
+}
+
+EXT(ai_generations, "ai_generations  (Shared)") {
+  PK(id) : INT
+}
+
 evaluation_windows ||..o{ deviations : "window_id"
 evaluation_windows ||..o| consistency_indices : "supplies intake series"
 
@@ -108,5 +157,11 @@ users ||..o{ deviations : "patient_id"
 users ||..o| consistency_indices : "patient_id"
 users ||..o{ referrals : "patient_id / issued_by"
 users ||..o{ scheduled_follow_ups : "patient_id / practitioner_id"
+
+scheduled_follow_ups ||..o| pre_visit_check_ins : "follow_up_id (one per visit)"
+users ||..o{ pre_visit_check_ins : "patient_id / practitioner_id"
+users ||..o{ weekly_summaries : "patient_id"
+ai_generations ||..o| weekly_summaries : "ai_generation_id"
+consultations ||..o| scheduled_follow_ups : "completed_by_consultation_id"
 
 @enduml
