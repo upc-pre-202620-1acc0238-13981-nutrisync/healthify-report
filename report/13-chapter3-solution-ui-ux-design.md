@@ -314,6 +314,158 @@ Las demás técnicas de navegación son:
 
 #### 3.1.3.1. Landing Page Wireframe
 
+Los wireframes del landing page se elaboraron en Figma, en escala de grises y con textos reales, para validar la estructura, el orden del contenido y la jerarquía antes de aplicar color y tipografía de marca. El sitio tiene cuatro páginas (Inicio, Nosotros, Contacto y Términos y condiciones) y se diseñó para escritorio (1440 px) y móvil (390 px).
+
+**Desktop Web Browser**
+
+La página de Inicio se organiza en el orden definido en la sección 3.1.2.1: encabezado con navegación, héroe, problema, sección «Para el paciente», sección «Para el nutricionista», «Cómo funciona», preguntas frecuentes y pie de página.
+
+<p class="caption"><strong>Figura 120</strong><br><em>Wireframe de Inicio en escritorio</em></p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-home-parts/part-1.png" alt="Wireframe de Inicio en escritorio (sección 1)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-home-parts/part-2.png" alt="Wireframe de Inicio en escritorio (sección 2)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-home-parts/part-3.png" alt="Wireframe de Inicio en escritorio (sección 3)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-home-parts/part-4.png" alt="Wireframe de Inicio en escritorio (sección 4)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-home-parts/part-5.png" alt="Wireframe de Inicio en escritorio (sección 5)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-home-parts/part-6.png" alt="Wireframe de Inicio en escritorio (sección 6)" style="width:520px" />
+</p>
+
+<p class="caption"><strong>Tabla 185</strong><br><em>Justificación de las decisiones de diseño del wireframe del landing page</em></p>
+
+| Elemento | Justificación |
+|---|---|
+| **Shape** | Las tarjetas de funcionalidades, los chips de filtro y las preguntas frecuentes usan esquinas redondeadas del mismo radio. Los marcadores de imagen (rectángulo con diagonales) indican dónde irán las capturas de la app y no compiten con el contenido. |
+| **Space** | El contenido ocupa un contenedor central de 1200 px. Las secciones se separan con bloques de alto uniforme y alternan fondo claro y oscuro, de modo que cada tema se lee como una unidad. Las tarjetas del paciente se organizan en una cuadrícula de 4 columnas, agrupadas bajo los rótulos «Registrar», «Ver progreso» y «Tu consulta». |
+| **Direction** | La lectura es vertical y descendente. Dentro de cada sección el texto se ubica a la izquierda y la evidencia visual a la derecha, y el ojo recorre el título, el texto y la acción en ese orden. El título de «Cómo funciona» se acompaña de pasos numerados en columna, que marcan la secuencia. |
+| **Size** | Los títulos en Anton son varias veces más grandes que el texto corrido y el héroe tiene el título de mayor tamaño de la página. Los botones principales («Soy nutricionista») tienen un alto mayor que los enlaces secundarios, de modo que la acción principal se identifica de inmediato. |
+
+<p class="caption"><strong>Tabla 186</strong><br><em>Heurísticas de Nielsen aplicadas al wireframe del landing page</em></p>
+
+| Heurística de Nielsen | Aplicación |
+|---|---|
+| **H1. Visibilidad del estado del sistema** | El carrusel del héroe muestra puntos de posición, y los chips de las preguntas frecuentes indican el filtro activo. |
+| **H3. Control y libertad del usuario** | El carrusel tiene flechas y puntos para avanzar o retroceder, las preguntas se abren y se cierran, y el logotipo lleva al inicio desde cualquier página. |
+| **H4. Consistencia y estándares** | Logotipo a la izquierda y navegación a la derecha, como en la mayoría de los sitios web; el mismo encabezado y pie de página en las cuatro páginas. |
+| **H6. Reconocer antes que recordar** | La navegación está siempre visible, y los rótulos de las tarjetas («Registro por foto», «Autopesaje como tendencia») describen la función sin necesidad de recordar nada. |
+| **H8. Diseño estético y minimalista** | Cada tarjeta tiene una etiqueta, un título y una descripción de dos o tres líneas. Se muestra una sola llamada a la acción primaria por bloque. |
+
+<p class="caption"><strong>Tabla 187</strong><br><em>Principios de arquitectura de información aplicados al wireframe</em></p>
+
+| Principio de arquitectura de información | Aplicación |
+|---|---|
+| **Organización jerárquica** | De lo que decide la visita (propuesta de valor) a lo que la respalda (preguntas y datos de contacto). |
+| **Etiquetado** | Los textos de la navegación son los de la sección 3.1.2.2: Paciente, Nutricionista, Cómo funciona, Nosotros, Contacto. |
+| **Navegación** | Barra superior fija, enlaces ancla a las secciones de Inicio y pie de página con los mismos destinos más los enlaces legales. |
+| **Búsqueda y filtrado** | Sin buscador de texto. Las preguntas frecuentes se filtran por tema con chips (Todas, Pacientes, Nutricionistas, Privacidad, IA). |
+
+**Diseño inclusivo:** el wireframe separa el contenido en bloques con encabezados claros para que los lectores de pantalla puedan navegar por títulos. Los botones y chips tienen un tamaño de toque cómodo, la información no depende solo del color (los chips y estados llevan texto), y el sitio tiene selector de idioma español / inglés. Las preguntas frecuentes incluyen la tarjeta «¿No encontraste tu respuesta?» con el compromiso de responder en menos de 48 horas hábiles, para las personas que no encuentran su duda.
+
+Las demás páginas siguen la misma estructura de encabezado y pie. **Nosotros** presenta la historia, la misión y visión, los valores y el equipo; **Contacto** muestra los datos de contacto y un formulario; **Términos y condiciones** presenta cada cláusula con un índice lateral.
+
+<p class="caption"><strong>Figura 121</strong><br><em>Wireframe de Nosotros en escritorio</em></p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-about-parts/part-1.png" alt="Wireframe de Nosotros en escritorio (sección 1)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-about-parts/part-2.png" alt="Wireframe de Nosotros en escritorio (sección 2)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-about-parts/part-3.png" alt="Wireframe de Nosotros en escritorio (sección 3)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-about-parts/part-4.png" alt="Wireframe de Nosotros en escritorio (sección 4)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-about-parts/part-5.png" alt="Wireframe de Nosotros en escritorio (sección 5)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-about-parts/part-6.png" alt="Wireframe de Nosotros en escritorio (sección 6)" style="width:520px" />
+</p>
+
+<p class="caption"><strong>Figura 122</strong><br><em>Wireframe de Contacto en escritorio</em></p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-contact-parts/part-1.png" alt="Wireframe de Contacto en escritorio (sección 1)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-contact-parts/part-2.png" alt="Wireframe de Contacto en escritorio (sección 2)" style="width:520px" />
+</p>
+
+<p class="caption"><strong>Figura 123</strong><br><em>Wireframe de Términos y condiciones en escritorio</em></p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-terms-parts/part-1.png" alt="Wireframe de Términos y condiciones en escritorio (sección 1)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-terms-parts/part-2.png" alt="Wireframe de Términos y condiciones en escritorio (sección 2)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/desktop-terms-parts/part-3.png" alt="Wireframe de Términos y condiciones en escritorio (sección 3)" style="width:520px" />
+</p>
+
+**Mobile Web Browser**
+
+En móvil el contenido se apila en una sola columna. La navegación se oculta tras un botón de menú y se abre como una pantalla completa con los cinco enlaces en Anton, las tres acciones («Soy nutricionista», «Fui invitado por mi nutricionista» e «Iniciar sesión») y los datos de contacto. Las listas largas de funcionalidades de «Para el paciente» y «Para el nutricionista» pasan de tarjetas en cuadrícula a un acordeón, de modo que la página no se alargue más de lo necesario.
+
+<p class="caption"><strong>Figura 124</strong><br><em>Wireframe de Inicio en móvil</em></p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/mobile-home-parts/part-1.png" alt="Wireframe de Inicio en móvil (sección 1)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/wireframe/mobile-home-parts/part-2.png" alt="Wireframe de Inicio en móvil (sección 2)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/wireframe/mobile-home-parts/part-3.png" alt="Wireframe de Inicio en móvil (sección 3)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/wireframe/mobile-home-parts/part-4.png" alt="Wireframe de Inicio en móvil (sección 4)" style="width:150px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/mobile-home-parts/part-5.png" alt="Wireframe de Inicio en móvil (sección 5)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/wireframe/mobile-home-parts/part-6.png" alt="Wireframe de Inicio en móvil (sección 6)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/wireframe/mobile-home-parts/part-7.png" alt="Wireframe de Inicio en móvil (sección 7)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/wireframe/mobile-home-parts/part-8.png" alt="Wireframe de Inicio en móvil (sección 8)" style="width:150px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/wireframe/mobile-home-parts/part-9.png" alt="Wireframe de Inicio en móvil (sección 9)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/wireframe/mobile-home-parts/part-10.png" alt="Wireframe de Inicio en móvil (sección 10)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/wireframe/mobile-home-parts/part-11.png" alt="Wireframe de Inicio en móvil (sección 11)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/wireframe/mobile-menu.png" alt="Wireframe del menú abierto en móvil" style="width:150px" />
+</p>
+
+<p class="caption"><strong>Tabla 188</strong><br><em>Justificación de las decisiones de diseño del wireframe del landing page móvil</em></p>
+
+| Elemento | Justificación |
+|---|---|
+| **Shape** | Los mismos radios y formas que en escritorio, para que la versión móvil se reconozca como la misma página. |
+| **Space** | Un solo margen lateral de 16 px y bloques apilados con separación uniforme. Los botones ocupan todo el ancho para facilitar el toque con el pulgar. |
+| **Direction** | Lectura vertical sin desplazamiento horizontal. Cada acordeón se abre en su lugar y no cambia el orden de la página. |
+| **Size** | Los enlaces del menú tienen un tamaño grande y una altura de fila de unos 66 px, y los botones principales mantienen un alto mínimo de 48 px. |
+
+**Diseño inclusivo en móvil:** los blancos de toque tienen al menos 48 px, el menú abierto tiene un botón de cierre visible y cada ítem del acordeón indica con un ícono si está abierto o cerrado. Los textos mantienen un tamaño mínimo de 12 px y el orden de lectura es igual al orden visual.
+
 #### 3.1.3.2. Landing Page Mock-up
 
 ### 3.1.4. Mobile Applications UX/UI Design
