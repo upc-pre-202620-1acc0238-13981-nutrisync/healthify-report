@@ -6,6 +6,8 @@ A continuación, cada integrante del equipo formula un plan de al menos dos obje
 
 **Objetivo 1 — Certificación en diseño de producto digital**
 
+<p class="caption"><strong>Tabla 3</strong><br><em>Objetivo SMART 1 de Olenka Priscilla Del Aguila Del Aguila: certificación en diseño de producto digital</em></p>
+
 | Criterio | Descripción |
 | :--- | :--- |
 | Specific | Obtener una certificación profesional en diseño UX/UI (por ejemplo, Google UX Design Certificate) que profundice mis conocimientos actuales en Figma y prototipado. |
@@ -15,6 +17,8 @@ A continuación, cada integrante del equipo formula un plan de al menos dos obje
 | Time-bound | Dentro de los 8 meses posteriores a mi egreso. |
 
 **Objetivo 2 — Participación en un proyecto de desarrollo con impacto medible**
+
+<p class="caption"><strong>Tabla 4</strong><br><em>Objetivo SMART 2 de Olenka Priscilla Del Aguila Del Aguila: participación en un proyecto de desarrollo con impacto medible</em></p>
 
 | Criterio | Descripción |
 | :--- | :--- |
@@ -28,6 +32,8 @@ A continuación, cada integrante del equipo formula un plan de al menos dos obje
 
 **Objetivo 1 — Especialización en desarrollo web**
 
+<p class="caption"><strong>Tabla 5</strong><br><em>Objetivo SMART 1 de Angela Milagros Espinoza Cruz: especialización en desarrollo web</em></p>
+
 | Criterio | Descripción |
 | :--- | :--- |
 | Specific | Cursar una especialización en desarrollo web full-stack que complemente mi experiencia previa en diseño y desarrollo de páginas web. |
@@ -37,6 +43,8 @@ A continuación, cada integrante del equipo formula un plan de al menos dos obje
 | Time-bound | En los 6 meses siguientes a mi egreso. |
 
 **Objetivo 2 — Presentación de una innovación técnica en un evento del sector**
+
+<p class="caption"><strong>Tabla 6</strong><br><em>Objetivo SMART 2 de Angela Milagros Espinoza Cruz: presentación de una innovación técnica en un evento del sector</em></p>
 
 | Criterio | Descripción |
 | :--- | :--- |
@@ -50,6 +58,8 @@ A continuación, cada integrante del equipo formula un plan de al menos dos obje
 
 **Objetivo 1 — Certificación en bases de datos y arquitectura de datos**
 
+<p class="caption"><strong>Tabla 7</strong><br><em>Objetivo SMART 1 de Joel Fernando Mora Rivera: certificación en bases de datos y arquitectura de datos</em></p>
+
 | Criterio | Descripción |
 | :--- | :--- |
 | Specific | Obtener una certificación en administración o arquitectura de bases de datos relacionales y no relacionales (por ejemplo, en un proveedor cloud como AWS o Azure). |
@@ -59,6 +69,8 @@ A continuación, cada integrante del equipo formula un plan de al menos dos obje
 | Time-bound | Dentro de los 9 meses posteriores a mi egreso. |
 
 **Objetivo 2 — Asunción de un rol de liderazgo técnico**
+
+<p class="caption"><strong>Tabla 8</strong><br><em>Objetivo SMART 2 de Joel Fernando Mora Rivera: asunción de un rol de liderazgo técnico</em></p>
 
 | Criterio | Descripción |
 | :--- | :--- |
@@ -72,6 +84,8 @@ A continuación, cada integrante del equipo formula un plan de al menos dos obje
 
 **Objetivo 1 — Especialización en desarrollo de software con bases de datos avanzadas**
 
+<p class="caption"><strong>Tabla 9</strong><br><em>Objetivo SMART 1 de Rose Almendra Vergaray Calderon: especialización en desarrollo de software con bases de datos avanzadas</em></p>
+
 | Criterio | Descripción |
 | :--- | :--- |
 | Specific | Cursar una especialización en desarrollo backend con manejo avanzado de bases de datos relacionales y no relacionales. |
@@ -81,6 +95,8 @@ A continuación, cada integrante del equipo formula un plan de al menos dos obje
 | Time-bound | Dentro de los 8 meses posteriores a mi egreso. |
 
 **Objetivo 2 — Mentoría y trabajo colaborativo en un entorno profesional**
+
+<p class="caption"><strong>Tabla 10</strong><br><em>Objetivo SMART 2 de Rose Almendra Vergaray Calderon: mentoría y trabajo colaborativo en un entorno profesional</em></p>
 
 | Criterio | Descripción |
 | :--- | :--- |
@@ -94,6 +110,8 @@ A continuación, cada integrante del equipo formula un plan de al menos dos obje
 
 **Objetivo 1 — Certificación en buenas prácticas de ingeniería de software**
 
+<p class="caption"><strong>Tabla 11</strong><br><em>Objetivo SMART 1 de Angel Martin Villarreal Bazan: certificación en buenas prácticas de ingeniería de software</em></p>
+
 | Criterio | Descripción |
 | :--- | :--- |
 | Specific | Obtener una certificación en arquitectura de software o buenas prácticas de desarrollo (por ejemplo, Clean Architecture o un certificado de un proveedor cloud). |
@@ -103,6 +121,8 @@ A continuación, cada integrante del equipo formula un plan de al menos dos obje
 | Time-bound | Dentro de los 9 meses posteriores a mi egreso. |
 
 **Objetivo 2 — Desarrollo de habilidades de liderazgo en gestión de proyectos**
+
+<p class="caption"><strong>Tabla 12</strong><br><em>Objetivo SMART 2 de Angel Martin Villarreal Bazan: desarrollo de habilidades de liderazgo en gestión de proyectos</em></p>
 
 | Criterio | Descripción |
 | :--- | :--- |
