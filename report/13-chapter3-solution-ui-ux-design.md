@@ -468,6 +468,116 @@ En móvil el contenido se apila en una sola columna. La navegación se oculta tr
 
 #### 3.1.3.2. Landing Page Mock-up
 
+Los mock-ups aplican sobre los wireframes el sistema de diseño descrito en 3.1.1.1: fondo oscuro `#101109` en el héroe y en la sección del nutricionista, crema `#F6F4EE` en las secciones del paciente y de «Cómo funciona», lima `#A3D437` como acento, naranja `#F5A623` para la acción principal, y Anton y Open Sans como tipografías. Las capturas de la aplicación son las pantallas reales de los mock-ups de la app (Inicio, estimación por foto, ficha del paciente), de modo que el visitante ve el producto que va a usar.
+
+**Desktop Web Browser**
+
+<p class="caption"><strong>Figura 125</strong><br><em>Mock-up de Inicio en escritorio</em></p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-home-parts/part-1.png" alt="Mock-up de Inicio en escritorio (sección 1)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-home-parts/part-2.png" alt="Mock-up de Inicio en escritorio (sección 2)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-home-parts/part-3.png" alt="Mock-up de Inicio en escritorio (sección 3)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-home-parts/part-4.png" alt="Mock-up de Inicio en escritorio (sección 4)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-home-parts/part-5.png" alt="Mock-up de Inicio en escritorio (sección 5)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-home-parts/part-6.png" alt="Mock-up de Inicio en escritorio (sección 6)" style="width:520px" />
+</p>
+
+<p class="caption"><strong>Tabla 189</strong><br><em>Aplicación del sistema de diseño en el mock-up del landing page</em></p>
+
+| Aspecto | Aplicación |
+|---|---|
+| **Branding** | El logotipo a color (corazón y hoja) en el encabezado, con «ify» en lima. El titular del héroe resalta «sí se ve.» en lima, el mismo recurso que usa la app. |
+| **Color y contraste** | Texto blanco sobre fondo casi negro y texto `#1C1C1A` sobre crema, con contraste superior a 4.5:1. El lima se usa para resaltar y para elementos gráficos, y el naranja solo para el botón principal. |
+| **Tipografía** | Anton para títulos y cifras; Open Sans para el cuerpo. La frase «El expediente no es el problema» se muestra en gris y «El vacío entre consultas, sí» en negro, para marcar la idea principal. |
+| **Jerarquía visual** | Alternancia de fondos (oscuro, claro, oscuro, claro) que separa los bloques de audiencia. En «Para el paciente» y «Para el nutricionista» una lista numerada a la derecha activa su detalle y la imagen de la izquierda cambia con el elemento seleccionado. |
+| **Heurística H4 (consistencia)** | Los botones, chips, tarjetas y el estilo de los títulos son los del sistema de diseño de la app, así que quien pasa del sitio a la aplicación reconoce los mismos patrones. |
+| **Heurística H1 (estado del sistema)** | El elemento activo de las listas y de los chips se distingue por color y por peso del texto, no solo por color. |
+| **Arquitectura de información** | La navegación, el orden de secciones y los rótulos son los definidos en 3.1.2. En «Para el paciente», las funciones se agrupan en «Registrar», «Ver progreso» y «Tu consulta»; en «Para el nutricionista», en «En consulta» y «Entre consultas». |
+| **Diseño inclusivo** | Enlace «Saltar al contenido principal», texto alternativo en las imágenes, selector de idioma ES / EN, foco visible en los elementos interactivos y pausa del carrusel cuando el usuario prefiere menos movimiento. |
+
+Las otras tres páginas conservan el encabezado y el pie de página, y cambian solo el contenido central.
+
+<p class="caption"><strong>Figura 126</strong><br><em>Mock-up de Nosotros en escritorio</em></p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-about-parts/part-1.png" alt="Mock-up de Nosotros en escritorio (sección 1)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-about-parts/part-2.png" alt="Mock-up de Nosotros en escritorio (sección 2)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-about-parts/part-3.png" alt="Mock-up de Nosotros en escritorio (sección 3)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-about-parts/part-4.png" alt="Mock-up de Nosotros en escritorio (sección 4)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-about-parts/part-5.png" alt="Mock-up de Nosotros en escritorio (sección 5)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-about-parts/part-6.png" alt="Mock-up de Nosotros en escritorio (sección 6)" style="width:520px" />
+</p>
+
+<p class="caption"><strong>Figura 127</strong><br><em>Mock-up de Contacto en escritorio</em></p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-contact-parts/part-1.png" alt="Mock-up de Contacto en escritorio (sección 1)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-contact-parts/part-2.png" alt="Mock-up de Contacto en escritorio (sección 2)" style="width:520px" />
+</p>
+
+<p class="caption"><strong>Figura 128</strong><br><em>Mock-up de Términos y condiciones en escritorio</em></p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-terms-parts/part-1.png" alt="Mock-up de Términos y condiciones en escritorio (sección 1)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-terms-parts/part-2.png" alt="Mock-up de Términos y condiciones en escritorio (sección 2)" style="width:520px" />
+</p>
+
+**Mobile Web Browser**
+
+<p class="caption"><strong>Figura 129</strong><br><em>Mock-up de Inicio en móvil</em></p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/mobile-home-parts/part-1.png" alt="Mock-up de Inicio en móvil (sección 1)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/mockup/mobile-home-parts/part-2.png" alt="Mock-up de Inicio en móvil (sección 2)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/mockup/mobile-home-parts/part-3.png" alt="Mock-up de Inicio en móvil (sección 3)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/mockup/mobile-home-parts/part-4.png" alt="Mock-up de Inicio en móvil (sección 4)" style="width:150px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/mobile-home-parts/part-5.png" alt="Mock-up de Inicio en móvil (sección 5)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/mockup/mobile-home-parts/part-6.png" alt="Mock-up de Inicio en móvil (sección 6)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/mockup/mobile-home-parts/part-7.png" alt="Mock-up de Inicio en móvil (sección 7)" style="width:150px" />
+</p>
+
+La versión móvil usa los mismos colores, tipografías y componentes. Los cambios respecto de escritorio responden al tamaño de pantalla: una sola columna, titulares más pequeños (la frase del héroe pasa a tres líneas), el menú de hamburguesa, listas de funcionalidades en acordeón con la imagen dentro del elemento abierto, y botones de ancho completo. El pie de página reorganiza sus columnas (Navegación, Legal, Redes y Contacto) en dos por fila.
+
 ### 3.1.4. Mobile Applications UX/UI Design
 
 #### 3.1.4.1. Mobile Applications Wireframes
