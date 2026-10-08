@@ -615,6 +615,225 @@ URL del Board (Trello): [Enlace del Trello](https://trello.com/b/6kovxMb4/sprint
 
 #### 4.2.1.4. Development Evidence for Sprint Review
 
+Durante el Sprint 1 el equipo implementó los tres productos digitales del alcance. En el landing page se construyó el sitio estático de cuatro páginas (inicio, nosotros, contacto y términos) con sus estilos, el motor de traducción español/inglés y los scripts de interacción. En el backend se implementaron los seis bounded contexts (IAM, Care Relationship, Nutritional Care, Food Catalog, Intake & Body Response y Monitoring & Adherence), la capa de read models y el módulo técnico de IA, que exponen 100 operaciones REST. La aplicación móvil Android, escrita en Kotlin con Jetpack Compose, tiene dos shells de navegación (paciente y nutricionista) y cinco módulos por bounded context (IAM y Care Relationship, Monitoring, Food Catalog, Intake y Nutritional Care), con 516 archivos Kotlin de producción, 63 clases de prueba y una base de datos Room para el trabajo sin conexión.
+
+El trabajo siguió GitFlow: cada bloque de trabajo se hizo en una rama `feature/*` y se integró en `develop` mediante un pull request; los pull requests de `develop` a `main` corresponden a los releases. En las tablas, la columna **Branch** indica la rama en la que se hizo el commit. Las ramas `develop` y `main` solo muestran los pull requests integrados en ellas. Cada commit aparece una sola vez, aunque la rama `main` también contenga el historial de `develop`.
+
+<p class="caption"><strong>Tabla 237</strong><br><em>Pull requests y releases por producto en el Sprint 1</em></p>
+
+| Producto | Repositorio | Pull requests | Releases |
+|---|---|:---:|---|
+| Web Services | `healthify-platform` | 9 (#1 a #9) | `v0.1.0`, `v0.5.0`, `v1.0.0` |
+| Landing Page | `healthify-website` | 8 (#1 a #8) | `v1.0.0`, `v1.0.1` |
+| Mobile Application | `healthify-android-app` | 6 (#1 a #6) | `v1.0.0` |
+
+<p class="caption"><strong>Figura 145</strong><br><em>Captura de GitHub: pull requests del backend</em></p>
+
+![Pull requests del backend](../assets/img/chapter4/sprint1/gh-platform-pulls.png)
+
+<p class="caption"><strong>Figura 146</strong><br><em>Captura de GitHub: pull requests del landing page</em></p>
+
+![Pull requests del landing page](../assets/img/chapter4/sprint1/gh-website-pulls.png)
+
+<p class="caption"><strong>Figura 147</strong><br><em>Captura de GitHub: pull requests de la aplicación móvil</em></p>
+
+![Pull requests de la aplicación móvil](../assets/img/chapter4/sprint1/gh-android-pulls.png)
+
+**Web Services (backend)**
+
+<p class="caption"><strong>Tabla 238</strong><br><em>Commits del Sprint 1 del backend</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `main` | 17386ec | Initial commit | — | 27/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | f315906 | chore(repo): normalize line endings and ignore build output | — | 28/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | 96f3000 | build(solution): add solution and projects at version 0.1.0 | — | 28/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | 3abf98c | feat(shared): add domain events, repository contracts and result pattern | — | 28/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | 80911bf | feat(shared): add localized shared and AI messages | — | 28/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | cbfbeaa | feat(shared): add EF Core context, interceptors and base repository | — | 28/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | b9e5ee5 | feat(shared): add AI contracts and generation pipeline | — | 28/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | 0695a0c | feat(shared): add Gemini client, prompt catalog and AI persistence | — | 28/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | abdff5a | feat(shared): add problem details, route convention and rate limiting | — | 29/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | 43ee916 | chore(migrations): add shared AI generation migrations | — | 29/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | 7da095e | chore(config): add appsettings and launch profiles | — | 29/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | c5a11b4 | feat(app): add composition root bootstrap | — | 29/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | 8e4efd7 | feat(app): register dependency injection and typed HTTP clients | — | 29/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | c0785fe | feat(app): register hosted services and request pipeline | — | 29/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | 4e8f773 | build(docker): add Dockerfile and compose stack | — | 29/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | 92ac51f | ci(release): add release workflow | — | 30/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | b9642ff | Merge pull request #1 from upc-pre-202620-1acc0238-13981-nutrisync/feature/platform-foundation | Feature/platform foundation | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | 0f9f636 | feat(iam): add user and session domain model | — | 30/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | aa228a2 | feat(iam): add commands, queries and domain events | — | 30/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | 5a5021c | feat(iam): add localized messages and schema migrations | — | 30/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | b746047 | feat(iam): add application services, event handler and ACL facade | — | 30/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | dc4bc78 | feat(iam): add hashing, tokens, lockout policy and persistence | — | 30/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | 50f9d0e | feat(iam): add authentication, session and user endpoints | — | 01/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | fec50d2 | feat(care-relationship): add domain model | — | 01/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | 4df41b4 | feat(care-relationship): add commands, queries and domain events | — | 01/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | 12ceb0a | feat(care-relationship): add localized messages and schema migrations | — | 01/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | b3cc5ff | feat(care-relationship): add application services, handlers and ACL facade | — | 01/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | d265274 | feat(care-relationship): add persistence and invitation expiry job | — | 01/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | 0b8b2e0 | feat(care-relationship): add invitation, care link and AI preference endpoints | — | 02/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | befb69f | chore(csproj): set project version to 0.2.0 | — | 02/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | 54bfd1a | Merge branch 'develop' into feature/identity-and-care-links | — | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | 61700bf | Merge pull request #3 from upc-pre-202620-1acc0238-13981-nutrisync/feature/identity-and-care-links | Feature/identity and care links | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | f358b53 | feat(nutritional-care): add aggregates, entities and errors | — | 02/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | dc73b11 | feat(nutritional-care): add value objects | — | 02/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | bc25d4a | feat(nutritional-care): add commands and queries | — | 02/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | 2b963a2 | feat(nutritional-care): add domain events, repository contracts and services | — | 02/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | 1348ea8 | feat(nutritional-care): add localized messages, AI prompts and lexicon | — | 03/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | 1f97254 | chore(migrations): add NutritionalCare clinical record migrations | — | 03/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | 0bea7a6 | chore(migrations): add NutritionalCare consultation and review inbox migrations | — | 03/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | 580084c | feat(nutritional-care): add application command services | — | 03/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | dfd851a | feat(nutritional-care): add query services, event handlers, AI outputs and ACL facade | — | 03/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | dfaf7d6 | feat(nutritional-care): add calculators, clock, persistence and scheduling | — | 03/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | 018541e | feat(nutritional-care): add REST resources, transforms and ACL contract | — | 03/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | 31b6be9 | feat(nutritional-care): add clinical endpoints | — | 04/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | aced2e1 | chore(csproj): set project version to 0.3.0 | — | 04/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | adc1b08 | Merge branch 'develop' into feature/nutritional-care | — | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | 9c8532d | Merge pull request #4 from upc-pre-202620-1acc0238-13981-nutrisync/feature/nutritional-care | Feature/nutritional care | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | f42a69d | feat(food-catalog): add reference food domain model | — | 04/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | 2e09ab9 | feat(food-catalog): add commands, queries and domain events | — | 04/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | 4356f9c | feat(food-catalog): add localized messages and schema migrations | — | 04/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | f045a56 | feat(food-catalog): add application services, providers and persistence | — | 05/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | f8b13fd | feat(food-catalog): add reference food and local catalog endpoints | — | 05/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | 1c71678 | feat(intake): add diary, meal photo and weigh-in domain model | — | 05/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | 958395b | feat(intake): add commands, queries, events, repository contracts and domain services | — | 05/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | e7a5f8b | feat(intake): add localized messages, AI prompts, lexicon and schema migrations | — | 05/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | 3118c71 | feat(intake): add application command services | — | 05/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | c9635c7 | feat(intake): add query services, handlers and ACL facade | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | f5e9edf | feat(intake): add persistence, AI caching, imaging, protocols and jobs | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | a9e6b76 | feat(intake): add diary, weigh-in, meal idea and photo analysis endpoints | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | 4143451 | chore(csproj): set project version to 0.4.0 | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | b64af57 | Merge branch 'develop' into feature/food-catalog-and-intake | — | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | 669c7c0 | Merge pull request #5 from upc-pre-202620-1acc0238-13981-nutrisync/feature/food-catalog-and-intake | Feature/food catalog and intake | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | 05d432e | feat(monitoring): add evaluation window, deviation and follow-up aggregates | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | 7c6aba1 | feat(monitoring): add value objects, errors, repository contracts and services | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | 46634b2 | feat(monitoring): add commands, queries and domain events | — | 07/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | 8a29d49 | feat(monitoring): add localized messages, AI prompts, lexicon and schema migrations | — | 07/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | 7721297 | feat(monitoring): add application command services | — | 07/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | e1365ac | feat(monitoring): add query services, AI outputs, handlers and ACL facade | — | 07/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | 66e2a51 | feat(monitoring): add persistence, clock, caching and scheduled jobs | — | 07/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | 6d5e67f | feat(monitoring): add monitoring, follow-up, referral and AI summary endpoints | — | 07/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | 1ad8acd | feat(read-models): add patient record, panel, summary, roster and consultations composers | — | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | 6c4d74c | feat(read-models): add composite view endpoints | — | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | eaf913a | chore(migrations): update AppDbContext model snapshot | — | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | 0b1993c | chore(csproj): set project version to 0.5.0 | — | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | 455de18 | Merge branch 'develop' into feature/monitoring-and-read-models | — | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | 49481b5 | Merge pull request #6 from upc-pre-202620-1acc0238-13981-nutrisync/feature/monitoring-and-read-models | Feature/monitoring and read models | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/usda-base-url-fix` | 5ccc8b7 | fix(food-catalog): resolve USDA search path relative to the base address | — | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/usda-base-url-fix` | aa17dbe | fix(app): normalize the USDA base address with a trailing slash | — | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/usda-base-url-fix` | 5f2a29b | fix(config): end the default USDA base URL with a slash | — | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/usda-base-url-fix` | 44830dd | docs(readme): add project title and product overview | — | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/usda-base-url-fix` | f150130 | docs(readme): add architecture section | — | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/usda-base-url-fix` | ed5b9f3 | docs(readme): add bounded contexts section | — | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/usda-base-url-fix` | e045ed1 | docs(readme): add running instructions | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/usda-base-url-fix` | 7417da2 | docs(readme): add configuration and tests section | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/usda-base-url-fix` | 2d48d39 | chore(csproj): set project version to 1.0.0 | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | be29284 | Merge pull request #8 from upc-pre-202620-1acc0238-13981-nutrisync/feature/usda-base-url-fix | Feature/usda base url fix | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `main` | 1875b03 | Merge pull request #2 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/0.1.0 | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `main` | 7913042 | Merge pull request #7 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/0.5.0 | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `main` | 877ac70 | Merge pull request #9 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.0.0 | 09/10/2026 |
+
+**Landing Page**
+
+<p class="caption"><strong>Tabla 239</strong><br><em>Commits del Sprint 1 del landing page</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `main` | 117e780 | Initial commit | — | 27/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/foundation` | 5f20870 | feat(assets): add brand identity and icon set | — | 28/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/foundation` | d037374 | feat(css): add design tokens, reset and buttons | — | 28/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/foundation` | f08ac5c | feat(css): add navbar, language switch and mobile menu | — | 29/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/foundation` | f478ecb | feat(i18n): add translation engine with language persistence | — | 29/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/foundation` | e51974c | feat(js): add mobile nav and language switch | — | 29/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/foundation` | 40c7d66 | feat(index): add page shell with header, mobile menu and footer | — | 30/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/foundation` | a54db14 | docs(readme): document pages, structure and local setup | — | 04/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/foundation` | 09769d5 | Merge branch 'develop' into feature/foundation | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `develop` | 530aeb9 | Merge pull request #2 from upc-pre-202620-1acc0238-13981-nutrisync/feature/foundation | Feature/foundation | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-hero-problem` | 9bfbeec | feat(assets): add hero phone screen | — | 30/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-hero-problem` | 2dab404 | feat(css): add hero and carousel styles | — | 30/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-hero-problem` | 86e97cd | feat(js): add hero carousel | — | 01/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-hero-problem` | 896d1dc | feat(index): add hero carousel section | — | 01/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-hero-problem` | 8669297 | feat(css): add problem section styles | — | 02/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-hero-problem` | b2f10c8 | feat(index): add problem section | — | 02/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-hero-problem` | ae74bad | feat(i18n): add hero and problem translations | — | 02/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-hero-problem` | 993b334 | Merge branch 'develop' into feature/home-hero-problem | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `develop` | 137e65c | Merge pull request #3 from upc-pre-202620-1acc0238-13981-nutrisync/feature/home-hero-problem | Feature/home hero problem | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-showcases` | 0dad0e2 | feat(assets): add feature screenshots | — | 30/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-showcases` | dc3a466 | feat(css): add showcase layout and sticky pinning | — | 30/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-showcases` | 1f0edfe | feat(js): add patient and nutritionist showcases | — | 01/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-showcases` | 75c3a12 | feat(index): add patient section | — | 01/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-showcases` | ad8c058 | feat(css): add nutritionist mock screens | — | 02/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-showcases` | b07dc8d | feat(index): add nutritionist section | — | 03/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-showcases` | 1310aee | feat(i18n): add showcase translations | — | 03/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-showcases` | 1923d67 | Merge branch 'develop' into feature/home-showcases | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `develop` | 2e4c3da | Merge pull request #5 from upc-pre-202620-1acc0238-13981-nutrisync/feature/home-showcases | Feature/home showcases | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-how-faq-terms` | 9366029 | feat(assets): add path-end illustration | — | 01/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-how-faq-terms` | 549eb06 | feat(index): add how-it-works section | — | 01/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-how-faq-terms` | a650ae3 | feat(faq): add FAQ accordion and filters | — | 02/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-how-faq-terms` | 65b7420 | feat(terms): add page shell and hero | — | 03/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-how-faq-terms` | ff1e4f3 | feat(terms): add table of contents and clauses | — | 03/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-how-faq-terms` | 9222502 | feat(css): add terms layout and stepper | — | 04/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-how-faq-terms` | 5b036c2 | feat(js): add terms index and desktop page scrolling | — | 04/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/home-how-faq-terms` | 5f1eda3 | Merge branch 'develop' into feature/home-how-faq-terms | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `develop` | f6b7089 | Merge pull request #4 from upc-pre-202620-1acc0238-13981-nutrisync/feature/home-how-faq-terms | Feature/home how faq terms | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/about-contact` | 32fcda7 | feat(assets): add mission and vision illustrations | — | 02/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/about-contact` | 1eae4da | feat(about): add hero, story and purpose sections | — | 03/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/about-contact` | 492145a | feat(about): add values and team sections | — | 03/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/about-contact` | 3b89f33 | feat(about): add FAQ section | — | 04/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/about-contact` | 693ac0b | feat(contact): add page and hero | — | 04/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/about-contact` | cac9782 | feat(contact): add contact form with validation | — | 05/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/about-contact` | 7a82896 | feat(i18n): add about and contact translations | — | 05/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `develop` | 4512e65 | Merge pull request #1 from upc-pre-202620-1acc0238-13981-nutrisync/feature/about-contact | Feature/about contact | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `fix/restore-sources` | 40831ea | fix(index): restore document structure and section order | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `fix/restore-sources` | 2ea62cf | fix(js): restore main.js bootstrap and function bodies | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `fix/restore-sources` | a5cc898 | fix(i18n): restore translation object structure | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `fix/restore-sources` | dcbdccb | fix(css): restore rule order for base, hero, showcases, how-it-works and FAQ | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `fix/restore-sources` | 6821bb0 | fix(css): restore missing braces and rule order for about, contact, terms and responsive | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `develop` | 26d9151 | Merge pull request #7 from upc-pre-202620-1acc0238-13981-nutrisync/fix/restore-sources | Fix/restore sources | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `main` | 25f9889 | Merge pull request #6 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.0.0 | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `main` | 8098a5b | Create CNAME | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `main` | cfa70b0 | Delete CNAME | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `main` | 4ea8878 | Merge pull request #8 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.0.1 | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `main` | b32908f | Create CNAME | — | 06/10/2026 |
+
+**Mobile Application (Android)**
+
+Los commits de la app no tienen un tipo `test` aparte: cada commit de funcionalidad incluye sus pruebas de JVM (ver sección 4.2.1.5).
+
+<p class="caption"><strong>Tabla 240</strong><br><em>Commits del Sprint 1 de la aplicación móvil</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | e939895 | Initial commit | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/foundation-design-system` | 9817d17 | chore(build): set up Gradle project, version catalog and wrapper | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/foundation-design-system` | ff46645 | feat(resources): add fonts, launcher icons, es/en strings and security configs | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/foundation-design-system` | 8682c36 | feat(core): add shared kernel, network, DI and offline sync queue | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/foundation-design-system` | 0be6819 | feat(designsystem): add Healthify M3 theme, icons, components and debug catalog | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | 313f9fe | Merge pull request #1 from upc-pre-202620-1acc0238-13981-nutrisync/feature/foundation-design-system | Feature/foundation design system | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/iam-care-relationship` | ef4dd64 | feat(iam): add domain model, value objects and use cases | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/iam-care-relationship` | ffa741e | feat(iam): add auth API, session storage and mappers | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/iam-care-relationship` | 2bd8207 | feat(carerelationship): add invitation redemption and consent flow | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/iam-care-relationship` | 8fd2d7e | feat(iam): add splash, sign-up, sign-in and care-link screens | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | f938347 | Merge pull request #2 from upc-pre-202620-1acc0238-13981-nutrisync/feature/iam-care-relationship | Feature/iam care relationship | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/monitoring-food-catalog` | afe38e5 | feat(foodcatalog): add reference food catalog with local cache | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/monitoring-food-catalog` | bf1f5c6 | feat(monitoring): add domain and use cases for progress and follow-ups | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/monitoring-food-catalog` | db4a4f2 | feat(monitoring): add monitoring repositories and mappers | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/monitoring-food-catalog` | 6afb611 | feat(monitoring): add progress, consultations and agenda screens | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | ed87363 | Merge pull request #3 from upc-pre-202620-1acc0238-13981-nutrisync/feature/monitoring-food-catalog | Feature/monitoring food catalog | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/intake-diary` | 24bd3a5 | feat(intake): add diary, targets and weigh-in domain and use cases | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/intake-diary` | ee6af9e | feat(intake): add diary, photo and weight APIs, offline queue and mappers | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/intake-diary` | e4d1def | feat(intake): add diary and meal logging view models and components | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/intake-diary` | efd9962 | feat(intake): add diary, photo and weigh-in screens | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | feb16dc | Merge pull request #4 from upc-pre-202620-1acc0238-13981-nutrisync/feature/intake-diary | Feature/intake diary | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/nutritional-care-app-shell` | 511baae | feat(nutritionalcare): add consultation, plan and review domain | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/nutritional-care-app-shell` | 8042596 | feat(nutritionalcare): add clinical record and plan repositories | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/nutritional-care-app-shell` | 73cdd4f | feat(nutritionalcare): add practitioner consultation and plan screens | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/nutritional-care-app-shell` | 7c1f07b | feat(app): wire navigation shells, Room database and entry points | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | dd9c2e9 | Merge pull request #5 from upc-pre-202620-1acc0238-13981-nutrisync/feature/nutritional-care-app-shell | Feature/nutritional care app shell | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | c829f7b | Merge pull request #6 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.0.0 | 09/10/2026 |
+
 #### 4.2.1.5. Testing Suite Evidence for Sprint Review
 
 #### 4.2.1.6. Execution Evidence for Sprint Review
