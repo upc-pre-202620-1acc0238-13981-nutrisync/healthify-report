@@ -3314,11 +3314,13 @@ El Deployment Diagram (diagrama suplementario del modelo C4, elaborado en notaci
 
 #### 2.6.1.1. Domain Layer
 
-El bounded context Intake & Body Response, implementado en `Healthify.Platform.IntakeBodyResponse`, funciona como el diario del paciente y guarda tanto las comidas que este declara haber consumido como los autopesajes que realiza en casa. Su Domain Layer está formado por cuatro aggregate roots, un conjunto de value objects que validan sus propios valores y cuatro abstracciones de repositorio. Todo lo que hace este contexto es registrar información, nunca evaluarla, de manera que ninguno de sus atributos o métodos habla de cumplimiento, desviación, racha o penalización. Esa comparación entre lo prescrito y lo comido le corresponde a Monitoring & Adherence.
+El bounded context Intake & Body Response, implementado en `Healthify.Platform.IntakeBodyResponse`, funciona como el diario del paciente y guarda tanto las comidas que este declara haber consumido como los autopesajes que realiza en casa. Su Domain Layer está formado por cinco aggregate roots, un conjunto de value objects que validan sus propios valores y cinco abstracciones de repositorio. Todo lo que hace este contexto es registrar información, nunca evaluarla, de manera que ninguno de sus atributos o métodos habla de cumplimiento, desviación, racha o penalización. Esa comparación entre lo prescrito y lo comido le corresponde a Monitoring & Adherence.
 
 **Aggregates (Aggregate Roots)**
 
 `ActiveTargetsCache` es la copia local que el paciente guarda del contrato publicado por el profesional, es decir aquello que debe apuntar durante el día. El paciente actúa como raíz del agregado, con un caché por persona que se reemplaza en el sitio, y esa decisión es la que permite que la app siga funcionando sin conectividad.
+
+<p class="caption"><strong>Tabla 92</strong><br><em>Atributos de ActiveTargetsCache</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -3329,6 +3331,8 @@ El bounded context Intake & Body Response, implementado en `Healthify.Platform.I
 | `RefreshedAt` | `DateTimeOffset` | `public get / private set` | Momento del último refresco. |
 | `Guidelines`, `Restrictions` | `IReadOnlyList<string>` | `public` (computada) | Texto libre que este contexto no interpreta. |
 
+<p class="caption"><strong>Tabla 93</strong><br><em>Métodos de ActiveTargetsCache</em></p>
+
 | Método | Scope | Descripción |
 |---|---|---|
 | `ActiveTargetsCache(RefreshActiveTargetsCacheCommand)` | `public` | Constructor, que delega en `Apply`. |
@@ -3338,6 +3342,8 @@ El bounded context Intake & Body Response, implementado en `Healthify.Platform.I
 Las reglas *Published Contract Only* y *Diagnosis And Basis Never Cached* se cumplen por la propia estructura de la clase, ya que no existen campos para el diagnóstico, el razonamiento clínico, la ecuación ni el déficit, y por lo tanto esa información no puede llegar a almacenarse en el caché.
 
 `DiaryEntry` es el registro de un consumo declarado por el paciente y constituye el agregado central del contexto.
+
+<p class="caption"><strong>Tabla 94</strong><br><em>Atributos de DiaryEntry</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -3354,6 +3360,8 @@ Las reglas *Published Contract Only* y *Diagnosis And Basis Never Cached* se cum
 | `ClientEntryId` | `Guid?` | `public get / private set` | Identificador generado por el dispositivo offline, que vuelve idempotente la sincronización. |
 | `LocalDate` | `DateOnly` | `public` (computada) | El día de calendario que el paciente estaba viviendo, no el del servidor. |
 
+<p class="caption"><strong>Tabla 95</strong><br><em>Métodos de DiaryEntry</em></p>
+
 | Método | Scope | Reglas que aplica |
 |---|---|---|
 | `DiaryEntry(int, LocalTimestamp, Provenance, SyncState, string?, Guid?)` | `public` | Aplica *Local Timestamp Required* y *Provenance Required*. |
@@ -3369,6 +3377,8 @@ El agregado no ofrece ningún método para eliminar entradas, y así se aplica l
 
 `SelfWeighIn` es una lectura de peso que el paciente se tomó a sí mismo. No es una medición clínica y el contexto nunca pretende lo contrario, ya que se toma sin supervisión y en una báscula desconocida, razón por la cual el protocolo se declara junto a ella.
 
+<p class="caption"><strong>Tabla 96</strong><br><em>Atributos de SelfWeighIn</em></p>
+
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `Id` | `SelfWeighInId` | `public get / private set` | Identidad tipada. |
@@ -3382,6 +3392,8 @@ Conviene añadir la regla *Excluded Weigh Ins Are Kept As Data*, según la cual 
 
 `WeightTrend` es la serie de peso suavizada del paciente y constituye la unidad que este contexto publica sobre peso corporal, con el paciente como raíz.
 
+<p class="caption"><strong>Tabla 97</strong><br><em>Atributos de WeightTrend</em></p>
+
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `DefaultWindowSize` | `const int = 7` | `public` | Siete días absorben un ritmo semanal sin llegar a ocultar un cambio real. |
@@ -3389,6 +3401,8 @@ Conviene añadir la regla *Excluded Weigh Ins Are Kept As Data*, según la cual 
 | `WindowSize` | `int` | `public get / private set` | Largo de la media móvil. |
 | `LastRecalculatedAt` | `DateTimeOffset` | `public get / private set` | Auditoría del cálculo. |
 | `Points` | `IReadOnlyList<WeightTrendPoint>` | `public` (computada) | La serie suavizada, ordenada de lo más antiguo a lo más reciente. |
+
+<p class="caption"><strong>Tabla 98</strong><br><em>Métodos de WeightTrend</em></p>
 
 | Método | Scope | Descripción |
 |---|---|---|
@@ -3399,9 +3413,11 @@ El filtrado vive dentro del agregado, que recibe todas las lecturas y devuelve l
 
 **Value Objects**
 
+<p class="caption"><strong>Tabla 99</strong><br><em>Value objects y clases auxiliares de la capa Domain de Intake &amp; Body Response</em></p>
+
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
-| `ProposedEstimate` | Lo que el estimador on-device cree que se comió, que es una propuesta y nunca un hecho. | `ReferenceFoodId > 0`, `PortionGrams > 0`, `Confidence` y `EstimatedAt`. |
+| `ProposedEstimate` | Lo que el modelo de IA estima que se comió, que es una propuesta y nunca un hecho. | `ReferenceFoodId > 0`, `PortionGrams > 0`, `Confidence` y `EstimatedAt`. |
 | `ConfirmedEstimate` | Lo que el paciente dijo que comió. | No lleva nivel de confianza, ya que el valor lo declara el paciente y no un estimador. |
 | `ProtocolCompliance` | Las tres condiciones que hacen comparable un autopesaje con el anterior. | `FastedState`, `SameTimeOfDay` y `SameScale`, donde `FollowsProtocol` exige las tres a la vez. |
 | `WeightTrendPoint` | Un punto de la serie suavizada. | `Date : DateOnly` y `SmoothedValueKg > 0`. |
@@ -3414,15 +3430,15 @@ El filtrado vive dentro del agregado, que recibe todas las lecturas y devuelve l
 
 **Commands**
 
-Los diez commands son `RefreshActiveTargetsCacheCommand`, `LogMealByPhotoCommand`, `EstimatePortionCommand`, `ConfirmEstimateCommand`, `AdjustEstimateCommand`, `LogMealManuallyCommand`, `LogOffPlanMealCommand`, `RecordSelfWeighInCommand`, `RecalculateWeightTrendCommand` y `SyncPendingEntriesCommand`, este último acompañado de un lote de registros `PendingDiaryEntry`. `LogOffPlanMealCommand` no incluye alimento, porción, motivo ni nota, ya que exigir esos datos desincentivaría que el paciente declarara las comidas fuera del plan.
+Los diecisiete commands son `RefreshActiveTargetsCacheCommand`, `LogMealByPhotoCommand`, `EstimatePortionCommand`, `ConfirmEstimateCommand`, `AdjustEstimateCommand`, `LogMealManuallyCommand`, `LogOffPlanMealCommand`, `RecordSelfWeighInCommand`, `RecalculateWeightTrendCommand` y `SyncPendingEntriesCommand`, este último acompañado de un lote de registros `PendingDiaryEntry`. `LogOffPlanMealCommand` no incluye alimento, porción, motivo ni nota, ya que exigir esos datos desincentivaría que el paciente declarara las comidas fuera del plan. Completan el conjunto `AnalyzeMealPhotoCommand`, `GenerateMealIdeasCommand`, `LogMealGroupManuallyCommand`, que registra los ingredientes de una idea de comida como un solo grupo, `SyncSelfWeighInsCommand` y los tres de purga, `PurgeMealPhotoAnalysesCommand`, `PurgeExpiredMealPhotoAnalysesCommand` y `PurgeMealIdeasCommand`.
 
 **Queries**
 
-Las seis queries son `GetActiveTargetsByPatientIdQuery`, `GetDiaryEntriesByPatientIdQuery`, `GetDiaryEntryByIdQuery`, `GetWeightTrendByPatientIdQuery`, `GetPendingSyncQueueByPatientIdQuery` y `GetSelfWeighInsByPatientIdQuery`.
+Las diez queries son `GetActiveTargetsByPatientIdQuery`, `GetDiaryEntriesByPatientIdQuery`, `GetDiaryEntryByIdQuery`, `GetWeightTrendByPatientIdQuery`, `GetPendingSyncQueueByPatientIdQuery`, `GetSelfWeighInsByPatientIdQuery`, `GetFoodNamesQuery`, `GetPatientIdsWithSelfWeighInsQuery`, `GetWeightTrendBetweenByPatientIdQuery` y `GetWeightTrendRangeByPatientIdQuery`.
 
 **Domain Events**
 
-Los doce domain events heredan de `DomainEventBase`. Cinco de ellos cruzan la frontera hacia Monitoring & Adherence, y son `MealLogged`, `EstimateConfirmedByPatient`, `OffPlanEntryLogged`, `WeightTrendRecalculated` y `EntrySynchronized`. Los internos son `ActiveTargetsCacheRefreshed`, `EstimateProposed`, `EstimateAdjustedByPatient`, `SelfWeighInRecorded`, `SelfWeighInExcludedFromTrend`, `EntryQueuedOffline` y `SyncConflictResolved`. `EstimateProposed` se mantiene interno a propósito, dado que una propuesta no es ingesta y dejarla cruzar permitiría que la conjetura de un modelo se evaluara como si la hubiera dicho el paciente.
+Los quince domain events heredan de `DomainEventBase`. Siete de ellos cruzan la frontera hacia Monitoring & Adherence, y son `MealLogged`, `EstimateConfirmedByPatient`, `OffPlanEntryLogged`, `WeightTrendRecalculated`, `EntrySynchronized`, `MealGroupLogged` y `DiaryBatchSynchronized`. Los internos son `ActiveTargetsCacheRefreshed`, `EstimateProposed`, `EstimateAdjustedByPatient`, `SelfWeighInRecorded`, `SelfWeighInExcludedFromTrend`, `EntryQueuedOffline`, `SyncConflictResolved` y `SelfWeighInBatchSynchronized`. `EstimateProposed` se mantiene interno a propósito, dado que una propuesta no es ingesta y dejarla cruzar permitiría que la conjetura de un modelo se evaluara como si la hubiera dicho el paciente.
 
 **Errors**
 
@@ -3434,17 +3450,27 @@ Son cuatro: `IActiveTargetsCacheRepository`, `IDiaryEntryRepository`, `ISelfWeig
 
 **Domain Services**
 
-Este contexto no declara servicios de dominio propios y se limita a consumir los ACL de Food Catalog y Care Relationship desde la capa de aplicación. El servidor no ejecuta ningún modelo de visión, puesto que la estimación de porciones corre en el dispositivo y llega ya calculada.
+Este contexto declara cinco servicios de dominio, que se describen al final de esta sección, y consume los ACL de Food Catalog y Care Relationship desde la capa de aplicación. El servidor reconoce la comida de una fotografía a través del módulo de IA de `Shared`.
 
 **Relaciones entre clases:** `DiaryEntry` compone `DiaryEntryId`, `Provenance` y `SyncState`, y agrega de forma reconstruida `ProposedEstimate` y `ConfirmedEstimate`, con 0..1 de cada uno, derivados de columnas planas. `SelfWeighIn` compone `SelfWeighInId` y reconstruye `ProtocolCompliance`. `WeightTrend` agrega 0..* `WeightTrendPoint` y depende de `SelfWeighIn` únicamente como parámetro de `Recalculate`, nunca por navegación. Los cuatro agregados son raíces independientes que se referencian entre sí mediante un `PatientId` plano, respetando así la regla de no navegar entre raíces de agregado.
 
+El modelo del contexto cubre además el reconocimiento de comidas por foto, las ideas de comidas y la declaración de adherencia al plan. En total hay 5 agregados, 17 commands, 10 queries y 15 domain events.
+
+- **`MealPhotoAnalysis`:** agregado que guarda el resultado temporal del análisis de una fotografía: el plato reconocido, los gramos estimados, la confianza, hasta tres alternativas (`MealPhotoAlternative`) y la fecha de expiración. La fotografía nunca se almacena, y un análisis expirado no puede usarse para registrar una comida.
+- **Atributos de los demás agregados:** `DiaryEntry` guarda `PlanAdherence`, `Origin` (`EntryOrigin`), `MealGroupId`, que agrupa los ingredientes de una misma idea de comida, y `MealPhotoAnalysisId`. `SelfWeighIn` guarda el `ClientEntryId` que hace idempotente la sincronización. `ActiveTargetsCache` conserva también las indicaciones, el cambio respecto de la versión anterior del plan y el mensaje del nutricionista.
+- **Value objects:** `PlanAdherence` (`InPlan`, `OffPlan` o `NotAnswered`), `EntryOrigin`, `MealPhoto`, `MealPhotoPortion`, `MealIdea`, `MealIdeaIngredient`, `RemainingTargets`, `SelfWeighInProtocol`, `WeightTrendRange`, `WeightTrendSummary`, `CachedGuideline` y `CachedPlanChange`.
+- **Servicios de dominio:** `IPhotoMetadataStripper`, `IRestrictionLexicon`, `ISelfWeighInProtocolProvider`, `MealIdeaRules` y `MealNutrients`.
+- **Adherencia al plan:** el paciente declara con `PlanAdherence` si una comida estaba dentro de su plan al confirmarla o registrarla. `Provenance.OffPlan` y el endpoint `off-plan-logs` se mantienen por compatibilidad.
+
 #### 2.6.1.2. Interface Layer
 
-La Interface Layer de Intake & Body Response expone el diario al cliente móvil del paciente y publica el contrato de solo lectura que los demás bounded contexts consultan. Los tres controllers están anotados con `[Authorize(Roles = "Patient")]`, ya que este diario lo escribe el paciente y nadie más.
+La Interface Layer de Intake & Body Response expone el diario al cliente móvil del paciente y publica el contrato de solo lectura que los demás bounded contexts consultan. Los cinco controllers están anotados con `[Authorize(Roles = "Patient")]`, ya que este diario lo escribe el paciente y nadie más.
 
 **Controllers**
 
 `DiaryEntriesController` se publica bajo `[Route("api/v1/diary-entries")] [Tags("Intake and Body Response")]`. Recibe las escrituras del diario y traduce `Result<T, IntakeError>` a respuestas HTTP.
+
+<p class="caption"><strong>Tabla 100</strong><br><em>Endpoints de DiaryEntriesController (Intake &amp; Body Response)</em></p>
 
 | Verbo / Ruta | Acción | Respuestas |
 |---|---|---|
@@ -3460,6 +3486,8 @@ Cuenta además con el método privado `PatientWriteOnly()`. No existe ningún ve
 `SelfWeighInsController`, bajo `[Route("api/v1/self-weigh-ins")]`, expone un único `POST /` resuelto por `RecordSelfWeighIn(RecordSelfWeighInResource)`, con respuestas 201 · 400 · 401 · 403. La operación `Recalculate Weight Trend` tampoco tiene endpoint, puesto que la dispara la política que escucha `SelfWeighInRecorded`.
 
 `PatientIntakeController`, bajo `[Route("api/v1/patients")]`, sirve los cuatro read models del paciente y declara los métodos privados `IsSelf(int)` y `NotThisPatient()`.
+
+<p class="caption"><strong>Tabla 101</strong><br><em>Endpoints de PatientIntakeController (Intake &amp; Body Response)</em></p>
 
 | Verbo / Ruta | Acción | Read Model |
 |---|---|---|
@@ -3480,6 +3508,8 @@ Las clases de entrada viven en `IntakeResources.cs` y son `LogMealByPhotoResourc
 
 Por su parte, `IntakeActionResultAssembler.cs` concentra la traducción de errores a HTTP mediante `ToDiaryEntryResult`, `ToSelfWeighInResult`, `ToSyncResult`, `ToNotFoundResult` y el privado `FailureResult`.
 
+<p class="caption"><strong>Tabla 102</strong><br><em>Mapeo de errores de dominio a códigos HTTP en Intake &amp; Body Response</em></p>
+
 | Errores | Status |
 |---|---|
 | `ActiveTargetsCacheNotFound`, `DiaryEntryNotFound`, `SelfWeighInNotFound`, `WeightTrendNotFound` | **404** |
@@ -3497,6 +3527,19 @@ Por su parte, `IntakeActionResultAssembler.cs` concentra la traducción de error
 
 Los mensajes localizados se declaran en `IntakeBodyResponse/Resources/IntakeMessages.cs`, clase marcador de los archivos `.resx` en inglés y español.
 
+Además de los endpoints del diario, el contexto expone el reconocimiento de comidas, las ideas de comidas, el registro por lote y la sincronización de autopesajes:
+
+<p class="caption"><strong>Tabla 103</strong><br><em>Endpoints adicionales de Intake &amp; Body Response</em></p>
+
+| Endpoint | Controller | Respuesta | Descripción |
+|---|---|---|---|
+| `POST /patients/{id}/meal-photo-analyses` | `PatientMealPhotoAnalysesController` | 201 · 400 · 403 · 413 · 422 · 429 · 503 | Recibe la foto (JPEG o WebP, hasta 2 MB) y devuelve la propuesta de estimación. |
+| `POST /patients/{id}/meal-ideas` | `PatientMealIdeasController` | 200 · 400 · 403 · 422 · 429 · 502 · 503 | Propone ideas de comidas que caben en lo que resta del día. |
+| `POST /diary-entries/manual-logs/batch` | `DiaryEntriesController` | 201 · 400 · 422 | Registra de una vez los ingredientes de una idea de comida. |
+| `POST /self-weigh-ins/synchronization` | `SelfWeighInsController` | 200 | Sincroniza autopesajes registrados sin conexión. |
+
+`photo-logs` acepta `analysisId`, `confirmation`, `planAdherence` y `clientEntryId`, y `manual-logs` acepta `planAdherence` y `clientEntryId`. El endpoint `off-plan-logs` se mantiene por compatibilidad. Para estos casos hay 18 resources y 5 assemblers, y los errores `PhotoTooLarge` (413), `UnsupportedPhotoFormat` (400) y `MealPhotoAnalysisNotFound` (404).
+
 #### 2.6.1.3. Application Layer
 
 La Application Layer orquesta los seis subflujos del contexto, numerados del 4.1 al 4.6, mediante command services, query services y tres event handlers que implementan las políticas. Las interfaces públicas viven en `Application/CommandServices` y `Application/QueryServices`, mientras que las implementaciones están en `Application/Internal/...`.
@@ -3506,6 +3549,8 @@ La Application Layer orquesta los seis subflujos del contexto, numerados del 4.1
 `ActiveTargetsCacheCommandService`, que implementa `IActiveTargetsCacheCommandService`, depende de `IActiveTargetsCacheRepository`, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. Su único método, `Handle(RefreshActiveTargetsCacheCommand)`, implementa el subflujo 4.1: valida *Published Contract Only*, exige un `CareLink` activo y, si el vínculo desapareció, deja el caché existente exactamente como está en lugar de borrarlo. Publica `ActiveTargetsCacheRefreshed`. Este servicio nunca habla con Nutritional Care y solo ve aquello que el evento publicado decidió llevar consigo.
 
 `DiaryEntryCommandService`, que implementa `IDiaryEntryCommandService`, depende de `IDiaryEntryRepository`, `IUnitOfWork`, `IFoodCatalogContextFacade`, `IConfiguration`, `ILogger<...>` e `IMediator`, y declara la constante `DefaultRetroactiveLoggingWindowHours = 48`.
+
+<p class="caption"><strong>Tabla 104</strong><br><em>Métodos de DiaryEntryCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -3529,7 +3574,9 @@ Sus métodos privados son tres. `ReconcileAsync(int, PendingDiaryEntry, CT)` es 
 
 **Event Handlers (políticas)**
 
-Los tres handlers crean un scope de DI aislado, ya que las notificaciones se manejan en paralelo y compartir el `DbContext` del request produciría un error de concurrencia.
+Los seis handlers crean un scope de DI aislado, ya que las notificaciones se manejan en paralelo y compartir el `DbContext` del request produciría un error de concurrencia.
+
+<p class="caption"><strong>Tabla 105</strong><br><em>Event handlers de Intake &amp; Body Response</em></p>
 
 | Handler | Escucha | Política | Emite |
 |---|---|---|---|
@@ -3545,11 +3592,18 @@ Los tres handlers crean un scope de DI aislado, ya que las notificaciones se man
 
 `IntakeContextFacade` implementa `IIntakeContextFacade` apoyándose en los query services y en `IFoodCatalogContextFacade`, con la constante `NutrientBasisGrams = 100m`. Los totales diarios se calculan aquí y no se almacenan, ya que un total almacenado sería una segunda fuente de verdad, y solo se cuentan los estimados confirmados, porque una propuesta que el paciente no confirmó no representa su consumo. Si el alimento de una entrada no puede resolverse, se conserva su identificador y únicamente se omite el nombre.
 
+- **`MealPhotoAnalysisCommandService`:** valida la foto, elimina sus metadatos, consulta el módulo de IA con el catálogo local como pista, resuelve o crea el alimento reconocido y guarda el `MealPhotoAnalysis`. Si la IA no está disponible o el paciente no dio su consentimiento, devuelve un error y la aplicación continúa con el registro manual.
+- **`MealIdeasCommandService`:** calcula lo que resta del día con `DailyIntakeCalculator`, pide las ideas a la IA y valida cada una con `MealIdeaRules` (energía, restricciones y términos prohibidos) antes de devolverlas. Los resultados se guardan en caché dos horas.
+- **Handlers de IA y de lotes:** `OnAiProcessingConsentChangedIntakeHandler` y `OnAiPreferencesChangedIntakeHandler` eliminan los análisis y las ideas cuando se retira el consentimiento o se apaga una función. `OnSelfWeighInBatchSynchronizedHandler` recalcula la tendencia una vez por lote.
+- **Validadores de salida de IA:** `MealPhotoRecognitionOutputValidator` y `MealIdeasOutputValidator`.
+
 #### 2.6.1.4. Infrastructure Layer
 
-La Infrastructure Layer de este bounded context se limita a la persistencia, de modo que no consume ningún servicio externo, no ejecuta modelos de visión y no aloja hosted services. Las cuatro configuraciones de EF Core viven en `IntakeEntityTypeConfigurations.cs` y los cuatro repositorios en `IntakeRepositories.cs`.
+La Infrastructure Layer de este bounded context contiene la persistencia, el procesamiento de imágenes, las cachés de IA y un hosted service que elimina los análisis vencidos. Cuatro configuraciones de EF Core viven en `IntakeEntityTypeConfigurations.cs` y cuatro repositorios en `IntakeRepositories.cs`; `MealPhotoAnalysis` tiene los suyos en archivos propios.
 
 **Configuraciones de EF Core**
+
+<p class="caption"><strong>Tabla 106</strong><br><em>Configuraciones de EF Core de Intake &amp; Body Response</em></p>
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
@@ -3558,9 +3612,11 @@ La Infrastructure Layer de este bounded context se limita a la persistencia, de 
 | `SelfWeighInEntityTypeConfiguration` | `self_weigh_ins` | La PK usa el converter `SelfWeighInId.FromRaw`, `value_kg` se declara como `decimal(10,2)`, las tres banderas de protocolo son requeridas y existe el índice `ix_self_weigh_ins_patient_id`. |
 | `WeightTrendEntityTypeConfiguration` | `weight_trends` | Usa `HasKey(t => t.PatientId)` con `ValueGeneratedNever()`, y la serie `points` se persiste como `json` desde el backing field `_points`, con el comparador estático `PointListComparer`. |
 
-Las cuatro configuraciones declaran `Ignore(...)` sobre cada propiedad calculada, entre ellas `DeclaredLocalTimestamp`, `LocalDate`, `ProposedEstimate`, `ConfirmedEstimate`, `FollowsProtocol` y `Points`, todas las cuales existen en el dominio pero no corresponden a columnas.
+Las configuraciones declaran `Ignore(...)` sobre cada propiedad calculada, entre ellas `DeclaredLocalTimestamp`, `LocalDate`, `ProposedEstimate`, `ConfirmedEstimate`, `FollowsProtocol` y `Points`, todas las cuales existen en el dominio pero no corresponden a columnas.
 
 **Repositorios (implementaciones)**
+
+<p class="caption"><strong>Tabla 107</strong><br><em>Repositorios de Intake &amp; Body Response</em></p>
 
 | Clase | Detalles de implementación |
 |---|---|
@@ -3573,13 +3629,21 @@ Los cuatro heredan de `BaseRepository<T>` y reimplementan de forma explícita `I
 
 **Servicios externos**
 
-Este contexto no consume ninguno. La estimación de porciones se ejecuta en el dispositivo del paciente con ML Kit, y el servidor se limita a persistir la propuesta que recibe.
+Este contexto consume un único servicio externo, el proveedor de IA generativa, a través del módulo técnico de IA de `Shared`. El servidor recibe la foto, la analiza en memoria sin conservarla y persiste solo la propuesta de estimación con su nivel de confianza. ML Kit no interviene en este contexto: en el dispositivo solo se usa para leer el código QR de invitación.
+
+- **Persistencia de análisis:** la tabla `meal_photo_analyses` con `MealPhotoAnalysisRepository` y su configuración de EF Core, y las columnas `plan_adherence`, `origin`, `meal_group_id`, `meal_photo_analysis_id` y `proposed_ai_generation_id` en `diary_entries`.
+- **Procesamiento de imágenes:** `PhotoMetadataStripper` reescribe el archivo JPEG o WebP sin EXIF, XMP ni ICC.
+- **IA:** `InMemoryMealIdeasCache` y `InMemoryCatalogNameHintsCache` guardan resultados temporales, y `EmbeddedRestrictionLexicon` aporta los términos que se usan para respetar las restricciones del paciente.
+- **Procesos en segundo plano:** `MealPhotoAnalysisPurgeHostedService` elimina los análisis vencidos y `WeightTrendRecalculationJob` permite recalcular las tendencias.
+- **Protocolo de pesaje:** `ConfiguredSelfWeighInProtocolProvider` define cuándo un autopesaje sigue el protocolo.
 
 #### 2.6.1.5. Bounded Context Software Architecture Component Level Diagrams
 
 **Intake & Body Response**
 
 Component:
+
+<p class="caption"><strong>Figura 77</strong><br><em>Diagrama de componentes del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/intake-body-response.puml)
 
@@ -3591,17 +3655,25 @@ Component:
 
 Domain:
 
+<p class="caption"><strong>Figura 78</strong><br><em>Diagrama de clases de la capa Domain del bounded context Intake &amp; Body Response</em></p>
+
 ![Intake & Body Response Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/domain.puml)
 
 Infrastructure:
+
+<p class="caption"><strong>Figura 79</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/infrastructure.puml)
 
 Application:
 
+<p class="caption"><strong>Figura 80</strong><br><em>Diagrama de clases de la capa Application del bounded context Intake &amp; Body Response</em></p>
+
 ![Intake & Body Response Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/application.puml)
 
 Interfaces:
+
+<p class="caption"><strong>Figura 81</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/interfaces.puml)
 
@@ -3611,17 +3683,21 @@ Interfaces:
 
 Database:
 
+<p class="caption"><strong>Figura 82</strong><br><em>Diagrama de base de datos del bounded context Intake &amp; Body Response</em></p>
+
 ![Intake & Body Response Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/intake-body-response.puml)
 
 ### 2.6.2. Bounded Context: Monitoring & Adherence
 
 #### 2.6.2.1. Domain Layer
 
-El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.MonitoringAdherence`, es el único que compara lo prescrito con lo registrado e interpreta la diferencia. Su Domain Layer aloja cinco aggregate roots y concentra la lógica de interpretación dentro de ellos, sin recurrir a domain services. Tres invariantes gobiernan toda la capa. El primero establece que ninguna desviación se evalúa sobre una ventana de menos de siete días. El segundo, que el paciente recibe una notificación antes de que una alerta escale al profesional. El tercero, que una señal escalada nunca modifica un plan.
+El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.MonitoringAdherence`, es el único que compara lo prescrito con lo registrado e interpreta la diferencia. Su Domain Layer aloja siete aggregate roots y concentra la lógica de interpretación dentro de ellos; sus únicos domain services son el calendario clínico de las consultas y las reglas que comprueban los textos generados con IA. Tres invariantes gobiernan toda la capa. El primero establece que ninguna desviación se evalúa sobre una ventana de menos de siete días. El segundo, que el paciente recibe una notificación antes de que una alerta escale al profesional. El tercero, que una señal escalada nunca modifica un plan.
 
 **Aggregates (Aggregate Roots)**
 
 `EvaluationWindow` representa el periodo sobre el que se compara lo prescrito contra lo registrado. Existe una ventana por relación de cuidado, que abre cuando se establece el vínculo y cierra cuando este se revoca, y dentro de ella conviven tres series que de forma deliberada nunca se mezclan entre sí.
+
+<p class="caption"><strong>Tabla 108</strong><br><em>Atributos de EvaluationWindow</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -3636,6 +3712,8 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 | `DailyComplianceSeries` | `IReadOnlyList<DailyCompliance>` | `public` (computada) | El resultado día a día. |
 | `AnthropometrySeries` | `IReadOnlyList<AnthropometryPoint>` | `public` (computada) | Contiene solo mediciones clínicas, ya que los autopesajes del paciente no forman parte de esta serie. |
 | `IntakeSummary` | `IntakeSummary` | `public` (computada) | Se calcula y nunca se almacena, de modo que no puede discrepar con la serie que resume. |
+
+<p class="caption"><strong>Tabla 109</strong><br><em>Métodos de EvaluationWindow</em></p>
 
 | Método | Scope | Reglas que aplica |
 |---|---|---|
@@ -3653,6 +3731,8 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 
 `Deviation` modela la diferencia entre lo prescrito y lo registrado cuando esta supera la tolerancia y se repite a lo largo de varios días de la ventana.
 
+<p class="caption"><strong>Tabla 110</strong><br><em>Atributos de Deviation</em></p>
+
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `Id` | `DeviationId` | `public get / private set` | Identidad tipada. |
@@ -3662,6 +3742,8 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 | `Direction` | `DeviationDirection` | `public get / private set` | Puede ser `Above` o `Below`. |
 | `IsSustained` / `SustainedAt` | `bool` / `DateTimeOffset?` | `public get / private set` | Sostienen *Sustained If Persists Across Majority Of Window*. |
 | `LoggedDaysConsidered`, `DeviatingDaysConsidered` | `int` | `public get / private set` | Los dos conteos con los que se decidió la mayoría, guardados para que la evidencia enviada al inbox no tenga que recalcularse desde una ventana que ya se movió. |
+
+<p class="caption"><strong>Tabla 111</strong><br><em>Métodos de Deviation</em></p>
 
 | Método | Scope | Descripción |
 |---|---|---|
@@ -3673,6 +3755,8 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 
 `ConsistencyIndex` mide cuán bien concuerdan entre sí la serie de peso y la serie de ingesta registrada, y tiene al paciente como raíz.
 
+<p class="caption"><strong>Tabla 112</strong><br><em>Atributos de ConsistencyIndex</em></p>
+
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `EnergyKcalPerKg` | `const decimal = 7700m` | `public` | Es una regla de dedo idéntica para todos, y justamente por eso sirve como chequeo de consistencia y no como predicción. |
@@ -3680,6 +3764,8 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 | `Value` | `decimal` | `public get / private set` | Movimiento de peso inexplicado, expresado en kg por semana. |
 | `State` | `ConsistencyState` | `public get / private set` | Puede ser `Normal`, `Watch` o `Alert`. |
 | `FirstFlaggedAt`, `ShownToPatientAt`, `EscalatedAt`, `AlertSinceAt` | `DateTimeOffset?` | `public get / private set` | Componen la cronología del episodio, y `ShownToPatientAt` es precondición de la escalación. |
+
+<p class="caption"><strong>Tabla 113</strong><br><em>Métodos de ConsistencyIndex</em></p>
 
 | Método | Scope | Descripción |
 |---|---|---|
@@ -3696,6 +3782,8 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 
 **Value Objects**
 
+<p class="caption"><strong>Tabla 114</strong><br><em>Value objects y clases auxiliares de la capa Domain de Monitoring &amp; Adherence</em></p>
+
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
 | `TargetsSnapshot` | La copia de los objetivos diarios vigentes en un momento dado. | `PlanVersion > 0`, `EnergyKcal > 0`, los macros, `TakenAt` y `EffectiveFrom`. No incluye diagnóstico, razonamiento clínico ni base de cálculo. |
@@ -3711,7 +3799,7 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 
 **Commands**
 
-Los dieciséis commands van desde `OpenEvaluationWindowCommand` y `SnapshotActiveTargetsCommand` hasta `CloseEvaluationWindowCommand`. Solo dos de ellos tienen endpoint, que son `RecordReferralCommand` y `ScheduleFollowUpCommand`, ya que el contexto es principalmente reactivo y se activa por eventos y por políticas temporales. Conviene notar que `ReEvaluateWindowCommand` recibe una sola fecha y no un rango.
+Los veintinueve commands van desde `OpenEvaluationWindowCommand` y `SnapshotActiveTargetsCommand` hasta `CloseEvaluationWindowCommand`, e incluyen los de la agenda, la respuesta previa, el cierre de derivaciones, el acuse del aviso de consistencia y los de IA, además de los de purga. Solo `RecordReferralCommand`, `CloseReferralCommand`, `ScheduleFollowUpCommand`, `RescheduleFollowUpCommand`, `CancelFollowUpCommand`, `SubmitPreVisitCheckInCommand`, `AcknowledgeConsistencyPromptCommand`, `SuggestQuestionsCommand` y `SummarizeMonitoringCommand` tienen endpoint, ya que el contexto es principalmente reactivo y se activa por eventos y por políticas temporales. Conviene notar que `ReEvaluateWindowCommand` recibe una sola fecha y no un rango.
 
 **Queries**
 
@@ -3731,13 +3819,24 @@ Son cinco: `IEvaluationWindowRepository`, `IDeviationRepository`, `IConsistencyI
 
 **Relaciones entre clases:** `EvaluationWindow` compone `WindowId` y `WindowState`, y agrega 0..* `TargetsSnapshot`, 0..* `DailyCompliance` y 0..* `AnthropometryPoint`, tres series independientes que se serializan como JSON. `Deviation` referencia la ventana mediante `WindowRef : WindowId`, en una asociación por identificador y sin navegación, y compone `DeviationMagnitude` y `DeviationDirection`. `ConsistencyIndex` compone `ConsistencyState` y depende de `DailyCompliance` y de los puntos de tendencia solo como parámetros de `Recompute`. Por último, `Referral` compone `Specialty` y `ReferralReason`, y `ScheduledFollowUp` compone `FollowUpState`.
 
+El contexto cubre además la agenda de consultas, la respuesta previa del paciente y los resúmenes con IA. En total hay 7 agregados, 29 commands, 19 queries y 23 domain events.
+
+- **`PreVisitCheckIn` y `WeeklySummary`:** `PreVisitCheckIn` guarda cómo se sintió el paciente, sus dificultades y hasta tres preguntas, con una sola respuesta por consulta. `WeeklySummary` guarda el resumen semanal de un paciente y se elimina a los 180 días.
+- **Atributos de los demás agregados:** `ScheduledFollowUp` guarda la modalidad, las indicaciones de preparación, la cancelación, la reprogramación y el cierre por consulta completada. `Referral` tiene estado abierto o cerrado. `ConsistencyIndex` registra el momento en que se avisó al paciente y el momento en que lo vio.
+- **Value objects:** `ConsultationModality`, `PreparationInstruction`, `CheckInDifficulty`, `PlanFeeling`, `PatientQuestion`, `QuestionOrigin`, `ComplianceDay`, `ComplianceSummary`, `MealSlot`, `MonitoringPeriodFacts` y los identificadores `PreVisitCheckInId` y `WeeklySummaryId`.
+- **Commands de agenda, respuesta previa e IA:** `SubmitPreVisitCheckInCommand`, `RescheduleFollowUpCommand`, `CancelFollowUpCommand`, `CloseReferralCommand`, `AcknowledgeConsistencyPromptCommand`, `GenerateWeeklySummaryCommand`, `SuggestQuestionsCommand` y `SummarizeMonitoringCommand`, entre otros de purga y cierre.
+- **Domain events:** `PreVisitCheckInSubmitted`, `FollowUpRescheduled`, `FollowUpCancelled`, `ReferralClosed` y `ConsistencyPromptAcknowledged`.
+- **Servicios de dominio:** `IFollowUpCalendar`, `IAiLanguageLexicon` y `GeneratedTextRules`.
+
 #### 2.6.2.2. Interface Layer
 
-La Interface Layer de Monitoring & Adherence es notablemente pequeña en escritura y rica en lectura, y la razón está en que el contexto es reactivo: de sus dieciséis comandos solo dos se exponen como endpoint. Los tres controllers trasladan a la API el principio *Patient First Always*.
+La Interface Layer de Monitoring & Adherence es notablemente pequeña en escritura y rica en lectura, y la razón está en que el contexto es reactivo: de sus veintinueve comandos solo nueve se exponen como endpoint. Los siete controllers trasladan a la API el principio *Patient First Always*.
 
 **Controllers**
 
 `PatientMonitoringController` se publica bajo `[Route("api/v1/patients")] [Authorize] [Tags("Monitoring and Adherence")]` y depende de los cuatro query services de lectura y de `IStringLocalizer<MonitoringMessages>`.
+
+<p class="caption"><strong>Tabla 115</strong><br><em>Endpoints de PatientMonitoringController (Monitoring &amp; Adherence)</em></p>
 
 | Verbo / Ruta | Acción | Rol | Read Model |
 |---|---|---|---|
@@ -3762,6 +3861,8 @@ Los permisos son deliberadamente asimétricos, de modo que el paciente ve su ind
 
 `MonitoringAssemblers.cs` reúne dos command assemblers, que son `RecordReferralCommandAssembler` y `ScheduleFollowUpCommandAssembler`, junto con ocho resource assemblers: `DailyComplianceResourceAssembler`, `TargetsSnapshotResourceAssembler`, `AnthropometryPointResourceAssembler`, `EvaluationWindowResourceAssembler`, `DeviationResourceAssembler`, `ConsistencyIndexResourceAssembler`, `ReferralResourceAssembler` y `ScheduledFollowUpResourceAssembler`. Por su parte, `MonitoringActionResultAssembler.cs` expone `ToReferralResult`, `ToScheduledFollowUpResult`, `ToNotFoundResult` y el privado `FailureResult`, y es el único lugar donde `MonitoringError` se convierte en un código HTTP.
 
+<p class="caption"><strong>Tabla 116</strong><br><em>Mapeo de errores de dominio a códigos HTTP en Monitoring &amp; Adherence</em></p>
+
 | Errores | Status |
 |---|---|
 | `EvaluationWindowNotFound`, `DeviationNotFound`, `ScheduledFollowUpNotFound` | **404** |
@@ -3779,6 +3880,21 @@ Los permisos son deliberadamente asimétricos, de modo que el paciente ve su ind
 
 Los mensajes localizados se declaran en `MonitoringAdherence/Resources/MonitoringMessages.cs`, que contiene los textos del recordatorio y de la notificación al paciente, redactados sin lenguaje acusatorio.
 
+Además de la lectura del seguimiento, el contexto expone la agenda, la respuesta previa del paciente, el acuse del aviso de consistencia y los textos con IA:
+
+<p class="caption"><strong>Tabla 117</strong><br><em>Endpoints adicionales de Monitoring &amp; Adherence</em></p>
+
+| Endpoint | Controller | Respuesta | Descripción |
+|---|---|---|---|
+| `PUT` y `GET /scheduled-follow-ups/{id}/check-in` | `FollowUpCheckInController` | 200 · 400 · 403 · 404 · 409 | Respuesta previa del paciente; se bloquea desde la hora de la consulta. |
+| `POST /scheduled-follow-ups/{id}/cancellation` y `/rescheduling` | `ScheduledFollowUpsController` | 204 · 200 | Cancela o reprograma una consulta de la agenda del nutricionista. |
+| `GET /patients/{id}/scheduled-follow-ups` y `/next` | `PatientScheduledFollowUpsController` | 200 · 404 | Consultas de un paciente. |
+| `POST /patients/{id}/consistency-index/prompt-acknowledgement` | `ConsistencyPromptController` | 204 · 409 | El paciente acusa haber visto el aviso de consistencia. |
+| `GET /patients/{id}/weekly-summaries/latest`, `/suggested-questions` y `/monitoring-summary` | `PatientAiSummariesController` | 200 · 404 · 429 · 502 · 503 | Resumen semanal y preguntas sugeridas del paciente, y resumen del periodo para el nutricionista. |
+| `POST /referrals/{id}/closure` | `ReferralsController` | 200 · 409 | Cierra una derivación. |
+
+La agenda incluye `preparation` y `modality`, y rechaza con 400 una fecha que no es futura. Para estos casos hay 16 resources y 13 assemblers.
+
 #### 2.6.2.3. Application Layer
 
 La Application Layer de este contexto orquesta once subflujos, numerados del 5.1 al 5.11, y aloja el mayor número de event handlers de toda la plataforma, con trece políticas disparadas por eventos de las cuales nueve reaccionan a eventos de otros bounded contexts. A ellas se suman tres políticas temporales ejecutadas como `BackgroundService`, que atienden el vacío de registro, la escalación de consistencia y la cita no acudida, para un total de dieciséis. Es aquí donde quedan a la vista los capabilities del contexto, esto es evaluar días, detectar y sostener desviaciones, calcular el índice de consistencia, preguntar al paciente, escalar al profesional, detectar huecos de registro y gestionar derivaciones y citas.
@@ -3786,6 +3902,8 @@ La Application Layer de este contexto orquesta once subflujos, numerados del 5.1
 **Command Services**
 
 `EvaluationWindowCommandService` depende de `IEvaluationWindowRepository`, `IIntakeContextFacade`, `IUnitOfWork`, `IConfiguration`, `ILogger<...>` e `IMediator`. Es la clase que compara lo prescrito con lo registrado, para lo cual obtiene lo registrado mediante el ACL de Intake & Body Response y lo prescrito desde los snapshots guardados en la ventana, sin modificar ninguno de los dos.
+
+<p class="caption"><strong>Tabla 118</strong><br><em>Métodos de EvaluationWindowCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -3803,6 +3921,8 @@ Su método privado clave es `EvaluateSingleDay(int, DateOnly, bool, CT)`, que re
 `DeviationCommandService` depende de `IDeviationRepository`, `IEvaluationWindowRepository`, `IUnitOfWork`, `IConfiguration`, `ILogger<...>` e `IMediator`. Su método `Handle(DetectDeviationCommand)` exige `HasMinimumSpan`, conforme al primer invariante, toma el horizonte rodante, delega en `Deviation.DetectFrom(...)` y, cuando ya existe una desviación en esa ventana y dirección, la vuelve a enunciar en lugar de duplicarla. `Handle(FlagSustainedDeviationCommand)`, por su parte, aplica el ratio configurable `Monitoring:SustainedDeviationRatio`, que por defecto vale 0.5, y publica `SustainedDeviationDetected` únicamente en la transición.
 
 `ConsistencyIndexCommandService` depende de `IConsistencyIndexRepository`, `IEvaluationWindowRepository`, `IIntakeContextFacade`, `ICareRelationshipContextFacade`, `IUnitOfWork`, `IConfiguration`, `ILogger<...>` e `IMediator`, y declara la constante `TrendDays = 90`. Para cumplir el tercer invariante, la clase no tiene ninguna dependencia hacia los planes nutricionales.
+
+<p class="caption"><strong>Tabla 119</strong><br><em>Métodos de ConsistencyIndexCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -3822,6 +3942,8 @@ Son cinco: `EvaluationWindowQueryService`, `DeviationQueryService`, `Consistency
 
 Son trece clases y todas trabajan con un scope de DI aislado.
 
+<p class="caption"><strong>Tabla 120</strong><br><em>Event handlers de Monitoring &amp; Adherence</em></p>
+
 | Handler | Escucha | Origen | Emite |
 |---|---|---|---|
 | `OnCareLinkEstablishedHandler` | `CareLinkEstablished` | Care Relationship | `OpenEvaluationWindowCommand` |
@@ -3838,19 +3960,26 @@ Son trece clases y todas trabajan con un scope de DI aislado.
 | `OnConsistencyAlertRaisedHandler` | `ConsistencyAlertRaised` | Interno | `PromptPatientCommand`, como único suscriptor, notificando primero al paciente |
 | `OnLoggingGapDetectedHandler` | `LoggingGapDetected` | Interno | `RemindPatientCommand`, como único suscriptor |
 
-Los tres handlers de entradas de diario comparten un método auxiliar que emite `EvaluateDayCommand(patientId, date)`, donde `date` es el día de calendario que el paciente estaba viviendo, tomado del timestamp local declarado en el evento y nunca del reloj del servidor.
+Los cinco handlers de entradas de diario comparten un método auxiliar que emite `EvaluateDayCommand(patientId, date)`, donde `date` es el día de calendario que el paciente estaba viviendo, tomado del timestamp local declarado en el evento y nunca del reloj del servidor.
 
 **ACL Facade**
 
 `MonitoringContextFacade` implementa `IMonitoringContextFacade` apoyándose exclusivamente en los query services propios, y ante un fallo devuelve `null` o una lista vacía en lugar de propagar la excepción.
 
+- **Servicios de comandos de la respuesta previa y de la IA:** `PreVisitCheckInCommandService`, `WeeklySummaryCommandService`, `SuggestedQuestionsCommandService`, `MonitoringSummaryCommandService` y `MonitoringAiContentCommandService` (purgas). Los tres que usan IA siguen el mismo orden: comprobar el consentimiento, reunir los hechos del periodo, redactar el texto, validarlo y guardarlo. Si la IA no está disponible, el resumen del nutricionista devuelve solo los hechos.
+- **Servicios de consulta:** `PreVisitCheckInQueryService` y `WeeklySummaryQueryService`.
+- **Handlers de consultas, altas y lotes:** `OnConsultationCompletedHandler` marca la consulta como completada al publicar el plan, `OnTreatmentDischargedHandler` cancela las consultas futuras al dar el alta, y `OnMealGroupLoggedHandler` y `OnDiaryBatchSynchronizedHandler` evalúan el día una sola vez por grupo o por lote. Los handlers de consentimiento y de preferencias de IA eliminan el contenido generado.
+- **Lectura de hechos:** `MonitoringFactsReader` reúne el cumplimiento, la tendencia y las franjas de comida que alimentan los textos, de modo que la IA no calcula ninguna cifra.
+
 #### 2.6.2.4. Infrastructure Layer
 
-La Infrastructure Layer de Monitoring & Adherence contiene la persistencia sobre MySQL 8.4 y tres `BackgroundService`, más que cualquier otro bounded context de la plataforma, y la razón es que tres de sus políticas no las dispara ni un usuario ni un evento sino el paso del tiempo. No consume servicios externos de terceros.
+La Infrastructure Layer de Monitoring & Adherence contiene la persistencia sobre MySQL 8.4 y cuatro `BackgroundService` (los tres de detección de huecos, escalación y consultas no acudidas, más el que genera el resumen semanal), y la razón es que sus políticas no las dispara ni un usuario ni un evento sino el paso del tiempo. No consume servicios externos de terceros fuera del módulo de IA de `Shared`.
 
 **Configuraciones de EF Core**
 
 Las cinco viven en `MonitoringEntityTypeConfigurations.cs`.
+
+<p class="caption"><strong>Tabla 121</strong><br><em>Configuraciones de EF Core de Monitoring &amp; Adherence</em></p>
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
@@ -3866,7 +3995,9 @@ Las cinco clases de `MonitoringRepositories.cs` heredan de `BaseRepository<T>`, 
 
 **Scheduling**
 
-Los tres hosted services siguen las cinco guardas obligatorias del proyecto, con el cuerpo del ciclo dentro de un `try/catch`, los servicios *scoped* resueltos en un scope propio, la propagación del `stoppingToken`, un ciclo idempotente y las migraciones ya aplicadas antes del arranque. Todos usan `PeriodicTimer` con el método privado `SafeWaitAsync` y declaran `BatchSize = 200`.
+Los cuatro hosted services siguen las cinco guardas obligatorias del proyecto, con el cuerpo del ciclo dentro de un `try/catch`, los servicios *scoped* resueltos en un scope propio, la propagación del `stoppingToken`, un ciclo idempotente y las migraciones ya aplicadas antes del arranque. Todos usan `PeriodicTimer` con el método privado `SafeWaitAsync` y declaran `BatchSize = 200`.
+
+<p class="caption"><strong>Tabla 122</strong><br><em>Hosted services de Monitoring &amp; Adherence</em></p>
 
 | Hosted Service | Política implementada | Intervalo (configuración) | Flujo |
 |---|---|---|---|
@@ -3876,13 +4007,20 @@ Los tres hosted services siguen las cinco guardas obligatorias del proyecto, con
 
 **Servicios externos**
 
-Este contexto no consume ninguno. Todo su cálculo es aritmética local sobre datos que ya posee o que lee a través de los ACL de Intake & Body Response y Care Relationship.
+Este contexto solo consume el proveedor de IA generativa, a través del módulo técnico de IA de `Shared`, para el resumen semanal, las preguntas sugeridas y el resumen del periodo. El cálculo de cumplimiento, desviación y consistencia es aritmética local sobre datos que ya posee o que lee a través de los ACL de Intake & Body Response y Care Relationship.
+
+- **Persistencia de la respuesta previa y los resúmenes:** las tablas `pre_visit_check_ins` y `weekly_summaries` con sus repositorios y configuraciones de EF Core, y las columnas de agenda de `scheduled_follow_ups`, de cierre de `referrals` y de aviso de `consistency_indices`.
+- **Procesos en segundo plano:** `WeeklySummaryHostedService` genera el resumen cada lunes con `CronSchedule`, junto con los servicios de detección de huecos, escalación y consultas no acudidas.
+- **Calendario clínico:** `ClinicalTimeZoneFollowUpCalendar` interpreta las fechas de las consultas en la zona horaria clínica.
+- **IA:** `InMemoryMonitoringAiCache` y `EmbeddedAiLanguageLexicon`, que impide que los textos contengan términos de diagnóstico o de reproche.
 
 #### 2.6.2.5. Bounded Context Software Architecture Component Level Diagrams
 
 **Monitoring & Adherence**
 
 Component:
+
+<p class="caption"><strong>Figura 83</strong><br><em>Diagrama de componentes del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/monitoring-adherence.puml)
 
@@ -3894,17 +4032,25 @@ Component:
 
 Domain:
 
+<p class="caption"><strong>Figura 84</strong><br><em>Diagrama de clases de la capa Domain del bounded context Monitoring &amp; Adherence</em></p>
+
 ![Monitoring & Adherence Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/domain.puml)
 
 Infrastructure:
+
+<p class="caption"><strong>Figura 85</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/infrastructure.puml)
 
 Application:
 
+<p class="caption"><strong>Figura 86</strong><br><em>Diagrama de clases de la capa Application del bounded context Monitoring &amp; Adherence</em></p>
+
 ![Monitoring & Adherence Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/application.puml)
 
 Interfaces:
+
+<p class="caption"><strong>Figura 87</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/interfaces.puml)
 
@@ -3914,17 +4060,21 @@ Interfaces:
 
 Database:
 
+<p class="caption"><strong>Figura 88</strong><br><em>Diagrama de base de datos del bounded context Monitoring &amp; Adherence</em></p>
+
 ![Monitoring & Adherence Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/monitoring-adherence.puml)
 
 ### 2.6.3. Bounded Context: Care Relationship
 
 #### 2.6.3.1. Domain Layer
 
-El bounded context Care Relationship, implementado en `Healthify.Platform.CareRelationship`, gobierna la relación consentida entre paciente y profesional y constituye la única fuente de verdad sobre quién puede ver a quién. Es aquí donde el principio de asimetría de la plataforma se hace cumplir técnicamente y no por simple convención. Su Domain Layer declara dos aggregate roots, cinco value objects y diez eventos de dominio, de los cuales solo dos llegan a cruzar la frontera.
+El bounded context Care Relationship, implementado en `Healthify.Platform.CareRelationship`, gobierna la relación consentida entre paciente y profesional y constituye la única fuente de verdad sobre quién puede ver a quién. Es aquí donde el principio de asimetría de la plataforma se hace cumplir técnicamente y no por simple convención. Su Domain Layer declara tres aggregate roots, seis value objects y doce eventos de dominio, de los cuales cuatro llegan a cruzar la frontera.
 
 **Aggregates (Aggregate Roots)**
 
 `Invitation` es el token de un solo uso que el profesional muestra como código QR durante la consulta. Se trata del único medio por el que un paciente se vincula a un profesional, ya que crear una cuenta no otorga acceso a ninguna información.
+
+<p class="caption"><strong>Tabla 123</strong><br><em>Atributos de Invitation</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -3936,6 +4086,8 @@ El bounded context Care Relationship, implementado en `Healthify.Platform.CareRe
 | `ExpiredAt` | `DateTimeOffset?` | `public get / private set` | Momento en que la política de expiración la retiró, que no debe confundirse con `ExpiresAt`. |
 | `IsRedeemed` / `IsExpired` | `bool` | `public` (computadas) | Se derivan de las dos fechas anteriores. |
 
+<p class="caption"><strong>Tabla 124</strong><br><em>Métodos de Invitation</em></p>
+
 | Método | Scope | Reglas que aplica |
 |---|---|---|
 | `Invitation(IssueInvitationCommand)` | `public` | Aplica *Expiration Date Required*, exigiendo una fecha futura, y *Single Use Token*, generando el token con `InvitationToken.Generate()`. |
@@ -3944,6 +4096,8 @@ El bounded context Care Relationship, implementado en `Healthify.Platform.CareRe
 | `Expire(DateTimeOffset)` | `public` | Aplica *Redeemed Invitation Cannot Expire*. Si la invitación ya estaba expirada se comporta como un no-op, y eso vuelve idempotente la política temporal. |
 
 `CareLink` modela la relación consentida entre paciente y profesional. El consentimiento se almacena como cuatro columnas y se reconstruye como value object mediante la propiedad calculada `Consent`, ya que un *owned type* nullable resulta frágil en EF Core y el consentimiento está genuinamente ausente durante el tramo que va desde establecer el vínculo hasta que el paciente lo otorga.
+
+<p class="caption"><strong>Tabla 125</strong><br><em>Atributos de CareLink</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -3956,6 +4110,8 @@ El bounded context Care Relationship, implementado en `Healthify.Platform.CareRe
 | `Consent` | `Consent?` | `public` (computada) | Se reconstruye a partir de las cuatro columnas anteriores. |
 | `IsActive` | `bool` | `public` (computada) | Indica consentimiento vigente, sin revocar y sin alta. Es el valor que el Open Host Service devuelve a Nutritional Care, Intake & Body Response, Monitoring & Adherence y a la capa de read models compuestos. |
 | `IsRevoked` / `IsDischarged` | `bool` | `public` (computadas) | Representan los dos estados de cierre. |
+
+<p class="caption"><strong>Tabla 126</strong><br><em>Métodos de CareLink</em></p>
 
 | Método | Scope | Reglas que aplica |
 |---|---|---|
@@ -3971,6 +4127,8 @@ Los métodos reflejan la asimetría entre roles, ya que el alta exige una razón
 
 **Value Objects**
 
+<p class="caption"><strong>Tabla 127</strong><br><em>Value objects y clases auxiliares de la capa Domain de Care Relationship</em></p>
+
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
 | `Consent` | El permiso que el paciente otorga y puede retirar en cualquier momento sin explicar por qué. | `IsGranted`, `Scope` con un máximo de 200 caracteres, `GrantedAt` y `WithdrawnAt?`. El método `Withdraw(DateTimeOffset)` devuelve una instancia nueva y así preserva la inmutabilidad. |
@@ -3980,15 +4138,15 @@ Los métodos reflejan la asimetría entre roles, ya que el alta exige una razón
 
 **Commands**
 
-Los diez commands son `IssueInvitationCommand`, `ExpireInvitationCommand`, `RedeemInvitationCommand`, `EstablishCareLinkCommand`, `GrantConsentCommand`, `MarkTargetsPendingAcknowledgementCommand`, `AcknowledgeActiveTargetsCommand`, `WithdrawConsentCommand`, `RevokeCareLinkCommand` y `DischargePatientCommand`. Cuatro de ellos carecen de endpoint, ya que los emiten exclusivamente las políticas.
+Los trece commands son `IssueInvitationCommand`, `ExpireInvitationCommand`, `RedeemInvitationCommand`, `EstablishCareLinkCommand`, `GrantConsentCommand`, `MarkTargetsPendingAcknowledgementCommand`, `AcknowledgeActiveTargetsCommand`, `WithdrawConsentCommand`, `RevokeCareLinkCommand` y `DischargePatientCommand`, más `ChangeAiProcessingConsentCommand`, `UpdateAiPreferencesCommand` y `SyncAiPreferencesWithConsentCommand`. Cinco de ellos carecen de endpoint, ya que los emiten exclusivamente las políticas.
 
 **Queries**
 
-Las seis queries son `GetInvitationByIdQuery`, `GetInvitationByTokenQuery`, `GetExpirableInvitationsQuery`, `GetCareLinkByIdQuery`, `GetActiveCareLinkByPatientIdQuery`, que respalda el Open Host Service, y `GetCareLinksByPractitionerIdQuery`.
+Las siete queries son `GetInvitationByIdQuery`, `GetInvitationByTokenQuery`, `GetExpirableInvitationsQuery`, `GetCareLinkByIdQuery`, `GetActiveCareLinkByPatientIdQuery`, que respalda el Open Host Service, `GetCareLinksByPractitionerIdQuery` y `GetAiPreferencesByPatientIdQuery`.
 
 **Domain Events**
 
-Los diez domain events heredan de `DomainEventBase` y solo dos cruzan la frontera, ambos hacia Monitoring & Adherence: `CareLinkEstablished`, que abre la ventana de evaluación, y `CareLinkRevoked`, que la cierra. `ConsentGranted` es interno a propósito, puesto que preguntar si un vínculo está activo no equivale a reaccionar a un hecho pasado, y de ahí que Care Link Status se consulte de forma síncrona por el OHS. Los restantes son internos y comprenden `InvitationIssued`, `InvitationExpired`, `InvitationRedeemed`, `ConsentWithdrawn`, `TreatmentDischarged`, `TargetsPendingAcknowledgement` y `ActiveTargetsAcknowledged`.
+Los doce domain events heredan de `DomainEventBase` y cuatro cruzan la frontera. `CareLinkEstablished`, que abre la ventana de evaluación, y `CareLinkRevoked`, que la cierra, van hacia Monitoring & Adherence, y `AiProcessingConsentChanged` y `AiPreferencesChanged` van hacia Intake & Body Response, Monitoring & Adherence y Nutritional Care, que eliminan lo generado con IA. `ConsentGranted` es interno a propósito, puesto que preguntar si un vínculo está activo no equivale a reaccionar a un hecho pasado, y de ahí que Care Link Status se consulte de forma síncrona por el OHS. Los restantes son internos y comprenden `InvitationIssued`, `InvitationExpired`, `InvitationRedeemed`, `ConsentWithdrawn`, `TreatmentDischarged`, `TargetsPendingAcknowledgement` y `ActiveTargetsAcknowledged`.
 
 **Errors**
 
@@ -4004,13 +4162,23 @@ Este bounded context no declara interfaces de domain service propias y se limita
 
 **Relaciones entre clases:** `Invitation` compone `InvitationId` e `InvitationToken`. `CareLink` compone `CareLinkId`, agrega de forma reconstruida 0..1 `Consent` y depende de `ClinicalReason` como parámetro de `Discharge`. Entre `Invitation` y `CareLink` existe una asociación por identificador y a través de una política, de 1 a 0..1 y etiquetada *redeemedInto*, sin navegación de EF ni columna `invitation_id` en el vínculo. Ambas raíces realizan `IAuditableEntity` y los diez eventos generalizan `DomainEventBase`, que a su vez realiza `IEvent`.
 
+El contexto gestiona también el consentimiento para el uso de IA y el cambio de nutricionista. En total hay 3 agregados, 13 commands, 7 queries y 12 domain events.
+
+- **`AiPreferences`:** agregado que indica cuáles de las funciones con IA permite el paciente (`WeeklySummaryEnabled`, `MealIdeasEnabled`, `SuggestedQuestionsEnabled` y `MealPhotoRecognitionEnabled`).
+- **`CareLink`:** guarda el consentimiento específico para IA (`ConsentAiProcessingGranted` y su fecha), el motivo de revocación (`RevocationReason`, por ejemplo `SwitchedPractitioner`) y la última versión de metas reconocida por el paciente.
+- **Commands de IA:** `ChangeAiProcessingConsentCommand`, `UpdateAiPreferencesCommand` y `SyncAiPreferencesWithConsentCommand`.
+- **Domain events de IA:** `AiProcessingConsentChanged` y `AiPreferencesChanged`, que los demás contextos usan para eliminar el contenido generado.
+- **Cambio de nutricionista:** al canjear una invitación con `replaceActiveLink = true`, el vínculo anterior se revoca con el motivo `SwitchedPractitioner`.
+
 #### 2.6.3.2. Interface Layer
 
-La Interface Layer de Care Relationship expone cuatro controllers y, sobre todo, publica el Open Host Service de la plataforma. Ese contrato es el que usan los tres bounded contexts que manejan información del paciente, esto es Nutritional Care, Intake & Body Response y Monitoring & Adherence, junto con la capa de read models compuestos, para preguntar si un vínculo está activo antes de servir nada.
+La Interface Layer de Care Relationship expone cinco controllers y, sobre todo, publica el Open Host Service de la plataforma. Ese contrato es el que usan los tres bounded contexts que manejan información del paciente, esto es Nutritional Care, Intake & Body Response y Monitoring & Adherence, junto con la capa de read models compuestos, para preguntar si un vínculo está activo antes de servir nada.
 
 **Controllers**
 
 `InvitationsController` se publica bajo `[Route("api/v1/invitations")] [Authorize] [Tags("Invitations")]` y depende de `IInvitationCommandService`, `IInvitationQueryService` e `IStringLocalizer<CareRelationshipMessages>`.
+
+<p class="caption"><strong>Tabla 128</strong><br><em>Endpoints de InvitationsController (Care Relationship)</em></p>
 
 | Verbo / Ruta | Acción | Rol | Read Model | Respuestas |
 |---|---|---|---|---|
@@ -4021,6 +4189,8 @@ La Interface Layer de Care Relationship expone cuatro controllers y, sobre todo,
 El token solo viaja en la respuesta que crea la invitación, y toda lectura posterior lo reporta como `null`.
 
 `CareLinksController` se publica bajo `[Route("api/v1/care-links")] [Authorize] [Tags("Care Links")]` y concentra las transiciones del vínculo.
+
+<p class="caption"><strong>Tabla 129</strong><br><em>Endpoints de CareLinksController (Care Relationship)</em></p>
 
 | Verbo / Ruta | Acción | Rol | Respuestas |
 |---|---|---|---|
@@ -4047,6 +4217,8 @@ Los command assemblers son `IssueInvitationCommandAssembler`, `RedeemInvitationC
 
 `CareRelationshipActionResultAssembler` es el único lugar donde el error de dominio se convierte en HTTP, y lo hace mediante `ToIssueInvitationResult`, `ToRedeemInvitationResult`, `ToCareLinkResult`, `ToWithdrawConsentResult`, `ToNotFoundResult` y el privado `FailureResult`.
 
+<p class="caption"><strong>Tabla 130</strong><br><em>Mapeo de errores de dominio a códigos HTTP en Care Relationship</em></p>
+
 | Errores | Status |
 |---|---|
 | `InvitationNotFound`, `CareLinkNotFound` | **404** |
@@ -4064,6 +4236,18 @@ Los command assemblers son `IssueInvitationCommandAssembler`, `RedeemInvitationC
 
 Los mensajes localizados se declaran en `CareRelationship/Resources/CareRelationshipMessages.cs`, clase marcador de los recursos `.resx`.
 
+Además del flujo de invitación y consentimiento, el contexto expone las preferencias de IA y el alta clínica:
+
+<p class="caption"><strong>Tabla 131</strong><br><em>Endpoints adicionales de Care Relationship</em></p>
+
+| Endpoint | Controller | Respuesta |
+|---|---|---|
+| `GET` y `PUT /patients/{id}/ai-preferences` | `PatientAiPreferencesController` | 200 · 401 · 403 · 409 |
+| `PUT /care-links/{id}/ai-processing-consent` | `CareLinksController` | 204 · 403 · 404 · 409 |
+| `POST /care-links/{id}/discharge` | `CareLinksController` | 200 · 400 · 409 (exige motivo clínico) |
+
+`POST /invitations/redemption` acepta `replaceActiveLink`, y `POST /care-links/{id}/consent` acepta `aiProcessingGranted`. Activar una función de IA sin consentimiento responde 409 `AiConsentRequiredToEnableFeature`. Para estos casos hay 3 resources y 3 assemblers.
+
 #### 2.6.3.3. Application Layer
 
 La Application Layer maneja los cinco subflujos del contexto, numerados del 2.1 al 2.5, y deja a la vista sus capabilities, que son emitir y expirar invitaciones, canjearlas, establecer el vínculo, otorgar y retirar el consentimiento, acusar recibo de los objetivos, revocar y dar de alta.
@@ -4071,6 +4255,8 @@ La Application Layer maneja los cinco subflujos del contexto, numerados del 2.1 
 **Command Services**
 
 `InvitationCommandService`, que implementa `IInvitationCommandService`, depende de `IInvitationRepository`, `ICareLinkRepository`, `IUnitOfWork`, `IIamContextFacade`, `ILogger<...>` e `IMediator`.
+
+<p class="caption"><strong>Tabla 132</strong><br><em>Métodos de InvitationCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -4081,6 +4267,8 @@ La Application Layer maneja los cinco subflujos del contexto, numerados del 2.1 
 Vale la pena detenerse en una decisión arquitectónica: el `CareLink` no se crea aquí. Canjear una invitación publica `InvitationRedeemed`, y la política que reacciona a ese evento emite `EstablishCareLinkCommand`, que es el único camino existente hacia un vínculo. Como la publicación de eventos espera a sus handlers, el vínculo ya existe en el momento en que el método vuelve a leerlo.
 
 `CareLinkCommandService`, que implementa `ICareLinkCommandService`, depende de `ICareLinkRepository`, `IUnitOfWork`, `IIamContextFacade`, `ILogger<...>` e `IMediator`.
+
+<p class="caption"><strong>Tabla 133</strong><br><em>Métodos de CareLinkCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -4098,7 +4286,9 @@ Vale la pena detenerse en una decisión arquitectónica: el `CareLink` no se cre
 
 **Event Handlers (políticas)**
 
-Los tres handlers crean un scope de DI aislado mediante `IServiceScopeFactory.CreateAsyncScope()`, dado que las notificaciones se manejan en paralelo.
+Los cinco handlers crean un scope de DI aislado mediante `IServiceScopeFactory.CreateAsyncScope()`, dado que las notificaciones se manejan en paralelo.
+
+<p class="caption"><strong>Tabla 134</strong><br><em>Event handlers de Care Relationship</em></p>
 
 | Handler | Escucha | Política | Emite |
 |---|---|---|---|
@@ -4114,11 +4304,17 @@ Los tres handlers crean un scope de DI aislado mediante `IServiceScopeFactory.Cr
 
 `CareRelationshipContextFacade` implementa `ICareRelationshipContextFacade` apoyándose en `ICareLinkQueryService` y nunca en un repositorio, con lo cual no se puentea la capa de aplicación. Ante cualquier fallo, `IsCareLinkActive` devuelve `false`, de modo que un error termina traduciéndose en denegación de acceso.
 
+- **`AiPreferencesCommandService` y `AiPreferencesQueryService`:** leen y cambian las preferencias, y las alinean con el consentimiento.
+- **`CareRelationshipAiConsentPolicy`:** fachada que el módulo de IA consulta antes de cada generación para saber si el paciente la permite.
+- **Handlers de IA:** `OnAiProcessingConsentChangedHandler` y `OnAiPreferencesChangedHandler`. Retirar el consentimiento, revocar el vínculo o dar el alta apagan la IA del vínculo en la misma operación.
+
 #### 2.6.3.4. Infrastructure Layer
 
 La Infrastructure Layer de Care Relationship comprende la persistencia sobre MySQL 8.4 y un único `BackgroundService`. Este bounded context no consume APIs de terceros.
 
 **Configuraciones de EF Core**
+
+<p class="caption"><strong>Tabla 135</strong><br><em>Configuraciones de EF Core de Care Relationship</em></p>
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
@@ -4126,6 +4322,8 @@ La Infrastructure Layer de Care Relationship comprende la persistencia sobre MyS
 | `CareLinkEntityTypeConfiguration` | `care_links` | La PK usa el converter `CareLinkId.FromRaw`, y tanto `patient_id` como `practitioner_id` son requeridos, con sus índices y sin clave foránea. El cierre se resuelve con `revoked_at`, `discharged_at` y `discharge_reason` como `VARCHAR(500)`, mientras que el acuse lo hacen `pending_targets_version` y `last_acknowledged_version`. El VO `Consent` se proyecta en cuatro columnas, que son `consent_granted` requerida, `consent_scope` como `VARCHAR(200)`, `consent_granted_at` y `consent_withdrawn_at`. Se aplica `Ignore` sobre `Consent`, `IsActive`, `IsRevoked` e `IsDischarged`. |
 
 **Repositorios (implementaciones)**
+
+<p class="caption"><strong>Tabla 136</strong><br><em>Repositorios de Care Relationship</em></p>
 
 | Clase | Detalles de implementación |
 |---|---|
@@ -4142,11 +4340,16 @@ Depende de `IServiceScopeFactory`, `IConfiguration` e `ILogger<...>`, declara la
 
 Este contexto no consume ninguno. El generador criptográfico del token de invitación es la biblioteca estándar de .NET y no un proveedor externo.
 
+- La tabla `ai_preferences` con `AiPreferencesRepository` y su configuración de EF Core.
+- Las columnas `consent_ai_processing`, `consent_ai_decided_at`, `revocation_reason` y `last_acknowledged_at` en `care_links`.
+
 #### 2.6.3.5. Bounded Context Software Architecture Component Level Diagrams
 
 **Care Relationship**
 
 Component:
+
+<p class="caption"><strong>Figura 89</strong><br><em>Diagrama de componentes del bounded context Care Relationship</em></p>
 
 ![Care Relationship Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/care-relationship.puml)
 
@@ -4158,17 +4361,25 @@ Component:
 
 Domain:
 
+<p class="caption"><strong>Figura 90</strong><br><em>Diagrama de clases de la capa Domain del bounded context Care Relationship</em></p>
+
 ![Care Relationship Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/care-relationship/domain.puml)
 
 Infrastructure:
+
+<p class="caption"><strong>Figura 91</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Care Relationship</em></p>
 
 ![Care Relationship Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/care-relationship/infrastructure.puml)
 
 Application:
 
+<p class="caption"><strong>Figura 92</strong><br><em>Diagrama de clases de la capa Application del bounded context Care Relationship</em></p>
+
 ![Care Relationship Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/care-relationship/application.puml)
 
 Interfaces:
+
+<p class="caption"><strong>Figura 93</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Care Relationship</em></p>
 
 ![Care Relationship Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/care-relationship/interfaces.puml)
 
@@ -4177,6 +4388,8 @@ Interfaces:
 **Care Relationship**
 
 Database:
+
+<p class="caption"><strong>Figura 94</strong><br><em>Diagrama de base de datos del bounded context Care Relationship</em></p>
 
 ![Care Relationship Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/care-relationship.puml)
 
@@ -4189,6 +4402,8 @@ El bounded context Nutritional Care, implementado en `Healthify.Platform.Nutriti
 **Aggregates (Aggregate Roots)**
 
 `NutritionalAssessment` corresponde a la primera fase clínica y reúne hábitos, historia, actividad física, antropometría y bioquímica, todos ellos registrados dentro de la consulta. Una vez cerrada se vuelve inmutable, y una corrección no la edita sino que crea una evaluación nueva que la referencia.
+
+<p class="caption"><strong>Tabla 137</strong><br><em>Atributos de NutritionalAssessment</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -4209,6 +4424,8 @@ Sus métodos son el constructor `NutritionalAssessment(RecordAssessmentCommand)`
 
 `NutritionPlan` corresponde a la tercera fase clínica y es además la raíz del versionado. Un plan atraviesa tres estados dentro de una misma consulta, ya que los objetivos primero se proponen mediante cálculo, después los prescribe el profesional y recién entonces se publican. Sus tres value objects compuestos se almacenan como columnas planas y se reconstruyen mediante propiedades calculadas.
 
+<p class="caption"><strong>Tabla 138</strong><br><em>Grupos de atributos de NutritionPlan</em></p>
+
 | Grupo de atributos | Miembros | Scope |
 |---|---|---|
 | Identidad y referencias | `Id : PlanId`, `PatientId`, `PractitionerId`, `DiagnosisId`, `Version` | `public get / private set` |
@@ -4217,6 +4434,8 @@ Sus métodos son el constructor `NutritionalAssessment(RecordAssessmentCommand)`
 | Proyección de `PrescribedTargets` | Los cuatro objetivos nullable, `PrescribedOutcome`, `PrescribedOverrideReason` | `public get / private set` |
 | Estado | `ChangeReason?`, `PublishedAt?`, `SupersededAt?`, `IsActive` | `public get / private set` |
 | Listas y computadas | `Guidelines`, `Restrictions`, `CalculationBasis`, `TargetProposal`, `PrescribedTargets?`, `IsPrescribed`, `IsPublished`, `IsSuperseded` | `public` |
+
+<p class="caption"><strong>Tabla 139</strong><br><em>Métodos de NutritionPlan</em></p>
 
 | Método | Scope | Reglas que aplica |
 |---|---|---|
@@ -4236,6 +4455,8 @@ Sus métodos son el constructor `NutritionalAssessment(RecordAssessmentCommand)`
 **Value Objects**
 
 El contexto declara dieciséis value objects.
+
+<p class="caption"><strong>Tabla 140</strong><br><em>Value objects y clases auxiliares de la capa Domain de Nutritional Care</em></p>
 
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
@@ -4258,11 +4479,11 @@ Son once y van desde `RecordAssessmentCommand` hasta `ResolveReviewItemCommand`.
 
 **Queries**
 
-Las ocho queries son `GetAssessmentByIdQuery`, `GetAssessmentsByPatientIdQuery`, `GetActiveDiagnosisByPatientIdQuery`, `GetPlanByIdQuery`, `GetActivePlanByPatientIdQuery`, `GetPlansByPatientIdQuery` y las dos de la bandeja, que son `GetOpenReviewItemsByPractitionerIdQuery` y `GetReviewItemByIdQuery`.
+Las veintidós queries son `GetAssessmentByIdQuery`, `GetAssessmentsByPatientIdQuery`, `GetActiveDiagnosisByPatientIdQuery`, `GetPlanByIdQuery`, `GetActivePlanByPatientIdQuery`, `GetPlansByPatientIdQuery` y las dos de la bandeja, que son `GetOpenReviewItemsByPractitionerIdQuery` y `GetReviewItemByIdQuery`. Las demás sirven a la consulta guiada, a los datos base y a las propuestas de plan: `GetConsultationByIdQuery`, `GetConsultationsByPatientIdQuery`, `GetInProgressConsultationByPatientIdQuery`, `GetInProgressConsultationsByPatientIdsQuery`, `GetConsultationDiagnosisSuggestionQuery`, `GetConsultationGuidelineSuggestionsQuery`, `GetPatientBaselineByPatientIdQuery`, `GetPatientBaselinesByPatientIdsQuery`, `GetPatientPlanVersionsQuery`, `GetPlanProposalByReviewItemIdQuery`, `GetReviewInboxEntryByIdQuery`, `GetReviewItemExistenceQuery`, `GetReviewItemsByPractitionerIdQuery` y `GetActivePlansByPatientIdsQuery`.
 
 **Domain Events**
 
-Los trece domain events son `NutritionalAssessmentRecorded`, `ClinicalMeasurementTaken`, `AssessmentClosed`, `NutritionalDiagnosisIssued`, `TargetsProposed`, `TargetsAcceptedAsProposed`, `TargetsOverridden`, `NutritionPlanPublished`, `ActiveTargetsUpdated`, `NutritionPlanAdjusted`, `PlanVersionSuperseded`, `ReviewItemCreated` y `ReviewItemResolved`. Solo dos cruzan la frontera, que son `ClinicalMeasurementTaken` hacia Monitoring y `ActiveTargetsUpdated` hacia Intake, Monitoring y Care Relationship. Este último constituye el Published Language del contexto y lleva paciente, versión, vigencia, objetivos diarios, pautas y restricciones, aunque deja fuera el diagnóstico, el razonamiento clínico y la base de cálculo conforme a la regla *Diagnosis And Basis Never Leave The Context*. Los objetivos diarios viajan en el record `DailyTargets(decimal, decimal, decimal, decimal)`, que no es un evento. Los demás eventos son internos, y entre ellos `NutritionalDiagnosisIssued` no se publica porque el paciente no consulta su diagnóstico en la app, mientras que `ReviewItemCreated` solo alimenta la bandeja del profesional.
+Los diecinueve domain events son `NutritionalAssessmentRecorded`, `ClinicalMeasurementTaken`, `AssessmentClosed`, `NutritionalDiagnosisIssued`, `TargetsProposed`, `TargetsAcceptedAsProposed`, `TargetsOverridden`, `NutritionPlanPublished`, `ActiveTargetsUpdated`, `NutritionPlanAdjusted`, `PlanVersionSuperseded`, `ReviewItemCreated`, `ReviewItemResolved`, `ConsultationStarted`, `ConsultationCompleted`, `PatientBaselineRecorded`, `PatientBaselineUpdated`, `PlanProposalAccepted` y `NutritionalDiagnosisSuperseded`. Solo tres cruzan la frontera, que son `ClinicalMeasurementTaken` y `ConsultationCompleted` hacia Monitoring y `ActiveTargetsUpdated` hacia Intake, Monitoring y Care Relationship. Este último constituye el Published Language del contexto y lleva paciente, versión, vigencia, objetivos diarios, pautas y restricciones, aunque deja fuera el diagnóstico, el razonamiento clínico y la base de cálculo conforme a la regla *Diagnosis And Basis Never Leave The Context*. Los objetivos diarios viajan en el record `DailyTargets(decimal, decimal, decimal, decimal)`, que no es un evento. Los demás eventos son internos, y entre ellos `NutritionalDiagnosisIssued` no se publica porque el paciente no consulta su diagnóstico en la app, mientras que `ReviewItemCreated` solo alimenta la bandeja del profesional.
 
 **Errors**
 
@@ -4278,13 +4499,24 @@ El único es `IBmrCalculator`, con el record de entrada `BmrInputs` y el método
 
 **Relaciones entre clases:** `NutritionalAssessment` compone 0..* `ClinicalMeasurement`, que es la única relación de composición entre entidades del contexto y se configura con cascada, y compone además `AssessmentId` y `BiologicalSex`. `NutritionalDiagnosis` referencia la evaluación por identificador y compone `ClinicalRationale`. `NutritionPlan` referencia el diagnóstico por identificador, agrega de forma reconstruida `CalculationBasis`, `TargetProposal` y 0..1 `PrescribedTargets`, y depende de `ChangeReason`; entre versiones existe además una asociación reflexiva *supersedes* de 1 a 0..1 que se resuelve por `Version` y `SupersededAt`. `ReviewItem` compone `SignalType` y `ReviewItemState`, y no guarda relación alguna con `NutritionPlan`, ausencia que constituye la regla misma.
 
+El acto clínico se conduce mediante la consulta guiada, que recorre cuatro pasos y se puede reanudar. Los pasos sueltos de evaluación, diagnóstico y prescripción se mantienen por compatibilidad. En total hay 6 agregados, 28 commands, 22 queries y 19 domain events.
+
+- **`Consultation` y `PatientBaseline`:** `Consultation` es la consulta de cuatro pasos, con un borrador de publicación. `PatientBaseline` guarda la fecha de nacimiento, el sexo, la talla y las condiciones del paciente, que se registran una sola vez. `PlanAdjustmentProposal` es una entidad que guarda el plan que la IA propone ante una desviación sostenida.
+- **Atributos de los demás agregados:** `NutritionalAssessment` guarda los hábitos, la actividad física y el panel bioquímico. `NutritionalDiagnosis` tiene un código del catálogo, su origen (`DiagnosisSource`), y puede quedar pendiente hasta la publicación. `NutritionPlan` registra las indicaciones, los cambios respecto de la versión anterior, el mensaje al paciente y el motivo estructurado del cambio. `ReviewItem` guarda la evidencia, las notas de resolución y la fecha de nueva revisión.
+- **Value objects:** `DiagnosisCode`, `ActivityLevel`, `BodyMassIndex`, `HeightCm`, `EatingHabits`, `BiochemistryPanel`, `MedicalCondition`, `Guideline`, `DietaryRestriction`, `PlanChange`, `PublicationDraft`, `IdempotencyKey`, `ConsultationState`, `ConsultationStep` y los identificadores `ConsultationId` y `PatientBaselineId`, entre otros.
+- **Commands de la consulta guiada:** `StartConsultationCommand`, `RecordConsultationMeasurementCommand`, `IssueConsultationDiagnosisCommand`, `ProposeConsultationTargetsCommand`, `PrescribeConsultationTargetsCommand`, `SaveConsultationPublicationDraftCommand`, `PublishFromConsultationCommand`, `AbandonConsultationCommand`, `RecordPatientBaselineCommand`, `UpdatePatientBaselineCommand`, `AcceptPlanProposalCommand` y los de generación y purga de propuestas.
+- **Domain events de la consulta guiada:** `ConsultationStarted`, `ConsultationCompleted`, `PatientBaselineRecorded`, `PatientBaselineUpdated`, `PlanProposalAccepted` y `NutritionalDiagnosisSuperseded`.
+- **Servicios de dominio:** `PlanAdjustmentSafety`, `PlanVersionDiff`, `PatientMessageRules` y las políticas `IActivityFactorProvider`, `ICalorieFloorPolicy`, `IDefaultGuidelinesProvider` e `IDefaultTargetParametersPolicy`.
+
 #### 2.6.4.2. Interface Layer
 
-La Interface Layer de Nutritional Care expone cinco controllers y todos llevan la anotación `[Authorize(Roles = "Practitioner")]`, así que no existe ni una sola ruta orientada al paciente. Lo que el paciente recibe es el contrato publicado, y ese contrato viaja como evento hacia Intake & Body Response en lugar de exponerse como endpoint.
+La Interface Layer de Nutritional Care expone nueve controllers y todos llevan la anotación `[Authorize(Roles = "Practitioner")]`, salvo `PatientPlanVersionsController`, que es la única ruta orientada al paciente y devuelve las versiones del plan sin el diagnóstico ni la base de cálculo. Lo que el paciente recibe es el contrato publicado, y ese contrato viaja como evento hacia Intake & Body Response en lugar de exponerse como endpoint.
 
 **Controllers**
 
 `NutritionalAssessmentsController` se publica bajo `[Route("api/v1/nutritional-assessments")] [Tags("Nutritional Assessments")]` y cubre la primera fase clínica.
+
+<p class="caption"><strong>Tabla 141</strong><br><em>Endpoints de NutritionalAssessmentsController (Nutritional Care)</em></p>
 
 | Verbo / Ruta | Acción | Respuestas |
 |---|---|---|
@@ -4297,6 +4529,8 @@ La Interface Layer de Nutritional Care expone cinco controllers y todos llevan l
 
 `NutritionPlansController` se publica bajo `[Route("api/v1/nutrition-plans")]` y recorre las cuatro transiciones del plan.
 
+<p class="caption"><strong>Tabla 142</strong><br><em>Endpoints de NutritionPlansController (Nutritional Care)</em></p>
+
 | Verbo / Ruta | Acción | Respuestas |
 |---|---|---|
 | `POST /target-proposals` | `ProposeTargets(ProposeTargetsResource)` | 201 · 400 · 401 · 403 · 422 |
@@ -4307,6 +4541,8 @@ La Interface Layer de Nutritional Care expone cinco controllers y todos llevan l
 La operación `Publish Active Targets` no tiene endpoint, ya que la ejecuta una política al publicar o ajustar un plan, y es la única información del plan que llega hasta el paciente.
 
 `PatientClinicalRecordController` se publica bajo `[Route("api/v1/patients")] [Tags("Nutritional Care")]`, depende adicionalmente de `ICareRelationshipContextFacade` y usa el método privado `IsLinkedToAsync(int)`, que consulta el Open Host Service y degrada a `false` para denegar el acceso ante cualquier fallo.
+
+<p class="caption"><strong>Tabla 143</strong><br><em>Endpoints de PatientClinicalRecordController (Nutritional Care)</em></p>
 
 | Verbo / Ruta | Acción | Read Model |
 |---|---|---|
@@ -4327,6 +4563,8 @@ Hay nueve command assemblers, que son `RecordAssessmentCommandAssembler`, `TakeC
 
 Por su parte, `NutritionalCareActionResultAssembler` expone cuatro métodos con estado de éxito parametrizable, que son `ToAssessmentResult`, `ToDiagnosisResult`, `ToPlanResult` y `ToReviewItemResult`, además de `ToNotFoundResult` y el privado `FailureResult`.
 
+<p class="caption"><strong>Tabla 144</strong><br><em>Mapeo de errores de dominio a códigos HTTP en Nutritional Care</em></p>
+
 | Errores | Status |
 |---|---|
 | `AssessmentNotFound`, `DiagnosisNotFound`, `PlanNotFound`, `ReviewItemNotFound` | **404** |
@@ -4344,6 +4582,24 @@ Por su parte, `NutritionalCareActionResultAssembler` expone cuatro métodos con 
 
 Los mensajes localizados se declaran en `NutritionalCare/Resources/NutritionalCareMessages.cs`.
 
+La consulta guiada, los datos base, el historial de versiones y las propuestas de plan se exponen con los siguientes endpoints:
+
+<p class="caption"><strong>Tabla 145</strong><br><em>Endpoints adicionales de Nutritional Care</em></p>
+
+| Endpoint | Controller | Respuesta |
+|---|---|---|
+| `GET`, `POST` y `PUT /patients/{id}/baseline` | `PatientBaselineController` | 200 · 201 · 400 · 409 |
+| `POST /patients/{id}/consultations`, `GET .../consultations/in-progress` y `GET .../consultations` | `PatientConsultationsController` | 201 · 200 · 409 · 422 |
+| `PUT /consultations/{id}/measurement` (paso 1) | `ConsultationsController` | 200 · 400 · 422 |
+| `POST .../diagnosis-suggestion` y `PUT .../diagnosis` (paso 2) | `ConsultationsController` | 200 · 409 · 422 |
+| `POST .../target-proposal` y `PUT .../targets` (paso 3) | `ConsultationsController` | 200 · 400 · 409 |
+| `POST .../guideline-suggestions`, `PUT .../publication-draft` y `POST .../publication` (paso 4) | `ConsultationsController` | 200 · 400 · 409 · 422 |
+| `DELETE /consultations/{id}` | `ConsultationsController` | 204 · 409 |
+| `GET /patients/{id}/plan-versions` | `PatientPlanVersionsController` | 200 (único endpoint clínico del paciente) |
+| `GET /review-items?state=`, `GET .../plan-proposal` y `POST .../plan-proposal/acceptance` | `ReviewItemsController` | 200 · 202 · 400 · 409 · 422 |
+
+La publicación exige un encabezado `Idempotency-Key`. Para estos casos hay 33 resources y 10 assemblers.
+
 #### 2.6.4.3. Application Layer
 
 La Application Layer de Nutritional Care orquesta los siete subflujos del acto clínico, numerados del 3.1 al 3.7. Sus capabilities consisten en registrar y cerrar evaluaciones, emitir diagnósticos, proponer, prescribir, publicar y ajustar objetivos, y gestionar la bandeja de revisión.
@@ -4351,6 +4607,8 @@ La Application Layer de Nutritional Care orquesta los siete subflujos del acto c
 **Command Services**
 
 `NutritionalAssessmentCommandService` depende de `INutritionalAssessmentRepository`, `IUnitOfWork`, `IIamContextFacade`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`.
+
+<p class="caption"><strong>Tabla 146</strong><br><em>Métodos de NutritionalAssessmentCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -4361,6 +4619,8 @@ La Application Layer de Nutritional Care orquesta los siete subflujos del acto c
 `NutritionalDiagnosisCommandService` depende de los repositorios de diagnóstico y evaluación, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. Su método `Handle(IssueDiagnosisCommand)`, correspondiente al subflujo 3.2, aplica las guardas en un orden preciso: razonamiento no vacío, vínculo activo, evaluación existente y perteneciente al paciente, evaluación cerrada, ya que un diagnóstico lee una foto terminada y no una que todavía se está editando, y finalmente *One Active Diagnosis Per Patient*.
 
 `NutritionPlanCommandService` depende de los tres repositorios clínicos, `IUnitOfWork`, `IBmrCalculator`, `ILogger<...>` e `IMediator`, y declara las constantes privadas `KcalPerGramProtein = 4m`, `KcalPerGramCarbohydrate = 4m` y `KcalPerGramFat = 9m`.
+
+<p class="caption"><strong>Tabla 147</strong><br><em>Métodos de NutritionPlanCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -4382,6 +4642,8 @@ Son cuatro: `NutritionalAssessmentQueryService`, `NutritionalDiagnosisQueryServi
 
 Son cuatro y todos trabajan con un scope de DI aislado.
 
+<p class="caption"><strong>Tabla 148</strong><br><em>Event handlers de Nutritional Care</em></p>
+
 | Handler | Escucha | Política | Emite |
 |---|---|---|---|
 | `OnNutritionPlanPublishedHandler` | `NutritionPlanPublished`, propio | *When Nutrition Plan Published*, del subflujo 3.5 | `PublishActiveTargetsCommand` |
@@ -4395,13 +4657,22 @@ Los dos últimos handlers se limitan a emitir el comando que abre un ítem de re
 
 `NutritionalCareContextFacade` depende de `INutritionPlanQueryService` e `IReviewItemQueryService`. Su método `GetActiveTargetsByPatientId` solo devuelve datos cuando el plan está publicado y tiene objetivos prescritos, y lo único que cruza es el contrato publicado, sin diagnóstico y sin base de cálculo.
 
+- **`ConsultationCommandService`:** recorre los cuatro pasos, valida el orden, guarda el borrador y publica el plan una sola vez por clave de idempotencia. Al publicar, el diagnóstico pendiente pasa a ser el activo y se cierra la consulta.
+- **`ConsultationAiCommandService`:** sugiere el diagnóstico (con una regla por IMC cuando la IA no está disponible) y las indicaciones del plan. La IA solo puede devolver códigos de catálogos cerrados.
+- **`PatientBaselineCommandService`:** registra y corrige los datos base.
+- **`PlanProposalCommandService` y `PlanAdjustmentProposer`:** generan, aceptan y eliminan las propuestas de plan que se asocian a una señal de revisión. Aceptar una propuesta siempre es una decisión explícita del nutricionista.
+- **Consultas:** `ConsultationQueryService` y `PatientBaselineQueryService`.
+- **Handler de IA:** `OnAiProcessingConsentChangedNutritionalCareHandler` elimina las propuestas de IA cuando se retira el consentimiento.
+
 #### 2.6.4.4. Infrastructure Layer
 
-La Infrastructure Layer de Nutritional Care contiene la implementación del único domain service del contexto junto con la persistencia de sus cinco tablas. No consume APIs de terceros ni aloja hosted services.
+La Infrastructure Layer de Nutritional Care contiene la implementación del domain service de cálculo, las políticas de cálculo configurables y la persistencia de sus ocho tablas, y aloja hosted services que generan y recuperan las propuestas de plan. No consume APIs de terceros directamente.
 
 **Calculadores**
 
 `BmrCalculator` implementa `IBmrCalculator` seleccionando la ecuación con un `switch` y redondeando el resultado a dos decimales. Cada constante proviene de la literatura publicada y todo resultado puede reproducirse a mano, lo que sostiene el principio de trazabilidad del cálculo.
+
+<p class="caption"><strong>Tabla 149</strong><br><em>Ecuaciones de estimación calculadas por BmrCalculator</em></p>
 
 | Método privado | Ecuación | Nota |
 |---|---|---|
@@ -4411,6 +4682,8 @@ La Infrastructure Layer de Nutritional Care contiene la implementación del úni
 | `KatchMcArdle(BmrInputs)` | Katch-McArdle | Se basa en la masa magra, y es la única que ignora edad y sexo y la única que exige una lectura de composición corporal. |
 
 **Configuraciones de EF Core**
+
+<p class="caption"><strong>Tabla 150</strong><br><em>Configuraciones de EF Core de Nutritional Care</em></p>
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
@@ -4426,6 +4699,8 @@ Los tres value objects compuestos del plan se aplanan en columnas en lugar de us
 
 Las cuatro clases de `NutritionalCareRepositories.cs` heredan de `BaseRepository<T>` y reimplementan de forma explícita `IBaseRepository<T>.FindByIdAsync`.
 
+<p class="caption"><strong>Tabla 151</strong><br><em>Repositorios de Nutritional Care</em></p>
+
 | Clase | Detalles de implementación |
 |---|---|
 | `NutritionalAssessmentRepository` | Declara el helper privado `WithRelations()`, que aplica `.Include(a => a.Measurements)`, ya que el cálculo necesita la antropometría. |
@@ -4435,13 +4710,20 @@ Las cuatro clases de `NutritionalCareRepositories.cs` heredan de `BaseRepository
 
 **Servicios externos**
 
-Este contexto no consume ninguno. El `BmrCalculator` es aritmética local antes que una API de terceros, y ninguna decisión clínica tomada aquí sale de la aplicación.
+Este contexto solo consume el proveedor de IA generativa, a través del módulo técnico de IA de `Shared`, para sugerir un diagnóstico, sugerir indicaciones y proponer un plan ante una desviación. Cada sugerencia tiene una alternativa determinista, y ninguna decisión clínica se toma sin la acción explícita del nutricionista. El `BmrCalculator` sigue siendo aritmética local.
+
+- **Persistencia de la consulta guiada:** las tablas `consultations`, `patient_baselines` y `review_item_plan_proposals`, con `ConsultationRepository`, `PatientBaselineRepository` y sus configuraciones, además de los convertidores JSON para indicaciones, cambios, motivos y evidencia.
+- **Procesos en segundo plano:** `PlanProposalGenerationHostedService` y `PlanProposalRecoveryHostedService` (con su cola `InMemoryPlanProposalGenerationQueue`) generan y recuperan las propuestas, y `ReviewItemRecheckHostedService` reabre los ítems que deben revisarse de nuevo.
+- **Cálculo y políticas:** `ConfiguredActivityFactorProvider`, `ConfiguredCalorieFloorPolicy`, `ConfiguredDefaultGuidelinesProvider` y `DefaultTargetParametersPolicy`.
+- **Otros:** `ClinicalTimeZoneDateProvider` y `EmbeddedPatientMessageLexicon`, que filtra los mensajes dirigidos al paciente.
 
 #### 2.6.4.5. Bounded Context Software Architecture Component Level Diagrams
 
 **Nutritional Care**
 
 Component:
+
+<p class="caption"><strong>Figura 95</strong><br><em>Diagrama de componentes del bounded context Nutritional Care</em></p>
 
 ![Nutritional Care Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/nutritional-care.puml)
 
@@ -4453,17 +4735,25 @@ Component:
 
 Domain:
 
+<p class="caption"><strong>Figura 96</strong><br><em>Diagrama de clases de la capa Domain del bounded context Nutritional Care</em></p>
+
 ![Nutritional Care Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/nutritional-care/domain.puml)
 
 Infrastructure:
+
+<p class="caption"><strong>Figura 97</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Nutritional Care</em></p>
 
 ![Nutritional Care Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/nutritional-care/infrastructure.puml)
 
 Application:
 
+<p class="caption"><strong>Figura 98</strong><br><em>Diagrama de clases de la capa Application del bounded context Nutritional Care</em></p>
+
 ![Nutritional Care Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/nutritional-care/application.puml)
 
 Interfaces:
+
+<p class="caption"><strong>Figura 99</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Nutritional Care</em></p>
 
 ![Nutritional Care Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/nutritional-care/interfaces.puml)
 
@@ -4473,17 +4763,21 @@ Interfaces:
 
 Database:
 
+<p class="caption"><strong>Figura 100</strong><br><em>Diagrama de base de datos del bounded context Nutritional Care</em></p>
+
 ![Nutritional Care Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/nutritional-care.puml)
 
 ### 2.6.5. Bounded Context: IAM
 
 #### 2.6.5.1. Domain Layer
 
-El bounded context IAM, implementado en `Healthify.Platform.Iam`, se encarga de la identidad de los usuarios y gestiona las cuentas, la autenticación, el *role claim* inmutable por sesión y la selección del *navigation shell* que monta el cliente. Su Domain Layer declara dos aggregate roots, seis value objects y dos interfaces de domain service. Conviene subrayar que crear una cuenta no otorga por sí sola acceso a la información clínica, de manera que un paciente sin `CareLink` no ve objetivos, no tiene diario y tampoco puede registrar comidas.
+El bounded context IAM, implementado en `Healthify.Platform.Iam`, se encarga de la identidad de los usuarios y gestiona las cuentas, la autenticación, el *role claim* inmutable por sesión y la selección del *navigation shell* que monta el cliente. Su Domain Layer declara dos aggregate roots, ocho value objects y cuatro interfaces de domain service. Conviene subrayar que crear una cuenta no otorga por sí sola acceso a la información clínica, de manera que un paciente sin `CareLink` no ve objetivos, no tiene diario y tampoco puede registrar comidas.
 
 **Aggregates (Aggregate Roots)**
 
 `User` modela una cuenta dentro de la plataforma y se limita a representar la identidad del usuario, ya que la relación con un profesional le corresponde a Care Relationship. Está implementada como `partial class` repartida entre `User.cs`, donde vive el dominio, y `UserAudit.cs`, donde se implementa `IAuditableEntity`, con lo que el modelo de dominio queda separado de los campos de auditoría.
+
+<p class="caption"><strong>Tabla 152</strong><br><em>Atributos de User</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -4496,6 +4790,8 @@ El bounded context IAM, implementado en `Healthify.Platform.Iam`, se encarga de 
 | `LockedOutAt` | `DateTimeOffset?` | `public get / private set` | Momento en que se produjo el bloqueo. |
 | `IsLockedOut` | `bool` | `public` (computada) | Se deriva de `LockedOutAt` y no corresponde a ninguna columna. |
 
+<p class="caption"><strong>Tabla 153</strong><br><em>Métodos de User</em></p>
+
 | Método | Scope | Descripción |
 |---|---|---|
 | `User(RegisterAccountCommand, string passwordHash)` | `public` | Valida la regla *Role Declared At Registration* junto con la presencia del hash, y construye los VO `Email` y `Role`. |
@@ -4504,6 +4800,8 @@ El bounded context IAM, implementado en `Healthify.Platform.Iam`, se encarga de 
 | `StartSession() : UserSession` | `public` | Factory Method que abre una sesión copiando el role claim, y que es el único camino posible para crear un `UserSession`. |
 
 `UserSession` modela una sesión autenticada. Transporta el role claim que el resto de la plataforma lee desde el token y el navigation shell que el cliente monta a raíz de ese rol. Es un aggregate root independiente dentro del mismo bounded context y referencia a `User` mediante un `int` plano, sin navegación de EF, con lo que se respeta la regla de no navegar entre agregados.
+
+<p class="caption"><strong>Tabla 154</strong><br><em>Atributos de UserSession</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -4515,6 +4813,8 @@ El bounded context IAM, implementado en `Healthify.Platform.Iam`, se encarga de 
 | `IsActive` | `bool` | `public` (computada) | Indica que la sesión todavía no ha terminado. |
 | `ActiveRoleClaim` | `Role?` | `public` (computada) | El rol que la sesión aún otorga, que queda en `null` cuando ya terminó. |
 
+<p class="caption"><strong>Tabla 155</strong><br><em>Métodos de UserSession</em></p>
+
 | Método | Scope | Descripción |
 |---|---|---|
 | `UserSession(int, Role)` | `internal` | Es `internal` de forma deliberada, ya que solo `User.StartSession()` debería poder crearla. |
@@ -4522,6 +4822,8 @@ El bounded context IAM, implementado en `Healthify.Platform.Iam`, se encarga de 
 | `Terminate()` | `public` | Cierra la sesión y lanza una excepción si esta ya estaba terminada. |
 
 **Value Objects**
+
+<p class="caption"><strong>Tabla 156</strong><br><em>Value objects y clases auxiliares de la capa Domain de IAM</em></p>
 
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
@@ -4533,7 +4835,7 @@ El bounded context IAM, implementado en `Healthify.Platform.Iam`, se encarga de 
 
 **Commands**
 
-Los cuatro commands son `RegisterAccountCommand`, `SignInCommand`, `SelectNavigationShellCommand` y `SignOutCommand`. El tercero no tiene endpoint REST y lo emite únicamente la política.
+Los seis commands son `RegisterAccountCommand`, `SignInCommand`, `SelectNavigationShellCommand`, `SignOutCommand`, `RefreshSessionCommand` y `ChangePreferredLanguageCommand`. `SelectNavigationShellCommand` no tiene endpoint REST y lo emite únicamente la política.
 
 **Queries**
 
@@ -4541,7 +4843,7 @@ También son cuatro. `GetUserByIdQuery` alimenta el read model Welcome Screen y 
 
 **Domain Events**
 
-Los cinco domain events son `AccountCreated`, `SessionStarted`, `RoleClaimIssued`, `NavigationShellSelected` y `SessionTerminated`. Ninguno cruza la frontera del bounded context y ningún otro contexto puede declarar un handler para ellos, ya que la infraestructura de cuentas y sesiones carece de significado de dominio fuera de IAM. El role claim viaja hacia los demás contextos dentro del token JWT, que es infraestructura y no un evento de dominio.
+Los seis domain events son `AccountCreated`, `SessionStarted`, `RoleClaimIssued`, `NavigationShellSelected`, `SessionTerminated` y `RefreshTokenReuseDetected`. Ninguno cruza la frontera del bounded context y ningún otro contexto puede declarar un handler para ellos, ya que la infraestructura de cuentas y sesiones carece de significado de dominio fuera de IAM. El role claim viaja hacia los demás contextos dentro del token JWT, que es infraestructura y no un evento de dominio.
 
 **Errors**
 
@@ -4557,6 +4859,11 @@ El `enum IamError` reúne 14 valores, uno por cada regla que el contexto hace cu
 
 **Relaciones entre clases:** `User` compone `UserId`, `Email` y `Role`, y depende de `UserSession` como creador a través de `StartSession()`, en una relación 1 → 0..* que no usa navegación de EF. `UserSession` compone `SessionId` y `Role`, este último en su papel de role claim congelado, junto con 0..1 `NavigationShell`, que a su vez depende de `Role` mediante `ForRole` y `MatchesRole`. `IHashingService` depende de `Password` e `ITokenService` depende tanto de `User` como de `UserSession`. Ambos agregados realizan `IAuditableEntity` y los cinco eventos generalizan `DomainEventBase`.
 
+- **`User`:** guarda el nombre (`PersonName`, con nombres y apellidos) y el idioma preferido (`PreferredLanguage`, español o inglés), que se cambia con `ChangePreferredLanguageCommand`.
+- **`UserSession`:** guarda el hash del token de renovación vigente y del anterior, de modo que reintentar la renovación dentro de un periodo de gracia devuelve el mismo resultado.
+- **Renovación de sesión:** `RefreshSessionCommand` renueva la sesión y `RefreshTokenReuseDetected` termina la sesión cuando se reutiliza un token fuera del periodo de gracia. El contexto tiene 6 commands, 5 queries y 6 domain events.
+- **Servicios de dominio:** `IRefreshTokenService` y `ISignInLockoutPolicy`: cinco intentos fallidos bloquean la cuenta durante 15 minutos.
+
 #### 2.6.5.2. Interface Layer
 
 La Interface Layer de IAM expone tres controllers y el contrato ACL por el que los demás bounded contexts resuelven identidades puntuales. Todas las respuestas de error se construyen con `ProblemDetailsFactory.Create(...)`, siguiendo el RFC 7807, y con textos localizados a través de `IStringLocalizer<IamMessages>`.
@@ -4564,6 +4871,8 @@ La Interface Layer de IAM expone tres controllers y el contrato ACL por el que l
 **Controllers**
 
 `AuthenticationController` se publica bajo `[ApiController] [Route("api/v1/authentication")] [Authorize] [Tags("Authentication")]`, con `[Produces]` y `[Consumes]` en `application/json`, y depende de `IUserCommandService`, `IUserSessionCommandService` e `IStringLocalizer<IamMessages>`.
+
+<p class="caption"><strong>Tabla 157</strong><br><em>Endpoints de AuthenticationController (IAM)</em></p>
 
 | Verbo / Ruta | Acción | Autorización | Respuestas |
 |---|---|---|---|
@@ -4574,6 +4883,8 @@ La Interface Layer de IAM expone tres controllers y el contrato ACL por el que l
 La operación de cierre de sesión no recibe body y toma tanto el identificador de sesión como el de usuario del propio token, de modo que nadie puede cerrar la sesión de otra persona enviando un identificador ajeno.
 
 `UsersController` se publica bajo `[Route("api/v1/users")] [Authorize] [Tags("Users")]` y sirve los dos read models de cuenta.
+
+<p class="caption"><strong>Tabla 158</strong><br><em>Endpoints de UsersController (IAM)</em></p>
 
 | Verbo / Ruta | Acción | Read Model | Respuestas |
 |---|---|---|---|
@@ -4586,6 +4897,8 @@ Ambos comparan el identificador de la ruta contra el del token autenticado y dev
 
 **Resources**
 
+<p class="caption"><strong>Tabla 159</strong><br><em>Resources de la capa Interface de IAM</em></p>
+
 | Resource | Campos | Uso |
 |---|---|---|
 | `SignUpResource` | `Email`, `Password`, `Role` | Request de registro. |
@@ -4596,6 +4909,8 @@ Ambos comparan el identificador de la ruta contra el del token autenticado y dev
 | `NavigationShellResource` | `SessionId`, `RoleClaim?`, `NavigationShell?`, `IsActive` | App Shell. |
 
 **Transform / Assemblers**
+
+<p class="caption"><strong>Tabla 160</strong><br><em>Assemblers de la capa Interface de IAM</em></p>
 
 | Assembler | Dirección | Método |
 |---|---|---|
@@ -4608,6 +4923,8 @@ Ambos comparan el identificador de la ruta contra el del token autenticado y dev
 | `IamActionResultAssembler` | `Result<T, IamError>` → `IActionResult` | `ToRegisterAccountResult`, `ToSignInResult`, `ToSignOutResult`, `ToNotFoundResult` y el privado `FailureResult` |
 
 El mapeo de errores a HTTP ocurre en un único lugar, y así se evita que una misma regla termine reportando dos códigos distintos.
+
+<p class="caption"><strong>Tabla 161</strong><br><em>Mapeo de errores de dominio a códigos HTTP en IAM</em></p>
 
 | Errores | Status |
 |---|---|
@@ -4626,6 +4943,17 @@ El mapeo de errores a HTTP ocurre en un único lugar, y así se evita que una mi
 
 Los mensajes localizados se declaran en `Iam/Resources/IamMessages.cs`, clase marcador de los archivos `.resx` en inglés y español.
 
+Además del registro, el inicio y el cierre de sesión, el contexto expone la renovación de sesión y el idioma de la cuenta:
+
+<p class="caption"><strong>Tabla 162</strong><br><em>Endpoints adicionales de IAM</em></p>
+
+| Endpoint | Respuesta | Descripción |
+|---|---|---|
+| `POST /authentication/token-refreshes` | 200 · 401 | Renueva la sesión con el token de renovación. |
+| `PUT /users/{id}/preferred-language` | 204 · 400 · 403 | Cambia el idioma de la cuenta. |
+
+`POST /authentication/sign-in` es un inicio de sesión único para ambos roles y responde con los nombres, el idioma y el token de renovación. La recuperación de contraseña aún no está disponible. Para estos casos hay 3 resources y 3 assemblers.
+
 #### 2.6.5.3. Application Layer
 
 La Application Layer de IAM maneja los tres subflujos del contexto, que son el registro en 1.1, la autenticación junto con la selección de shell en 1.2 y el cierre de sesión en 1.3. Sigue la estructura estándar del proyecto, con las interfaces públicas en `Application/CommandServices` y `Application/QueryServices`, las implementaciones en `Application/Internal/...`, los handlers de eventos en `Application/Internal/EventHandlers` y la fachada ACL en `Application/Acl`.
@@ -4637,6 +4965,8 @@ La Application Layer de IAM maneja los tres subflujos del contexto, que son el r
 Su método `Handle(RegisterAccountCommand, CancellationToken) : Task<Result<User, IamError>>` implementa el subflujo 1.1 con las guardas dispuestas en un orden deliberado. Primero valida el value object `Email` y reporta `InvalidEmail` si falla, luego comprueba que el rol venga declarado con `RoleNotDeclared` y que sea válido con `InvalidRole`, y a continuación construye el `Password` aplicando la política de fortaleza, que puede devolver `WeakPassword`. Después verifica la unicidad del correo con `EmailAlreadyTaken`, construye el agregado con el hash producido por el servicio de hashing, persiste, hace commit y publica `AccountCreated` siempre después del commit. En los logs deja registrado el correo, pero nunca la contraseña.
 
 `UserSessionCommandService`, que implementa `IUserSessionCommandService`, depende de `IUserRepository`, `IUserSessionRepository`, `IUnitOfWork`, `IHashingService`, `ITokenService`, `ILogger<...>` e `IMediator`.
+
+<p class="caption"><strong>Tabla 163</strong><br><em>Métodos de UserSessionCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -4668,12 +4998,16 @@ La Infrastructure Layer de IAM implementa la persistencia de cuentas y sesiones 
 
 **Configuraciones de EF Core**
 
+<p class="caption"><strong>Tabla 164</strong><br><em>Configuraciones de EF Core de IAM</em></p>
+
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
 | `UserEntityTypeConfiguration` | `users` | La PK `id` usa la conversión `UserId.FromRaw` con `ValueGeneratedOnAdd()`. La columna `email` lleva converter, 255 caracteres, es requerida y tiene el índice único `ix_users_email`, que funciona como segunda línea de defensa de *Unique Email Required*. Le siguen `password_hash` con 255 caracteres, `role` con 20 y converter, `failed_sign_in_attempts` y `locked_out_at`. Se aplica `Ignore(u => u.IsLockedOut)` por tratarse de una propiedad calculada. |
 | `UserSessionEntityTypeConfiguration` | `user_sessions` | La PK usa el converter `SessionId.FromRaw` y `user_id` se guarda como `int` plano sin navegación de EF, con el índice `ix_user_sessions_user_id`. La columna `role_claim` ocupa 20 caracteres con converter y `navigation_shell` ocupa 30 y es opcional, resuelta con un `ValueConverter<NavigationShell?, string?>` explícito en lugar de un `OwnsOne` nullable más frágil. Finalmente `started_at` es requerida, `terminated_at` opcional, y se aplica `Ignore` sobre `IsActive` y `ActiveRoleClaim`. |
 
 **Repositorios (implementaciones)**
+
+<p class="caption"><strong>Tabla 165</strong><br><em>Repositorios de IAM</em></p>
 
 | Clase | Base | Detalles de implementación |
 |---|---|---|
@@ -4696,11 +5030,18 @@ Además de sus propios registros de repositorios, servicios de dominio, command 
 
 Este contexto no consume ninguno. El *auth provider* que aparece en el event storming está implementado dentro del mismo contenedor, así que no interviene ningún proveedor de identidad externo.
 
+- `RefreshTokenService` rota el token de renovación y guarda solo su hash SHA-256.
+- `ConfiguredSignInLockoutPolicy` aplica el bloqueo temporal configurado.
+- `LanguageClaimRequestCultureProvider` toma el idioma de las respuestas del claim `lang` del token.
+- Las columnas `given_names`, `family_names` y `preferred_language` en `users`, y las del token de renovación en `user_sessions`.
+
 #### 2.6.5.5. Bounded Context Software Architecture Component Level Diagrams
 
 **IAM**
 
 Component:
+
+<p class="caption"><strong>Figura 101</strong><br><em>Diagrama de componentes del bounded context IAM</em></p>
 
 ![IAM Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/iam.puml)
 
@@ -4712,17 +5053,25 @@ Component:
 
 Domain:
 
+<p class="caption"><strong>Figura 102</strong><br><em>Diagrama de clases de la capa Domain del bounded context IAM</em></p>
+
 ![IAM Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/iam/domain.puml)
 
 Infrastructure:
+
+<p class="caption"><strong>Figura 103</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context IAM</em></p>
 
 ![IAM Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/iam/infrastructure.puml)
 
 Application:
 
+<p class="caption"><strong>Figura 104</strong><br><em>Diagrama de clases de la capa Application del bounded context IAM</em></p>
+
 ![IAM Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/iam/application.puml)
 
 Interfaces:
+
+<p class="caption"><strong>Figura 105</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context IAM</em></p>
 
 ![IAM Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/iam/interfaces.puml)
 
@@ -4732,17 +5081,21 @@ Interfaces:
 
 Database:
 
+<p class="caption"><strong>Figura 106</strong><br><em>Diagrama de base de datos del bounded context IAM</em></p>
+
 ![IAM Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/iam.puml)
 
 ### 2.6.6. Bounded Context: Food Catalog
 
 #### 2.6.6.1. Domain Layer
 
-El bounded context Food Catalog, implementado en `Healthify.Platform.FoodCatalog`, mantiene el catálogo local de alimentos de referencia con su nombre y sus nutrientes por cada 100 gramos. Se trata de un subdominio genérico y su modelo es simple, ya que la mayor parte de la lógica vive en la capa anticorrupción encargada de traducir las fuentes externas. Su Domain Layer declara un único aggregate root junto con cuatro value objects, y hay tres decisiones de diseño que lo definen. La primera es que la importación traduce y anuncia, pero nunca escribe. La segunda es que ningún identificador externo llega a entrar al dominio. La tercera es que toda búsqueda empieza por lo local.
+El bounded context Food Catalog, implementado en `Healthify.Platform.FoodCatalog`, mantiene el catálogo local de alimentos de referencia con su nombre y sus nutrientes por cada 100 gramos. Se trata de un subdominio genérico y su modelo es simple, ya que la mayor parte de la lógica vive en la capa anticorrupción encargada de traducir las fuentes externas. Su Domain Layer declara un único aggregate root junto con cinco value objects, y hay tres decisiones de diseño que lo definen. La primera es que la importación traduce y anuncia, pero nunca escribe. La segunda es que ningún identificador externo llega a entrar al dominio. La tercera es que toda búsqueda empieza por lo local.
 
 **Aggregate Root**
 
 `ReferenceFood` representa una entrada del catálogo local, es decir un nombre acompañado de sus nutrientes por 100 gramos. El value object compuesto `NutrientsPer100g` se almacena como columnas planas y se reconstruye mediante una propiedad calculada, siguiendo el mismo patrón que usa el resto del proyecto.
+
+<p class="caption"><strong>Tabla 166</strong><br><em>Atributos de ReferenceFood</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -4754,6 +5107,8 @@ El bounded context Food Catalog, implementado en `Healthify.Platform.FoodCatalog
 | `LocalName` | `LocalName` | `public` (computada) | Se reconstruye a partir de `LocalNameText`. |
 | `NutrientsPer100g` | `NutrientsPer100g` | `public` (computada) | Se reconstruye a partir de las cuatro columnas de nutrientes. |
 
+<p class="caption"><strong>Tabla 167</strong><br><em>Métodos de ReferenceFood</em></p>
+
 | Método | Scope | Descripción |
 |---|---|---|
 | `ReferenceFood(LocalName, NutrientsPer100g, SourceHash)` | `public` | Constructor que usa la importación, y que deja `IsLocalOverride` en falso. |
@@ -4762,6 +5117,8 @@ El bounded context Food Catalog, implementado en `Healthify.Platform.FoodCatalog
 | `StoreNutrients(NutrientsPer100g)` | `private` | Aplana el value object en sus cuatro columnas. |
 
 **Value Objects**
+
+<p class="caption"><strong>Tabla 168</strong><br><em>Value objects y clases auxiliares de la capa Domain de Food Catalog</em></p>
 
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
@@ -4778,11 +5135,11 @@ El contexto declara cuatro commands: `ImportCatalogSnapshotCommand`, `CacheFoodL
 
 **Queries**
 
-Las tres queries son `GetReferenceFoodByIdQuery`, `SearchReferenceFoodsQuery`, que alimenta el read model Food Results List, y `GetLocalFoodCatalogQuery`, que alimenta el read model Local Food Catalog con el que se llena la copia offline del dispositivo.
+Las seis queries son `GetReferenceFoodByIdQuery`, `SearchReferenceFoodsQuery`, que alimenta el read model Food Results List, y `GetLocalFoodCatalogQuery`, que alimenta el read model Local Food Catalog con el que se llena la copia offline del dispositivo. Las otras tres, `GetReferenceFoodsByIdsQuery`, `ListVerifiedReferenceFoodsQuery` y `ResolveReferenceFoodsByNamesQuery`, sirven a la fachada que usa Intake & Body Response.
 
 **Domain Events**
 
-Los seis domain events son `ExternalCatalogSnapshotImported`, `ReferenceFoodTranslated`, `TranslationFailed`, `ReferenceFoodCached`, `FoodSearchPerformed` y `LocalFoodOverrideCreated`. Ninguno cruza la frontera del bounded context, ya que Intake & Body Response lee el catálogo de forma síncrona a través del ACL y necesita el alimento en el mismo instante en que el paciente registra su comida. `TranslationFailed` no representa una excepción sino un resultado previsto, y el registro se descarta para evitar que un alimento incompleto termine usándose luego en el cálculo de la ingesta.
+Los siete domain events son `ExternalCatalogSnapshotImported`, `ReferenceFoodTranslated`, `TranslationFailed`, `ReferenceFoodCached`, `FoodSearchPerformed`, `LocalFoodOverrideCreated` y `AiEstimatedFoodCreated`. Ninguno cruza la frontera del bounded context, ya que Intake & Body Response lee el catálogo de forma síncrona a través del ACL y necesita el alimento en el mismo instante en que el paciente registra su comida. `TranslationFailed` no representa una excepción sino un resultado previsto, y el registro se descarta para evitar que un alimento incompleto termine usándose luego en el cálculo de la ingesta.
 
 **Errors**
 
@@ -4798,6 +5155,10 @@ El único domain service es `IExternalFoodCatalogProvider`, que expone la propie
 
 **Relaciones entre clases:** `ReferenceFood` compone `ReferenceFoodId` y `SourceHash`, y agrega de forma reconstruida `LocalName` y `NutrientsPer100g`, derivados respectivamente de `LocalNameText` y de las cuatro columnas de nutrientes. `ExternalFoodRecord` compone esos mismos tres value objects y `ExternalCatalogSnapshot` agrega 0..* `ExternalFoodRecord`. `IExternalFoodCatalogProvider` depende de `ExternalCatalogSnapshot` mediante la relación *fetches*, e `IReferenceFoodRepository` depende de `SourceHash` mediante *findsBy*. Dentro del contexto no hay relaciones entre agregados, dado que solo existe uno.
 
+- **`ReferenceFood`:** guarda la fuente (`FoodSource`), si está verificado, quién lo verificó y el identificador de la generación de IA cuando el alimento fue estimado por IA. Los alimentos estimados por IA se almacenan como cualquier otro alimento y no muestran ninguna marca al usuario.
+- **Alimentos estimados por IA:** `CreateAiEstimatedFoodCommand`, `ResolveFoodWithProvidersCommand` y `AiEstimatedFoodCreated`. El contexto tiene 6 commands, 6 queries y 7 domain events.
+- **Servicios de dominio:** `FoodNameMatcher` (coincidencia de nombres), `NutrientCoherence` y `NutrientTolerance`, que comprueban que los nutrientes estimados por IA no se alejen de los del catálogo.
+
 #### 2.6.6.2. Interface Layer
 
 La Interface Layer de Food Catalog expone dos controllers y aplica entre ellos una asimetría deliberada de autorización, porque buscar en el catálogo es abierto y escribir en él no lo es.
@@ -4805,6 +5166,8 @@ La Interface Layer de Food Catalog expone dos controllers y aplica entre ellos u
 **Controllers**
 
 `ReferenceFoodsController` se publica bajo `[Route("api/v1/reference-foods")] [Tags("Food Catalog")]` y no lleva `[Authorize]` a nivel de clase, dado que la lectura del catálogo es pública. Recibe tanto las consultas como las dos escrituras del contexto.
+
+<p class="caption"><strong>Tabla 169</strong><br><em>Endpoints de ReferenceFoodsController (Food Catalog)</em></p>
 
 | Verbo / Ruta | Acción | Autorización | Respuestas |
 |---|---|---|---|
@@ -4819,6 +5182,8 @@ Los alimentos y sus nutrientes por 100 g son datos de referencia públicos que n
 
 **Resources**
 
+<p class="caption"><strong>Tabla 170</strong><br><em>Resources de la capa Interface de Food Catalog</em></p>
+
 | Resource | Tipo | Campos |
 |---|---|---|
 | `CreateLocalOverrideResource` | request | `LocalName`, `EnergyKcalPer100g`, `ProteinGPer100g`, `CarbGPer100g`, `FatGPer100g` |
@@ -4831,6 +5196,8 @@ Los alimentos y sus nutrientes por 100 g son datos de referencia públicos que n
 **Transform / Assemblers**
 
 `FoodCatalogAssemblers.cs` reúne `CreateLocalOverrideCommandAssembler`, `ImportCatalogSnapshotCommandAssembler`, `ReferenceFoodResourceAssembler` y `CatalogImportSummaryResourceAssembler`. Por su parte, `FoodCatalogActionResultAssembler.cs` expone `ToReferenceFoodResult`, cuyo estado es parametrizable, junto con `ToReferenceFoodListResult`, `ToCatalogImportResult`, que responde 202 Accepted por defecto, `ToNotFoundResult` y el privado `FailureResult`.
+
+<p class="caption"><strong>Tabla 171</strong><br><em>Mapeo de errores a códigos HTTP en Food Catalog</em></p>
 
 | Error | Status |
 |---|---|
@@ -4852,6 +5219,8 @@ Los dos últimos estados merecen una explicación. Cuando falla la traducción t
 
 Los mensajes localizados se declaran en `FoodCatalog/Resources/FoodCatalogMessages.cs`.
 
+La fachada `IFoodCatalogContextFacade` expone `ResolveByNames` y la creación de alimentos estimados por IA, con los items `ResolvedFoodItem` y `FoodNutrientsItem`. `POST /reference-foods/catalog-imports` responde 202 con un resumen de la importación.
+
 #### 2.6.6.3. Application Layer
 
 La Application Layer de Food Catalog orquesta los cuatro subflujos del contexto, numerados del 6.1 al 6.4, que consisten en importar un snapshot, cachear un alimento, buscar y crear un override local. Su decisión principal es que la importación no escribe en el catálogo y que solo la política de caching lo hace, con lo cual toda fila almacenada pasó necesariamente por la traducción.
@@ -4859,6 +5228,8 @@ La Application Layer de Food Catalog orquesta los cuatro subflujos del contexto,
 **Command Service**
 
 `ReferenceFoodCommandService`, que implementa `IReferenceFoodCommandService`, depende de `IReferenceFoodRepository`, `IUnitOfWork`, `IEnumerable<IExternalFoodCatalogProvider>` con todas las implementaciones registradas, `ILogger<...>` e `IMediator`, y declara la constante privada `MaxRecordsPerProvider = 100`.
+
+<p class="caption"><strong>Tabla 172</strong><br><em>Métodos de ReferenceFoodCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -4884,6 +5255,8 @@ Sus métodos privados son tres. `TopUpFromExternalProvidersAsync(string, int, CT
 **ACL Facade**
 
 `FoodCatalogContextFacade` implementa `IFoodCatalogContextFacade` apoyándose en `IReferenceFoodQueryService` y en el método privado estático `ToItem(ReferenceFood) : ReferenceFoodItem`, y ante un fallo devuelve `null` o una lista vacía según corresponda. Es el contrato que Intake & Body Response consulta de forma síncrona para resolver el alimento que el paciente está registrando.
+
+`ReferenceFoodCommandService` resuelve un alimento con el catálogo local, luego con los proveedores externos y, si no lo encuentra, lo crea con los nutrientes estimados por la IA (`FoodNameResolution`).
 
 #### 2.6.6.4. Infrastructure Layer
 
@@ -4921,6 +5294,8 @@ Los dos servicios consumidos son Open Food Facts, en `https://world.openfoodfact
 
 Component:
 
+<p class="caption"><strong>Figura 107</strong><br><em>Diagrama de componentes del bounded context Food Catalog</em></p>
+
 ![Food Catalog Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/food-catalog.puml)
 
 #### 2.6.6.6. Bounded Context Software Architecture Code Level Diagrams
@@ -4931,17 +5306,25 @@ Component:
 
 Domain:
 
+<p class="caption"><strong>Figura 108</strong><br><em>Diagrama de clases de la capa Domain del bounded context Food Catalog</em></p>
+
 ![Food Catalog Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/food-catalog/domain.puml)
 
 Infrastructure:
+
+<p class="caption"><strong>Figura 109</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Food Catalog</em></p>
 
 ![Food Catalog Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/food-catalog/infrastructure.puml)
 
 Application:
 
+<p class="caption"><strong>Figura 110</strong><br><em>Diagrama de clases de la capa Application del bounded context Food Catalog</em></p>
+
 ![Food Catalog Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/food-catalog/application.puml)
 
 Interfaces:
+
+<p class="caption"><strong>Figura 111</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Food Catalog</em></p>
 
 ![Food Catalog Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/food-catalog/interfaces.puml)
 
@@ -4950,5 +5333,7 @@ Interfaces:
 **Food Catalog**
 
 Database:
+
+<p class="caption"><strong>Figura 112</strong><br><em>Diagrama de base de datos del bounded context Food Catalog</em></p>
 
 ![Food Catalog Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/food-catalog.puml)
