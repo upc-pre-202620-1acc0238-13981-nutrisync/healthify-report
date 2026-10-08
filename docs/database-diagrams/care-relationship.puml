@@ -36,6 +36,21 @@ TABLE(care_links, "care_links") {
   consent_scope : VARCHAR(200)
   consent_granted_at : DATETIME
   consent_withdrawn_at : DATETIME
+  consent_ai_decided_at : DATETIME
+  consent_ai_processing : TINYINT(1) NOT NULL
+  last_acknowledged_at : DATETIME
+  revocation_reason : VARCHAR(30)
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(ai_preferences, "ai_preferences") {
+  PK(patient_id) : INT NOT NULL
+  --
+  meal_ideas_enabled : TINYINT(1) NOT NULL
+  meal_photo_recognition_enabled : TINYINT(1) NOT NULL
+  suggested_questions_enabled : TINYINT(1) NOT NULL
+  weekly_summary_enabled : TINYINT(1) NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -50,5 +65,7 @@ invitations ||..o| care_links : "redemption establishes"
 
 users ||..o{ invitations : "issued_by"
 users ||..o{ care_links : "patient_id / practitioner_id"
+
+users ||..o| ai_preferences : "patient_id"
 
 @enduml

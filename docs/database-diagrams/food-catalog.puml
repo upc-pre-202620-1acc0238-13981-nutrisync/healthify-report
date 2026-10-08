@@ -19,6 +19,10 @@ TABLE(reference_foods, "reference_foods") {
   fat_g_per_100g : DECIMAL(10,2) NOT NULL
   source_hash : VARCHAR(64) NOT NULL
   is_local_override : TINYINT(1) NOT NULL
+  FK(ai_generation_id) : BIGINT
+  is_verified : TINYINT(1) NOT NULL
+  source : VARCHAR(20) NOT NULL
+  verified_by : INT
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -36,8 +40,14 @@ EXT(users, "users  (IAM)") {
   role : VARCHAR(20)
 }
 
+EXT(ai_generations, "ai_generations  (Shared)") {
+  PK(id) : INT
+}
+
 reference_foods ||..o{ diary_entries : "resolved via ACL"
 
 users ||..o{ reference_foods : "creates local override"
+
+ai_generations ||..o{ reference_foods : "ai_generation_id"
 
 @enduml
