@@ -582,9 +582,190 @@ La versión móvil usa los mismos colores, tipografías y componentes. Los cambi
 
 #### 3.1.4.1. Mobile Applications Wireframes
 
+La aplicación Android de Healthify tiene dos roles, paciente y nutricionista, y se diseñó en 360 × 800 dp. En total el diseño tiene más de cien pantallas con sus estados (carga, vacío, sin conexión y error). Se presentan seis wireframes representativos: tres del paciente (Inicio, estimación por foto y tendencia de peso) y tres del nutricionista (Bandeja, ficha del paciente y diagnóstico con IA). Los wireframes se elaboraron en Figma, con textos reales y componentes del sistema de diseño en escala de grises.
+
+<p class="caption"><strong>Figura 130</strong><br><em>Wireframes de las pantallas representativas de la aplicación móvil</em></p>
+
+<table align="center">
+  <tr>
+    <td align="center"><img src="../assets/img/chapter3/mobile/wireframes/1-inicio.png" alt="Wireframe de Inicio del paciente" width="150" /><br/><sub>Paciente · Inicio</sub></td>
+    <td align="center"><img src="../assets/img/chapter3/mobile/wireframes/2-estimacion.png" alt="Wireframe de estimación propuesta" width="150" /><br/><sub>Paciente · Estimación propuesta</sub></td>
+    <td align="center"><img src="../assets/img/chapter3/mobile/wireframes/3-tendencia.png" alt="Wireframe de tendencia de peso" width="150" /><br/><sub>Paciente · Tendencia de peso</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="../assets/img/chapter3/mobile/wireframes/4-bandeja.png" alt="Wireframe de la bandeja de revisión" width="150" /><br/><sub>Nutricionista · Bandeja</sub></td>
+    <td align="center"><img src="../assets/img/chapter3/mobile/wireframes/5-ficha.png" alt="Wireframe de la ficha del paciente" width="150" /><br/><sub>Nutricionista · Ficha del paciente</sub></td>
+    <td align="center"><img src="../assets/img/chapter3/mobile/wireframes/6-diagnostico.png" alt="Wireframe del diagnóstico con IA" width="150" /><br/><sub>Nutricionista · Diagnóstico con IA</sub></td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 190</strong><br><em>Decisiones de diseño de las pantallas de los wireframes móviles</em></p>
+
+| Pantalla | Decisión de diseño |
+|---|---|
+| **Inicio (paciente)** | Lo primero que se ve es la meta del día (kcal y macros). Debajo, un único botón de ancho completo, «Registrar comida», y luego las tarjetas «Cómo voy hoy» y «Próxima consulta». Es una jerarquía de arriba abajo, de lo que el paciente quiere saber a lo que quiere hacer. |
+| **Estimación propuesta** | El plato y el porcentaje de confianza ocupan la parte superior. La pregunta «¿Estaba en tu plan?» tiene dos opciones, «Sí» y «No», y el botón principal «Sí, es correcto» está separado del enlace secundario «Ajustar gramos». |
+| **Tendencia de peso** | Título «Tu tendencia». Arriba, la tarjeta «Tu semana» con la insignia «Resumen con IA»; debajo, el gráfico del promedio de los últimos autopesajes y el botón «Registrar autopesaje» al pie. Muestra una tendencia y no el peso de un día, que es el principio del producto. |
+| **Bandeja** | Una lista de señales con un indicador de estado, el nombre del paciente, el tipo de señal y la fecha de recepción. Sin acciones en la lista: tocar una fila abre la señal. |
+| **Ficha del paciente** | Cuatro pestañas (Resumen, Seguimiento, Expediente y Plan). El resumen agrupa la identidad y el estado del plan, la próxima consulta, los datos base, dos indicadores y las acciones de gestión; el botón «Iniciar consulta» queda fijo al pie. |
+| **Diagnóstico con IA** | Paso 2 de 4 de la consulta guiada. La sugerencia de la IA va en una tarjeta con la insignia «Sugerencia de IA» y los botones «Usar sugerencia» y «Elegir otro»; el diagnóstico final lo elige el nutricionista. |
+
+**Principios y elementos de diseño.** *Shape*: tarjetas y botones con esquinas redondeadas del mismo radio. *Space*: margen de 16 dp y separación de 8 y 16 dp entre bloques, según la escala del sistema. *Direction*: lectura vertical, con la acción principal siempre al pie, en el área del pulgar. *Size*: el título de pantalla y las métricas tienen el mayor tamaño, y los botones principales miden 56 dp.
+
+**Arquitectura de información.** Cada rol tiene su barra inferior (cinco pestañas el paciente, cuatro el nutricionista), según la sección 3.1.2.5. Los rótulos son los de 3.1.2.2, y las pantallas de detalle muestran la flecha de retroceso y el título en la barra superior.
+
+**Diseño inclusivo.** Los textos respetan el tamaño de fuente del sistema (en sp, con un mínimo de 12 sp) y se revisaron con la fuente al 200 %, con desplazamiento donde el contenido no cabe. El contraste de texto es de al menos 4.5:1. Las áreas táctiles tienen al menos 48 dp. Los estados no se comunican solo con color: los chips y avisos llevan texto («Vigente», «Por confirmar»). Todas las pantallas definen su estado sin conexión, de carga y de error, y los textos de la aplicación están disponibles en español e inglés.
+
 #### 3.1.4.2. Mobile Applications Wireflow Diagrams
 
+Se elaboró un wireflow por cada objetivo del usuario. Los objetivos 1 a 3 corresponden al nutricionista (persona: Willyan Guerrero Ortega) y los objetivos 4 y 5 al paciente (persona: Evelyn Del Aguila). Antes de cada wireflow se definió su Task Flow, que fija la ruta típica de pasos. Cada paso agrega un wireframe con el nuevo estado de la pantalla.
+
+##### Wireflow 1: Atender una consulta
+
+<p class="caption"><strong>Tabla 191</strong><br><em>User goal del Wireflow 1: Atender una consulta</em></p>
+
+| **User Goal N°1** | Como nutricionista, quiero conducir la consulta de un paciente en cuatro pasos guiados, con apoyo de IA en el diagnóstico, para publicar un plan actualizado de forma rápida y precisa. |
+|---|---|
+
+<p class="caption"><strong>Tabla 192</strong><br><em>Task flow del Wireflow 1: Atender una consulta</em></p>
+
+| **Task Flow** |
+|---|
+| 1. El nutricionista abre «Mis pacientes» y toca a Ana Flores. |
+| 2. Ve la pestaña Resumen de Ana y toca «Iniciar consulta». |
+| 3. Registra la medición de hoy (paso 1) y toca «Continuar a diagnóstico». |
+| 4. Revisa el diagnóstico con apoyo de IA (paso 2) y toca «Continuar a metas». |
+| 5. Revisa las metas calculadas (paso 3) y toca «Aceptar metas». |
+| 6. Escribe las indicaciones (paso 4) y toca «Publicar y cerrar consulta». |
+| 7. Vuelve al Resumen del paciente y ve el aviso «Plan publicado». |
+
+El flujo recorre las cuatro etapas de la consulta con una barra de progreso («Paso 1 de 4», «Paso 2 de 4»). El botón principal al pie cambia de etiqueta según el paso y siempre indica a dónde lleva. Al final, el aviso temporal confirma la publicación sin interrumpir al nutricionista.
+
+<p class="caption"><strong>Figura 131</strong><br><em>Wireflow 1: Atender una consulta</em></p>
+
+<img src="../assets/img/chapter3/wireflows/01_Attend_Consultation_Wireflow.png" alt="Wireflow 1: Atender una consulta" width="100%" />
+
+##### Wireflow 2: Evaluar a un paciente nuevo
+
+<p class="caption"><strong>Tabla 193</strong><br><em>User goal del Wireflow 2: Evaluar a un paciente nuevo</em></p>
+
+| **User Goal N°2** | Como nutricionista, quiero registrar los datos base de un paciente nuevo una sola vez, para iniciar su primera consulta sin volver a pedir la misma información. |
+|---|---|
+
+<p class="caption"><strong>Tabla 194</strong><br><em>Task flow del Wireflow 2: Evaluar a un paciente nuevo</em></p>
+
+| **Task Flow** |
+|---|
+| 1. El nutricionista abre «Mis pacientes» y toca a Luz Ramírez. |
+| 2. Ve el perfil del paciente nuevo, sin datos base, y toca «Registrar datos base». |
+| 3. Ingresa los datos base y toca «Guardar e iniciar consulta». |
+| 4. Inicia la primera consulta en el paso 1 (Medición de hoy). |
+
+El perfil de un paciente sin datos base muestra una llamada a registrarlos antes de iniciar la consulta. Una vez guardados, el paso 1 los toma como punto de partida y solo pide lo que cambió.
+
+<p class="caption"><strong>Figura 132</strong><br><em>Wireflow 2: Evaluar a un paciente nuevo</em></p>
+
+<img src="../assets/img/chapter3/wireflows/02_Evaluate_New_Patient_Wireflow.png" alt="Wireflow 2: Evaluar a un paciente nuevo" width="75%" />
+
+##### Wireflow 3: Atender una señal de la bandeja
+
+<p class="caption"><strong>Tabla 195</strong><br><em>User goal del Wireflow 3: Atender una señal de la bandeja</em></p>
+
+| **User Goal N°3** | Como nutricionista, quiero revisar las señales de mis pacientes en la bandeja y ajustar un plan propuesto por la IA, para actuar entre consultas sin perder el control del plan. |
+|---|---|
+
+<p class="caption"><strong>Tabla 196</strong><br><em>Task flow del Wireflow 3: Atender una señal de la bandeja</em></p>
+
+| **Task Flow** |
+|---|
+| 1. El nutricionista abre la Bandeja de revisión y toca la señal de Ana Flores (desviación sostenida). |
+| 2. Revisa la señal y el plan propuesto por la IA y toca «Ajustar». |
+| 3. Ajusta el plan propuesto y toca «Asignar plan ajustado». |
+| 4. Vuelve a la bandeja y ve la señal marcada como resuelta. |
+
+La IA propone un plan y el nutricionista lo acepta con cambios. Nada se asigna al paciente sin esa decisión.
+
+<p class="caption"><strong>Figura 133</strong><br><em>Wireflow 3: Atender una señal de la bandeja</em></p>
+
+<img src="../assets/img/chapter3/wireflows/03_Handle_Inbox_Signal_Wireflow.png" alt="Wireflow 3: Atender una señal de la bandeja" width="75%" />
+
+##### Wireflow 4: Registrar una comida con foto
+
+<p class="caption"><strong>Tabla 197</strong><br><em>User goal del Wireflow 4: Registrar una comida con foto</em></p>
+
+| **User Goal N°4** | Como paciente, quiero registrar una comida tomándole una foto y confirmando la porción estimada, para mantener mi diario al día con el mínimo esfuerzo. |
+|---|---|
+
+<p class="caption"><strong>Tabla 198</strong><br><em>Task flow del Wireflow 4: Registrar una comida con foto</em></p>
+
+| **Task Flow** |
+|---|
+| 1. El paciente abre Inicio y toca «Registrar comida». |
+| 2. Toma una foto de la comida con la cámara. |
+| 3. Ve la foto y toca «Usar esta foto». |
+| 4. Espera mientras se estima el plato. |
+| 5. Ve la estimación propuesta y toca «Ajustar gramos». |
+| 6. Ajusta la porción y toca «Confirmar». |
+| 7. Ve el Diario con el aviso «Comida registrada». |
+
+De Inicio a la confirmación hay seis pasos y solo uno requiere escribir (la porción). La pantalla de espera informa qué ocurre («Viendo tu foto…»), y la estimación muestra su porcentaje de confianza.
+
+<p class="caption"><strong>Figura 134</strong><br><em>Wireflow 4: Registrar una comida con foto</em></p>
+
+<img src="../assets/img/chapter3/wireflows/04_Log_Meal_With_Photo_Wireflow.png" alt="Wireflow 4: Registrar una comida con foto" width="100%" />
+
+##### Wireflow 5: Prepararme para la consulta
+
+<p class="caption"><strong>Tabla 199</strong><br><em>User goal del Wireflow 5: Prepararme para la consulta</em></p>
+
+| **User Goal N°5** | Como paciente, quiero saber cómo prepararme para mi próxima consulta y contarle a mi nutricionista cómo me ha ido, para aprovechar mejor la cita. |
+|---|---|
+
+<p class="caption"><strong>Tabla 200</strong><br><em>Task flow del Wireflow 5: Prepararme para la consulta</em></p>
+
+| **Task Flow** |
+|---|
+| 1. El paciente abre Inicio y toca «Próxima consulta». |
+| 2. Lee cómo prepararse para la consulta y toca «Ver mis consultas». |
+| 3. Ve «Mis consultas» y toca «Responder». |
+| 4. Le cuenta a su nutricionista cómo le fue y toca «Enviar a mi nutricionista». |
+| 5. Ve «Mis consultas» con la respuesta enviada. |
+
+<p class="caption"><strong>Figura 135</strong><br><em>Wireflow 5: Prepararme para la consulta</em></p>
+
+<img src="../assets/img/chapter3/wireflows/05_Prepare_For_Consultation_Wireflow.png" alt="Wireflow 5: Prepararme para la consulta" width="85%" />
+
 #### 3.1.4.3. Mobile Applications Mock-ups
+
+Los mock-ups aplican el sistema de diseño «Healthify M3» sobre los wireframes de 3.1.4.1: fondo crema `#F6F4EE`, tarjetas blancas, verde `#3B6E23` para la navegación activa y los enlaces, naranja `#F5A623` para la acción principal, Anton en títulos y métricas, y Open Sans en el resto. Se presentan las mismas seis pantallas.
+
+<p class="caption"><strong>Figura 136</strong><br><em>Mock-ups de las pantallas representativas de la aplicación móvil</em></p>
+
+<table align="center">
+  <tr>
+    <td align="center"><img src="../assets/img/chapter3/mobile/mockups/1-inicio.png" alt="Mock-up de Inicio del paciente" width="150" /><br/><sub>Paciente · Inicio</sub></td>
+    <td align="center"><img src="../assets/img/chapter3/mobile/mockups/2-estimacion.png" alt="Mock-up de estimación propuesta" width="150" /><br/><sub>Paciente · Estimación propuesta</sub></td>
+    <td align="center"><img src="../assets/img/chapter3/mobile/mockups/3-tendencia.png" alt="Mock-up de tendencia de peso" width="150" /><br/><sub>Paciente · Tendencia de peso</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="../assets/img/chapter3/mobile/mockups/4-bandeja.png" alt="Mock-up de la bandeja de revisión" width="150" /><br/><sub>Nutricionista · Bandeja</sub></td>
+    <td align="center"><img src="../assets/img/chapter3/mobile/mockups/5-ficha.png" alt="Mock-up de la ficha del paciente" width="150" /><br/><sub>Nutricionista · Ficha del paciente</sub></td>
+    <td align="center"><img src="../assets/img/chapter3/mobile/mockups/6-diagnostico.png" alt="Mock-up del diagnóstico con IA" width="150" /><br/><sub>Nutricionista · Diagnóstico con IA</sub></td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 201</strong><br><em>Aplicación del sistema de diseño en los mock-ups móviles</em></p>
+
+| Aspecto | Aplicación |
+|---|---|
+| **Sistema de diseño** | Los componentes (botón, tarjeta, chip de estado, campo de texto, barra de navegación, snackbar, diálogo) son los del sistema, con los mismos nombres en el Figma y en el código de la app. Cada pantalla tiene su frame de notas con estados y validaciones. |
+| **Color** | El naranja aparece una vez por pantalla, en la acción principal. El verde marca lo activo y lo vigente (ítem de la barra inferior, chip «Vigente»). El rojo se reserva a errores. Un punto naranja en la bandeja indica señales sin resolver. |
+| **Tipografía** | Anton en el título de pantalla y en las métricas («1 260 / 1 850 kcal», «−0,3 kg/sem»), para que el dato se lea de un vistazo. Open Sans en el resto de textos. |
+| **Jerarquía visual** | En Inicio, la meta del día y el botón naranja ocupan el centro de la pantalla. En la ficha del paciente, el botón «Iniciar consulta» queda fijo al pie, sobre el contenido que se desplaza. |
+| **Heurísticas** | H1 (la estimación muestra su confianza y el diario marca «Por confirmar» lo no confirmado), H5 (prevención de errores: el nutricionista confirma antes de salir de una consulta), H9 (los mensajes de error indican qué hacer: «Intentar de nuevo») y H4 (consistencia entre las pantallas de ambos roles). |
+| **IA bajo control del usuario** | Las sugerencias llevan la insignia «IA» y se pueden aceptar, cambiar o ignorar. La estimación de una foto queda «Por confirmar» hasta que el paciente la confirma. |
+| **Diseño inclusivo** | Contraste verificado de texto (≥ 4.5:1) y de elementos no textuales (≥ 3:1), áreas táctiles de 48 dp, estados con texto además de color, tamaño de fuente que sigue la configuración del sistema, español e inglés, y funcionamiento sin conexión para registrar comidas y autopesajes con aviso al usuario. |
+| **Arquitectura de información** | Barra inferior por rol, rótulos breves y títulos de pantalla que coinciden con la etiqueta por la que se llegó a ellas («Bandeja» lleva a «Bandeja», «Diario» a «Tu diario»). |
 
 #### 3.1.4.4. Mobile Applications User Flow Diagrams
 
