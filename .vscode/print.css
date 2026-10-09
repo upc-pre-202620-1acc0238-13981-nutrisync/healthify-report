@@ -1,0 +1,9 @@
+img, pre, blockquote { break-inside: avoid; page-break-inside: avoid; }
+tr:has(img) { break-inside: avoid; }
+p:has(> img), li:has(> img) { break-inside: avoid; }
+img { vertical-align: top; max-width: 100%; max-height: 170mm; height: auto; object-fit: contain; }
+p:has(> img), td:has(> img) { text-align: center; }
+h1, h2, h3, h4, h5, h6 { break-after: avoid; }
+p.caption { text-align: left; margin: 14px 0 6px; line-height: 1.35; break-after: avoid; page-break-after: avoid; break-inside: avoid; }
+p.caption strong { font-weight: 700; }
+p.caption em { font-style: italic; }
