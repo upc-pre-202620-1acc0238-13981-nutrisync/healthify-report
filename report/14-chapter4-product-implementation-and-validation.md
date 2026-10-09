@@ -836,9 +836,645 @@ Los commits de la app no tienen un tipo `test` aparte: cada commit de funcionali
 
 #### 4.2.1.5. Testing Suite Evidence for Sprint Review
 
+El Sprint 1 tiene dos suites de pruebas automatizadas: la del backend y la de la aplicación móvil.
+
+**Web Services (backend)**
+
+La suite del backend está en el proyecto `Healthify.Platform.Tests`, dentro del repositorio `healthify-platform` (https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform). Se escribió con xUnit y NSubstitute. Las pruebas son de tres tipos:
+
+- **Pruebas unitarias** de agregados, objetos de valor, políticas y calculadores del dominio.
+- **Pruebas de integración en memoria** de los servicios de aplicación, los manejadores de eventos, las fachadas ACL y los controladores, con repositorios y reloj de prueba (`TestSupport`).
+- **Pruebas de integración con MySQL**, que verifican la persistencia, las migraciones y las restricciones únicas. Se ejecutan solo cuando la variable `HEALTHIFY_IT_MYSQL` apunta a un servidor.
+
+Los criterios de aceptación de las historias técnicas están redactados en Gherkin en la sección 2.4.1. En este sprint no se generaron archivos `.feature` ni archivos de pasos: los escenarios se automatizaron como pruebas de xUnit cuyo nombre describe el comportamiento verificado. El landing page no tiene pruebas automatizadas; se revisó de forma manual en el navegador, en español e inglés.
+
+La suite se ejecutó con `dotnet test healthify-platform.sln` sobre el estado de `develop` el 09/10/2026 con resultado **1374 pruebas superadas, 0 con error y 35 omitidas** (1409 en total). Las 35 omitidas son las pruebas de integración con MySQL, que no se ejecutan sin `HEALTHIFY_IT_MYSQL`.
+
+<p class="caption"><strong>Tabla 241</strong><br><em>Resultados de la suite de pruebas</em></p>
+
+| Área de pruebas | Total | Superadas | Omitidas (MySQL) |
+|---|:---:|:---:|:---:|
+| Iam | 89 | 83 | 6 |
+| CareRelationship | 90 | 90 | 0 |
+| NutritionalCare | 525 | 515 | 10 |
+| FoodCatalog | 64 | 64 | 0 |
+| IntakeBodyResponse | 227 | 216 | 11 |
+| MonitoringAdherence | 289 | 285 | 4 |
+| ReadModels | 33 | 31 | 2 |
+| Ai | 62 | 60 | 2 |
+| Shared | 26 | 26 | 0 |
+| Composition | 4 | 4 | 0 |
+| **Total** | **1409** | **1374** | **35** |
+
+Relación entre las historias técnicas y las clases de prueba. Entre paréntesis, el número de pruebas de cada clase.
+
+<p class="caption"><strong>Tabla 242</strong><br><em>Relación entre historias técnicas y clases de prueba</em></p>
+
+| Historia | Clases de prueba | Comportamientos verificados |
+|---|---|---|
+| TS01 | `PersonNameTests` (11), `RegisterAccountNameTests` (6), `PreferredLanguageTests` (18), `TemporaryLockoutTests` (5), `RefreshTokenRotationTests` (14), `RefreshRetryGraceTests` (7), `UsersByIdsFacadeTests` (4), `ErrorCodeExtensionTests` (19), `IamSessionMySqlTests` (5) | Validación de nombres, idioma `es` por defecto, bloqueo temporal de 15 minutos, rotación del token de renovación, reintento dentro del periodo de gracia, finalización de la sesión ante reúso y códigos de error estables. |
+| TS02 | `PatientCannotSelfLinkTests` (3), `SwitchPractitionerTests` (15), `AiProcessingConsentTests` (13), `AiConsentEndsWithLinkTests` (7), `AiPreferencesTests` (18), `AcknowledgedAtTests` (3), `ErrorCodeExtensionTests` (31) | Un emisor no puede canjear su propia invitación, el cambio de nutricionista revoca el vínculo anterior en la misma transacción, el consentimiento para IA termina con el vínculo y el acuse de metas guarda solo el momento. |
+| TS03 | `ConsultationLifecycleTests` (18), `ConsultationMeasurementTests` (15), `ConsultationDiagnosisTests` (16), `ConsultationRedoAndDiscardTests` (6), `ConsultationQueryAndRestTests` (19), `PatientBaselineTests` (23), `StructuredAssessmentValueObjectsTests` (43), `DiagnosisCodeTests` (21), `OneActiveDiagnosisPerPatientTests` (5), `ClosedAssessmentStaysImmutableTests` (4), `ClinicalDateTests` (6) | Pasos de la consulta guiada, un solo diagnóstico activo por paciente, evaluación cerrada inmutable, rangos clínicos válidos, categoría de IMC según la OMS y fecha clínica en la zona horaria de Lima. |
+| TS04 | `ConsultationTargetsTests` (16), `PublishFromConsultationTests` (21), `OneActiveVersionPerPatientTests` (4), `PlanVersionDiffTests` (7), `PatientPlanVersionsTests` (6), `PatientMessagePerVersionTests` (9), `DefaultTargetParametersPolicyTests` (7), `PlanAdjustmentProposalTests` (26), `PlanProposalInReviewItemTests` (16), `ReviewInboxEvidenceTests` (15) | Cálculo y edición de metas, una sola versión activa, diferencia entre versiones, mensaje por versión, propuesta de ajuste dentro de los límites de seguridad y aceptación solo por el nutricionista de la bandeja. |
+| TS05 | `AnalyzedPhotoLogTests` (9), `PhotoLogConfirmationTests` (9), `MealGroupLogTests` (11), `PlanAdherenceTests` (13), `PlanAdherenceCommandTests` (10), `RetroactiveLoggingWindowTests` (5), `DailyIntakeSummaryOffPlanTests` (3), `ResolveByNamesTests` (17), `AiEstimatedFoodTests` (35), `MealPhotoRecognitionTests` (24) | Una estimación sin confirmar no cuenta como ingesta, ventana de registro retroactivo de 48 horas, adherencia al plan (`InPlan`, `OffPlan`, `NotAnswered`), resolución de alimentos por nombre y alimentos estimados por IA con nutrientes coherentes. |
+| TS06 | `FastedOnlyProtocolTests` (12), `WeightTrendRangeTests` (13), `WeightTrendSummaryTests` (4), `SelfWeighInMySqlTests` (5) | Solo las lecturas en ayunas entran en la tendencia, la tendencia se calcula como pendiente semanal y el rango de semanas se acota. |
+| TS07 | `PatientRecordByRoleTests` (5), `PatientSummaryComposerTests` (7), `PatientMonitoringPanelComposerTests` (5), `PatientRosterComposerTests` (5), `DailyComplianceRangeTests` (14), `UnloggedIsNotNonCompliantTests` (8), `ComplianceSummaryTests` (3), `WindowHandoverOnSwitchTests` (5), `ConsistencyPromptAcknowledgementTests` (9) | El expediente del paciente nunca incluye diagnóstico, base de cálculo ni IMC; un día sin registros es «sin registro» y no incumplimiento; el panel y el listado leen cada fachada una sola vez. |
+| TS08 | `SelfWeighInSyncTests` (11), `SyncPlanAdherenceTests` (6), `BatchGapDaysTests` (2), `OfflineDaysSignalTests` (4) | Un registro reenviado no se duplica, el servidor no cambia la hora registrada por el paciente, cada registro se procesa por separado y los días sin conexión se marcan una sola vez. |
+| TS09 | `AiGenerationPipelineTests` (19), `AiInputPseudonymizerTests` (5), `AiSchemaAndPromptCatalogTests` (13), `GeminiLanguageModelClientTests` (15), `AiImageInputTests` (6), `GeneratedTextValidatorTests` (25), `MealIdeasTests` (37), `SharedKernelIndependenceTests` (2) | Sin consentimiento nunca se llama al modelo, las entradas se pseudonimizan, una salida que no cumple el esquema se rechaza, los textos para el paciente no mencionan diagnóstico ni acusan, un reintento ante errores 5xx y el módulo compartido no depende de ningún contexto. |
+| TS10 | `ScheduleFollowUpPreparationTests` (9), `FollowUpPreparationAndModalityTests` (15), `FollowUpStateTransitionsTests` (11), `CancelAndRescheduleFollowUpTests` (8), `PreVisitCheckInTests` (17), `PreVisitCheckInCommandServiceTests` (10), `ConsultationCompletesFollowUpTests` (7), `DischargeCancelsFutureFollowUpsTests` (6), `PatientFollowUpsQueryTests` (6) | Estados de la cita, preparación y modalidad, cancelación y reprogramación solo por el nutricionista de la agenda, publicación de la consulta completa su cita y el alta cancela las citas futuras. |
+| Transversal | `RateLimitingTests` (20), `ProblemDetailsErrorCodesTests` (6), `ServiceProviderCompositionTests` (4) | Límite de solicitudes por minuto, códigos de error en Problem Details, activación de todos los controladores desde el contenedor y generación del documento de Swagger. |
+
+Commits de pruebas del Sprint 1:
+
+<p class="caption"><strong>Tabla 243</strong><br><em>Commits de pruebas del backend en el Sprint 1</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | aad3e76 | test(shared): add shared test support, AI and rate-limit tests | — | 30/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | 4708780 | test(iam): add Iam tests | — | 01/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | aec0898 | test(care-relationship): add tests | — | 02/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | ade3bc7 | test(nutritional-care): add domain and application tests | — | 04/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | ad6e27b | test(nutritional-care): add MySQL integration tests | — | 04/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | 7fba450 | test(food-catalog): add tests | — | 05/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | 339bf40 | test(intake): add tests | — | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | e4d485d | test(monitoring): add tests | — | 07/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | 3bdcd07 | test(read-models): add composer and session mapping tests | — | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | 2c20434 | test(composition): add cross-context test support, AI pipeline and DI composition tests | — | 08/10/2026 |
+
+**Mobile Application (Android)**
+
+La suite de la app está en `app/src/test` del repositorio `healthify-android-app` (https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app). Son pruebas de JVM con JUnit 4, MockK, Turbine y `kotlinx-coroutines-test` sobre las cuatro capas de cada módulo: objetos de valor y entidades del dominio, casos de uso, repositorios y mappers de infraestructura, y ViewModels de presentación, con dobles de prueba en la carpeta `testing`. No hay pruebas instrumentadas (`androidTest`) en este sprint. Tampoco hay archivos `.feature`: los escenarios de las historias se automatizaron como pruebas cuyo nombre describe el comportamiento.
+
+Se ejecutaron con `./gradlew :app:testDebugUnitTest` sobre la rama `main` el 09/10/2026, con resultado **567 pruebas superadas, 0 con error y 0 omitidas**, en 63 clases de prueba.
+
+<p class="caption"><strong>Tabla 244</strong><br><em>Pruebas por módulo de la aplicación móvil</em></p>
+
+| Módulo | Pruebas | Clases | Historias relacionadas |
+|---|:---:|:---:|---|
+| iam | 72 | 10 | US28, US29, US30 |
+| carerelationship | 93 | 11 | US01 a US07, US24, US41 |
+| foodcatalog | 12 | 2 | US10, US44 |
+| intake | 151 | 16 | US08 a US13, US31, US42, US43 |
+| monitoring | 64 | 7 | US14 a US16, US18, US19, US39, US40, US42 |
+| nutritionalcare | 119 | 9 | US17, US18, US20 a US23, US25 a US27 |
+| main | 20 | 2 | US23, US30, US43 |
+| onboarding | 5 | 1 | US28, US29 |
+| core/network | 20 | 4 | Transversal: red y renovación de sesión |
+| core/sync | 11 | 1 | US31 |
+| **Total** | **567** | **63** | |
+
+Comportamientos verificados por módulo, con clases de ejemplo:
+
+<p class="caption"><strong>Tabla 245</strong><br><em>Comportamientos verificados por módulo de la aplicación móvil</em></p>
+
+| Módulo | Clases de prueba (n) | Comportamientos verificados |
+|---|---|---|
+| core | `TokenRefreshAuthenticatorTest` (8), `ProblemDetailsMapperTest` (7), `ApiCallTest` (4), `PendingSyncEngineTest` (11) | Un `401` renueva el par de tokens y reintenta con el nuevo, se envían `Authorization` y `Accept-Language` en las solicitudes protegidas, los errores Problem Details se traducen a mensajes, y la cola de operaciones conserva todo ante un fallo transitorio y no reintenta lo que el servidor rechazó. |
+| iam | `SignInViewModelTest` (10), `SignUpViewModelTest` (10), `SignUpValueObjectsTest` (10), `SessionRepositoryImplTest` (6), `IamUseCasesTest` (9) | Sin conexión no se llama al backend, un inicio de sesión correcto avanza a la pantalla siguiente, y los datos de registro se validan en objetos de valor. |
+| carerelationship | `ScanInvitationViewModelTest` (9), `SwitchPractitionerFlowTest` (4), `ConsentViewModelTest` (9), `AiFeaturesViewModelTest` (9), `TargetsAcknowledgementUseCasesTest` (6) | Un QR que no es una invitación se rechaza sin llamar al servidor, el cambio de nutricionista reemplaza el vínculo y pide el consentimiento del nuevo, y una función de IA no se activa sin consentimiento. |
+| foodcatalog | `FoodCatalogTest` (8), `LocalFoodCatalogTest` (4) | La búsqueda necesita al menos dos caracteres, el catálogo del teléfono ordena primero los prefijos y los alimentos locales, y sin conexión responde solo con lo local. |
+| intake | `MealPhotoViewModelTest` (19), `ManualMealViewModelTest` (9), `DiaryOfflineQueueTest` (10), `SelfWeighInSyncTest` (12), `JpegMetadataStripperTest` (6), `WeightTrendViewModelTest` (10), `ReminderTest` (4) | Un registro sin conexión se encola con su identificador y su hora local exactos, la foto se envía sin EXIF ni otros metadatos, el registro manual exige alimento, porción válida y respuesta sobre el plan, y los recordatorios parten apagados. |
+| monitoring | `HowAmITodayViewModelTest` (4), `PractitionerAgendaTest` (19), `ConsultationsTest` (13), `WeeklySummaryTest` (8), `CheckInViewModelTest` (10) | Sin registros el día es una invitación y no un error, la agenda lista las citas desde ahora y rechaza momentos pasados sin llamar al backend. |
+| nutritionalcare | `ConsultationStepsViewModelTest` (29), `ReviewInboxTest` (19), `ReviewInboxViewModelsTest` (16), `PatientTabsViewModelTest` (15), `PlanTextsTest` (6) | La consulta guiada vuelve al paso 2 si falta el diagnóstico, los valores propios exigen un motivo antes de enviarse, y el texto escrito por el nutricionista se muestra tal cual, sin traducirlo. |
+| main | `PatientHomeViewModelTest` (15), `PatientSettingsViewModelTest` (5) | Sin conexión el inicio muestra las metas guardadas en el teléfono, y sin índice de consistencia no hay tarjeta. |
+
+Commits de la app que incluyen pruebas (la columna Commit Message Body no aplica; las pruebas viajan dentro del commit de funcionalidad):
+
+<p class="caption"><strong>Tabla 246</strong><br><em>Commits de la aplicación móvil que incluyen pruebas</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/foundation-design-system` | 8682c36 | feat(core): add shared kernel, network, DI and offline sync queue | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/iam-care-relationship` | ef4dd64 | feat(iam): add domain model, value objects and use cases | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/iam-care-relationship` | ffa741e | feat(iam): add auth API, session storage and mappers | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/iam-care-relationship` | 2bd8207 | feat(carerelationship): add invitation redemption and consent flow | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/iam-care-relationship` | 8fd2d7e | feat(iam): add splash, sign-up, sign-in and care-link screens | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/monitoring-food-catalog` | afe38e5 | feat(foodcatalog): add reference food catalog with local cache | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/monitoring-food-catalog` | db4a4f2 | feat(monitoring): add monitoring repositories and mappers | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/monitoring-food-catalog` | 6afb611 | feat(monitoring): add progress, consultations and agenda screens | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/intake-diary` | 24bd3a5 | feat(intake): add diary, targets and weigh-in domain and use cases | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/intake-diary` | ee6af9e | feat(intake): add diary, photo and weight APIs, offline queue and mappers | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/intake-diary` | e4d1def | feat(intake): add diary and meal logging view models and components | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/nutritional-care-app-shell` | 511baae | feat(nutritionalcare): add consultation, plan and review domain | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/nutritional-care-app-shell` | 8042596 | feat(nutritionalcare): add clinical record and plan repositories | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/nutritional-care-app-shell` | 73cdd4f | feat(nutritionalcare): add practitioner consultation and plan screens | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/nutritional-care-app-shell` | 7c1f07b | feat(app): wire navigation shells, Room database and entry points | — | 09/10/2026 |
+
 #### 4.2.1.6. Execution Evidence for Sprint Review
 
+En el Sprint 1 se publicó el landing page, se desplegó el backend completo y se construyó la aplicación móvil. El landing page está disponible en https://landing.healthify.lat, en español y en inglés, con cuatro páginas y las secciones que cubren las historias US32 a US38 y US45. El backend está disponible en https://platform.healthify.lat y su documentación interactiva en https://platform.healthify.lat/swagger. La aplicación móvil Android 1.0 se instala con el APK de `assembleRelease` y consume el backend publicado. A continuación se presentan las vistas principales de cada producto.
+
+Tres elementos del landing page quedan pendientes de conectar con productos que aún no se publican: el enlace «Iniciar sesión» apunta a un marcador interno hasta que exista la dirección de inicio de sesión de la aplicación, las diapositivas de video del carrusel se activan al configurar el identificador de YouTube de cada video, y el formulario de contacto valida los datos y muestra la confirmación en el navegador sin enviarlos a un servidor.
+
+**Landing Page**
+
+Hero con carrusel de cuatro diapositivas (nutricionistas, pacientes, video del producto y video del equipo) y botones de acceso según el rol (US32, US36).
+
+<p class="caption"><strong>Figura 148</strong><br><em>Captura del landing page: sección Hero</em></p>
+
+![Hero](../assets/img/chapter4/sprint1/landing-hero.png)
+
+Sección del problema (US32).
+
+<p class="caption"><strong>Figura 149</strong><br><em>Captura del landing page: sección Problema</em></p>
+
+![Problema](../assets/img/chapter4/sprint1/landing-problem.png)
+
+Funciones para el paciente, con la lista de diez funciones y la pantalla de cada una (US33).
+
+<p class="caption"><strong>Figura 150</strong><br><em>Captura del landing page: sección Para el paciente</em></p>
+
+![Para el paciente](../assets/img/chapter4/sprint1/landing-patient.png)
+
+Funciones para el nutricionista, con once funciones agrupadas por momento (US33).
+
+<p class="caption"><strong>Figura 151</strong><br><em>Captura del landing page: sección Para el nutricionista</em></p>
+
+![Para el nutricionista](../assets/img/chapter4/sprint1/landing-nutritionist.png)
+
+Cómo funciona: consulta guiada en cuatro pasos y ciclo entre consultas (US36).
+
+<p class="caption"><strong>Figura 152</strong><br><em>Captura del landing page: sección Cómo funciona</em></p>
+
+![Cómo funciona](../assets/img/chapter4/sprint1/landing-how-it-works.png)
+
+Preguntas frecuentes con acordeón y filtros por tema (US45).
+
+<p class="caption"><strong>Figura 153</strong><br><em>Captura del landing page: preguntas frecuentes</em></p>
+
+![Preguntas frecuentes](../assets/img/chapter4/sprint1/landing-faq.png)
+
+Página «Nosotros»: hero, misión y visión, y equipo (US34).
+
+<p class="caption"><strong>Figura 154</strong><br><em>Captura del landing page: página Nosotros</em></p>
+
+![Nosotros](../assets/img/chapter4/sprint1/landing-about-hero.png)
+
+<p class="caption"><strong>Figura 155</strong><br><em>Captura del landing page: misión y visión</em></p>
+
+![Misión y visión](../assets/img/chapter4/sprint1/landing-about-purpose.png)
+
+<p class="caption"><strong>Figura 156</strong><br><em>Captura del landing page: equipo</em></p>
+
+![Equipo](../assets/img/chapter4/sprint1/landing-about-team.png)
+
+Página de contacto y formulario con los mensajes de validación por campo (US37).
+
+<p class="caption"><strong>Figura 157</strong><br><em>Captura del landing page: página Contacto</em></p>
+
+![Contacto](../assets/img/chapter4/sprint1/landing-contact.png)
+
+<p class="caption"><strong>Figura 158</strong><br><em>Captura del landing page: validación del formulario de contacto</em></p>
+
+![Validación del formulario](../assets/img/chapter4/sprint1/landing-contact-validation.png)
+
+Confirmación al enviar el formulario con datos válidos (US37).
+
+<p class="caption"><strong>Figura 159</strong><br><em>Captura del landing page: confirmación del formulario</em></p>
+
+![Confirmación del formulario](../assets/img/chapter4/sprint1/landing-contact-success.png)
+
+Términos y condiciones, con tabla de contenido y una cláusula por pantalla, en inglés (US35, US38).
+
+<p class="caption"><strong>Figura 160</strong><br><em>Captura del landing page: términos y condiciones</em></p>
+
+![Términos y condiciones](../assets/img/chapter4/sprint1/landing-terms-body.png)
+
+Footer con navegación, enlaces legales, redes, contacto y selector de idioma.
+
+<p class="caption"><strong>Figura 161</strong><br><em>Captura del landing page: footer</em></p>
+
+![Footer](../assets/img/chapter4/sprint1/landing-footer.png)
+
+Cambio de idioma a inglés (US35).
+
+<p class="caption"><strong>Figura 162</strong><br><em>Captura del landing page en inglés: hero</em></p>
+
+![Hero en inglés](../assets/img/chapter4/sprint1/landing-hero-en.png)
+
+<p class="caption"><strong>Figura 163</strong><br><em>Captura del landing page en inglés: sección del nutricionista</em></p>
+
+![Nutricionista en inglés](../assets/img/chapter4/sprint1/landing-nutritionist-en.png)
+
+**Mobile Application (Android)**
+
+Las capturas corresponden a la aplicación ejecutada en un emulador Android con una sesión de paciente vinculada a su nutricionista, conectada al backend publicado. La app está disponible en español e inglés, con selector de idioma en los ajustes; las capturas están en inglés. Las pantallas del nutricionista (consulta guiada, agenda, bandeja de revisión) están cubiertas por las pruebas de ViewModel de la sección 4.2.1.5.
+
+<p class="caption"><strong>Figura 164</strong><br><em>Capturas de la aplicación móvil en ejecución en un emulador Android</em></p>
+
+<table>
+  <tr>
+    <td align="center"><img src="../assets/img/chapter4/sprint1/app-patient-home.png" alt="Inicio del paciente" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint1/app-patient-how-am-i-today.png" alt="Cómo voy hoy" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint1/app-patient-diary.png" alt="Diario del día" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint1/app-patient-manual-meal.png" alt="Registro a mano" width="190" /></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Inicio del paciente.</strong> Metas vigentes con el avance del día, macronutrientes, botón para registrar una comida y acceso a «Cómo voy hoy» (US14, US23).</td>
+    <td valign="top"><strong>Cómo voy hoy.</strong> Describe el resultado del día en palabras, sin cifras en rojo (US14).</td>
+    <td valign="top"><strong>Diario del día.</strong> Comidas con su origen (a mano o por foto con su confianza), confirmación, si estaban en el plan y acceso a las ideas con IA (US08 a US11, US42).</td>
+    <td valign="top"><strong>Registro a mano.</strong> Búsqueda en el catálogo guardado en el teléfono, porción y hora, con ventana de 48 horas (US10).</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="../assets/img/chapter4/sprint1/app-patient-progress.png" alt="Progreso" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint1/app-patient-weigh-in.png" alt="Autopesaje" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint1/app-patient-record.png" alt="Mi expediente" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint1/app-patient-consultations.png" alt="Mis consultas" width="190" /></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Progreso.</strong> Tendencia de peso, que no se muestra hasta tener dos pesajes que sigan el protocolo (US13).</td>
+    <td valign="top"><strong>Autopesaje.</strong> Peso, hora y pregunta sobre el protocolo de ayunas (US12).</td>
+    <td valign="top"><strong>Mi expediente.</strong> Nutricionista vinculado, consultas, números clave, plan con pautas y restricciones, y derivaciones (US18, US23).</td>
+    <td valign="top"><strong>Mis consultas.</strong> Próxima consulta y consultas anteriores (US18, US40).</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="../assets/img/chapter4/sprint1/app-patient-settings.png" alt="Ajustes" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint1/app-patient-ai-features.png" alt="Funciones de IA" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint1/app-patient-reminders.png" alt="Recordatorios" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint1/app-patient-pending-sync.png" alt="Sincronización pendiente" width="190" /></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Ajustes.</strong> Cuenta, recordatorios, idioma, funciones de IA, sincronización pendiente, retiro del consentimiento, cambio de nutricionista y descarga de datos (US03, US07, US31, US41, US43).</td>
+    <td valign="top"><strong>Funciones de IA.</strong> El paciente activa o desactiva cada función, y la app deja de usar su diario para ella al apagarla (US41).</td>
+    <td valign="top"><strong>Recordatorios.</strong> Recordatorios de pesaje y de registro de comidas, apagados por defecto (US43).</td>
+    <td valign="top"><strong>Sincronización pendiente.</strong> Registros hechos sin conexión que aún no se enviaron (US31).</td>
+  </tr>
+</table>
+
+**Web Services**
+
+La documentación de Swagger del backend publicado agrupa las operaciones por recurso. La primera captura muestra la cabecera del documento, el botón **Authorize** para el esquema Bearer y los primeros recursos.
+
+<p class="caption"><strong>Figura 165</strong><br><em>Captura de Swagger: vista general de los servicios</em></p>
+
+![Swagger: vista general](../assets/img/chapter4/sprint1/swagger-overview.png)
+
+Consulta guiada del nutricionista, de la medición a la publicación del plan en cuatro pasos (TS03, TS04).
+
+<p class="caption"><strong>Figura 166</strong><br><em>Captura de Swagger: servicios de consultas</em></p>
+
+![Swagger: consultas](../assets/img/chapter4/sprint1/swagger-consultations.png)
+
+Ingesta y respuesta corporal del paciente: diario, estimaciones, sincronización, autopesaje, tendencia, ideas de comida y análisis de foto (TS05, TS06, TS08).
+
+<p class="caption"><strong>Figura 167</strong><br><em>Captura de Swagger: servicios de ingesta</em></p>
+
+![Swagger: ingesta](../assets/img/chapter4/sprint1/swagger-intake.png)
+
+Monitoreo y adherencia: seguimientos, resumen, índice de consistencia, derivaciones y agenda (TS07, TS10).
+
+<p class="caption"><strong>Figura 168</strong><br><em>Captura de Swagger: servicios de monitoreo</em></p>
+
+![Swagger: monitoreo](../assets/img/chapter4/sprint1/swagger-monitoring.png)
+
+Las capturas de la sección 4.2.1.7 muestran además dos solicitudes ejecutadas contra el servicio publicado: la búsqueda anónima en el catálogo de alimentos, que responde `200`, y la lectura de una cuenta sin token, que responde `401`.
+
+El video de demostración del Sprint 1 recorre el landing page en ambos idiomas, el formulario de contacto, la documentación del backend y la aplicación móvil.
+
+**URL del video de demostración del Sprint 1:** [Video del Sprint 1](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQDkwu1yzZXNQrSVWng49FMJAWd8AljnrQbej0wJ4HD9wOg?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=7Rp3ni)
+
 #### 4.2.1.7. Services Documentation Evidence for Sprint Review
+
+Los servicios del backend se documentan con OpenAPI mediante Swashbuckle. El documento generado describe **100 operaciones en 94 rutas** (45 `GET`, 44 `POST`, 9 `PUT` y 2 `DELETE`), con 160 esquemas, y cada operación declara un resumen, una descripción de su comportamiento y un `SwaggerResponse` por cada código de estado posible. Ocho operaciones están marcadas como obsoletas (`deprecated`); se conservan para clientes anteriores a la consulta guiada y al registro con confirmación de estimación.
+
+<p class="caption"><strong>Tabla 247</strong><br><em>Recursos de documentación de los servicios</em></p>
+
+| Recurso | Enlace |
+|---|---|
+| Swagger UI | https://platform.healthify.lat/swagger |
+| Documento OpenAPI | https://platform.healthify.lat/swagger/v1/swagger.json |
+| Repositorio de Web Services | https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform |
+
+La aplicación móvil consume estos servicios a través de `BASE_URL = https://platform.healthify.lat/api/v1/`, definida en cada tipo de compilación.
+
+Convenciones comunes a todos los endpoints:
+
+- La ruta base es `/api/v1`. Las rutas usan sustantivos y las acciones que no son un CRUD se expresan como sub-recurso (`/invitations/redemption`, `/consultations/{id}/publication`).
+- Todas las operaciones piden `Authorization: Bearer <token>` salvo las marcadas como **Anónimo**. El token se obtiene en `POST /authentication/sign-in` y lleva el rol (`Patient` o `Practitioner`), que fija el acceso a cada operación. En la columna **Acceso**, «Patient o Practitioner vinculado» significa que el acceso exige además un vínculo de cuidado activo entre ambos.
+- Los errores se devuelven como `application/problem+json` (RFC 7807), con título y detalle en el idioma de `Accept-Language` (español o inglés) y un código estable en `extensions.code`, por ejemplo `AuthenticationRequired` o `AccountLocked`.
+- Las solicitudes se limitan por usuario o por IP. Al excederse el límite, el servicio responde `429` con la cabecera `Retry-After`.
+- Las operaciones de IA responden `403` cuando el paciente no dio su consentimiento, `429` al superar la cuota y `503` si el modelo no está disponible.
+- La columna **Descripción en Swagger** reproduce el resumen de cada operación tal como figura en la documentación publicada, en inglés.
+
+**IAM: autenticación, cuentas y sesiones (8 operaciones)**
+
+<p class="caption"><strong>Tabla 248</strong><br><em>Operaciones documentadas en Swagger: IAM: autenticación, cuentas y sesiones</em></p>
+
+| Método | Ruta | Descripción en Swagger | Acceso | Respuestas |
+|---|---|---|---|---|
+| `POST` | `/api/v1/authentication/sign-up` | Register an account | Anónimo | 201 · 400 · 409 · 429 · 500 |
+| `POST` | `/api/v1/authentication/sign-in` | Sign in and receive the role claim | Anónimo | 200 · 401 · 429 · 500 |
+| `POST` | `/api/v1/authentication/token-refreshes` | Refresh the session token | Anónimo | 200 · 401 · 429 · 500 |
+| `POST` | `/api/v1/authentication/sign-out` | Sign out | Autenticado | 204 · 401 · 404 · 409 |
+| `GET` | `/api/v1/users/{userId}` | Get an account | Dueño de la cuenta | 200 · 401 · 403 · 404 |
+| `PUT` | `/api/v1/users/{userId}/preferred-language` | Change the preferred language of an account | Dueño de la cuenta | 204 · 400 · 401 · 403 · 404 |
+| `GET` | `/api/v1/users/{userId}/sessions` | List the sessions of an account | Dueño de la cuenta | 200 · 401 · 403 |
+| `GET` | `/api/v1/sessions/{sessionId}/navigation-shell` | Get the navigation shell of a session | Dueño de la cuenta | 200 · 401 · 403 · 404 |
+
+**Care Relationship: invitaciones, vínculos, consentimiento e IA (14 operaciones)**
+
+<p class="caption"><strong>Tabla 249</strong><br><em>Operaciones documentadas en Swagger: Care Relationship: invitaciones, vínculos, consentimiento e IA</em></p>
+
+| Método | Ruta | Descripción en Swagger | Acceso | Respuestas |
+|---|---|---|---|---|
+| `POST` | `/api/v1/invitations` | Issue an invitation | Practitioner | 201 · 400 · 401 · 403 · 500 |
+| `GET` | `/api/v1/invitations/{invitationId}` | Get the status of an invitation | Practitioner | 200 · 401 · 403 · 404 |
+| `POST` | `/api/v1/invitations/redemption` | Redeem an invitation | Patient | 201 · 400 · 401 · 403 · 404 · 409 · 422 |
+| `GET` | `/api/v1/care-links/{careLinkId}` | Get a care link | Patient o Practitioner vinculado | 200 · 401 · 403 · 404 |
+| `GET` | `/api/v1/care-links/{careLinkId}/targets-read-status` | Get the targets read status of a care link | Patient o Practitioner vinculado | 200 · 401 · 403 · 404 |
+| `POST` | `/api/v1/care-links/{careLinkId}/consent` | Grant consent | Patient | 200 · 400 · 401 · 403 · 404 · 409 |
+| `DELETE` | `/api/v1/care-links/{careLinkId}/consent` | Withdraw consent | Patient | 204 · 401 · 403 · 404 |
+| `PUT` | `/api/v1/care-links/{careLinkId}/ai-processing-consent` | Turn AI processing on or off | Patient | 204 · 401 · 403 · 404 · 409 |
+| `POST` | `/api/v1/care-links/{careLinkId}/targets-acknowledgement` | Acknowledge the active targets | Patient | 200 · 401 · 403 · 404 · 422 |
+| `POST` | `/api/v1/care-links/{careLinkId}/discharge` | Discharge the patient | Practitioner | 200 · 400 · 401 · 403 · 404 · 409 |
+| `GET` | `/api/v1/patients/{patientId}/care-links/active` | Get the active care link of a patient | Patient o Practitioner vinculado | 200 · 401 · 403 · 404 |
+| `GET` | `/api/v1/practitioners/{practitionerId}/patients` | List the patients of a practitioner | Practitioner | 200 · 401 · 403 |
+| `GET` | `/api/v1/patients/{patientId}/ai-preferences` | Get the AI preferences of a patient | Patient | 200 · 401 · 403 |
+| `PUT` | `/api/v1/patients/{patientId}/ai-preferences` | Choose the AI functions | Patient | 200 · 401 · 403 · 409 |
+
+**Nutritional Care: datos base, consulta guiada, plan y bandeja de revisión (33 operaciones)**
+
+<p class="caption"><strong>Tabla 250</strong><br><em>Operaciones documentadas en Swagger: Nutritional Care: datos base, consulta guiada, plan y bandeja de revisión</em></p>
+
+| Método | Ruta | Descripción en Swagger | Acceso | Respuestas |
+|---|---|---|---|---|
+| `POST` | `/api/v1/patients/{patientId}/baseline` | Record the patient baseline | Practitioner | 201 · 400 · 401 · 403 · 409 · 500 |
+| `PUT` | `/api/v1/patients/{patientId}/baseline` | Edit the patient baseline | Practitioner | 200 · 400 · 401 · 403 · 404 · 500 |
+| `GET` | `/api/v1/patients/{patientId}/baseline` | Get the patient baseline | Practitioner | 200 · 401 · 403 · 404 |
+| `PUT` | `/api/v1/consultations/{consultationId}/measurement` | Step 1: record the measurement | Practitioner | 200 · 400 · 401 · 403 · 404 · 409 · 422 · 500 |
+| `POST` | `/api/v1/consultations/{consultationId}/diagnosis-suggestion` | Step 2: suggest a diagnosis | Practitioner | 200 · 401 · 403 · 404 · 422 · 429 · 500 |
+| `POST` | `/api/v1/consultations/{consultationId}/guideline-suggestions` | Step 4: suggest guidelines for the diagnosis | Practitioner | 200 · 401 · 403 · 404 · 422 · 429 · 500 |
+| `PUT` | `/api/v1/consultations/{consultationId}/diagnosis` | Step 2: issue the diagnosis | Practitioner | 200 · 400 · 401 · 403 · 404 · 409 · 422 · 500 |
+| `POST` | `/api/v1/consultations/{consultationId}/target-proposal` | Step 3: propose the targets | Practitioner | 200 · 400 · 401 · 403 · 404 · 409 · 422 · 500 |
+| `PUT` | `/api/v1/consultations/{consultationId}/targets` | Step 3: prescribe the targets | Practitioner | 200 · 400 · 401 · 403 · 404 · 409 · 422 · 500 |
+| `PUT` | `/api/v1/consultations/{consultationId}/publication-draft` | Step 4: save the publication draft | Practitioner | 200 · 400 · 401 · 403 · 404 · 409 · 422 · 500 |
+| `POST` | `/api/v1/consultations/{consultationId}/publication` | Step 4: publish and close the consultation | Practitioner | 200 · 400 · 401 · 403 · 404 · 409 · 422 · 500 |
+| `DELETE` | `/api/v1/consultations/{consultationId}` | Discard a consultation | Practitioner | 204 · 401 · 403 · 404 · 409 · 500 |
+| `POST` | `/api/v1/patients/{patientId}/consultations` | Start a consultation | Practitioner | 201 · 401 · 403 · 409 · 422 · 500 |
+| `GET` | `/api/v1/patients/{patientId}/consultations` | List the consultations of a patient | Practitioner | 200 · 400 · 401 · 403 |
+| `GET` | `/api/v1/patients/{patientId}/consultations/in-progress` | Get the consultation in progress | Practitioner | 200 · 401 · 403 · 404 |
+| `GET` | `/api/v1/patients/{patientId}/nutritional-assessments` | List the assessments of a patient | Practitioner | 200 · 401 · 403 |
+| `GET` | `/api/v1/patients/{patientId}/nutritional-diagnoses/active` | Get the active diagnosis of a patient | Practitioner | 200 · 401 · 403 · 404 |
+| `GET` | `/api/v1/patients/{patientId}/nutrition-plans` | List the plan versions of a patient | Practitioner | 200 · 401 · 403 |
+| `GET` | `/api/v1/patients/{patientId}/nutrition-plans/active` | Get the active plan of a patient | Practitioner | 200 · 401 · 403 · 404 |
+| `GET` | `/api/v1/patients/{patientId}/plan-versions` | List my plan versions | Patient | 200 · 401 · 403 |
+| `GET` | `/api/v1/review-items` | List the review items | Practitioner | 200 · 400 · 401 |
+| `GET` | `/api/v1/review-items/{reviewItemId}/plan-proposal` | Read the AI plan proposal of a review item | Practitioner | 200 · 202 · 401 · 403 · 404 |
+| `POST` | `/api/v1/review-items/{reviewItemId}/plan-proposal/acceptance` | Assign the proposed plan | Practitioner | 200 · 400 · 401 · 403 · 404 · 409 · 422 |
+| `POST` | `/api/v1/review-items/{reviewItemId}/resolution` | Resolve a review item | Practitioner | 200 · 400 · 401 · 403 · 404 |
+| `POST` | `/api/v1/nutrition-plans/target-proposals` | Propose targets (deprecated) | Practitioner | 201 · 400 · 401 · 403 · 422 |
+| `POST` | `/api/v1/nutrition-plans/{planId}/prescribed-targets` | Prescribe the targets (deprecated) | Practitioner | 200 · 400 · 401 · 403 · 404 · 409 |
+| `POST` | `/api/v1/nutrition-plans/{planId}/publication` | Publish the nutrition plan (deprecated) | Practitioner | 200 · 400 · 401 · 403 · 404 · 409 · 422 |
+| `POST` | `/api/v1/nutrition-plans/{planId}/adjustments` | Adjust the plan between visits | Practitioner | 201 · 400 · 401 · 403 · 404 · 409 |
+| `POST` | `/api/v1/nutritional-assessments` | Record a nutritional assessment (deprecated) | Practitioner | 201 · 400 · 401 · 403 · 500 |
+| `POST` | `/api/v1/nutritional-assessments/{assessmentId}/clinical-measurements` | Take a clinical measurement (deprecated) | Practitioner | 201 · 400 · 401 · 403 · 404 · 409 |
+| `POST` | `/api/v1/nutritional-assessments/{assessmentId}/closure` | Close the assessment (deprecated) | Practitioner | 200 · 401 · 403 · 404 · 409 |
+| `GET` | `/api/v1/nutritional-assessments/{assessmentId}` | Get an assessment | Practitioner | 200 · 401 · 403 · 404 |
+| `POST` | `/api/v1/nutritional-diagnoses` | Issue a nutritional diagnosis (deprecated) | Practitioner | 201 · 400 · 401 · 403 · 404 · 409 · 422 |
+
+**Food Catalog: catálogo de alimentos (5 operaciones)**
+
+<p class="caption"><strong>Tabla 251</strong><br><em>Operaciones documentadas en Swagger: Food Catalog: catálogo de alimentos</em></p>
+
+| Método | Ruta | Descripción en Swagger | Acceso | Respuestas |
+|---|---|---|---|---|
+| `GET` | `/api/v1/patients/{patientId}/local-food-catalog` | Get the local food catalog of a patient | Patient | 200 · 401 · 403 |
+| `GET` | `/api/v1/reference-foods` | Search the food catalog | Anónimo | 200 · 500 |
+| `GET` | `/api/v1/reference-foods/{referenceFoodId}` | Get one catalog entry | Anónimo | 200 · 404 |
+| `POST` | `/api/v1/reference-foods/local-overrides` | Create a local override | Practitioner | 201 · 400 · 401 · 403 · 409 |
+| `POST` | `/api/v1/reference-foods/catalog-imports` | Request a catalog import | Practitioner | 202 · 401 · 403 · 422 · 503 |
+
+**Intake & Body Response: diario y respuesta corporal (15 operaciones)**
+
+<p class="caption"><strong>Tabla 252</strong><br><em>Operaciones documentadas en Swagger: Intake &amp; Body Response: diario y respuesta corporal</em></p>
+
+| Método | Ruta | Descripción en Swagger | Acceso | Respuestas |
+|---|---|---|---|---|
+| `POST` | `/api/v1/diary-entries/photo-logs` | Log a meal from a photo | Patient | 201 · 400 · 401 · 403 · 404 · 409 · 422 |
+| `POST` | `/api/v1/diary-entries/manual-logs` | Log a meal by hand | Patient | 201 · 400 · 401 · 403 · 409 · 422 |
+| `POST` | `/api/v1/diary-entries/manual-logs/batch` | Log a meal of several foods | Patient | 201 · 400 · 401 · 403 · 409 · 422 · 500 |
+| `POST` | `/api/v1/diary-entries/off-plan-logs` | Log an off-plan meal (deprecated) | Patient | 201 · 400 · 401 · 403 · 422 |
+| `POST` | `/api/v1/diary-entries/{diaryEntryId}/estimate-confirmation` | Confirm the proposed estimate | Patient | 200 · 400 · 401 · 403 · 404 · 409 · 422 |
+| `POST` | `/api/v1/diary-entries/{diaryEntryId}/estimate-adjustment` | Adjust the proposed estimate | Patient | 200 · 400 · 401 · 403 · 404 · 409 · 422 |
+| `POST` | `/api/v1/diary-entries/synchronization` | Synchronise the entries queued offline | Patient | 200 · 401 · 403 |
+| `GET` | `/api/v1/patients/{patientId}/active-targets` | Get the active targets of a patient | Patient | 200 · 401 · 403 · 404 |
+| `GET` | `/api/v1/patients/{patientId}/diary-entries` | Get the diary of a patient | Patient | 200 · 401 · 403 |
+| `GET` | `/api/v1/patients/{patientId}/weight-trend` | Get the weight trend of a patient | Patient | 200 · 401 · 403 · 404 |
+| `GET` | `/api/v1/patients/{patientId}/pending-sync-queue` | Get the entries still waiting to be reconciled | Patient | 200 · 401 · 403 |
+| `POST` | `/api/v1/patients/{patientId}/meal-ideas` | Generate meal ideas for what is left today | Patient | 200 · 400 · 401 · 403 · 404 · 422 · 429 · 500 · 502 · 503 |
+| `POST` | `/api/v1/patients/{patientId}/meal-photo-analyses` | Recognize the dish of a meal photo | Patient | 201 · 400 · 401 · 403 · 413 · 422 · 429 · 500 · 503 |
+| `POST` | `/api/v1/self-weigh-ins` | Record a self weigh-in | Patient | 201 · 400 · 401 · 403 |
+| `POST` | `/api/v1/self-weigh-ins/synchronization` | Synchronise the self weigh-ins queued offline | Patient | 200 · 401 · 403 |
+
+**Monitoring & Adherence: interpretación y seguimiento (20 operaciones)**
+
+<p class="caption"><strong>Tabla 253</strong><br><em>Operaciones documentadas en Swagger: Monitoring &amp; Adherence: interpretación y seguimiento</em></p>
+
+| Método | Ruta | Descripción en Swagger | Acceso | Respuestas |
+|---|---|---|---|---|
+| `POST` | `/api/v1/patients/{patientId}/consistency-index/prompt-acknowledgement` | Acknowledge the consistency prompt | Patient | 204 · 401 · 403 · 409 · 500 |
+| `PUT` | `/api/v1/scheduled-follow-ups/{followUpId}/check-in` | Send or edit the check in of a visit | Patient | 200 · 400 · 401 · 403 · 404 · 409 |
+| `GET` | `/api/v1/scheduled-follow-ups/{followUpId}/check-in` | Get the check in of a visit | Patient o Practitioner vinculado | 200 · 401 · 403 · 404 |
+| `GET` | `/api/v1/patients/{patientId}/weekly-summaries/latest` | Get the latest weekly summary | Patient | 200 · 401 · 403 · 404 · 503 |
+| `GET` | `/api/v1/patients/{patientId}/suggested-questions` | Get questions to bring to the visit | Patient | 200 · 401 · 403 · 404 · 429 · 502 · 503 |
+| `GET` | `/api/v1/patients/{patientId}/monitoring-summary` | Get the monitoring summary of a patient | Practitioner | 200 · 400 · 401 · 403 · 429 · 502 · 503 |
+| `GET` | `/api/v1/patients/{patientId}/evaluation-windows` | Get the evaluation windows of a patient | Patient o Practitioner vinculado | 200 · 401 · 403 |
+| `GET` | `/api/v1/patients/{patientId}/evaluation-windows/current` | Get the evaluation window that is still counting | Patient o Practitioner vinculado | 200 · 401 · 403 · 404 |
+| `GET` | `/api/v1/patients/{patientId}/daily-compliance` | Get the day-by-day outcome of a patient | Patient | 200 · 400 · 401 · 403 |
+| `GET` | `/api/v1/patients/{patientId}/deviations` | Get the deviations read from a patient window | Practitioner | 200 · 401 · 403 |
+| `GET` | `/api/v1/patients/{patientId}/consistency-index` | Get the consistency index of a patient | Patient | 200 · 401 · 403 · 422 |
+| `GET` | `/api/v1/patients/{patientId}/referrals` | Get the referrals of a patient | Patient o Practitioner vinculado | 200 · 401 · 403 |
+| `GET` | `/api/v1/patients/{patientId}/scheduled-follow-ups/next` | Get the next visit of a patient | Patient o Practitioner vinculado | 200 · 401 · 403 · 404 |
+| `GET` | `/api/v1/patients/{patientId}/scheduled-follow-ups` | Get the visits of a patient | Patient o Practitioner vinculado | 200 · 400 · 401 · 403 |
+| `POST` | `/api/v1/referrals` | Record a referral | Practitioner | 201 · 400 · 401 · 403 |
+| `POST` | `/api/v1/referrals/{referralId}/closure` | Close a referral | Practitioner | 200 · 401 · 404 · 409 · 500 |
+| `POST` | `/api/v1/scheduled-follow-ups` | Schedule a follow up | Practitioner | 201 · 400 · 401 · 403 · 409 |
+| `POST` | `/api/v1/scheduled-follow-ups/{followUpId}/cancellation` | Cancel a visit | Practitioner | 204 · 400 · 401 · 403 · 404 · 409 |
+| `POST` | `/api/v1/scheduled-follow-ups/{followUpId}/rescheduling` | Reschedule a visit | Practitioner | 200 · 400 · 401 · 403 · 404 · 409 |
+| `GET` | `/api/v1/practitioners/{practitionerId}/scheduled-follow-ups` | Get the agenda of a practitioner | Practitioner | 200 · 400 · 401 · 403 |
+
+**Read Models: vistas compuestas (5 operaciones)**
+
+<p class="caption"><strong>Tabla 254</strong><br><em>Operaciones documentadas en Swagger: Read Models: vistas compuestas</em></p>
+
+| Método | Ruta | Descripción en Swagger | Acceso | Respuestas |
+|---|---|---|---|---|
+| `GET` | `/api/v1/patients/{patientId}/consultations-overview` | Get the consultations of a patient | Patient o Practitioner vinculado | 200 · 401 · 403 |
+| `GET` | `/api/v1/patients/{patientId}/monitoring-panel` | Get the monitoring panel of a patient | Practitioner | 200 · 401 · 403 |
+| `GET` | `/api/v1/patients/{patientId}/record` | Get the unified record of a patient | Patient o Practitioner vinculado | 200 · 401 · 403 |
+| `GET` | `/api/v1/practitioners/{practitionerId}/patient-roster` | Get the patient roster of a practitioner | Practitioner | 200 · 401 · 403 |
+| `GET` | `/api/v1/patients/{patientId}/summary` | Get the summary of a patient | Practitioner | 200 · 401 · 403 |
+
+**Ejemplos de uso**
+
+Los valores de los ejemplos son datos de muestra. Los campos y tipos provienen del documento OpenAPI publicado.
+
+*1. Registrar una cuenta: `POST /api/v1/authentication/sign-up` (anónimo)*
+
+El cuerpo lleva el correo, la contraseña, el rol y los nombres. Si el correo ya existe, responde `409`; si algún dato no es válido, `400`.
+
+```json
+{
+  "email": "camila.rojas@ejemplo.com",
+  "password": "Str0ngPass!2026",
+  "role": "Patient",
+  "givenNames": "Camila",
+  "familyNames": "Rojas"
+}
+```
+
+Respuesta `201 Created`. La cuenta nueva queda en español y el registro no da acceso a datos clínicos hasta que exista un vínculo de cuidado.
+
+```json
+{
+  "userId": 12,
+  "email": "camila.rojas@ejemplo.com",
+  "role": "Patient",
+  "createdAt": "2026-10-09T15:02:11Z",
+  "givenNames": "Camila",
+  "familyNames": "Rojas",
+  "fullName": "Camila Rojas",
+  "preferredLanguage": "es"
+}
+```
+
+*2. Iniciar sesión: `POST /api/v1/authentication/sign-in` (anónimo)*
+
+El cuerpo lleva `email` y `password`. No pide el rol: el token lo trae de la cuenta. Tras cinco intentos fallidos la cuenta se bloquea y el servicio responde `401` con el código `AccountLocked`.
+
+```json
+{ "email": "camila.rojas@ejemplo.com", "password": "Str0ngPass!2026" }
+```
+
+Respuesta `200 OK`. `token` es el token de acceso; `refreshToken` se usa en `POST /authentication/token-refreshes` y rota en cada uso.
+
+```json
+{
+  "userId": 12,
+  "email": "camila.rojas@ejemplo.com",
+  "role": "Patient",
+  "sessionId": 40,
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "startedAt": "2026-10-09T15:03:40Z",
+  "givenNames": "Camila",
+  "familyNames": "Rojas",
+  "preferredLanguage": "es",
+  "refreshToken": "q7Zk...",
+  "expiresAt": "2026-10-09T15:33:40Z"
+}
+```
+
+<p class="caption"><strong>Figura 169</strong><br><em>Captura de Swagger: operación de inicio de sesión</em></p>
+
+![Swagger: iniciar sesión](../assets/img/chapter4/sprint1/swagger-sign-in.png)
+
+*3. Canjear una invitación: `POST /api/v1/invitations/redemption` (Patient)*
+
+El paciente escanea el QR que el nutricionista generó con `POST /api/v1/invitations`. El cuerpo lleva el `token` de la invitación y `replaceActiveLink`. Si el paciente ya tiene un nutricionista, responde `409` salvo que `replaceActiveLink` sea `true`; en ese caso el vínculo anterior termina en el mismo momento. Un emisor no puede canjear su propia invitación.
+
+```json
+{ "token": "INV-4F7K2", "replaceActiveLink": false }
+```
+
+Respuesta `201 Created`. El vínculo nace inactivo (`isActive: false`) hasta que el paciente dé su consentimiento con `POST /api/v1/care-links/{careLinkId}/consent`.
+
+```json
+{
+  "careLinkId": 7,
+  "patientId": 12,
+  "practitionerId": 3,
+  "isActive": false,
+  "hasConsent": false,
+  "establishedAt": "2026-10-09T15:10:02Z",
+  "aiProcessingGranted": false
+}
+```
+
+*4. Registrar una comida a mano: `POST /api/v1/diary-entries/manual-logs` (Patient)*
+
+El paciente debe indicar si la comida estaba en su plan (`InPlan`, `OffPlan` o `NotAnswered`). Si la aplicación envía su propio `clientEntryId`, reenviar la misma comida devuelve la entrada ya guardada y no crea otra.
+
+```json
+{
+  "patientId": 12,
+  "localTimestamp": "2026-10-09T13:05:00",
+  "referenceFoodId": 1,
+  "portionGrams": 180,
+  "planAdherence": "InPlan",
+  "clientEntryId": "0b1d2c4e-5f6a-4c8b-9d0e-1a2b3c4d5e6f"
+}
+```
+
+Respuesta `201 Created`. Lo escrito a mano cuenta como confirmado desde el inicio.
+
+```json
+{
+  "diaryEntryId": 85,
+  "patientId": 12,
+  "localTimestamp": "2026-10-09T13:05:00",
+  "localDate": "2026-10-09",
+  "provenance": "Manual",
+  "confirmedReferenceFoodId": 1,
+  "confirmedPortionGrams": 180,
+  "syncState": "Synced",
+  "planAdherence": "InPlan",
+  "isCountedTowardsTargets": true,
+  "foodName": "Arroz blanco cocido"
+}
+```
+
+*5. Consultar la tendencia de peso: `GET /api/v1/patients/{patientId}/weight-trend?weeks=4` (Patient)*
+
+El parámetro `weeks` va de 1 a 52 y vale 4 por defecto. El servicio no devuelve un «peso de hoy»: devuelve la serie, el cambio en el rango, la pendiente semanal y cuántas lecturas se dejaron fuera por no haberse tomado en ayunas. Responde `200`; `404` si el paciente no tiene lecturas.
+
+*6. Programar un seguimiento: `POST /api/v1/scheduled-follow-ups` (Practitioner)*
+
+El nutricionista se toma de la sesión y se exige un vínculo de cuidado activo. `scheduledFor` debe ser una fecha futura y `preparation` es opcional. Responde `201`, `400` si la fecha ya pasó y `409` si el paciente ya tiene una cita programada.
+
+```json
+{
+  "patientId": 12,
+  "scheduledFor": "2026-10-16T10:00:00",
+  "preparation": ["Fasting", "BringBloodTests"],
+  "modality": "InPerson"
+}
+```
+
+Solicitudes ejecutadas desde Swagger contra el servicio publicado:
+
+La búsqueda de alimentos es anónima y consulta primero el catálogo propio y, si hay pocos resultados, las bases externas. La respuesta `200` devuelve para cada alimento su identificador, nombre, energía y macronutrientes por 100 g. Las cabeceras de la respuesta muestran que el dominio se sirve a través de Cloudflare.
+
+<p class="caption"><strong>Figura 170</strong><br><em>Captura de Swagger: búsqueda en el catálogo de alimentos</em></p>
+
+![Swagger: búsqueda en el catálogo](../assets/img/chapter4/sprint1/swagger-reference-foods.png)
+
+Una operación protegida sin token responde `401` con un Problem Details cuyo código es `AuthenticationRequired`.
+
+<p class="caption"><strong>Figura 171</strong><br><em>Captura de Swagger: solicitud sin autenticación</em></p>
+
+![Swagger: solicitud sin autenticación](../assets/img/chapter4/sprint1/swagger-unauthorized.png)
+
+Commits relacionados con la documentación de servicios. La configuración de Swagger entró con el arranque de la aplicación y las anotaciones de cada operación con los commits de endpoints de cada bounded context:
+
+<p class="caption"><strong>Tabla 255</strong><br><em>Commits relacionados con la documentación de servicios</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Committed on |
+|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | abdff5a | feat(shared): add problem details, route convention and rate limiting | 29/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/platform-foundation` | c5a11b4 | feat(app): add composition root bootstrap | 29/09/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | 50f9d0e | feat(iam): add authentication, session and user endpoints | 01/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/identity-and-care-links` | 0b8b2e0 | feat(care-relationship): add invitation, care link and AI preference endpoints | 02/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | 018541e | feat(nutritional-care): add REST resources, transforms and ACL contract | 03/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/nutritional-care` | 31b6be9 | feat(nutritional-care): add clinical endpoints | 04/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | f8b13fd | feat(food-catalog): add reference food and local catalog endpoints | 05/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/food-catalog-and-intake` | a9e6b76 | feat(intake): add diary, weigh-in, meal idea and photo analysis endpoints | 06/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | 6d5e67f | feat(monitoring): add monitoring, follow-up, referral and AI summary endpoints | 07/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/monitoring-and-read-models` | 6c4d74c | feat(read-models): add composite view endpoints | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/usda-base-url-fix` | 44830dd | docs(readme): add project title and product overview | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/usda-base-url-fix` | f150130 | docs(readme): add architecture section | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/usda-base-url-fix` | ed5b9f3 | docs(readme): add bounded contexts section | 08/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/usda-base-url-fix` | e045ed1 | docs(readme): add running instructions | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/usda-base-url-fix` | 7417da2 | docs(readme): add configuration and tests section | 09/10/2026 |
 
 #### 4.2.1.8. Software Deployment Evidence for Sprint Review
 
