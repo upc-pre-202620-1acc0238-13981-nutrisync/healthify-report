@@ -1,0 +1,71 @@
+@startuml Healthify - Nutritional Care - Application (part 6 of 7)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Application layer (part 6 of 7)
+
+package "Healthify.Platform.NutritionalCare.Application" {
+
+  package "Internal.CommandServices" {
+    class StructuredAssessmentInput {
+      +{static} TryActivityLevel(code: string?, level: out ActivityLevel?): NutritionalCareError?
+      +{static} TryEatingHabits(dto: EatingHabitsDto?, habits: out EatingHabits?): NutritionalCareError?
+      +{static} TryBiochemistry(dto: BiochemistryDto?, panel: out BiochemistryPanel?): NutritionalCareError?
+      +{static} TryProtocolChecks(checks: IReadOnlyList<string>?, checklist: out MeasurementProtocolChecklist?): NutritionalCareError?
+      +{static} CheckPlausibleMeasurement(weightKg: decimal, waistCm: decimal?, bodyFatPercentage: decimal?): NutritionalCareError?
+    }
+    class TargetCalculation {
+      +{static} TryValidate(command: ProposeTargetsCommand, parameters: out ValidatedTargetParameters?): NutritionalCareError?
+      +{static} TryCalculate(bmrCalculator: IBmrCalculator, p: ValidatedTargetParameters, assessment: NutritionalAssessment, measurement: ClinicalMeasurement, basis: out CalculationBasis?, proposal: out TargetProposal?): NutritionalCareError?
+      +{static} BuildPrescription(plan: NutritionPlan, outcome: PrescriptionOutcome, energyKcal: decimal?, proteinG: decimal?, carbG: decimal?, fatG: decimal?, overrideReason: string?): PrescribedTargets
+    }
+    class ValidatedTargetParameters <<record>> {
+      -Equation: Equation
+      -ReferenceWeight: ReferenceWeight
+      -ActivityFactor: decimal
+      -Deficit: DeficitStrategy
+      -ProteinGramsPerKg: decimal
+      -FatPercentOfEnergy: decimal
+    }
+  }
+  package "Internal.EventHandlers" {
+    class OnAiProcessingConsentChangedNutritionalCareHandler {
+      +Handle(notification: AiProcessingConsentChanged, ct): Task
+    }
+  }
+  package "Internal.QueryServices" {
+    class ConsultationQueryService {
+      +Handle(query: GetConsultationByIdQuery, ct): Task<ConsultationDetails?>
+      +Handle(query: GetInProgressConsultationByPatientIdQuery, ct): Task<ConsultationDetails?>
+      +Handle(query: GetInProgressConsultationsByPatientIdsQuery, ct): Task<IReadOnlyList<Consultation>>
+      +Handle(query: GetConsultationsByPatientIdQuery, ct): Task<IReadOnlyList<ConsultationSummary>>
+      +Handle(query: GetConsultationGuidelineSuggestionsQuery, ct): Task<IReadOnlyList<string>>
+      +Handle(query: GetConsultationDiagnosisSuggestionQuery, ct): Task<DiagnosisSuggestion?>
+    }
+    class PatientBaselineQueryService {
+      +Handle(query: GetPatientBaselineByPatientIdQuery, ct): Task<PatientBaseline?>
+      +Handle(query: GetPatientBaselinesByPatientIdsQuery, ct): Task<IReadOnlyList<PatientBaseline>>
+    }
+  }
+  package "QueryServices" {
+    interface IConsultationQueryService {
+      +Handle(query: GetConsultationByIdQuery, ct): Task<ConsultationDetails?>
+      +Handle(query: GetInProgressConsultationByPatientIdQuery, ct): Task<ConsultationDetails?>
+      +Handle(query: GetInProgressConsultationsByPatientIdsQuery, ct): Task<IReadOnlyList<Consultation>>
+      +Handle(query: GetConsultationsByPatientIdQuery, ct): Task<IReadOnlyList<ConsultationSummary>>
+      +Handle(query: GetConsultationDiagnosisSuggestionQuery, ct): Task<DiagnosisSuggestion?>
+      +Handle(query: GetConsultationGuidelineSuggestionsQuery, ct): Task<IReadOnlyList<string>>
+    }
+  }
+}
+
+ConsultationQueryService -[hidden]down-> IConsultationQueryService
+ConsultationQueryService ..|> IConsultationQueryService
+OnAiProcessingConsentChangedNutritionalCareHandler -[hidden]down-> ConsultationQueryService
+StructuredAssessmentInput -[hidden]down-> OnAiProcessingConsentChangedNutritionalCareHandler
+
+@enduml

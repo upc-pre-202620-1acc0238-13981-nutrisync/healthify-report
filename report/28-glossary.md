@@ -4,6 +4,8 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 
 ## Metodologías de descubrimiento y diseño centrado en el usuario
 
+<p class="caption"><strong>Tabla 256</strong><br><em>Glosario: Metodologías de descubrimiento y diseño centrado en el usuario</em></p>
+
 | Término | Definición |
 |---|---|
 | **Benchmark / Análisis competitivo** | Estudio comparativo de soluciones existentes en el mercado (por ejemplo, Nutrimind y Nutrium) para identificar fortalezas, debilidades y oportunidades de diferenciación del producto. |
@@ -23,6 +25,8 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 
 ## Gestión ágil y especificación de requisitos
 
+<p class="caption"><strong>Tabla 257</strong><br><em>Glosario: Gestión ágil y especificación de requisitos</em></p>
+
 | Término | Definición |
 |---|---|
 | **Criterios de aceptación** | Condiciones verificables, generalmente redactadas en formato Given/When/Then, que una historia de usuario debe cumplir para considerarse terminada. |
@@ -38,6 +42,8 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **User Story (Historia de usuario)** | Descripción breve de una funcionalidad desde la perspectiva de quien la necesita, con la forma "Como… quiero… para…". |
 
 ## Domain-Driven Design estratégico
+
+<p class="caption"><strong>Tabla 258</strong><br><em>Glosario: Domain-Driven Design estratégico</em></p>
 
 | Término | Definición |
 |---|---|
@@ -70,6 +76,8 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 
 ## Domain-Driven Design táctico y patrones de diseño
 
+<p class="caption"><strong>Tabla 259</strong><br><em>Glosario: Domain-Driven Design táctico y patrones de diseño</em></p>
+
 | Término | Definición |
 |---|---|
 | **Aggregate / Aggregate Root** | Grupo de objetos de dominio tratados como una unidad de consistencia; la raíz es la única entrada desde el exterior y la responsable de hacer cumplir las reglas de negocio. |
@@ -98,6 +106,8 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 
 ## Arquitectura de software y diagramas
 
+<p class="caption"><strong>Tabla 260</strong><br><em>Glosario: Arquitectura de software y diagramas</em></p>
+
 | Término | Definición |
 |---|---|
 | **Application Layer** | Capa que orquesta los casos de uso: recibe comandos y consultas, coordina agregados y repositorios, y publica eventos. No contiene reglas de negocio. |
@@ -122,6 +132,8 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 
 ## Tecnologías, backend y seguridad
 
+<p class="caption"><strong>Tabla 261</strong><br><em>Glosario: Tecnologías, backend y seguridad</em></p>
+
 | Término | Definición |
 |---|---|
 | **API REST** | Interfaz de programación basada en HTTP que expone recursos mediante URL y verbos (`GET`, `POST`, `PUT`, `DELETE`). |
@@ -139,7 +151,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Interceptor** | Componente de EF Core que intercepta operaciones de persistencia para aplicar lógica transversal, como auditoría o normalización a UTC. |
 | **JWT Bearer** | Esquema de autenticación en el que el cliente envía un token JWT en la cabecera `Authorization` de cada petición. |
 | **Localización (.resx)** | Mecanismo de .NET para traducir mensajes a varios idiomas mediante archivos de recursos; el proyecto soporta español e inglés. |
-| **ML Kit** | Kit de aprendizaje automático de Google que se ejecuta en el dispositivo móvil; en Healthify se usa para proponer la estimación de porción a partir de una fotografía. |
+| **ML Kit** | Kit de aprendizaje automático de Google que se ejecuta en el dispositivo móvil; en Healthify se usa únicamente para leer el código QR de invitación. La estimación de porción a partir de una fotografía la realiza el servidor con un modelo de IA generativa. |
 | **MySQL** | Sistema gestor de bases de datos relacional utilizado para la persistencia de la plataforma (versión 8.4). |
 | **Open Food Facts** | Base de datos colaborativa y abierta de productos alimenticios, utilizada como fuente externa del catálogo nutricional. |
 | **ProblemDetails** | Formato estándar (RFC 7807, actualizado por RFC 9457) para describir errores en respuestas HTTP de una API. |
@@ -151,6 +163,8 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Value Converter** | Mecanismo de EF Core que transforma un value object en un tipo primitivo al guardar y lo reconstruye al leer. |
 
 ## Diseño de producto e interfaces (UI/UX)
+
+<p class="caption"><strong>Tabla 262</strong><br><em>Glosario: Diseño de producto e interfaces (UI/UX)</em></p>
 
 | Término | Definición |
 |---|---|
@@ -174,6 +188,8 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Wireframe** | Esquema de baja fidelidad que representa la estructura y distribución de los elementos de una pantalla, sin detalle visual. |
 
 ## Términos del dominio de Healthify
+
+<p class="caption"><strong>Tabla 263</strong><br><em>Glosario: Términos del dominio de Healthify</em></p>
 
 | Término | Definición |
 |---|---|
@@ -200,6 +216,8 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 | **Weight Trend (Tendencia de peso)** | Suavizado estadístico (media móvil) de los autopesajes; único formato en que el peso del paciente se presenta. |
 
 ## Abreviaturas y acrónimos
+
+<p class="caption"><strong>Tabla 264</strong><br><em>Glosario: Abreviaturas y acrónimos</em></p>
 
 | Sigla | Significado | Descripción breve |
 |---|---|---|

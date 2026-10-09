@@ -1,0 +1,30 @@
+@startuml Healthify - Intake and Body Response - Application (part 4 of 4)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Intake and Body Response - Application layer (part 4 of 4)
+
+package "Healthify.Platform.IntakeBodyResponse.Application" {
+
+  package "Internal.EventHandlers" {
+    class MealPhotoAnalysesPurge {
+      +{static} Run(scopeFactory: IServiceScopeFactory, logger: ILogger, patientId: int, ct): Task
+    }
+    class OnAiPreferencesChangedIntakeHandler {
+      +Handle(notification: AiPreferencesChanged, ct): Task
+    }
+    class OnAiProcessingConsentChangedIntakeHandler {
+      +Handle(notification: AiProcessingConsentChanged, ct): Task
+    }
+    class OnSelfWeighInBatchSynchronizedHandler {
+      +Handle(notification: SelfWeighInBatchSynchronized, ct): Task
+    }
+  }
+}
+
+
+@enduml

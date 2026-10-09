@@ -1,0 +1,69 @@
+@startuml Healthify - Nutritional Care - Interfaces (part 2 of 3)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Interfaces layer (part 2 of 3)
+
+package "Healthify.Platform.NutritionalCare.Interfaces" {
+
+  package "Acl" {
+    class ActiveDiagnosisItem <<record>> {
+      -DiagnosisId: int
+      -Code: string?
+      -Statement: string
+      -IssuedAt: DateTimeOffset
+    }
+    class ActiveGuidelineItem <<record>> {
+      -Code: string?
+      -Custom: string?
+    }
+    class ClinicalEvaluationItem <<record>> {
+      -AssessmentId: int
+      -TakenAt: DateTimeOffset
+      -WeightKg: decimal
+      -BmiKgM2: decimal
+      -BmiCategory: string
+      -WaistCircumferenceCm: decimal?
+      -IsFirst: bool
+    }
+    class ClinicalMeasurementItem <<record>> {
+      -TakenAt: DateTimeOffset
+      -WeightKg: decimal
+      -ProtocolChecks: IReadOnlyList<string>
+      -Protocol: string
+    }
+    class CompletedConsultationItem <<record>> {
+      -ConsultationId: int
+      -CompletedAt: DateTimeOffset
+      -PlanVersion: int?
+      -IsFirstConsultation: bool
+    }
+    class ConsultationInProgressItem <<record>> {
+      -ConsultationId: int
+      -StepNumber: int
+      -StepName: string
+      -LastSavedAt: DateTimeOffset
+    }
+    class PatientBaselineSummaryItem <<record>> {
+      -PatientId: int
+      -BiologicalSex: string
+      -AgeYears: int
+      -HeightCm: decimal
+      -Conditions: IReadOnlyList<string>
+    }
+    class PatientCareStatusItem <<record>> {
+      -PatientId: int
+      -HasBaseline: bool
+      -ActivePlanVersion: int?
+      -HasConsultationInProgress: bool
+      -HasOpenReviewItem: bool
+    }
+  }
+}
+
+
+@enduml

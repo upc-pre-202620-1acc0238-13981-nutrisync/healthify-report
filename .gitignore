@@ -1,0 +1,15 @@
+# Python (scripts de generación de diagramas)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Exportaciones locales del informe (markdown-pdf)
+*.pdf
+!assets/**/*.pdf
+
+# Sistema operativo
+Thumbs.db
+desktop.ini
+.DS_Store
+*:Zone.Identifier

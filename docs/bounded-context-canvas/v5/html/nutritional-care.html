@@ -1,0 +1,47 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1920px;height:1080px;font-family:'Segoe UI','Open Sans',Arial,sans-serif;color:#000;background:#fff}
+.canvas{position:absolute;inset:0;border:6px solid #000;display:grid;grid-template-columns:870px 607px 1fr;grid-template-rows:92px 192px 598px 1fr}
+.cell{border:2px solid #000;padding:12px 18px;overflow:hidden}
+h2{font-size:34px;font-weight:700;line-height:1.15;margin-bottom:8px}
+.head{grid-column:1/4;display:flex;justify-content:space-between;align-items:center;padding:0 22px}
+.head h1{font-size:44px}
+.ver{font-size:20px;color:#555}
+p,li{font-size:20px;line-height:1.35}
+ul{list-style:none}
+.purpose p{font-size:20px}
+.cls{display:flex;gap:26px}
+.cls div span{display:block;font-size:19px;color:#666}
+.cls div b{font-size:27px}
+.roles li{font-size:18px;margin-bottom:4px}
+.row3{grid-column:1/4;display:grid;grid-template-columns:690px 540px 1fr;border:2px solid #000;position:relative}
+.row3>.side{padding:12px 18px;overflow:hidden}
+.center{border:2px solid #000;margin:14px 0;padding:12px 20px;overflow:hidden}
+.center h2{font-size:32px}
+.center ul li{font-size:17px;line-height:1.3;margin-bottom:5px}
+.center .bd{margin-top:14px}
+.grp{margin-bottom:9px}
+.grp .who{font-size:19px;font-weight:700}
+.grp .who i{font-weight:400;color:#555;font-style:normal}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.chip{font-size:15.5px;padding:3px 9px;border-radius:3px;border:1.5px solid}
+.command{background:#cfe3ff;border-color:#7ba7e6}
+.query{background:#dcefb0;border-color:#9bc23f}
+.event{background:#fbeaa6;border-color:#d6b73c}
+.legend{font-size:14px;color:#555;margin-top:2px}
+.small li{font-size:18px;margin-bottom:4px}
+.row4 .cell h2{font-size:30px}
+</style></head><body><div class="canvas">
+<div class="cell head"><h1>Name: Nutritional Care</h1><span class="ver">V5 · github.com/ddd-crew/bounded-context-canvas</span></div>
+<div class="cell purpose"><h2>Purpose</h2><p>Support the complete clinical act: assessment, diagnosis, prescription and plan adjustment between visits. The practitioner runs a guided consultation, publishes a plan, and reviews the signals that arrive between visits.</p></div>
+<div class="cell"><h2>Strategic Classification</h2><div class="cls"><div><span>Domain</span><b>Supporting</b></div><div><span>Business Model</span><b>Compliance</b></div><div><span>Evolution</span><b>Custom built</b></div></div></div>
+<div class="cell"><h2>Domain Roles</h2><ul class="roles"><li>Execution: carries out the clinical act.</li><li>Specification: publishes the Active Targets contract.</li></ul></div>
+<div class="row3">
+<div class="side"><h2>Inbound Communication</h2><div class="grp"><div class="who">Practitioner app (REST)</div><div class="chips"><span class="chip command">Record Baseline</span><span class="chip command">Start Consultation</span><span class="chip command">Take Clinical Measurement</span><span class="chip command">Issue Diagnosis</span><span class="chip command">Prescribe Targets</span><span class="chip command">Publish Nutrition Plan</span><span class="chip command">Resolve Review Item</span><span class="chip query">Get Review Inbox</span></div></div><div class="grp"><div class="who">Patient app (REST)</div><div class="chips"><span class="chip query">Get Active Targets</span><span class="chip query">Get Plan Versions</span></div></div><div class="grp"><div class="who">Monitoring &amp; Adherence <i>· Events only</i></div><div class="chips"><span class="chip event">Sustained Deviation Detected</span><span class="chip event">Alert Escalated To Practitioner</span></div></div><div class="grp"><div class="who">Care Relationship <i>· Open Host Service</i></div><div class="chips"><span class="chip query">Is Care Link Active</span></div></div><div class="grp"><div class="who">IAM <i>· Conformist</i></div><div class="chips"><span class="chip query">Role claim (session token)</span></div></div><div class="legend">Messages: command · query · event</div></div>
+<div class="center"><h2>Ubiquitous Language</h2><ul><li><b>Consultation:</b> a guided visit in four steps</li><li><b>Clinical Measurement:</b> what the practitioner measures today</li><li><b>Nutritional Diagnosis:</b> a coded diagnosis with its rationale</li><li><b>Active Targets:</b> the reduced contract the patient sees</li><li><b>Review Item:</b> a signal waiting in the practitioner&#x27;s inbox</li></ul><div class="bd"><h2>Business Decisions</h2><ul><li>A closed assessment is immutable; a correction creates a new one</li><li>No plan without an active diagnosis</li><li>Overriding a proposal requires a reason</li><li>Every adjustment requires a reason; old versions are kept</li><li>Diagnosis and calculation basis never leave the context</li><li>A review item never modifies the plan automatically</li></ul></div></div>
+<div class="side"><h2>Outbound Communication</h2><div class="grp"><div class="who">Intake, Monitoring, Care Relationship <i>· Published Language</i></div><div class="chips"><span class="chip event">Active Targets Updated</span></div></div><div class="grp"><div class="who">Monitoring &amp; Adherence <i>· Events</i></div><div class="chips"><span class="chip event">Clinical Measurement Taken</span><span class="chip event">Consultation Completed</span></div></div><div class="grp"><div class="who">AI module (Shared) <i>· technical</i></div><div class="chips"><span class="chip query">Suggest Diagnosis</span><span class="chip query">Suggest Guidelines</span><span class="chip query">Propose Plan For Deviation</span></div></div></div>
+</div>
+<div class="cell small"><h2>Assumptions</h2><ul><li>– Four guided steps cover a typical consultation</li><li>– Practitioners accept AI suggestions only as a starting point</li><li>– Patients need the result of the plan, not its procedure</li></ul></div>
+<div class="cell small"><h2>Verification Metrics</h2><ul><li>– Consultations published without leaving (%)</li><li>– Suggestions accepted or edited (%)</li><li>– Review items resolved per week</li></ul></div>
+<div class="cell small"><h2>Open Questions</h2><ul><li>– Should patients see why a target changed?</li><li>– Is one active diagnosis enough?</li><li>– When should the baseline be refreshed?</li></ul></div>
+</div></body></html>

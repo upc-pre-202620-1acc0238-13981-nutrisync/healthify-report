@@ -1,0 +1,66 @@
+@startuml Healthify - Nutritional Care - Application (part 2 of 7)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Application layer (part 2 of 7)
+
+package "Healthify.Platform.NutritionalCare.Application" {
+
+  package "Internal" {
+    class ConsultationPublicationOutcome <<record>> {
+      -Consultation: Consultation
+      -Plan: NutritionPlan
+      -Diagnosis: NutritionalDiagnosis
+      -Replayed: bool
+    }
+    class ConsultationSummary <<record>> {
+      -ConsultationId: int
+      -State: string
+      -StartedAt: DateTimeOffset
+      -CompletedAt: DateTimeOffset?
+      -PlanVersion: int?
+      -IsFirstConsultation: bool
+      -WeightKg: decimal?
+      -Bmi: decimal?
+      -WaistCm: decimal?
+    }
+    class ConsultationTargetProposalOutcome <<record>> {
+      -Consultation: Consultation
+      -Plan: NutritionPlan
+      -Inputs: TargetInputsSummary
+      -ActivePlanLegacyRestrictions: IReadOnlyList<string>
+    }
+    class ConsultationTargetsOutcome <<record>> {
+      -Consultation: Consultation
+      -Plan: NutritionPlan
+    }
+    class DiagnosisSuggestion <<record>> {
+      -Code: string
+      -Rationale: string
+      -Source: string
+      -AiGenerationId: long?
+      +RuleSource: string
+      +AiSource: string
+    }
+    class DiagnosisSuggestionOutput <<record>> {
+      -Code: string
+      -Rationale: string
+    }
+    class DiagnosisSuggestionOutputValidator {
+      +MaximumRationaleLength: int
+      +Validate(output: DiagnosisSuggestionOutput): IReadOnlyList<string>
+    }
+    class GuidelineSuggestions <<record>> {
+      -Suggested: IReadOnlyList<string>
+      -Source: string
+      -AiGenerationId: long?
+    }
+  }
+}
+
+
+@enduml

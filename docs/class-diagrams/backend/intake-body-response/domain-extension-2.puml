@@ -1,0 +1,93 @@
+@startuml Healthify - Intake and Body Response - Domain (part 2 of 4)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Intake and Body Response - Domain layer (part 2 of 4)
+
+package "Healthify.Platform.IntakeBodyResponse.Domain" {
+
+  package "Model.Aggregates" {
+    class MealPhotoAnalysis {
+      +MaximumAlternatives: int
+      +MealPhotoAnalysis(patientId: int, referenceFoodId: int, estimatedGrams: decimal, confidence: Confidence, alternatives: IReadOnlyList<MealPhotoAlternative>, aiGenerationId: long, expiresAt: DateTimeOffset)
+      +Id: Guid
+      +PatientId: int
+      +ReferenceFoodId: int
+      +EstimatedGrams: decimal
+      +Confidence: decimal
+      +Alternatives: IReadOnlyList<MealPhotoAlternative>
+      +AiGenerationId: long
+      +ExpiresAt: DateTimeOffset
+      +BelongsTo(patientId: int): bool
+      +IsExpiredAt(now: DateTimeOffset): bool
+    }
+  }
+  package "Model.ValueObjects" {
+    class CachedGuideline <<record>> {
+      +CachedGuideline(code: string?, custom: string?)
+      +Code: string?
+      +Custom: string?
+      +ToString(): string
+    }
+    class CachedPlanChange <<record>> {
+      +CachedPlanChange(type: string, code: string?, custom: string?, macro: string?, from: decimal?, to: decimal?)
+      +Type: string
+      +Code: string?
+      +Custom: string?
+      +Macro: string?
+      +From: decimal?
+      +To: decimal?
+    }
+    class EntryOrigin <<record>> {
+      +MealIdea: string
+      +MaximumLength: int
+      +EntryOrigin(value: string)
+      +Value: string
+      +IsMealIdea: bool
+      +ToString(): string
+    }
+    class MealIdea <<record>> {
+      -MealIdeaId: string
+      -Name: string
+      -EnergyKcal: decimal
+      -ProteinG: decimal
+      -CarbG: decimal
+      -FatG: decimal
+      -Ingredients: IReadOnlyList<MealIdeaIngredient>
+      -Why: string
+      -NutrientsFromCatalog: bool
+    }
+    class MealIdeaIngredient <<record>> {
+      -Name: string
+      -Grams: decimal
+      -ReferenceFoodId: int?
+      -CatalogName: string?
+      +IsResolved: bool
+    }
+    class MealPhoto {
+      +Jpeg: string
+      +WebP: string
+      +MealPhoto(bytes: byte[])
+      +Bytes: byte[]
+      +MimeType: string
+      +IsJpeg: bool
+      +{static} DetectFormat(bytes: ReadOnlySpan<byte>): string?
+      +ToString(): string
+    }
+    class MealPhotoAlternative <<record>> {
+      +MaximumNameLength: int
+      +MealPhotoAlternative(name: string, grams: decimal, referenceFoodId: int?)
+      +Name: string
+      +Grams: decimal
+      +ReferenceFoodId: int?
+    }
+  }
+}
+
+MealPhotoAnalysis -[hidden]down-> CachedGuideline
+
+@enduml

@@ -100,6 +100,11 @@ package "Healthify.Platform.MonitoringAdherence.Domain" {
       -MoveTo(nextState: string): bool
       -{static} Later(a: DateOnly, b: DateOnly): DateOnly
       -{static} Earlier(a: DateOnly, b: DateOnly): DateOnly
+      +PromptIssuedAt: DateTimeOffset?
+      +IsPatientPromptPending: bool
+      +MarkShownToPatient(at: DateTimeOffset): bool
+      +ShownToPatientAtLeast(days: int, asOf: DateTimeOffset): bool
+      +WeeksInAlertAt(asOf: DateTimeOffset): int?
     }
 
     class Referral {
@@ -113,6 +118,12 @@ package "Healthify.Platform.MonitoringAdherence.Domain" {
       -UpdatedAt: DateTimeOffset?
       #Referral()
       +Referral(command: RecordReferralCommand)
+      +Open: string
+      +Closed: string
+      +Status: string
+      +ClosedAt: DateTimeOffset?
+      +IsOpen: bool
+      +Close(at: DateTimeOffset): void
     }
 
     class ScheduledFollowUp {
@@ -128,6 +139,19 @@ package "Healthify.Platform.MonitoringAdherence.Domain" {
       #ScheduledFollowUp()
       +ScheduledFollowUp(command: ScheduleFollowUpCommand)
       +MarkMissed(asOf: DateTimeOffset): bool
+      +CancelledByPractitionerReason: string
+      +DischargedReason: string
+      +SwitchedPractitionerReason: string
+      +Modality: ConsultationModality
+      +ScheduledAt: DateTimeOffset?
+      +CompletedAt: DateTimeOffset?
+      +CompletedByConsultationId: int?
+      +CancelledAt: DateTimeOffset?
+      +CancellationReason: string?
+      +AcceptsCheckInAt(now: DateTimeOffset): bool
+      +MarkCompleted(consultationId: int, at: DateTimeOffset): bool
+      +Cancel(reason: string): void
+      +Reschedule(newMoment: DateTimeOffset, preparation: IReadOnlyList<string>?): void
     }
   }
 

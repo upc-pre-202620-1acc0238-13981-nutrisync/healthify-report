@@ -1,0 +1,28 @@
+@startuml Healthify - Care Relationship - Interfaces (part 1 of 2)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Care Relationship - Interfaces layer (part 1 of 2)
+
+package "Healthify.Platform.CareRelationship.Interfaces" {
+
+  class "REST.Resources (3)" as REST_Resources <<messages>> {
+    AiPreferencesResource
+    ChangeAiProcessingConsentResource
+    UpdateAiPreferencesResource
+  }
+  class "REST.Transform (3)" as REST_Transform <<messages>> {
+    AiPreferencesResourceAssembler
+    ChangeAiProcessingConsentCommandAssembler
+    UpdateAiPreferencesCommandAssembler
+  }
+
+}
+
+REST_Resources -[hidden]down-> REST_Transform
+
+@enduml

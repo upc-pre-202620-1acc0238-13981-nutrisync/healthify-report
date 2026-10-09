@@ -22,6 +22,15 @@ TABLE(nutritional_assessments, "nutritional_assessments") {
   biological_sex : VARCHAR(10) NOT NULL
   FK(supersedes_assessment_id) : INT
   closed_at : DATETIME
+  activity_level : VARCHAR(15)
+  conditions_snapshot : JSON
+  FK(consultation_id) : INT
+  glucose_mg_dl : DECIMAL(6,1)
+  meals_out_per_week : INT
+  meals_per_day : INT
+  total_cholesterol_mg_dl : DECIMAL(6,1)
+  triglycerides_mg_dl : DECIMAL(6,1)
+  water_liters_per_day : DECIMAL(4,2)
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -36,6 +45,9 @@ TABLE(clinical_measurements, "clinical_measurements") {
   body_fat_percentage : DECIMAL(10,2)
   waist_circumference_cm : DECIMAL(10,2)
   taken_at : DATETIME NOT NULL
+  bmi : DECIMAL(5,1) NOT NULL
+  bmi_category : VARCHAR(20) NOT NULL
+  protocol_checks : JSON
 }
 
 TABLE(nutritional_diagnoses, "nutritional_diagnoses") {
@@ -48,6 +60,12 @@ TABLE(nutritional_diagnoses, "nutritional_diagnoses") {
   rationale : VARCHAR(2000) NOT NULL
   issued_at : DATETIME NOT NULL
   superseded_at : DATETIME
+  FK(ai_generation_id) : BIGINT
+  bmi_at_issue : DECIMAL(4,1)
+  code : VARCHAR(30)
+  discarded_at : DATETIME
+  FK(pending_consultation_id) : INT
+  source : VARCHAR(30)
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -83,6 +101,13 @@ TABLE(nutrition_plans, "nutrition_plans") {
   is_active : TINYINT(1) NOT NULL
   guidelines : JSON NOT NULL
   restrictions : JSON NOT NULL
+  change_reason_code : VARCHAR(30)
+  change_reason_data : JSON
+  discarded_at : DATETIME
+  dropped_legacy_restrictions : JSON
+  legacy_restrictions : JSON NOT NULL
+  patient_change_summary : JSON
+  patient_message : VARCHAR(500)
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -98,6 +123,73 @@ TABLE(review_items, "review_items") {
   resolved_with_adjustment : TINYINT(1)
   resolved_at : DATETIME
   resolution_note : VARCHAR(1000)
+  evidence_data : JSON
+  recheck_due_at : DATETIME
+  recheck_issued_at : DATETIME
+  resolution_note_code : VARCHAR(30)
+  resolution_note_data : JSON
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(consultations, "consultations") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  abandoned_at : DATETIME
+  FK(assessment_id) : INT
+  completed_at : DATETIME
+  current_step : VARCHAR(20) NOT NULL
+  FK(diagnosis_id) : INT
+  idempotency_key : VARCHAR(64)
+  FK(in_progress_patient_id) : INT
+  is_first_consultation : TINYINT(1) NOT NULL
+  last_saved_at : DATETIME NOT NULL
+  FK(patient_id) : INT NOT NULL
+  FK(plan_id) : INT
+  FK(practitioner_id) : INT NOT NULL
+  publication_draft : JSON
+  published_plan_version : INT
+  FK(scheduled_follow_up_id) : INT
+  started_at : DATETIME NOT NULL
+  state : VARCHAR(20) NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(patient_baselines, "patient_baselines") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  biological_sex : VARCHAR(10) NOT NULL
+  birth_date : DATE NOT NULL
+  birth_date_estimated : TINYINT(1) NOT NULL
+  conditions : JSON NOT NULL
+  height_cm : DECIMAL(5,1) NOT NULL
+  FK(patient_id) : INT NOT NULL
+  recorded_by : INT NOT NULL
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+TABLE(review_item_plan_proposals, "review_item_plan_proposals") {
+  PK(id) : INT AUTO_INCREMENT
+  --
+  added_guidelines : JSON NOT NULL
+  FK(ai_generation_id) : BIGINT NOT NULL
+  assigned_plan_version : INT
+  generated_at : DATETIME NOT NULL
+  patient_language : VARCHAR(5)
+  patient_message : VARCHAR(500) NOT NULL
+  practitioner_language : VARCHAR(5)
+  proposed_carb_g : DECIMAL(10,2) NOT NULL
+  proposed_energy_kcal : DECIMAL(10,2) NOT NULL
+  proposed_fat_g : DECIMAL(10,2) NOT NULL
+  proposed_protein_g : DECIMAL(10,2) NOT NULL
+  rationale : VARCHAR(600) NOT NULL
+  recheck_after_days : INT NOT NULL
+  removed_guidelines : JSON NOT NULL
+  FK(review_item_id) : INT NOT NULL
+  status : VARCHAR(20) NOT NULL
+  title : VARCHAR(120) NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -106,6 +198,10 @@ EXT(users, "users  (IAM)") {
   PK(id) : INT
   --
   role : VARCHAR(20)
+}
+
+EXT(ai_generations, "ai_generations  (Shared)") {
+  PK(id) : INT
 }
 
 nutritional_assessments ||--o{ clinical_measurements : "Anthropometry"
@@ -118,5 +214,12 @@ users ||..o{ nutritional_assessments : "patient_id / practitioner_id"
 users ||..o{ nutritional_diagnoses : "patient_id / practitioner_id"
 users ||..o{ nutrition_plans : "patient_id / practitioner_id"
 users ||..o{ review_items : "patient_id / practitioner_id"
+
+users ||..o| patient_baselines : "patient_id"
+users ||..o{ consultations : "patient_id / practitioner_id"
+consultations ||..o| nutritional_assessments : "consultation_id"
+consultations ||..o{ nutritional_diagnoses : "pending_consultation_id"
+review_items ||..o| review_item_plan_proposals : "review_item_id"
+ai_generations ||..o{ nutritional_diagnoses : "ai_generation_id"
 
 @enduml

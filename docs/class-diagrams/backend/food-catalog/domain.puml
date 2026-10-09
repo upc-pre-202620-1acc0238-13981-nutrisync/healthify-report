@@ -26,6 +26,12 @@ package "Healthify.Platform.FoodCatalog.Domain" {
       +ReferenceFood(command: CreateLocalOverrideCommand)
       +RefreshFromUpstream(localName: LocalName, nutrients: NutrientsPer100g): void
       -StoreNutrients(nutrients: NutrientsPer100g): void
+      +{static} AiEstimated(localName: LocalName, nutrients: NutrientsPer100g, aiGenerationId: long, tolerance: NutrientTolerance?): ReferenceFood
+      +Source: FoodSource
+      +IsVerified: bool
+      +VerifiedBy: int?
+      +AiGenerationId: long?
+      +IsProtectedFromImport: bool
     }
   }
 

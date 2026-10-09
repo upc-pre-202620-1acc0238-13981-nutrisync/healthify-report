@@ -1,0 +1,70 @@
+@startuml Healthify - Nutritional Care - Domain (part 5 of 6)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Domain layer (part 5 of 6)
+
+package "Healthify.Platform.NutritionalCare.Domain" {
+
+  package "Model.ValueObjects" {
+    class PublicationDraft <<record>> {
+      +PublicationDraft(restrictions: IEnumerable<string>?, guidelines: IEnumerable<string>?, customGuidelines: IEnumerable<string>?, patientMessage: string?)
+      +Restrictions: IReadOnlyList<string>
+      +Guidelines: IReadOnlyList<string>
+      +CustomGuidelines: IReadOnlyList<string>
+      +PatientMessage: string?
+      +Equals(other: PublicationDraft?): bool
+      +GetHashCode(): int
+    }
+    class ResolutionNoteCode {
+      +Custom: string
+      +PlanAssignedAsIs: string
+      +PlanAssignedWithEdits: string
+      +ProposalDiscarded: string
+      +{static} All: IReadOnlyList<string>
+    }
+    class ResolutionNoteData <<record>> {
+      -PlanVersion: int?
+    }
+    class ReviewItemEvidence <<record>> {
+      +ReviewItemEvidence(averagePercentFromTarget: decimal?, deviatedDays: int?, loggedDaysConsidered: int?, direction: string?, adjustedOn: DateOnly?, adjustedPlanVersion: int?, averageEnergyKcalFromTarget: decimal?, consistencyKgPerWeek: decimal?, consistencyState: string?, alertSinceOn: DateOnly?, weeksInAlert: int?, shownToPatientOn: DateOnly?)
+      +Above: string
+      +Below: string
+      +AveragePercentFromTarget: decimal?
+      +DeviatedDays: int?
+      +LoggedDaysConsidered: int?
+      +Direction: string?
+      +AdjustedOn: DateOnly?
+      +AdjustedPlanVersion: int?
+      +AverageEnergyKcalFromTarget: decimal?
+      +ConsistencyKgPerWeek: decimal?
+      +ConsistencyState: string?
+    }
+  }
+  package "Repositories" {
+    interface IConsultationRepository {
+      +FindInProgressByPatientIdAsync(patientId: int, ct): Task<Consultation?>
+      +ListInProgressByPatientIdsAsync(patientIds: IReadOnlyCollection<int>, ct): Task<IReadOnlyList<Consultation>>
+      +ExistsCompletedForPatientAsync(patientId: int, ct): Task<bool>
+      +ListByPatientIdAsync(patientId: int, state: ConsultationState?, ct): Task<IEnumerable<Consultation>>
+    }
+    interface IPatientBaselineRepository {
+      +FindByPatientIdAsync(patientId: int, ct): Task<PatientBaseline?>
+      +ListByPatientIdsAsync(patientIds: IReadOnlyCollection<int>, ct): Task<IReadOnlyList<PatientBaseline>>
+    }
+  }
+  package "Services" {
+    interface IActivityFactorProvider {
+      +FactorFor(level: ActivityLevel): decimal
+    }
+  }
+}
+
+IConsultationRepository -[hidden]down-> IActivityFactorProvider
+PublicationDraft -[hidden]down-> IConsultationRepository
+
+@enduml

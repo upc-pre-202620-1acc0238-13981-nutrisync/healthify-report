@@ -27,6 +27,10 @@ package "Healthify.Platform.IntakeBodyResponse.Domain" {
       +ActiveTargetsCache(command: RefreshActiveTargetsCacheCommand)
       +Refresh(command: RefreshActiveTargetsCacheCommand): void
       -Apply(command: RefreshActiveTargetsCacheCommand): void
+      +GuidelineItems: IReadOnlyList<CachedGuideline>
+      +LegacyRestrictions: IReadOnlyList<string>
+      +ChangesFromPrevious: IReadOnlyList<CachedPlanChange>?
+      +PatientMessage: string?
     }
 
     class DiaryEntry {
@@ -63,6 +67,15 @@ package "Healthify.Platform.IntakeBodyResponse.Domain" {
       +MarkConflicted(): void
       +ResolveWithLatest(referenceFoodId, portionGrams, confirmedAt): bool
       -StoreConfirmation(referenceFoodId: int, portionGrams: decimal): void
+      +{static} LegacyOffPlan(patientId: int, localTimestamp: LocalTimestamp, syncState: SyncState, clientEntryId: Guid?): DiaryEntry
+      +PlanAdherence: PlanAdherence
+      +MealGroupId: Guid?
+      +Origin: EntryOrigin?
+      +MealPhotoAnalysisId: Guid?
+      +ProposedAiGenerationId: long?
+      +ConfirmFromLegacySync(estimate: ConfirmedEstimate): void
+      +JoinMealGroup(mealGroupId: Guid, origin: EntryOrigin?): void
+      +RecordPhotoAnalysis(analysisId: Guid, aiGenerationId: long): void
     }
 
     class SelfWeighIn {
@@ -82,6 +95,8 @@ package "Healthify.Platform.IntakeBodyResponse.Domain" {
       +LocalDate: DateOnly <<derived>>
       #SelfWeighIn()
       +SelfWeighIn(patientId, valueKg, localTimestamp, protocolCompliance)
+      +ClientEntryId: Guid?
+      +FollowsProtocolUnder(protocol: SelfWeighInProtocol): bool
     }
 
     class WeightTrend {
@@ -97,6 +112,9 @@ package "Healthify.Platform.IntakeBodyResponse.Domain" {
       #WeightTrend()
       +WeightTrend(patientId: int, windowSize: int = 7)
       +Recalculate(weighIns: IReadOnlyList<SelfWeighIn>): IReadOnlyList<int>
+      +SummarizeSince(from: DateOnly): WeightTrendSummary
+      +SummarizeLastWeeks(today: DateOnly, weeks: int, weighIns: IEnumerable<SelfWeighIn>, protocol: SelfWeighInProtocol?): WeightTrendRange
+      +SummarizeBetween(from: DateOnly, to: DateOnly, weighIns: IEnumerable<SelfWeighIn>, protocol: SelfWeighInProtocol?): WeightTrendRange
     }
   }
 

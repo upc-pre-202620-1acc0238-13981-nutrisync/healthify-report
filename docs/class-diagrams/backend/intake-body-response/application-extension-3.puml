@@ -1,0 +1,75 @@
+@startuml Healthify - Intake and Body Response - Application (part 3 of 4)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Intake and Body Response - Application layer (part 3 of 4)
+
+package "Healthify.Platform.IntakeBodyResponse.Application" {
+
+  package "Internal" {
+    class MealPhotoRecognitionOutput <<record>> {
+      -DishName: string
+      -EstimatedGrams: decimal
+      -Confidence: decimal
+      -Alternatives: IReadOnlyList<MealPhotoAlternativeOutput>
+      -NutrientsPer100g: MealPhotoNutrientsOutput
+    }
+    class MealPhotoRecognitionOutputValidator {
+      +MaximumNameLength: int
+      +Validate(output: MealPhotoRecognitionOutput): IReadOnlyList<string>
+    }
+    class SelfWeighInSyncOutcome <<record>> {
+      -PatientId: int
+      -Created: int
+      -AlreadyPresent: int
+      -Rejected: int
+      -Entries: IReadOnlyList<SyncedSelfWeighInOutcome>
+    }
+    class SyncedSelfWeighInOutcome <<record>> {
+      -ClientEntryId: Guid
+      -SelfWeighInId: int?
+      -Outcome: string
+      -Reason: string?
+    }
+    class WeightTrendView <<record>> {
+      -Trend: WeightTrend
+      -Range: WeightTrendRange
+    }
+  }
+  package "Internal.CommandServices" {
+    class MealIdeasCommandService {
+      +MaximumAttempts: int
+      +IdeasRequested: int
+      +MaximumExcludedIdeas: int
+      +Handle(command: GenerateMealIdeasCommand, ct): Task<Result<MealIdeasView, IntakeAiFailure>>
+      +Handle(command: PurgeMealIdeasCommand, ct): Task<Result<int, IntakeError>>
+      +{static} InputOf(localDate: DateOnly, targets: ActiveTargetsCache, remaining: RemainingTargets, restrictions: IReadOnlyList<string>, avoid: IReadOnlyList<string>): object
+    }
+    class MealPhotoAnalysisCommandService {
+      +DefaultMaxBytes: int
+      +DefaultAnalysisLifetimeHours: int
+      +CatalogLanguage: string
+      +DefaultCatalogNameHints: int
+      +DefaultCatalogNameHintsCacheMinutes: int
+      +MinimumPatientsPerHint: int
+      +Handle(command: AnalyzeMealPhotoCommand, ct): Task<Result<MealPhotoAnalysisView, IntakeAiFailure>>
+      +Handle(command: PurgeMealPhotoAnalysesCommand, ct): Task<Result<int, IntakeError>>
+      +Handle(command: PurgeExpiredMealPhotoAnalysesCommand, ct): Task<Result<int, IntakeError>>
+      +{static} InputOf(catalogDishNames: IReadOnlyList<string>?): object
+    }
+  }
+  package "Internal.EventHandlers" {
+    class MealIdeasPurge {
+      +{static} Run(scopeFactory: IServiceScopeFactory, logger: ILogger, patientId: int, ct): Task
+    }
+  }
+}
+
+MealIdeasCommandService -[hidden]down-> MealIdeasPurge
+MealPhotoRecognitionOutput -[hidden]down-> MealIdeasCommandService
+
+@enduml

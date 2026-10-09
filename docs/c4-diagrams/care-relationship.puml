@@ -35,6 +35,12 @@ Container_Boundary(api, "Healthify Platform API") {
     Component(crRepos, "CareLinkRepository / InvitationRepository", "C# Repositories over EF Core 10", "Persist care links and invitations")
     Component(crEfcConfig, "CareLink / Invitation EntityTypeConfiguration", "EF Core 10 Fluent API", "Maps tables, token index and audit")
     Component(expiryHostedService, "InvitationExpiryHostedService", "ASP.NET Core BackgroundService", "Sweeps and expires stale invitations")
+
+    Component(aiPrefsController, "PatientAiPreferencesController", "ASP.NET Core REST Controller", "api/v1/patients/{id}/ai-preferences. Reads and changes the AI functions")
+    Component(aiPrefsCmdService, "AiPreferencesCommandService", "C# Application Service (CQRS command side)", "Turns each AI function on or off")
+    Component(aiPrefsAggregate, "AiPreferences", "C# Aggregate Root", "Which AI functions the patient allows")
+    Component(onAiConsentHandler, "OnAiProcessingConsentChangedHandler", "Cortex.Mediator IEventHandler of AiProcessingConsentChanged", "Aligns the preferences with the consent")
+    Component(aiConsentPolicy, "CareRelationshipAiConsentPolicy", "C# ACL", "Answers whether AI processing is allowed for a patient")
 }
 
 ContainerDb(db, "Healthify Database", "MySQL 8.4", "Owns the care_links, invitations and audit tables of this context")
@@ -42,6 +48,8 @@ ContainerDb(db, "Healthify Database", "MySQL 8.4", "Owns the care_links, invitat
 Container_Ext(iamCtx, "IAM", "Sibling bounded context", "Consulted through IIamContextFacade to confirm the two parties exist and hold the expected roles")
 Container_Ext(nutritionalCareCtx, "Nutritional Care", "Sibling bounded context", "Publishes ActiveTargetsUpdated; nothing here reaches back into it")
 Container_Ext(downstreamCtx, "Nutritional Care, Intake and Body Response, Monitoring and Adherence, Read Models", "Sibling bounded contexts", "Ask the Open Host Service whether the link is active before touching patient data")
+
+Container_Ext(aiModule, "AI module (Shared)", "Technical module", "Generates content with a generative model behind consent, validation and quota controls; switched off by default")
 
 Rel(practitioner, mobile, "Issues an invitation, discharges a patient", "Touch")
 Rel(patient, mobile, "Scans the QR, grants or withdraws consent, acknowledges targets", "Touch")
@@ -89,5 +97,12 @@ Rel(crRepos, db, "Reads from and writes to", "EF Core 10 / MySQL, TCP 3306")
 Rel(invitationCmdService, iamCtx, "Validates the identity and role of both parties", "in-process ACL call")
 Rel(careLinkCmdService, iamCtx, "Validates the identity and role of both parties", "in-process ACL call")
 Rel(downstreamCtx, crFacade, "Asks whether the care link is active", "in-process ACL call")
+
+Rel(mobile, aiPrefsController, "Reads and changes AI preferences", "JSON/HTTPS, Bearer JWT")
+Rel(aiPrefsController, aiPrefsCmdService, "Sends UpdateAiPreferencesCommand", "in-process")
+Rel(aiPrefsCmdService, aiPrefsAggregate, "Updates", "in-process")
+Rel(careLinkCmdService, onAiConsentHandler, "Publishes AiProcessingConsentChanged to", "Cortex.Mediator, own DI scope")
+Rel(onAiConsentHandler, aiPrefsAggregate, "Switches the functions off with the consent", "in-process")
+Rel(aiModule, aiConsentPolicy, "Asks whether AI processing is allowed", "in-process ACL call")
 
 @enduml

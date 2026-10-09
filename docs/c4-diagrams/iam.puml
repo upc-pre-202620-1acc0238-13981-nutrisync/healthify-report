@@ -33,6 +33,10 @@ Container_Boundary(api, "Healthify Platform API") {
     Component(jwt, "JwtTokenService", "C# adapter, JwtBearer 10", "Issues and validates the bearer token")
     Component(userRepos, "UserRepository / UserSessionRepository", "C# Repositories over EF Core 10", "Persist users and sessions")
     Component(efcConfig, "User / UserSession EntityTypeConfiguration", "EF Core 10 Fluent API", "Maps tables, columns and unique indexes")
+
+    Component(refreshTokenService, "RefreshTokenService", "C# infrastructure service", "Rotates the refresh token and detects reuse")
+    Component(lockoutPolicy, "ConfiguredSignInLockoutPolicy", "C# infrastructure service", "Locks the account for 15 minutes after five failed attempts")
+    Component(languageProvider, "LanguageClaimRequestCultureProvider", "ASP.NET Core localization", "Takes the language of the response from the token")
 }
 
 ContainerDb(db, "Healthify Database", "MySQL 8.4", "Single schema, one migration per bounded context. IAM owns users and user_sessions")
@@ -75,5 +79,9 @@ Rel(userRepos, efcConfig, "Is mapped by", "EF Core model")
 Rel(userRepos, db, "Reads from and writes to", "EF Core 10 / MySQL, TCP 3306")
 
 Rel(otherContexts, iamFacade, "Asks whether a user exists and which role it holds", "in-process ACL call")
+
+Rel(sessionCmdService, refreshTokenService, "Issues and rotates the refresh token through", "in-process")
+Rel(userCmdService, lockoutPolicy, "Checks the lockout through", "in-process")
+Rel(mobile, authController, "Registers, signs in, refreshes the session and signs out", "JSON/HTTPS")
 
 @enduml

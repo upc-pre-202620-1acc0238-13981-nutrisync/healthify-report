@@ -1,0 +1,65 @@
+@startuml Healthify - Nutritional Care - Interfaces (part 1 of 3)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Interfaces layer (part 1 of 3)
+
+package "Healthify.Platform.NutritionalCare.Interfaces" {
+
+  class "REST.Resources (33)" as REST_Resources <<messages>> {
+    AcceptPlanProposalResource
+    BiochemistryPanelResource
+    ChangeReasonDataResource
+    ConsultationCheckInQuestionResource
+    ConsultationDiagnosisResource
+    ConsultationMeasurementResource
+    ConsultationPatientCheckInResource
+    ConsultationPublicationDraftResource
+    ConsultationPublicationResource
+    ConsultationResource
+    ConsultationSummaryResource
+    ConsultationTargetParametersResource
+    ConsultationTargetProposalResource
+    ConsultationTargetsResource
+    DiagnosisSuggestionResource
+    EatingHabitsResource
+    GuidelineItemResource
+    GuidelineSuggestionsResource
+    IssueConsultationDiagnosisResource
+    PatientBaselineResource
+    PatientPlanVersionResource
+    PlanAdjustmentProposalResource
+    PlanChangeResource
+    PlanProposalAcceptanceResource
+    PrescribeConsultationTargetsResource
+    ProposeConsultationTargetsResource
+    RecordConsultationMeasurementResource
+    RecordPatientBaselineResource
+    ResolutionNoteDataResource
+    ReviewItemEvidenceResource
+    StartConsultationResource
+    TargetInputsSummaryResource
+    UpdatePatientBaselineResource
+  }
+  class "REST.Transform (10)" as REST_Transform <<messages>> {
+    AcceptPlanProposalCommandAssembler
+    ConsultationCommandAssembler
+    ConsultationQueryAssembler
+    ConsultationResourceAssembler
+    PatientBaselineResourceAssembler
+    PatientPlanVersionResourceAssembler
+    PlanAdjustmentProposalResourceAssembler
+    RecordPatientBaselineCommandAssembler
+    ReviewItemQueryAssembler
+    UpdatePatientBaselineCommandAssembler
+  }
+
+}
+
+REST_Resources -[hidden]down-> REST_Transform
+
+@enduml

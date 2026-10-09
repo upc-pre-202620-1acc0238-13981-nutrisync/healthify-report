@@ -1,0 +1,62 @@
+@startuml Healthify - Intake and Body Response - Application (part 1 of 4)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Intake and Body Response - Application layer (part 1 of 4)
+
+package "Healthify.Platform.IntakeBodyResponse.Application" {
+
+
+  package "CommandServices" {
+    interface IMealIdeasCommandService {
+      +Handle(command: GenerateMealIdeasCommand, ct): Task<Result<MealIdeasView, IntakeAiFailure>>
+      +Handle(command: PurgeMealIdeasCommand, ct): Task<Result<int, IntakeError>>
+    }
+    interface IMealPhotoAnalysisCommandService {
+      +Handle(command: AnalyzeMealPhotoCommand, ct): Task<Result<MealPhotoAnalysisView, IntakeAiFailure>>
+      +Handle(command: PurgeMealPhotoAnalysesCommand, ct): Task<Result<int, IntakeError>>
+      +Handle(command: PurgeExpiredMealPhotoAnalysesCommand, ct): Task<Result<int, IntakeError>>
+    }
+  }
+  package "Internal" {
+    class DailyIntakeCalculator {
+      +{static} SumAsync(entries: IEnumerable<DiaryEntry>, foodCatalogContextFacade: IFoodCatalogContextFacade, ct): Task<DailyIntakeTotals>
+    }
+    class DailyIntakeTotals <<record>> {
+      -EnergyKcal: decimal
+      -ProteinG: decimal
+      -CarbG: decimal
+      -FatG: decimal
+      -OffPlanEnergyKcal: decimal
+    }
+    interface ICatalogNameHintsCache {
+      +TryGet(names: out IReadOnlyList<string>): bool
+      +Set(names: IReadOnlyList<string>, lifetime: TimeSpan): void
+    }
+    interface IMealIdeasCache {
+      +TryGet(patientId: int, key: string, view: out MealIdeasView?): bool
+      +Set(patientId: int, key: string, view: MealIdeasView, lifetime: TimeSpan): void
+      +FindIdeaNames(patientId: int, mealIdeaIds: IReadOnlyCollection<string>): IReadOnlyList<string>
+      +Evict(patientId: int): int
+    }
+    class IntakeAiFailure <<record>> {
+      +Error: IntakeError?
+      +AiError: AiError?
+      +{static} Of(error: IntakeError): IntakeAiFailure
+      +{static} Of(error: AiError): IntakeAiFailure
+      +ToString(): string
+    }
+    class MealGroupLogOutcome <<record>> {
+      -MealGroupId: Guid
+      -Entries: IReadOnlyList<DiaryEntry>
+    }
+  }
+}
+
+IMealIdeasCommandService -[hidden]down-> DailyIntakeCalculator
+
+@enduml

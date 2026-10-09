@@ -1,0 +1,44 @@
+@startuml Healthify - Intake and Body Response - Domain (part 4 of 4)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Intake and Body Response - Domain layer (part 4 of 4)
+
+package "Healthify.Platform.IntakeBodyResponse.Domain" {
+
+  package "Services" {
+    interface IRestrictionLexicon {
+      +ViolatedRestrictions(text: string, restrictionCodes: IReadOnlyCollection<string>): IReadOnlyList<string>
+      +ForbiddenTermsIn(text: string): IReadOnlyList<string>
+    }
+    interface ISelfWeighInProtocolProvider {
+      +Current: SelfWeighInProtocol
+    }
+    class MealIdeaRules {
+      +MinimumIdeas: int
+      +MaximumIdeasShown: int
+      +CatalogToleranceRatio: decimal
+      +{static} Screen(name: string, energyKcal: decimal, ingredientTexts: IEnumerable<string>, why: string, remaining: RemainingTargets, restrictions: IReadOnlyCollection<string>, lexicon: IRestrictionLexicon): IReadOnlyList<string>
+      +UnresolvedEnergyShareLimit: decimal
+      +{static} UnresolvedEnergyShare(declaredEnergyKcal: decimal, resolvedCatalogEnergyKcal: decimal): decimal
+      +{static} UnresolvedIngredientsAreMinor(declaredEnergyKcal: decimal, resolvedCatalogEnergyKcal: decimal): bool
+    }
+    class MealNutrients <<record>> {
+      -EnergyKcal: decimal
+      -ProteinG: decimal
+      -CarbG: decimal
+      -FatG: decimal
+      +{static} Zero: MealNutrients
+      +Plus(other: MealNutrients): MealNutrients
+      +{static} OfPortion(grams: decimal, energyKcalPer100g: decimal, proteinGPer100g: decimal, carbGPer100g: decimal, fatGPer100g: decimal): MealNutrients
+      +Rounded(): MealNutrients
+    }
+  }
+}
+
+
+@enduml

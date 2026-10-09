@@ -38,11 +38,14 @@
 <br>
 
 <p align="center"><strong>Período 202620</strong></p>
-<p align="center"><strong>Septiembre 2026</strong></p>
+<p align="center"><strong>Octubre 2026</strong></p>
 
 <div style="page-break-after: always"></div>
 
 ## REGISTRO DE VERSIONES DEL INFORME
+
+<p class="caption"><strong>Tabla 1</strong><br><em>Registro de versiones del informe</em></p>
+
 | Versión | Fecha | Autor | Descripción de modificación |
 | :---: | :---: | :---: | :---: |
 | 0.1.0 | 28/08/2026 | Angel Villarreal | Commit inicial del repositorio (`main`) |
@@ -63,9 +66,21 @@
 ## PROJECT REPORT COLLABORATION INSIGHTS
 
 Repositorio del informe del proyecto en GitHub: [healthify-report](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report)
+Repositorio de la website: [healthify-website](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-website)
+Repositorio de la webservices: [healthify-platform](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform)
+Repositorio de la app en Android Studio: [healthify-android-app](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app)
 
 AV1:<br>
+
+<p class="caption"><strong>Figura 1</strong><br><em>Captura de GitHub Insights del repositorio del informe al cierre del AV1</em></p>
+
 ![Report](./assets/img/insights/av1.png)
+
+TB1:<br>
+
+<p class="caption"><strong>Figura 2</strong><br><em>Captura de GitHub Insights del repositorio del informe al cierre del TB1</em></p>
+
+![Report](./assets/img/insights/tb1.png)
 
 <div style="page-break-after: always"></div>
 

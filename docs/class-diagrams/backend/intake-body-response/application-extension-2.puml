@@ -1,0 +1,64 @@
+@startuml Healthify - Intake and Body Response - Application (part 2 of 4)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Intake and Body Response - Application layer (part 2 of 4)
+
+package "Healthify.Platform.IntakeBodyResponse.Application" {
+
+  package "Internal" {
+    class MealIdeaIngredientOutput <<record>> {
+      -Name: string
+      -Grams: decimal
+    }
+    class MealIdeaOutput <<record>> {
+      -Name: string
+      -EnergyKcal: decimal
+      -ProteinG: decimal
+      -CarbG: decimal
+      -FatG: decimal
+      -Ingredients: IReadOnlyList<MealIdeaIngredientOutput>
+      -Why: string
+    }
+    class MealIdeasOutput <<record>> {
+      -Ideas: IReadOnlyList<MealIdeaOutput>
+    }
+    class MealIdeasOutputValidator {
+      +Validate(output: MealIdeasOutput): IReadOnlyList<string>
+    }
+    class MealIdeasView <<record>> {
+      -LocalDate: DateOnly
+      -Remaining: RemainingTargets
+      -Restrictions: IReadOnlyList<string>
+      -Ideas: IReadOnlyList<MealIdea>
+      -AiGenerationId: long
+      -GeneratedAt: DateTimeOffset
+    }
+    class MealPhotoAlternativeOutput <<record>> {
+      -Name: string
+      -Grams: decimal
+    }
+    class MealPhotoAnalysisView <<record>> {
+      -AnalysisId: Guid
+      -ReferenceFoodId: int
+      -FoodName: string
+      -EstimatedGrams: decimal
+      -Confidence: decimal
+      -Alternatives: IReadOnlyList<MealPhotoAlternative>
+      -ExpiresAt: DateTimeOffset
+    }
+    class MealPhotoNutrientsOutput <<record>> {
+      -Kcal: decimal
+      -Protein: decimal
+      -Carb: decimal
+      -Fat: decimal
+    }
+  }
+}
+
+
+@enduml

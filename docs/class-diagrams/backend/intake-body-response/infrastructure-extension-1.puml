@@ -1,0 +1,73 @@
+@startuml Healthify - Intake and Body Response - Infrastructure (part 1 of 2)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Intake and Body Response - Infrastructure layer (part 1 of 2)
+
+package "Healthify.Platform.IntakeBodyResponse.Infrastructure" {
+
+
+  package "Ai.Caching" {
+    class InMemoryCatalogNameHintsCache {
+      +TryGet(names: out IReadOnlyList<string>): bool
+      +Set(names: IReadOnlyList<string>, lifetime: TimeSpan): void
+    }
+    class InMemoryMealIdeasCache {
+      +SweepThreshold: int
+      +TryGet(patientId: int, key: string, view: out MealIdeasView?): bool
+      +Set(patientId: int, key: string, view: MealIdeasView, lifetime: TimeSpan): void
+      +FindIdeaNames(patientId: int, mealIdeaIds: IReadOnlyCollection<string>): IReadOnlyList<string>
+      +Evict(patientId: int): int
+    }
+  }
+  package "Ai.Lexicon" {
+    class EmbeddedRestrictionLexicon {
+      +ResourceName: string
+      +{static} Instance: EmbeddedRestrictionLexicon
+      +KnownRestrictions: IReadOnlyCollection<string>
+      +ViolatedRestrictions(text: string, restrictionCodes: IReadOnlyCollection<string>): IReadOnlyList<string>
+      +ForbiddenTermsIn(text: string): IReadOnlyList<string>
+      +{static} Padded(text: string): string
+    }
+  }
+  package "Imaging" {
+    class PhotoMetadataStripper {
+      +Strip(photo: MealPhoto): MealPhoto
+      +{static} StripJpeg(jpeg: byte[]): byte[]
+      +{static} StripWebP(webp: byte[]): byte[]
+    }
+  }
+  package "Maintenance" {
+    class WeightTrendRecalculationJob {
+      +CommandLineVerb: string
+      +RunAsync(ct): Task<WeightTrendRecalculationReport>
+    }
+    class WeightTrendRecalculationReport <<record>> {
+      -Patients: int
+      -Recalculated: int
+      -FailedPatientIds: IReadOnlyList<int>
+    }
+  }
+  package "Persistence.EFC.Configuration" {
+    class CachedGuidelineJson {
+      +{static} Serialize(guidelines: List<CachedGuideline>): string
+      +{static} Deserialize(json: string?): List<CachedGuideline>
+      +{static} SerializeChanges(changes: List<CachedPlanChange>): string
+      +{static} DeserializeChanges(json: string?): List<CachedPlanChange>
+    }
+    class MealPhotoAnalysisEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<MealPhotoAnalysis>): void
+    }
+  }
+}
+
+EmbeddedRestrictionLexicon -[hidden]down-> PhotoMetadataStripper
+InMemoryCatalogNameHintsCache -[hidden]down-> EmbeddedRestrictionLexicon
+PhotoMetadataStripper -[hidden]down-> WeightTrendRecalculationJob
+WeightTrendRecalculationJob -[hidden]down-> CachedGuidelineJson
+
+@enduml

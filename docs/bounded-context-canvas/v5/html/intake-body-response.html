@@ -1,0 +1,47 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1920px;height:1080px;font-family:'Segoe UI','Open Sans',Arial,sans-serif;color:#000;background:#fff}
+.canvas{position:absolute;inset:0;border:6px solid #000;display:grid;grid-template-columns:870px 607px 1fr;grid-template-rows:92px 192px 598px 1fr}
+.cell{border:2px solid #000;padding:12px 18px;overflow:hidden}
+h2{font-size:34px;font-weight:700;line-height:1.15;margin-bottom:8px}
+.head{grid-column:1/4;display:flex;justify-content:space-between;align-items:center;padding:0 22px}
+.head h1{font-size:44px}
+.ver{font-size:20px;color:#555}
+p,li{font-size:20px;line-height:1.35}
+ul{list-style:none}
+.purpose p{font-size:20px}
+.cls{display:flex;gap:26px}
+.cls div span{display:block;font-size:19px;color:#666}
+.cls div b{font-size:27px}
+.roles li{font-size:18px;margin-bottom:4px}
+.row3{grid-column:1/4;display:grid;grid-template-columns:690px 540px 1fr;border:2px solid #000;position:relative}
+.row3>.side{padding:12px 18px;overflow:hidden}
+.center{border:2px solid #000;margin:14px 0;padding:12px 20px;overflow:hidden}
+.center h2{font-size:32px}
+.center ul li{font-size:17px;line-height:1.3;margin-bottom:5px}
+.center .bd{margin-top:14px}
+.grp{margin-bottom:9px}
+.grp .who{font-size:19px;font-weight:700}
+.grp .who i{font-weight:400;color:#555;font-style:normal}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.chip{font-size:15.5px;padding:3px 9px;border-radius:3px;border:1.5px solid}
+.command{background:#cfe3ff;border-color:#7ba7e6}
+.query{background:#dcefb0;border-color:#9bc23f}
+.event{background:#fbeaa6;border-color:#d6b73c}
+.legend{font-size:14px;color:#555;margin-top:2px}
+.small li{font-size:18px;margin-bottom:4px}
+.row4 .cell h2{font-size:30px}
+</style></head><body><div class="canvas">
+<div class="cell head"><h1>Name: Intake &amp; Body Response</h1><span class="ver">V5 · github.com/ddd-crew/bounded-context-canvas</span></div>
+<div class="cell purpose"><h2>Purpose</h2><p>Capture faithfully what the patient eats and how their body responds, without judging it. Patients log meals (by photo or by hand) and weigh-ins with little effort, even offline; practitioners read trustworthy data between visits through read models.</p></div>
+<div class="cell"><h2>Strategic Classification</h2><div class="cls"><div><span>Domain</span><b>Core</b></div><div><span>Business Model</span><b>Engagement</b></div><div><span>Evolution</span><b>Custom built</b></div></div></div>
+<div class="cell"><h2>Domain Roles</h2><ul class="roles"><li>Execution: records meals and weigh-ins.</li><li>Draft: a photo estimate is a proposal until the patient confirms it.</li></ul></div>
+<div class="row3">
+<div class="side"><h2>Inbound Communication</h2><div class="grp"><div class="who">Patient app (REST)</div><div class="chips"><span class="chip command">Log Meal By Photo</span><span class="chip command">Log Meal Manually</span><span class="chip command">Confirm / Adjust Estimate</span><span class="chip command">Record Self Weigh-In</span><span class="chip command">Sync Pending Entries</span><span class="chip query">Get Diary Entries</span><span class="chip query">Get Weight Trend</span></div></div><div class="grp"><div class="who">Nutritional Care <i>· Published Language</i></div><div class="chips"><span class="chip event">Active Targets Updated</span></div></div><div class="grp"><div class="who">Monitoring &amp; Adherence <i>· Customer/Supplier</i></div><div class="chips"><span class="chip query">Get Diary Entries For Day</span><span class="chip query">Get Weight Trend</span></div></div><div class="grp"><div class="who">Read Models <i>· Open Host Service</i></div><div class="chips"><span class="chip query">Get Intake Facts For Patient Record</span></div></div><div class="legend">Messages: command · query · event</div></div>
+<div class="center"><h2>Ubiquitous Language</h2><ul><li><b>Diary Entry:</b> a meal record; never deleted</li><li><b>Provenance:</b> how an entry was captured (photo or manual)</li><li><b>Proposed Estimate:</b> what the AI thinks was eaten; a proposal, never a fact</li><li><b>Self Weigh-In:</b> a weight recorded following the protocol</li><li><b>Weight Trend:</b> the smoothed series; the daily value is never a headline</li></ul><div class="bd"><h2>Business Decisions</h2><ul><li>A diary entry is never deleted</li><li>Provenance and local timestamp are mandatory</li><li>A photo estimate is stored as a proposal with its confidence</li><li>Declaring plan adherence carries no penalty</li><li>Only protocol-compliant weigh-ins smooth the trend</li><li>Offline entries are synced idempotently</li></ul></div></div>
+<div class="side"><h2>Outbound Communication</h2><div class="grp"><div class="who">Monitoring &amp; Adherence <i>· Customer/Supplier</i></div><div class="chips"><span class="chip event">Meal Logged</span><span class="chip event">Estimate Confirmed By Patient</span><span class="chip event">Weight Trend Recalculated</span><span class="chip event">Entry Synchronized</span></div></div><div class="grp"><div class="who">Care Relationship <i>· Open Host Service</i></div><div class="chips"><span class="chip query">Is Care Link Active</span></div></div><div class="grp"><div class="who">Food Catalog <i>· Customer/Supplier</i></div><div class="chips"><span class="chip query">Search Reference Foods</span><span class="chip query">Resolve Foods By Name</span><span class="chip command">Create AI-Estimated Food</span></div></div><div class="grp"><div class="who">AI module (Shared) <i>· technical</i></div><div class="chips"><span class="chip query">Recognize Meal Photo</span></div></div></div>
+</div>
+<div class="cell small"><h2>Assumptions</h2><ul><li>– Patients keep logging when declaring costs them almost nothing</li><li>– A photo estimate is close enough to confirm or adjust in one step</li><li>– Practitioners trust the trend more than any single day</li></ul></div>
+<div class="cell small"><h2>Verification Metrics</h2><ul><li>– Estimates confirmed without adjustment (%)</li><li>– Days logged per patient per week</li><li>– Offline entries synced without duplicates (%)</li></ul></div>
+<div class="cell small"><h2>Open Questions</h2><ul><li>– Is a 48 h retroactive window enough?</li><li>– Should AI-estimated foods carry a mark?</li><li>– Who owns the weigh-in protocol?</li></ul></div>
+</div></body></html>

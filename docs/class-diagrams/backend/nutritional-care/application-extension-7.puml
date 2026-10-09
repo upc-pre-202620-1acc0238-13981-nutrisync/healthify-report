@@ -1,0 +1,22 @@
+@startuml Healthify - Nutritional Care - Application (part 7 of 7)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Application layer (part 7 of 7)
+
+package "Healthify.Platform.NutritionalCare.Application" {
+
+  package "QueryServices" {
+    interface IPatientBaselineQueryService {
+      +Handle(query: GetPatientBaselineByPatientIdQuery, ct): Task<PatientBaseline?>
+      +Handle(query: GetPatientBaselinesByPatientIdsQuery, ct): Task<IReadOnlyList<PatientBaseline>>
+    }
+  }
+}
+
+
+@enduml

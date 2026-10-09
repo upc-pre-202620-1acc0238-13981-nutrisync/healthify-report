@@ -1,0 +1,11 @@
+{
+  "markdown-pdf.styles": ["./.vscode/print.css"],
+  "markdown-pdf.margin.top": "0.5cm",
+  "markdown-pdf.margin.bottom": "0.5cm",
+  "markdown-pdf.margin.left": "0.5cm",
+  "markdown-pdf.margin.right": "0.5cm",
+  "markdown-pdf-plus.marginTop": "0px",
+  "markdown-pdf-plus.marginBottom": "0px",
+  "markdown-pdf-plus.marginLeft": "0px",
+  "markdown-pdf-plus.marginRight": "0px"
+}

@@ -1,0 +1,46 @@
+@startuml Healthify - Care Relationship - Domain (part 2 of 2)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Care Relationship - Domain layer (part 2 of 2)
+
+package "Healthify.Platform.CareRelationship.Domain" {
+
+  package "Model.Aggregates" {
+    class AiPreferences {
+      +AiPreferences(patientId: int)
+      +PatientId: int
+      +WeeklySummaryEnabled: bool
+      +MealIdeasEnabled: bool
+      +SuggestedQuestionsEnabled: bool
+      +MealPhotoRecognitionEnabled: bool
+      +AnyEnabled: bool
+      +Change(weeklySummary: bool, mealIdeas: bool, suggestedQuestions: bool, aiProcessingConsented: bool, mealPhotoRecognition: bool?): bool
+      +EnableAll(): bool
+      +DisableAll(): bool
+    }
+  }
+  package "Model.ValueObjects" {
+    class RevocationReason <<record>> {
+      +ConsentWithdrawnValue: string
+      +SwitchedPractitionerValue: string
+      +RevocationReason(value: string)
+      +Value: string
+      +ToString(): string
+    }
+  }
+  package "Repositories" {
+    interface IAiPreferencesRepository {
+      +FindByPatientIdAsync(patientId: int, ct): Task<AiPreferences?>
+    }
+  }
+}
+
+AiPreferences -[hidden]down-> RevocationReason
+RevocationReason -[hidden]down-> IAiPreferencesRepository
+
+@enduml

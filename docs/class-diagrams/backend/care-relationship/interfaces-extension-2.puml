@@ -1,0 +1,28 @@
+@startuml Healthify - Care Relationship - Interfaces (part 2 of 2)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Care Relationship - Interfaces layer (part 2 of 2)
+
+package "Healthify.Platform.CareRelationship.Interfaces" {
+
+  package "Acl" {
+    class RosterCareLinkItem <<record>> {
+      -CareLinkId: int
+      -PatientId: int
+      -LinkStatus: string
+      -LinkedSince: DateTimeOffset
+    }
+  }
+  package "REST" {
+    class PatientAiPreferencesController
+  }
+}
+
+RosterCareLinkItem -[hidden]down-> PatientAiPreferencesController
+
+@enduml
