@@ -1,0 +1,45 @@
+@startuml Healthify - Intake and Body Response - Interfaces (part 1 of 2)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Intake and Body Response - Interfaces layer (part 1 of 2)
+
+package "Healthify.Platform.IntakeBodyResponse.Interfaces" {
+
+  class "REST.Resources (18)" as REST_Resources <<messages>> {
+    ActiveGuidelineResource
+    ActivePlanChangeResource
+    EstimateConfirmationResource
+    GenerateMealIdeasResource
+    LogMealGroupResource
+    MealGroupItemResource
+    MealGroupLogResource
+    MealGroupOriginResource
+    MealIdeaIngredientResource
+    MealIdeaResource
+    MealIdeasResource
+    MealPhotoAlternativeResource
+    MealPhotoAnalysisResource
+    PendingSelfWeighInResource
+    PhotoConfirmationResource
+    SelfWeighInSyncOutcomeResource
+    SyncSelfWeighInsResource
+    SyncedSelfWeighInOutcomeResource
+  }
+  class "REST.Transform (5)" as REST_Transform <<messages>> {
+    LogMealGroupCommandAssembler
+    MealIdeasResourceAssembler
+    MealPhotoAnalysisResourceAssembler
+    SelfWeighInSyncOutcomeResourceAssembler
+    SyncSelfWeighInsCommandAssembler
+  }
+
+}
+
+REST_Resources -[hidden]down-> REST_Transform
+
+@enduml

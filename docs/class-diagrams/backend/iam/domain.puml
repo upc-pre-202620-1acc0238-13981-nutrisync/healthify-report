@@ -24,6 +24,12 @@ package "Healthify.Platform.Iam.Domain" {
       +RegisterFailedSignInAttempt(): void
       +RegisterSuccessfulSignIn(): void
       +StartSession(): UserSession
+      +GivenNames: string
+      +FamilyNames: string
+      +FullName: string
+      +PreferredLanguage: PreferredLanguage
+      +IsLockedOutAt(now: DateTimeOffset, lockoutDuration: TimeSpan): bool
+      +ChangePreferredLanguage(language: PreferredLanguage): void
     }
 
     class UserSession {
@@ -41,6 +47,14 @@ package "Healthify.Platform.Iam.Domain" {
       ~UserSession(userId: int, roleClaim: Role)
       +SelectNavigationShell(shell: NavigationShell): void
       +Terminate(): void
+      +RefreshTokenHash: string?
+      +RefreshTokenExpiresAt: DateTimeOffset?
+      +PreviousRefreshTokenHash: string?
+      +RefreshTokenRotatedAt: DateTimeOffset?
+      +AcceptsRefreshToken(tokenHash: string, now: DateTimeOffset): bool
+      +IsRotatedRefreshToken(tokenHash: string): bool
+      +CanReplayRotation(tokenHash: string, successorHash: string, now: DateTimeOffset, grace: TimeSpan): bool
+      +RotateRefreshToken(newTokenHash: string, expiresAt: DateTimeOffset, rotatedAt: DateTimeOffset?): void
     }
   }
 

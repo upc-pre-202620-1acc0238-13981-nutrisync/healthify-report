@@ -1,0 +1,100 @@
+@startuml Healthify - Nutritional Care - Domain (part 3 of 6)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Domain layer (part 3 of 6)
+
+package "Healthify.Platform.NutritionalCare.Domain" {
+
+  package "Model.ValueObjects" {
+    class ConsultationId <<record>> {
+      +ConsultationId(value: int)
+      +Value: int
+      +{static} FromRaw(value: int): ConsultationId
+      +ToString(): string
+    }
+    class ConsultationState <<record>> {
+      +InProgress: string
+      +Completed: string
+      +Abandoned: string
+      +ConsultationState(value: string)
+      +Value: string
+      +IsInProgress: bool
+      +ToString(): string
+    }
+    class ConsultationStep <<record>> {
+      +Measurement: string
+      +Diagnosis: string
+      +Targets: string
+      +Publication: string
+      +ConsultationStep(value: string)
+      +Value: string
+      +ToString(): string
+    }
+    class DiagnosisCode <<record>> {
+      +Underweight: string
+      +NormalWeight: string
+      +OverweightGradeI: string
+      +ObesityGradeI: string
+      +ObesityGradeII: string
+      +ObesityGradeIII: string
+      +DiagnosisCode(value: string)
+      +{static} All: IReadOnlyList<string>
+      +Value: string
+      +IsAtOrBelowNormalWeight: bool
+      +IsWithinOneGradeOf(other: DiagnosisCode): bool
+      +{static} FromBodyMassIndex(bmi: decimal): DiagnosisCode
+    }
+    class DiagnosisSource <<record>> {
+      +AiSuggestionAccepted: string
+      +PractitionerSelected: string
+      +DiagnosisSource(value: string)
+      +{static} All: IReadOnlyList<string>
+      +Value: string
+      +IsAiSuggestionAccepted: bool
+      +ToString(): string
+    }
+    class DietaryRestriction <<record>> {
+      +LactoseFree: string
+      +GlutenFree: string
+      +Vegan: string
+      +Vegetarian: string
+      +TreeNutFree: string
+      +ShellfishFree: string
+      +Kosher: string
+      +Halal: string
+      +DietaryRestriction(value: string)
+      +{static} All: IReadOnlyList<string>
+      +Value: string
+      +ToString(): string
+    }
+    class EatingHabits <<record>> {
+      +EatingHabits(mealsPerDay: int?, waterLitersPerDay: decimal?, mealsOutPerWeek: int?)
+      +MealsPerDay: int?
+      +WaterLitersPerDay: decimal?
+      +MealsOutPerWeek: int?
+      +{static} From(mealsPerDay: int?, waterLitersPerDay: decimal?, mealsOutPerWeek: int?): EatingHabits?
+    }
+    class Guideline <<record>> {
+      +PrioritizeVegetables: string
+      +Drink2LWater: string
+      +AvoidSugaryDrinks: string
+      +ProteinAtBreakfast: string
+      +ReduceSalt: string
+      +EatEvery3To4Hours: string
+      +ProteinAndVegetablesAtDinner: string
+      +MinimumCustomLength: int
+      +MaximumCustomLength: int
+      +MaximumCustomPerVersion: int
+      +{static} Codes: IReadOnlyList<string>
+      +Code: string?
+    }
+  }
+}
+
+
+@enduml

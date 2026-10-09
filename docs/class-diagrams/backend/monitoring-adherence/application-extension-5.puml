@@ -1,0 +1,46 @@
+@startuml Healthify - Monitoring and Adherence - Application (part 5 of 5)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Monitoring and Adherence - Application layer (part 5 of 5)
+
+package "Healthify.Platform.MonitoringAdherence.Application" {
+
+  package "Internal.EventHandlers" {
+    class OnTreatmentDischargedHandler {
+      +Handle(notification: TreatmentDischarged, ct): Task
+    }
+    class TreatmentEnd {
+      +{static} CancelFutureFollowUps(scopeFactory: IServiceScopeFactory, logger: ILogger, patientId: int, practitionerId: int, reason: string, ct): Task
+    }
+  }
+  package "Internal.QueryServices" {
+    class PreVisitCheckInQueryService {
+      +Handle(query: GetPreVisitCheckInByFollowUpIdQuery, ct): Task<PreVisitCheckInView?>
+      +Handle(query: GetLatestPreVisitCheckInQuery, ct): Task<PreVisitCheckInView?>
+    }
+    class WeeklySummaryQueryService {
+      +Handle(query: GetLatestWeeklySummaryByPatientIdQuery, ct): Task<WeeklySummary?>
+    }
+  }
+  package "QueryServices" {
+    interface IPreVisitCheckInQueryService {
+      +Handle(query: GetPreVisitCheckInByFollowUpIdQuery, ct): Task<PreVisitCheckInView?>
+      +Handle(query: GetLatestPreVisitCheckInQuery, ct): Task<PreVisitCheckInView?>
+    }
+    interface IWeeklySummaryQueryService {
+      +Handle(query: GetLatestWeeklySummaryByPatientIdQuery, ct): Task<WeeklySummary?>
+    }
+  }
+}
+
+OnTreatmentDischargedHandler -[hidden]down-> PreVisitCheckInQueryService
+PreVisitCheckInQueryService -[hidden]down-> IPreVisitCheckInQueryService
+PreVisitCheckInQueryService ..|> IPreVisitCheckInQueryService
+WeeklySummaryQueryService ..|> IWeeklySummaryQueryService
+
+@enduml

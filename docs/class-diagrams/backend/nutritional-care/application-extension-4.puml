@@ -1,0 +1,72 @@
+@startuml Healthify - Nutritional Care - Application (part 4 of 7)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Application layer (part 4 of 7)
+
+package "Healthify.Platform.NutritionalCare.Application" {
+
+  package "Internal" {
+    class PlanAdjustmentMealSlots <<record>> {
+      -Days: int
+      -Breakfast: int
+      -Lunch: int
+      -Dinner: int
+      -Other: int
+    }
+    class PlanAdjustmentProposalOutput <<record>> {
+      -Title: string
+      -EnergyKcal: decimal
+      -ProteinG: decimal
+      -CarbG: decimal
+      -FatG: decimal
+      -AddedGuidelines: IReadOnlyList<string>
+      -RemovedGuidelines: IReadOnlyList<string>
+      -PatientMessage: string
+      -RecheckAfterDays: int
+      -Rationale: string
+      -PractitionerLanguage: string?
+      -PatientLanguage: string?
+    }
+    class PlanAdjustmentProposalOutputValidator {
+      +MaximumPatientMessageLength: int
+      +MaximumRationaleLength: int
+      +MaximumTitleLength: int
+      +MinimumRecheckAfterDays: int
+      +MaximumRecheckAfterDays: int
+      +Validate(output: PlanAdjustmentProposalOutput): IReadOnlyList<string>
+    }
+    class PlanAdjustmentWeightTrend <<record>> {
+      -SlopeKgPerWeek: decimal?
+      -ChangeKg: decimal?
+      -PointCount: int
+    }
+    class PlanProposalAcceptanceOutcome <<record>> {
+      -ReviewItem: ReviewItem
+      -PlanVersion: NutritionPlan
+    }
+    class PlanProposalLookup <<record>> {
+      -ReviewItem: ReviewItem
+      -IsGenerating: bool
+      -CurrentEnergyKcal: decimal?
+    }
+    class ReviewInboxEntry <<record>> {
+      -ReviewItem: ReviewItem
+      -PatientFullName: string?
+    }
+    class TargetInputsSummary <<record>> {
+      -Sex: string
+      -AgeYears: int
+      -HeightCm: decimal
+      -WeightKg: decimal
+      -ActivityLevel: string
+    }
+  }
+}
+
+
+@enduml

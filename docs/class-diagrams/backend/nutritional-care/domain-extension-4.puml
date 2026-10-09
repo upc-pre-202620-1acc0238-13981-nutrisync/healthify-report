@@ -1,0 +1,92 @@
+@startuml Healthify - Nutritional Care - Domain (part 4 of 6)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Domain layer (part 4 of 6)
+
+package "Healthify.Platform.NutritionalCare.Domain" {
+
+  package "Model.ValueObjects" {
+    class HeightCm <<record>> {
+      +Minimum: decimal
+      +Maximum: decimal
+      +HeightCm(value: decimal)
+      +Value: decimal
+      +ToString(): string
+    }
+    class IdempotencyKey <<record>> {
+      +MaximumLength: int
+      +IdempotencyKey(value: string)
+      +Value: string
+      +ToString(): string
+    }
+    class MeasurementProtocolChecklist <<record>> {
+      +Fasting: string
+      +NoShoes: string
+      +LightClothing: string
+      +EmptyBladder: string
+      +SameScale: string
+      +{static} All: IReadOnlyList<string>
+      +MeasurementProtocolChecklist(checks: IEnumerable<string>?)
+      +{static} IsKnown(code: string?): bool
+      +Checks: IReadOnlyList<string>
+      +ToSummary(): string
+    }
+    class MedicalCondition <<record>> {
+      +Type2Diabetes: string
+      +Hypertension: string
+      +CeliacDisease: string
+      +Hypothyroidism: string
+      +ChronicKidneyDisease: string
+      +Gout: string
+      +MedicalCondition(value: string)
+      +Value: string
+      +{static} ListFrom(values: IEnumerable<string>?): IReadOnlyList<MedicalCondition>
+      +ToString(): string
+    }
+    class PatientBaselineId <<record>> {
+      +PatientBaselineId(value: int)
+      +Value: int
+      +{static} FromRaw(value: int): PatientBaselineId
+      +ToString(): string
+    }
+    class PatientFacingMessage <<record>> {
+      +MaximumLength: int
+      +PatientFacingMessage(value: string)
+      +Value: string
+      +{static} FromOptional(value: string?): PatientFacingMessage?
+      +ToString(): string
+    }
+    class PlanChange <<record>> {
+      +GuidelineAdded: string
+      +GuidelineRemoved: string
+      +RestrictionAdded: string
+      +RestrictionRemoved: string
+      +EnergyChanged: string
+      +MacroChanged: string
+      +NoTargetChanges: string
+      +Protein: string
+      +Carb: string
+      +Fat: string
+      +{static} Types: IReadOnlyList<string>
+      +{static} Macros: IReadOnlyList<string>
+    }
+    class PlanProposalStatus <<record>> {
+      +Proposed: string
+      +AcceptedAsIs: string
+      +AcceptedWithEdits: string
+      +Dismissed: string
+      +PlanProposalStatus(value: string)
+      +Value: string
+      +IsProposed: bool
+      +ToString(): string
+    }
+  }
+}
+
+
+@enduml

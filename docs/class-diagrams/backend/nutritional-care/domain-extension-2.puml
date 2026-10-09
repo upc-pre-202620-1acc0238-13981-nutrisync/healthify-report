@@ -1,0 +1,99 @@
+@startuml Healthify - Nutritional Care - Domain (part 2 of 6)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Domain layer (part 2 of 6)
+
+package "Healthify.Platform.NutritionalCare.Domain" {
+
+  package "Model.Aggregates" {
+    class Consultation {
+      +Consultation(command: StartConsultationCommand, isFirstConsultation: bool)
+      +Id: ConsultationId
+      +PatientId: int
+      +PractitionerId: int
+      +ScheduledFollowUpId: int?
+      +CurrentStep: ConsultationStep
+      +State: ConsultationState
+      +AssessmentId: int?
+      +DiagnosisId: int?
+      +PlanId: int?
+      +StartedAt: DateTimeOffset
+      +LastSavedAt: DateTimeOffset
+    }
+    class PatientBaseline {
+      +PatientBaseline(command: RecordPatientBaselineCommand, today: DateOnly)
+      +Id: PatientBaselineId
+      +PatientId: int
+      +BirthDate: DateOnly
+      +BirthDateEstimated: bool
+      +BiologicalSex: BiologicalSex
+      +Height: HeightCm
+      +RecordedBy: int
+      +AgeAt(date: DateOnly): int
+      +Update(command: UpdatePatientBaselineCommand, today: DateOnly): void
+      +{static} EnsurePlausibleBirthDate(birthDate: DateOnly, today: DateOnly): void
+    }
+  }
+  package "Model.Entities" {
+    class PlanAdjustmentProposal {
+      +MaximumTitleLength: int
+      +MaximumPatientMessageLength: int
+      +MaximumRationaleLength: int
+      +MinimumRecheckAfterDays: int
+      +MaximumRecheckAfterDays: int
+      +PlanAdjustmentProposal(aiGenerationId: long, title: string, proposedEnergyKcal: decimal, proposedProteinG: decimal, proposedCarbG: decimal, proposedFatG: decimal, addedGuidelines: IEnumerable<string>, removedGuidelines: IEnumerable<string>, patientMessage: string, recheckAfterDays: int, rationale: string, generatedAt: DateTimeOffset, practitionerLanguage: string?, patientLanguage: string?)
+      +Id: int
+      +ReviewItemId: ReviewItemId
+      +AiGenerationId: long
+      +Title: string
+      +ProposedEnergyKcal: decimal
+      +ProposedProteinG: decimal
+    }
+  }
+  package "Model.ValueObjects" {
+    class ActivityLevel <<record>> {
+      +Sedentary: string
+      +Light: string
+      +Moderate: string
+      +Intense: string
+      +ActivityLevel(value: string)
+      +{static} All: IReadOnlyList<string>
+      +Value: string
+      +DefaultFactor: decimal
+      +ToString(): string
+    }
+    class BiochemistryPanel <<record>> {
+      +BiochemistryPanel(fastingGlucoseMgDl: decimal?, totalCholesterolMgDl: decimal?, triglyceridesMgDl: decimal?)
+      +FastingGlucoseMgDl: decimal?
+      +TotalCholesterolMgDl: decimal?
+      +TriglyceridesMgDl: decimal?
+      +{static} From(fastingGlucoseMgDl: decimal?, totalCholesterolMgDl: decimal?, triglyceridesMgDl: decimal?): BiochemistryPanel?
+    }
+    class BodyMassIndex <<record>> {
+      +Underweight: string
+      +NormalWeight: string
+      +OverweightGradeI: string
+      +ObesityGradeI: string
+      +ObesityGradeII: string
+      +ObesityGradeIII: string
+      +BodyMassIndex(weightKg: decimal, heightCm: decimal)
+      +Value: decimal
+      +Category: string
+      +{static} CategoryFor(bmi: decimal): string
+    }
+    class ChangeReasonData <<record>> {
+      -Date: DateOnly?
+      -SignalType: string?
+    }
+  }
+}
+
+Consultation -[hidden]down-> PlanAdjustmentProposal
+PlanAdjustmentProposal -[hidden]down-> ActivityLevel
+
+@enduml

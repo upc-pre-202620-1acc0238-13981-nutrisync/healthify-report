@@ -1,0 +1,35 @@
+@startuml Healthify - Nutritional Care - Infrastructure (part 3 of 3)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Infrastructure layer (part 3 of 3)
+
+package "Healthify.Platform.NutritionalCare.Infrastructure" {
+
+  package "Scheduling" {
+    class InMemoryPlanProposalGenerationQueue {
+      +TryEnqueue(reviewItemId: int): bool
+      +IsPending(reviewItemId: int): bool
+      +DequeueAsync(ct): ValueTask<int>
+      +Complete(reviewItemId: int): void
+    }
+    class PlanProposalGenerationHostedService {
+      +GenerateAsync(reviewItemId: int, ct): Task
+    }
+    class PlanProposalRecoveryHostedService {
+      +DefaultIntervalMinutes: int
+      +DefaultRecoveryHours: int
+      +RunCycleAsync(ct): Task
+    }
+    class ReviewItemRecheckHostedService {
+      +RunCycleAsync(ct): Task
+    }
+  }
+}
+
+
+@enduml

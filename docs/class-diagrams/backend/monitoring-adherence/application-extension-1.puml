@@ -1,0 +1,51 @@
+@startuml Healthify - Monitoring and Adherence - Application (part 1 of 5)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Monitoring and Adherence - Application layer (part 1 of 5)
+
+package "Healthify.Platform.MonitoringAdherence.Application" {
+
+
+  package "CommandServices" {
+    interface IMonitoringAiContentCommandService {
+      +Handle(command: PurgeMonitoringAiContentCommand, ct): Task<Result<int, MonitoringError>>
+    }
+    interface IMonitoringSummaryCommandService {
+      +Handle(command: SummarizeMonitoringCommand, ct): Task<Result<MonitoringSummaryView, MonitoringAiFailure>>
+    }
+    interface IPreVisitCheckInCommandService {
+      +Handle(command: SubmitPreVisitCheckInCommand, ct): Task<Result<PreVisitCheckInView, MonitoringError>>
+    }
+    interface ISuggestedQuestionsCommandService {
+      +Handle(command: SuggestQuestionsCommand, ct): Task<Result<SuggestedQuestionsView, MonitoringAiFailure>>
+    }
+    interface IWeeklySummaryCommandService {
+      +Handle(command: GenerateWeeklySummaryCommand, ct): Task<Result<WeeklySummary, MonitoringAiFailure>>
+      +Handle(command: PurgeExpiredWeeklySummariesCommand, ct): Task<Result<int, MonitoringError>>
+    }
+  }
+  package "Internal" {
+    class DailyComplianceRange <<record>> {
+      -From: DateOnly
+      -To: DateOnly
+      -Days: IReadOnlyList<ComplianceDay>
+      -Summary: ComplianceSummary
+    }
+    class FollowUpAgendaEntry <<record>> {
+      -FollowUp: ScheduledFollowUp
+      -PatientFullName: string?
+    }
+    class GeneratedTextChecks {
+      +{static} Check(label: string, text: string?, facts: MonitoringPeriodFacts, lexicon: IAiLanguageLexicon, forPatient: bool, consistencyAllowed: bool, violations: List<string>): void
+    }
+  }
+}
+
+IMonitoringAiContentCommandService -[hidden]down-> DailyComplianceRange
+
+@enduml

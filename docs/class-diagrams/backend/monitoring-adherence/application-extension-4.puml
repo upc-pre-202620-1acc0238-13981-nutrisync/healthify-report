@@ -1,0 +1,50 @@
+@startuml Healthify - Monitoring and Adherence - Application (part 4 of 5)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Monitoring and Adherence - Application layer (part 4 of 5)
+
+package "Healthify.Platform.MonitoringAdherence.Application" {
+
+  package "Internal.CommandServices" {
+    class PreVisitCheckInCommandService {
+      +Handle(command: SubmitPreVisitCheckInCommand, ct): Task<Result<PreVisitCheckInView, MonitoringError>>
+    }
+    class SuggestedQuestionsCommandService {
+      +MaximumPeriodDays: int
+      +Handle(command: SuggestQuestionsCommand, ct): Task<Result<SuggestedQuestionsView, MonitoringAiFailure>>
+      +{static} FingerprintOf(language: string, checkIn: PreVisitCheckIn?): string
+      +{static} InputOf(facts: MonitoringPeriodFacts, checkIn: PreVisitCheckIn?, guidelines: IReadOnlyList<string>): object
+    }
+    class WeeklySummaryCommandService {
+      +Handle(command: GenerateWeeklySummaryCommand, ct): Task<Result<WeeklySummary, MonitoringAiFailure>>
+      +Handle(command: PurgeExpiredWeeklySummariesCommand, ct): Task<Result<int, MonitoringError>>
+      +{static} InputOf(facts: MonitoringPeriodFacts): object
+    }
+  }
+  package "Internal.EventHandlers" {
+    class OnAiPreferencesChangedMonitoringHandler {
+      +Handle(notification: AiPreferencesChanged, ct): Task
+    }
+    class OnAiProcessingConsentChangedMonitoringHandler {
+      +Handle(notification: AiProcessingConsentChanged, ct): Task
+    }
+    class OnConsultationCompletedHandler {
+      +Handle(notification: ConsultationCompleted, ct): Task
+    }
+    class OnDiaryBatchSynchronizedHandler {
+      +Handle(notification: DiaryBatchSynchronized, ct): Task
+    }
+    class OnMealGroupLoggedHandler {
+      +Handle(notification: MealGroupLogged, ct): Task
+    }
+  }
+}
+
+PreVisitCheckInCommandService -[hidden]down-> OnAiPreferencesChangedMonitoringHandler
+
+@enduml

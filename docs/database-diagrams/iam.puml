@@ -16,6 +16,9 @@ TABLE(users, "users") {
   role : VARCHAR(20) NOT NULL
   failed_sign_in_attempts : INT NOT NULL
   locked_out_at : DATETIME
+  family_names : VARCHAR(80) NOT NULL
+  given_names : VARCHAR(80) NOT NULL
+  preferred_language : VARCHAR(5) NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
 }
@@ -28,6 +31,10 @@ TABLE(user_sessions, "user_sessions") {
   navigation_shell : VARCHAR(30)
   started_at : DATETIME NOT NULL
   terminated_at : DATETIME
+  previous_refresh_token_hash : CHAR(64)
+  refresh_token_expires_at : DATETIME
+  refresh_token_hash : CHAR(64)
+  refresh_token_rotated_at : DATETIME
   created_at : DATETIME
   updated_at : DATETIME
 }

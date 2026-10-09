@@ -1,0 +1,58 @@
+@startuml Healthify - Monitoring and Adherence - Application (part 2 of 5)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Monitoring and Adherence - Application layer (part 2 of 5)
+
+package "Healthify.Platform.MonitoringAdherence.Application" {
+
+  package "Internal" {
+    interface IMonitoringAiCache {
+      +TryGet(feature: AiFeature, patientId: int, key: string, value: out T?): bool
+      +Set(feature: AiFeature, patientId: int, key: string, value: T, lifetime: TimeSpan): void
+      +Evict(patientId: int, feature: AiFeature?): int
+    }
+    class MonitoringAiFailure <<record>> {
+      +Error: MonitoringError?
+      +AiError: AiError?
+      +{static} Of(error: MonitoringError): MonitoringAiFailure
+      +{static} Of(error: AiError): MonitoringAiFailure
+      +ToString(): string
+    }
+    class MonitoringFactsReader {
+      +Today(): DateOnly
+      +ReadAsync(patientId: int, from: DateOnly, to: DateOnly, includeWeight: bool, ct): Task<MonitoringPeriodFacts>
+      +{static} LanguageOf(preferred: string?): string
+    }
+    class MonitoringSummaryOutput <<record>> {
+      -Text: string
+    }
+    class MonitoringSummaryOutputValidator {
+      +MaximumLength: int
+      +Validate(output: MonitoringSummaryOutput): IReadOnlyList<string>
+    }
+    class MonitoringSummaryView <<record>> {
+      -Text: string?
+      -Facts: MonitoringPeriodFacts
+      -ConsistencyState: string?
+      -AiGenerationId: long?
+      -GeneratedAt: DateTimeOffset
+      -TextUnavailableReason: string?
+    }
+    class PatientFollowUpEntry <<record>> {
+      -FollowUp: ScheduledFollowUp
+      -PractitionerFullName: string?
+    }
+    class PreVisitCheckInView <<record>> {
+      -CheckIn: PreVisitCheckIn
+      -IsLocked: bool
+    }
+  }
+}
+
+
+@enduml

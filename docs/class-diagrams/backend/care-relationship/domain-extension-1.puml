@@ -1,0 +1,31 @@
+@startuml Healthify - Care Relationship - Domain (part 1 of 2)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Care Relationship - Domain layer (part 1 of 2)
+
+package "Healthify.Platform.CareRelationship.Domain" {
+
+  class "Model.Commands (3)" as Model_Commands <<messages>> {
+    ChangeAiProcessingConsentCommand
+    SyncAiPreferencesWithConsentCommand
+    UpdateAiPreferencesCommand
+  }
+  class "Model.Events (2)" as Model_Events <<messages>> {
+    AiPreferencesChanged
+    AiProcessingConsentChanged
+  }
+  class "Model.Queries (1)" as Model_Queries <<messages>> {
+    GetAiPreferencesByPatientIdQuery
+  }
+
+}
+
+Model_Commands -[hidden]down-> Model_Events
+Model_Events -[hidden]down-> Model_Queries
+
+@enduml

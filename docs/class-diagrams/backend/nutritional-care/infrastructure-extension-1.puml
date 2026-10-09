@@ -1,0 +1,67 @@
+@startuml Healthify - Nutritional Care - Infrastructure (part 1 of 3)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Infrastructure layer (part 1 of 3)
+
+package "Healthify.Platform.NutritionalCare.Infrastructure" {
+
+
+  package "Ai.Lexicon" {
+    class EmbeddedPatientMessageLexicon {
+      +ResourceName: string
+      +{static} Instance: EmbeddedPatientMessageLexicon
+      +AccusatoryTerms: IReadOnlyCollection<string>
+      +DiagnosisTerms: IReadOnlyCollection<string>
+    }
+  }
+  package "Calculators" {
+    class ConfiguredActivityFactorProvider {
+      +FactorFor(level: ActivityLevel): decimal
+    }
+    class ConfiguredCalorieFloorPolicy {
+      +DefaultFemaleFloorKcal: decimal
+      +DefaultMaleFloorKcal: decimal
+      +FloorFor(biologicalSex: string?): decimal
+    }
+    class ConfiguredDefaultGuidelinesProvider {
+      +{static} Defaults: IReadOnlyDictionary<string, IReadOnlyList<string>>
+      +For(diagnosis: DiagnosisCode): IReadOnlyList<string>
+    }
+    class DefaultTargetParametersPolicy {
+      +DefaultEquation: string
+      +DefaultDeficitKind: string
+      +DefaultDeficitValue: decimal
+      +DefaultProteinGramsPerKg: decimal
+      +DefaultFatPercentOfEnergy: decimal
+      +For(patientId: int, practitionerId: int, diagnosis: DiagnosisCode?, activityLevel: ActivityLevel, measuredWeightKg: decimal): ProposeTargetsCommand
+    }
+  }
+  package "Clock" {
+    class ClinicalTimeZoneDateProvider {
+      +DefaultTimeZoneId: string
+      +ClinicalTimeZoneDateProvider(configuration: IConfiguration, logger: ILogger<ClinicalTimeZoneDateProvider>, timeProvider: TimeProvider)
+      +Today(): DateOnly
+      +DateOf(instant: DateTimeOffset): DateOnly
+    }
+  }
+  package "Persistence.EFC.Configuration" {
+    class ChangeReasonDataJsonConverter {
+      +{static} Serialize(data: ChangeReasonData): string
+      +{static} Deserialize(json: string?): ChangeReasonData?
+    }
+    class ConsultationEntityTypeConfiguration {
+      +Configure(builder: EntityTypeBuilder<Consultation>): void
+    }
+  }
+}
+
+ClinicalTimeZoneDateProvider -[hidden]down-> ChangeReasonDataJsonConverter
+ConfiguredActivityFactorProvider -[hidden]down-> ClinicalTimeZoneDateProvider
+EmbeddedPatientMessageLexicon -[hidden]down-> ConfiguredActivityFactorProvider
+
+@enduml

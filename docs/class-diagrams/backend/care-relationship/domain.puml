@@ -54,6 +54,14 @@ package "Healthify.Platform.CareRelationship.Domain" {
       +Discharge(reason: ClinicalReason): void
       +MarkTargetsPending(planVersion: int): void
       +AcknowledgeActiveTargets(planVersion: int): void
+      +RevocationReason: RevocationReason?
+      +LastAcknowledgedAt: DateTimeOffset?
+      +ConsentAiProcessingGranted: bool
+      +ConsentAiProcessingDecidedAt: DateTimeOffset?
+      +HasAiProcessingConsent: bool
+      +IsPendingConsent: bool
+      +GrantAiProcessing(): bool
+      +RevokeAiProcessing(): bool
     }
   }
 

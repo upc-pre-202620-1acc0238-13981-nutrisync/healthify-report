@@ -1,0 +1,97 @@
+@startuml Healthify - Monitoring and Adherence - Domain (part 2 of 4)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Monitoring and Adherence - Domain layer (part 2 of 4)
+
+package "Healthify.Platform.MonitoringAdherence.Domain" {
+
+  package "Model.Aggregates" {
+    class PreVisitCheckIn {
+      +MaximumQuestionsPerOrigin: int
+      +PreVisitCheckIn(command: SubmitPreVisitCheckInCommand, followUp: ScheduledFollowUp, now: DateTimeOffset)
+      +Id: PreVisitCheckInId
+      +FollowUpId: int
+      +PatientId: int
+      +PractitionerId: int
+      +Feeling: PlanFeeling
+      +SubmittedAt: DateTimeOffset
+      +EditedAt: DateTimeOffset?
+      +Edit(command: SubmitPreVisitCheckInCommand, followUp: ScheduledFollowUp, now: DateTimeOffset): void
+      +{static} IsLockedFor(followUp: ScheduledFollowUp, now: DateTimeOffset): bool
+      +{static} ExceedsQuestionLimit(questions: IEnumerable<PatientQuestion>): bool
+    }
+    class WeeklySummary {
+      +MinimumLoggedDays: int
+      +HeadlineMaximumLength: int
+      +BulletMaximumLength: int
+      +MaximumWentWell: int
+      +MaximumWatchOut: int
+      +WeeklySummary(patientId: int, facts: MonitoringPeriodFacts, headline: string, wentWell: IEnumerable<string>, watchOut: IEnumerable<string>?, aiGenerationId: long, language: string, generatedAt: DateTimeOffset)
+      +Id: WeeklySummaryId
+      +PatientId: int
+      +WeekStart: DateOnly
+      +WeekEnd: DateOnly
+      +Headline: string
+      +AiGenerationId: long
+    }
+  }
+  package "Model.ValueObjects" {
+    class CheckInDifficulty <<record>> {
+      +Dinners: string
+      +Weekends: string
+      +EatingOut: string
+      +Schedules: string
+      +Cravings: string
+      +CheckInDifficulty(value: string?)
+      +Value: string
+      +{static} ListOf(values: IEnumerable<string>?): IReadOnlyList<CheckInDifficulty>
+      +ToString(): string
+    }
+    class ComplianceDay <<record>> {
+      -Date: DateOnly
+      -Outcome: string
+    }
+    class ComplianceSummary <<record>> {
+      -Met: int
+      -Exceeded: int
+      -Short: int
+      -Unlogged: int
+      -TotalDays: int
+      +MaximumRangeDays: int
+      +{static} IsValidRange(from: DateOnly, to: DateOnly): bool
+      +{static} DaysOf(days: IEnumerable<DailyCompliance>, from: DateOnly, to: DateOnly): IReadOnlyList<ComplianceDay>
+      +Logged: int
+      +{static} Of(days: IEnumerable<DailyCompliance>, from: DateOnly, to: DateOnly): ComplianceSummary
+    }
+    class ConsultationModality <<record>> {
+      +InPerson: string
+      +Remote: string
+      +ConsultationModality(value: string?)
+      +Value: string
+      +ToString(): string
+    }
+    class MealSlot {
+      +Breakfast: string
+      +Lunch: string
+      +Dinner: string
+      +Other: string
+      +{static} MainSlots: IReadOnlyList<string>
+      +{static} Of(localTimestamp: DateTimeOffset): string
+    }
+    class MealSlotDays <<record>> {
+      -Breakfast: int
+      -Lunch: int
+      -Dinner: int
+      -Other: int
+    }
+  }
+}
+
+PreVisitCheckIn -[hidden]down-> CheckInDifficulty
+
+@enduml

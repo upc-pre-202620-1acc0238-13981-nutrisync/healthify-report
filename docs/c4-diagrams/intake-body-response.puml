@@ -9,7 +9,7 @@ title Component Diagram - Bounded Context "Intake and Body Response" (Container:
 Person(patient, "Patient", "Logs meals, confirms the portion estimate and records self weigh-ins between consultations")
 Person(practitioner, "Practitioner", "Reads the diary and the weight trend of a linked patient; never writes here")
 
-Container(mobile, "Mobile Application", "Flutter / MAUI", "Offline-first diary. Runs the on-device portion estimation (ML Kit) and synchronises the entries when connectivity returns")
+Container(mobile, "Mobile Application", "Flutter / MAUI", "Offline-first diary. Uploads the photo for server-side recognition and synchronises the entries when connectivity returns; ML Kit only reads the invitation QR")
 
 Container_Boundary(api, "Healthify Platform API") {
 
@@ -23,7 +23,7 @@ Container_Boundary(api, "Healthify Platform API") {
     Component(targetsCacheCmdService, "ActiveTargetsCacheCommandService", "C# Application Service (CQRS command side)", "Refreshes the local targets copy")
     Component(intakeQryServices, "Intake Query Services", "C# Application Services (CQRS query side)", "Read diary, weigh-ins, trend and targets")
     Component(onTargetsUpdated, "OnActiveTargetsUpdatedIntakeHandler", "Cortex.Mediator IEventHandler of ActiveTargetsUpdated", "Policy 4.1: caches the published targets")
-    Component(onPhotoEstimation, "OnMealLoggedPhotoEstimationHandler", "Cortex.Mediator IEventHandler of MealLogged", "Policy 4.2: stores the on-device proposal")
+    Component(onPhotoEstimation, "OnMealLoggedPhotoEstimationHandler", "Cortex.Mediator IEventHandler of MealLogged", "Policy 4.2: stores the proposal supplied by the client (legacy path)")
     Component(onWeighIn, "OnSelfWeighInRecordedHandler", "Cortex.Mediator IEventHandler of SelfWeighInRecorded", "Recalculates the weight trend")
     Component(intakeFacade, "IntakeContextFacade", "C# ACL - Open Host Service", "Publishes daily summaries and trend")
 
@@ -35,6 +35,16 @@ Container_Boundary(api, "Healthify Platform API") {
 
     Component(intakeRepos, "Intake Repositories", "C# Repositories over EF Core 10", "Persist diary, weigh-ins, trend, cache")
     Component(intakeEfcConfig, "Intake EntityTypeConfigurations", "EF Core 10 Fluent API", "Maps tables, sync index and audit")
+
+    Component(mealPhotoController, "PatientMealPhotoAnalysesController", "ASP.NET Core REST Controller", "api/v1/patients/{id}/meal-photo-analyses. Recognizes a meal from a photo")
+    Component(mealIdeasController, "PatientMealIdeasController", "ASP.NET Core REST Controller", "api/v1/patients/{id}/meal-ideas. Suggests meals that fit what is left of the day")
+    Component(mealPhotoCmdService, "MealPhotoAnalysisCommandService", "C# Application Service (CQRS command side)", "Strips the metadata, calls the AI module and proposes an estimate")
+    Component(mealIdeasCmdService, "MealIdeasCommandService", "C# Application Service (CQRS command side)", "Generates meal ideas from the remaining targets and the restrictions")
+    Component(onAiConsent, "OnAiProcessingConsentChangedIntakeHandler", "Cortex.Mediator IEventHandler of AiProcessingConsentChanged", "Purges photo analyses and meal ideas when AI is switched off")
+    Component(onWeighInBatch, "OnSelfWeighInBatchSynchronizedHandler", "Cortex.Mediator IEventHandler of SelfWeighInBatchSynchronized", "Recalculates the trend once per synchronised batch")
+    Component(photoAnalysisAggregate, "MealPhotoAnalysis", "C# Aggregate Root", "Temporary result of a photo analysis; the photo itself is never stored")
+    Component(metadataStripper, "PhotoMetadataStripper", "C# infrastructure service", "Removes EXIF, XMP and ICC data before the photo reaches the AI")
+    Component(photoPurgeService, "MealPhotoAnalysisPurgeHostedService", "ASP.NET Core BackgroundService", "Deletes expired photo analyses")
 }
 
 ContainerDb(db, "Healthify Database", "MySQL 8.4", "Owns the diary entry, self weigh-in, weight trend, active targets cache and audit tables")
@@ -43,6 +53,8 @@ Container_Ext(careRelCtx, "Care Relationship", "Sibling bounded context", "Consu
 Container_Ext(foodCatalogCtx, "Food Catalog", "Sibling bounded context", "Consulted through IFoodCatalogContextFacade to resolve the food of an entry against the local catalog")
 Container_Ext(nutritionalCareCtx, "Nutritional Care", "Sibling bounded context", "Publishes ActiveTargetsUpdated")
 Container_Ext(monitoringCtx, "Monitoring and Adherence", "Sibling bounded context", "Subscribes to MealLogged, EstimateConfirmedByPatient, OffPlanEntryLogged, EntrySynchronized and WeightTrendRecalculated, and reads the summaries through the Open Host Service")
+
+Container_Ext(aiModule, "AI module (Shared)", "Technical module", "Generates content with a generative model behind consent, validation and quota controls; switched off by default")
 
 Rel(patient, mobile, "Logs meals, confirms estimates and weighs in", "Touch, works offline")
 Rel(practitioner, mobile, "Reads the diary and the trend", "Touch")
@@ -67,7 +79,7 @@ Rel(weighInAggregate, intakeValueObjects, "Is built from", "in-process")
 Rel(nutritionalCareCtx, onTargetsUpdated, "Publishes ActiveTargetsUpdated", "Cortex.Mediator, in-process")
 Rel(onTargetsUpdated, targetsCacheCmdService, "Refreshes the local targets cache", "in-process")
 Rel(diaryCmdService, onPhotoEstimation, "Publishes MealLogged to", "Cortex.Mediator, own DI scope")
-Rel(onPhotoEstimation, diaryCmdService, "Persists the on-device portion proposal", "in-process")
+Rel(onPhotoEstimation, diaryCmdService, "Persists the client-supplied portion proposal", "in-process")
 Rel(weighInCmdService, onWeighIn, "Publishes SelfWeighInRecorded to", "Cortex.Mediator, own DI scope")
 Rel(onWeighIn, trendAggregate, "Recalculates and publishes WeightTrendRecalculated", "in-process")
 
@@ -84,5 +96,21 @@ Rel(targetsCacheCmdService, careRelCtx, "Confirms the care link is active", "in-
 Rel(diaryCmdService, foodCatalogCtx, "Resolves the food of the entry", "in-process ACL call")
 Rel(monitoringCtx, intakeFacade, "Reads the daily summary and the weight trend", "in-process ACL call")
 Rel(diaryCmdService, monitoringCtx, "Publishes MealLogged, EstimateConfirmedByPatient, OffPlanEntryLogged and EntrySynchronized", "Cortex.Mediator, in-process")
+
+Rel(mobile, mealPhotoController, "Uploads the photo and reads the proposed estimate", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, mealIdeasController, "Asks for meal ideas", "JSON/HTTPS, Bearer JWT")
+Rel(mealPhotoController, mealPhotoCmdService, "Sends AnalyzeMealPhotoCommand", "in-process")
+Rel(mealIdeasController, mealIdeasCmdService, "Sends GenerateMealIdeasCommand", "in-process")
+Rel(mealPhotoCmdService, metadataStripper, "Cleans the photo through", "in-process")
+Rel(mealPhotoCmdService, photoAnalysisAggregate, "Records the analysis in", "in-process")
+Rel(mealPhotoCmdService, aiModule, "Recognizes the meal through", "in-process, own pipeline")
+Rel(mealIdeasCmdService, aiModule, "Generates the ideas through", "in-process, own pipeline")
+Rel(mealPhotoCmdService, foodCatalogCtx, "Resolves or creates the recognized food", "in-process ACL call")
+Rel(mealIdeasCmdService, foodCatalogCtx, "Resolves the ingredient names", "in-process ACL call")
+Rel(careRelCtx, onAiConsent, "Publishes AiProcessingConsentChanged", "Cortex.Mediator, in-process")
+Rel(onAiConsent, mealPhotoCmdService, "Purges the generated content", "in-process")
+Rel(photoPurgeService, mealPhotoCmdService, "Purges expired analyses through", "in-process")
+Rel(weighInCmdService, onWeighInBatch, "Publishes SelfWeighInBatchSynchronized to", "Cortex.Mediator, own DI scope")
+Rel(onWeighInBatch, trendAggregate, "Recalculates", "in-process")
 
 @enduml

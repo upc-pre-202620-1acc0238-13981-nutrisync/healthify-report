@@ -1,0 +1,50 @@
+@startuml Healthify - Nutritional Care - Domain (part 6 of 6)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Nutritional Care - Domain layer (part 6 of 6)
+
+package "Healthify.Platform.NutritionalCare.Domain" {
+
+  package "Services" {
+    interface ICalorieFloorPolicy {
+      +FloorFor(biologicalSex: string?): decimal
+    }
+    interface IClinicalDateProvider {
+      +Today(): DateOnly
+      +DateOf(instant: DateTimeOffset): DateOnly
+    }
+    interface IDefaultGuidelinesProvider {
+      +For(diagnosis: DiagnosisCode): IReadOnlyList<string>
+    }
+    interface IDefaultTargetParametersPolicy {
+      +For(patientId: int, practitionerId: int, diagnosis: DiagnosisCode?, activityLevel: ActivityLevel, measuredWeightKg: decimal): ProposeTargetsCommand
+    }
+    interface IPatientMessageLexicon {
+      +AccusatoryTerms: IReadOnlyCollection<string>
+      +DiagnosisTerms: IReadOnlyCollection<string>
+    }
+    class PatientMessageRules {
+      +{static} TermsIn(text: string?, terms: IEnumerable<string>): IReadOnlyList<string>
+    }
+    class PlanAdjustmentSafety {
+      +MaximumEnergyChange: decimal
+      +MacroTolerance: decimal
+      +{static} IsWithinAdjustmentBand(currentEnergyKcal: decimal, proposedEnergyKcal: decimal): bool
+      +{static} IsAtOrAboveFloor(proposedEnergyKcal: decimal, floorKcal: decimal): bool
+      +{static} AreMacrosCoherent(energyKcal: decimal, proteinG: decimal, carbG: decimal, fatG: decimal): bool
+      +{static} MinimumEnergyKcal(currentEnergyKcal: decimal, floorKcal: decimal): decimal
+      +{static} MaximumEnergyKcal(currentEnergyKcal: decimal): decimal
+    }
+    class PlanVersionDiff {
+      +{static} Compare(previous: NutritionPlan?, current: NutritionPlan): IReadOnlyList<PlanChange>
+    }
+  }
+}
+
+
+@enduml

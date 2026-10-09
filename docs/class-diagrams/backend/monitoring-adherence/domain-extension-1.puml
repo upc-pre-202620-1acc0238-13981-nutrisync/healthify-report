@@ -1,0 +1,53 @@
+@startuml Healthify - Monitoring and Adherence - Domain (part 1 of 4)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam nodesep 10
+skinparam ranksep 14
+hide empty members
+
+title Monitoring and Adherence - Domain layer (part 1 of 4)
+
+package "Healthify.Platform.MonitoringAdherence.Domain" {
+
+  class "Model.Commands (14)" as Model_Commands <<messages>> {
+    AcknowledgeConsistencyPromptCommand
+    CancelFollowUpCommand
+    CancelFollowUpsForPatientCommand
+    CloseReferralCommand
+    CompleteFollowUpFromConsultationCommand
+    GenerateWeeklySummaryCommand
+    MarkUnloggedDaysBeforeCommand
+    PreVisitCheckInQuestionInput
+    PurgeExpiredWeeklySummariesCommand
+    PurgeMonitoringAiContentCommand
+    RescheduleFollowUpCommand
+    SubmitPreVisitCheckInCommand
+    SuggestQuestionsCommand
+    SummarizeMonitoringCommand
+  }
+  class "Model.Events (5)" as Model_Events <<messages>> {
+    ConsistencyPromptAcknowledged
+    FollowUpCancelled
+    FollowUpRescheduled
+    PreVisitCheckInSubmitted
+    ReferralClosed
+  }
+  class "Model.Queries (9)" as Model_Queries <<messages>> {
+    GetDailyComplianceRangeQuery
+    GetFollowUpsByPatientIdQuery
+    GetLatestPreVisitCheckInQuery
+    GetLatestWeeklySummaryByPatientIdQuery
+    GetNextFollowUpByPatientIdQuery
+    GetPractitionerAgendaQuery
+    GetPreVisitCheckInByFollowUpIdQuery
+    GetScheduledFollowUpByIdQuery
+    GetScheduledFollowUpsByPatientIdsQuery
+  }
+
+}
+
+Model_Commands -[hidden]down-> Model_Events
+Model_Events -[hidden]down-> Model_Queries
+
+@enduml
