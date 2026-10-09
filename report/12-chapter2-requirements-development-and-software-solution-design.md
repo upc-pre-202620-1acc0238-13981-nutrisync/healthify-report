@@ -1,3 +1,4 @@
+
 # CAPÍTULO II: REQUIREMENTS DEVELOPMENT AND SOFTWARE SOLUTION DESIGN
 
 ## 2.1. Competidores
@@ -11,6 +12,8 @@ Nutrium es una plataforma de gestión de la práctica nutricional con presencia 
 MacroFactor es una aplicación de seguimiento nutricional dirigida al consumidor final, sin intervención de un profesional de la salud. Su diferencial es un algoritmo adaptativo que estima el gasto energético total a partir de la relación entre la ingesta registrada y la tendencia de peso del usuario, ajustando las metas calóricas de forma semanal. Constituye un competidor indirecto relevante porque valida técnicamente el mismo mecanismo de contraste entre lo declarado y la respuesta corporal que Healthify incorpora, aunque prescindiendo por completo del profesional que en Healthify conserva la decisión clínica.
 
 ### 2.1.1. Análisis competitivo
+
+<p class="caption"><strong>Tabla 16</strong><br><em>Competitive Analysis Landscape: Healthify frente a Nutrimind, Nutrium y MacroFactor</em></p>
 
 <table>
 <tr>
@@ -210,6 +213,8 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 
 ### 2.2.2. Registro de entrevistas
 
+<p class="caption"><strong>Tabla 17</strong><br><em>Registro de la entrevista #1 al segmento nutricionista</em></p>
+
 | Segmento: Nutricionista | Entrevista #1 |
 | --- | --- |
 | Nombres y Apellidos | Willyan Guerrero Ortega |
@@ -224,6 +229,8 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 | Resumen | Willyan tiene 30 años y cuatro de ejercicio profesional. Trabaja en el Centro de Salud La Rama y antes trabajó en EsSalud en Huaraz. En clínicas atiende entre cinco y seis pacientes activos. Con un paciente nuevo sigue las fases de la consulta nutricional: evaluación (hábitos alimentarios, antecedentes médicos, actividad física, peso, talla, perímetro abdominal, pliegues y análisis bioquímicos como perfil lipídico y glucosa), diagnóstico, intervención con un plan de alimentación personalizado y, por último, monitoreo y seguimiento. Entre consultas hace el monitoreo de forma virtual, con una frecuencia que ajusta a cada paciente, y en algunos casos lo sigue día por día. Cuando el paciente regresa, para saber qué consumió debe hacerle **nuevamente una entrevista sobre sus hábitos**. En ese periodo los pacientes también le consultan sustituciones por antojos, y él les responde con equivalencias en gramos y calorías (por ejemplo, cambiar camote por papa, yuca u olluco). Si un paciente no progresa, hace ajustes, vuelve a preguntar y, según la evaluación, lo deriva a un endocrinólogo, porque los factores hormonales pueden influir. No considera repetitivo su trabajo, ya que cada plan es individualizado. Usa Nutrimind, un software con app en su celular, para diseñar el régimen alimentario y registrar datos y medidas del paciente. Sin embargo, lo que el paciente come entre consultas lo sigue obteniendo mediante entrevista y contacto virtual. |
 
 <div style="page-break-after: always"></div>
+
+<p class="caption"><strong>Tabla 18</strong><br><em>Registro de la entrevista #2 al segmento nutricionista</em></p>
 
 | Segmento: Nutricionista | Entrevista #2 |
 | --- | --- |
@@ -240,6 +247,8 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 
 <div style="page-break-after: always"></div>
 
+<p class="caption"><strong>Tabla 19</strong><br><em>Registro de la entrevista #1 al segmento paciente en tratamiento nutricional activo</em></p>
+
 | Segmento: Paciente en tratamiento nutricional activo | Entrevista #1 |
 | --- | --- |
 | Nombres y Apellidos | Evelyn Del Aguila |
@@ -254,6 +263,8 @@ Las entrevistas se diseñaron como guías semiestructuradas y diferenciadas para
 | Resumen | Evelyn tiene 52 años, vive con su madre, quien suele cocinar, y en ocasiones piden comida por delivery. Llegó al nutricionista por recomendación tras un examen de salud ocupacional que mostró triglicéridos y glucosa elevados. Recibe su plan por WhatsApp como un cronograma semanal de tres comidas diarias, que mantiene impreso y en el celular. Su nutricionista le pide **enviar todos los días, de lunes a domingo, la foto de su desayuno, almuerzo y cena** para evaluar lo que consume. Ese chat de WhatsApp es el único registro de su alimentación y el lugar donde ella misma revisa su nivel de cumplimiento. Recibe sus análisis y medidas y se los lleva al nutricionista en la cita para que los interprete. Cuando come fuera del plan por compromisos laborales o familiares (por ejemplo, makis en una reunión con colegas), igual envía la foto y explica la situación por escrito. Se pesa cada dos semanas por decisión propia. Ha usado apps de delivery con información nutricional, pero ninguna dedicada al registro de comidas. Afirmó que usaría a diario el registro por foto, "porque igual a diario tengo que enviar el reporte", siempre que la app sea eficiente. También usaría el botón de "comí fuera del plan", ya que por el trabajo le cuesta tomarse tiempo para escribirle detalles al nutricionista. Lo que más le gustaría cambiar es poder enviar sus fotos con un mensaje ya predefinido. |
 
 <div style="page-break-after: always"></div>
+
+<p class="caption"><strong>Tabla 20</strong><br><em>Registro de la entrevista #2 al segmento paciente en tratamiento nutricional activo</em></p>
 
 | Segmento: Paciente en tratamiento nutricional activo | Entrevista #2 |
 | --- | --- |
@@ -328,9 +339,13 @@ Esta sección presenta las fichas de User Persona elaboradas en UXPressia, una p
 
 #### Segmento 1: Nutricionista
 
+<p class="caption"><strong>Figura 4</strong><br><em>User persona de Willyan</em></p>
+
 ![Willyan User Persona](../assets/img/chapter2/willyan-user-persona.png)
 
 #### Segmento 2: Paciente en tratamiento nutricional activo
+
+<p class="caption"><strong>Figura 5</strong><br><em>User persona de Evelyn</em></p>
 
 ![Evelyn User Persona](../assets/img/chapter2/evelyn-user-persona.png)
 
@@ -339,6 +354,8 @@ Esta sección presenta las fichas de User Persona elaboradas en UXPressia, una p
 Esta sección presenta el User Task Matrix de los dos segmentos objetivo de Healthify, construido a partir de las cuatro entrevistas realizadas: Willyan Guerrero y Tatiana Mozombite, nutricionistas, y Evelyn Del Aguila y Larisa Ramírez, pacientes en tratamiento nutricional activo. La matriz concentra las tareas que cada entrevistado realiza actualmente para cumplir sus objetivos, con independencia de la existencia de la solución propuesta. Para cada tarea se consigna la frecuencia con que se ejecuta y la importancia que reviste para el usuario correspondiente.
 
 #### Segmento 1: Nutricionista
+
+<p class="caption"><strong>Tabla 21</strong><br><em>User Task Matrix del segmento nutricionista</em></p>
 
 <table>
 <tr>
@@ -400,6 +417,8 @@ Esta sección presenta el User Task Matrix de los dos segmentos objetivo de Heal
 </table>
 
 #### Segmento 2: Paciente en tratamiento nutricional activo
+
+<p class="caption"><strong>Tabla 22</strong><br><em>User Task Matrix del segmento paciente en tratamiento nutricional activo</em></p>
 
 <table>
 <tr>
@@ -469,9 +488,13 @@ Esta sección presenta los User Journey Maps elaborados en UXPressia, uno por ca
 
 #### Segmento 1: Nutricionista
 
+<p class="caption"><strong>Figura 6</strong><br><em>User journey mapping de Willyan</em></p>
+
 ![Willyan User Journey Mapping](../assets/img/chapter2/willyan-user-journey-mapping.png)
 
 #### Segmento 2: Paciente en tratamiento nutricional activo
+
+<p class="caption"><strong>Figura 7</strong><br><em>User journey mapping de Evelyn</em></p>
 
 ![Evelyn User Journey Mapping](../assets/img/chapter2/evelyn-user-journey-mapping.png)
 
@@ -481,9 +504,13 @@ Esta sección presenta los Empathy Maps elaborados en UXPressia para cada uno de
 
 #### Segmento 1: Nutricionista
 
+<p class="caption"><strong>Figura 8</strong><br><em>Mapa de empatía de Willyan</em></p>
+
 ![Willyan Empathy Map](../assets/img/chapter2/willyan-empathy-map.png)
 
 #### Segmento 2: Paciente en tratamiento nutricional activo
+
+<p class="caption"><strong>Figura 9</strong><br><em>Mapa de empatía de Evelyn</em></p>
 
 ![Evelyn Empathy Map](../assets/img/chapter2/evelyn-empathy-map.png)
 
@@ -495,6 +522,8 @@ El proceso se desarrolló en cuatro momentos. En el primero, el equipo realizó 
 
 **Convención de notas utilizada en el tablero:**
 
+<p class="caption"><strong>Tabla 23</strong><br><em>Convención de notas del tablero de Big Picture EventStorming</em></p>
+
 | Nota | Elemento | Significado en el modelo |
 |---|---|---|
 | Amarillo claro | Actor | `Patient` o `Practitioner`, nunca un usuario genérico |
@@ -502,33 +531,47 @@ El proceso se desarrolló en cuatro momentos. En el primero, el equipo realizó 
 | Morado | Policy | Reacción automática del tipo cuando X entonces Y |
 | Verde claro | Read Model | Vista que alguien consulta para decidir |
 
+<p class="caption"><strong>Figura 10</strong><br><em>Tablero completo del Big Picture EventStorming</em></p>
+
 ![Big Picture EventStorming - Tablero completo](../assets/img/artifacts/event-storming/big-picture-eventstorming-completo.png)
 
 El tablero resultante quedó organizado en cinco fases narrativas, que se describen a continuación.
 
 **Fase 1 — Vinculación, dentro de la consulta.** El profesional crea su cuenta y emite una invitación; el paciente la redime escaneando el código QR durante la consulta presencial y otorga su consentimiento. Los hechos relevantes son `Invitation Issued`, `Invitation Redeemed`, `Care Link Established` y `Consent Granted`. Aquí aparece la primera política del tablero: cuando se establece el vínculo, se abre automáticamente una ventana de evaluación para ese paciente.
 
+<p class="caption"><strong>Figura 11</strong><br><em>Fase 1 del Big Picture EventStorming: vinculación y consentimiento</em></p>
+
 ![Fase 1 - Vinculación y consentimiento](../assets/img/artifacts/event-storming/big-picture-fase1-vinculacion.png)
 
 **Fase 2 — El acto clínico, dentro de la consulta.** Ocurre con un solo actor presente, el profesional, y reproduce las tres primeras fases que los nutricionistas entrevistados describieron como su proceso de trabajo: evaluación, diagnóstico e intervención. La cadena de hechos va de `Nutritional Assessment Recorded` y `Clinical Measurement Taken` hasta `Nutritional Diagnosis Issued`, `Targets Proposed`, `Targets Accepted As Proposed` o `Targets Overridden`, y culmina en `Nutrition Plan Published` y `Active Targets Updated`. Este último hecho es el que más consecuencias tiene en el resto del tablero, porque desencadena tres políticas simultáneas en zonas distintas del dominio.
+
+<p class="caption"><strong>Figura 12</strong><br><em>Fase 2 del Big Picture EventStorming: acto clínico</em></p>
 
 ![Fase 2 - Acto clínico](../assets/img/artifacts/event-storming/big-picture-fase2-acto-clinico.png)
 
 **Fase 3 — Entre consultas.** Es la zona del tablero donde vive el enunciado del problema. Participan los dos actores de manera asíncrona, sin estar en el mismo lugar ni en el mismo momento, y con conectividad intermitente. El paciente produce `Meal Logged`, `Estimate Confirmed By Patient`, `Off Plan Entry Logged`, `Self Weigh In Recorded` y `Entry Queued Offline`; el sistema reacciona con `Day Evaluated`, `Daily Compliance Computed`, `Deviation Detected`, `Sustained Deviation Detected` y `Consistency Index Recomputed`. Durante la sesión se identificó aquí una decisión de diseño que el equipo dejó explícita en el tablero: la alerta de consistencia notifica primero al paciente mediante `Patient Prompted About Consistency` y solo escala al profesional después de tres semanas sostenidas, mientras que `Logging Gap Detected` nunca escala ni cuenta como incumplimiento.
 
+<p class="caption"><strong>Figura 13</strong><br><em>Fase 3 del Big Picture EventStorming: periodo entre consultas</em></p>
+
 ![Fase 3 - Periodo entre consultas](../assets/img/artifacts/event-storming/big-picture-fase3-entre-consultas.png)
 
 **Fase 4 — La decisión clínica.** El profesional recibe la señal en su bandeja de revisión y decide. Los hechos son `Review Item Created`, `Nutrition Plan Adjusted`, `Plan Version Superseded` y `Review Item Resolved`. La sesión hizo visible que ninguna política conecta la señal con el ajuste del plan: la automatización se detiene en la bandeja y es un humano quien continúa la cadena.
 
+<p class="caption"><strong>Figura 14</strong><br><em>Fase 4 del Big Picture EventStorming: decisión clínica del profesional</em></p>
+
 ![Fase 4 - Decisión clínica del profesional](../assets/img/artifacts/event-storming/big-picture-fase4-decision-clinica.png)
 
 **Fase 5 — Cierre.** Comprende `Referral Recorded`, `Treatment Discharged`, `Consent Withdrawn` y `Care Link Revoked`, con la política que cierra la ventana de evaluación cuando el vínculo se revoca.
+
+<p class="caption"><strong>Figura 15</strong><br><em>Fase 5 del Big Picture EventStorming: cierre del tratamiento</em></p>
 
 ![Fase 5 - Cierre del tratamiento](../assets/img/artifacts/event-storming/big-picture-fase5-cierre.png)
 
 ### 2.3.6. Ubiquitous Language
 
 Esta sección presenta el glosario de términos del dominio nutricional que el equipo utiliza de manera uniforme en las entrevistas, en el modelado, en la documentación y en el código. Los términos se expresan en inglés, acompañados de su equivalente en español, y su definición corresponde al significado que tienen en el dominio del negocio y no a su implementación técnica. El glosario se construyó a partir del análisis lingüístico de las entrevistas y del Big Picture EventStorming, y es normativo: un término que aparezca en el modelo y no figure en esta tabla no existe en el dominio.
+
+<p class="caption"><strong>Tabla 24</strong><br><em>Términos del Ubiquitous Language de Healthify</em></p>
 
 | Término (inglés) | Equivalente en español | Definición |
 |---|---|---|
@@ -565,6 +608,8 @@ Esta sección presenta el glosario de términos del dominio nutricional que el e
 
 Del análisis lingüístico surgieron además cinco expresiones que el equipo decidió prohibir porque introducen ambigüedad o contradicen decisiones de producto ya tomadas.
 
+<p class="caption"><strong>Tabla 25</strong><br><em>Expresiones prohibidas del Ubiquitous Language</em></p>
+
 | Expresión prohibida | Razón | Término que la reemplaza |
 |---|---|---|
 | `Weight` | Designa dos realidades con autoridad clínica distinta | `Clinical Measurement` o `Self Weigh In` |
@@ -583,6 +628,8 @@ Adicionalmente, se consideran Technical Stories para representar capacidades té
 
 Los criterios de aceptación se expresan mediante escenarios Given–When–Then y describen comportamientos verificables del sistema sin establecer detalles específicos de presentación de la interfaz.
 
+<p class="caption"><strong>Tabla 26</strong><br><em>Épicas del producto</em></p>
+
 | Epic ID | Title | Description |
 |---|---|---|
 | **EP01** | Gestión de la Relación de Cuidado | Agrupa las capacidades necesarias para establecer, mantener y finalizar el vínculo entre un Paciente y un Nutricionista, incluyendo invitaciones, consentimiento y control del acceso a la información. |
@@ -595,12 +642,14 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 | **EP08** | Identidad y Acceso | Agrupa las capacidades relacionadas con creación de cuentas, autenticación, autorización y administración de sesiones. |
 | **EP09** | Offline y Sincronización | Comprende la continuidad del registro cuando no existe conectividad y la posterior sincronización segura de los datos. |
 | **EP10** | Landing Page | Agrupa las funcionalidades públicas destinadas a presentar Healthify, informar sobre sus capacidades y facilitar el acceso y contacto con la solución. |
+| **EP11** | Asistencia con IA | Agrupa las funcionalidades que utilizan IA como apoyo, siempre con consentimiento del paciente y sin sustituir la decisión del profesional: resumen semanal, ideas de comidas y preguntas sugeridas. |
 | **EP_TS** | RESTful API — Technical Stories | Agrupa las Technical Stories necesarias para implementar los servicios RESTful que soportan las funcionalidades de Healthify y permiten la comunicación entre las aplicaciones cliente y el backend. |
 | **EP_SS** | Spike Stories | Agrupa las investigaciones, análisis y pruebas de viabilidad técnica necesarias para reducir incertidumbre antes de implementar funcionalidades o integraciones de Healthify. |
 
 ### EP01 — Gestión de la Relación de Cuidado
 
-<br>***US01 — Vinculación mediante invitación QR***
+<p class="caption"><strong>Tabla 27</strong><br><em>Historia de usuario US01: Vinculación mediante invitación QR</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -632,7 +681,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US02 — Otorgamiento de consentimiento para compartir información***
+<p class="caption"><strong>Tabla 28</strong><br><em>Historia de usuario US02: Otorgamiento de consentimiento para compartir información</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -664,7 +714,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US03 — Revocación del consentimiento***
+<p class="caption"><strong>Tabla 29</strong><br><em>Historia de usuario US03: Revocación del consentimiento</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -696,7 +747,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US04 — Generación de invitación QR para un nuevo paciente***
+<p class="caption"><strong>Tabla 30</strong><br><em>Historia de usuario US04: Generación de invitación QR para un nuevo paciente</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -728,7 +780,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US05 — Consulta de pacientes con vínculo activo***
+<p class="caption"><strong>Tabla 31</strong><br><em>Historia de usuario US05: Consulta de pacientes con vínculo activo</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -760,7 +813,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US06 — Alta del paciente al finalizar el tratamiento***
+<p class="caption"><strong>Tabla 32</strong><br><em>Historia de usuario US06: Alta del paciente al finalizar el tratamiento</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -788,11 +842,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Alta registrada</strong><br>Dado que el nutricionista mantiene un vínculo de cuidado activo<br>Cuando el nutricionista registra el alta del paciente<br>Entonces el sistema finaliza el vínculo por cierre clínico y conserva su historial.<br><br><strong>Escenario 2: Acceso posterior al alta</strong><br>Dado que el nutricionista ha registrado previamente el alta del paciente<br>Cuando el nutricionista consulta el estado del vínculo después de registrar el alta<br>Entonces el sistema no considera activo el vínculo finalizado por alta.</td>
+    <td colspan="8"><strong>Escenario 1: Alta registrada</strong><br>Dado que el nutricionista mantiene un vínculo de cuidado activo<br>Cuando el nutricionista registra el alta del paciente<br>Entonces el sistema finaliza el vínculo por cierre clínico y conserva su historial.<br><br><strong>Escenario 2: Acceso posterior al alta</strong><br>Dado que el nutricionista ha registrado previamente el alta del paciente<br>Cuando el nutricionista consulta el estado del vínculo después de registrar el alta<br>Entonces el sistema no considera activo el vínculo finalizado por alta.<br><br><strong>Escenario 3: Efectos del alta</strong><br>Dado que el nutricionista ha registrado el alta de un paciente que tenía consultas futuras agendadas y funciones con IA habilitadas<br>Cuando el sistema cierra el vínculo por alta<br>Entonces el sistema cancela las consultas futuras del paciente y desactiva las funciones con IA asociadas a ese vínculo.</td>
   </tr>
 </table>
 
-<br>***US07 — Revocación del vínculo de cuidado***
+<p class="caption"><strong>Tabla 33</strong><br><em>Historia de usuario US07: Cambio de nutricionista</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -802,32 +857,33 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
   <tr>
     <td colspan="2">US07</td>
-    <td colspan="2">Nutricionista</td>
+    <td colspan="2">Paciente</td>
     <td colspan="2">Media</td>
     <td colspan="2">EP01</td>
   </tr>
   <tr>
     <th colspan="2">Title</th>
-    <td colspan="6">Revocación del vínculo de cuidado</td>
+    <td colspan="6">Cambio de nutricionista</td>
   </tr>
   <tr>
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como nutricionista, deseo revocar un vínculo de cuidado cuando la relación de seguimiento deba finalizar sin registrar un alta clínica, para impedir nuevos accesos mediante dicho vínculo.</td>
+    <td colspan="8">Como paciente, deseo vincularme con otro nutricionista cuando decida cambiar de profesional, para continuar mi seguimiento sin mantener dos vínculos activos al mismo tiempo.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Revocación de vínculo activo</strong><br>Dado que el nutricionista mantiene un vínculo de cuidado activo<br>Cuando el nutricionista solicita revocar el vínculo de cuidado<br>Entonces el sistema registra el vínculo como revocado.<br><br><strong>Escenario 2: Acceso mediante vínculo revocado</strong><br>Dado que el nutricionista tiene un vínculo que se encuentra revocado<br>Cuando el nutricionista solicita acceder a información protegida mediante el vínculo revocado<br>Entonces el sistema rechaza el acceso.</td>
+    <td colspan="8"><strong>Escenario 1: Cambio confirmado</strong><br>Dado que el paciente mantiene un vínculo activo con un nutricionista y posee una invitación válida de otro nutricionista<br>Cuando el paciente confirma de forma explícita que desea cambiar de nutricionista y utiliza la nueva invitación<br>Entonces el sistema revoca el vínculo anterior, conserva su historial y establece el vínculo con el nuevo nutricionista.<br><br><strong>Escenario 2: Cambio sin confirmación</strong><br>Dado que el paciente mantiene un vínculo activo y utiliza la invitación de otro nutricionista<br>Cuando el paciente no confirma que desea reemplazar su vínculo actual<br>Entonces el sistema rechaza la operación y conserva el vínculo vigente.<br><br><strong>Escenario 3: Acceso del nutricionista anterior</strong><br>Dado que el paciente ha cambiado de nutricionista<br>Cuando el nutricionista anterior solicita acceder a información protegida del paciente<br>Entonces el sistema rechaza el acceso mediante el vínculo revocado.</td>
   </tr>
 </table>
 <br>
 
 ### EP02 — Gestión de Ingesta Alimentaria
 
-<br>***US08 — Registro de comida por fotografía***
+<p class="caption"><strong>Tabla 34</strong><br><em>Historia de usuario US08: Registro de comida por fotografía</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -855,11 +911,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Fotografía procesable</strong><br>Dado que el paciente proporciona una fotografía válida de una comida<br>Cuando el paciente solicita procesar la fotografía de la comida<br>Entonces el sistema genera una propuesta de alimentos y porciones estimadas para su confirmación.<br><br><strong>Escenario 2: Estimación con procedencia</strong><br>Dado que el paciente tiene una estimación generada a partir de una fotografía<br>Cuando el paciente revisa la propuesta generada a partir de la fotografía<br>Entonces el sistema conserva la procedencia y nivel de confianza asociados a la estimación.<br><br><strong>Escenario 3: Fotografía no procesable</strong><br>Dado que el paciente proporciona una fotografía cuya información no permite obtener una estimación utilizable<br>Cuando el paciente solicita procesar una fotografía que no permite obtener una estimación válida<br>Entonces el sistema informa que no se obtuvo una estimación válida y permite continuar mediante registro manual.</td>
+    <td colspan="8"><strong>Escenario 1: Fotografía procesable</strong><br>Dado que el paciente proporciona una fotografía válida de una comida<br>Cuando el paciente solicita procesar la fotografía de la comida<br>Entonces el sistema genera una propuesta de alimentos y porciones estimadas para su confirmación.<br><br><strong>Escenario 2: Estimación con procedencia</strong><br>Dado que el paciente tiene una estimación generada a partir de una fotografía<br>Cuando el paciente revisa la propuesta generada a partir de la fotografía<br>Entonces el sistema conserva la procedencia y nivel de confianza asociados a la estimación.<br><br><strong>Escenario 3: Fotografía no procesable</strong><br>Dado que el paciente proporciona una fotografía cuya información no permite obtener una estimación utilizable<br>Cuando el paciente solicita procesar una fotografía que no permite obtener una estimación válida<br>Entonces el sistema informa que no se obtuvo una estimación válida y permite continuar mediante registro manual.<br><br><strong>Escenario 4: Reconocimiento sujeto al consentimiento de IA</strong><br>Dado que el paciente no ha otorgado el consentimiento para funciones con IA o ha desactivado el reconocimiento de comidas por fotografía<br>Cuando el paciente solicita procesar una fotografía de una comida<br>Entonces el sistema no procesa la fotografía y permite continuar mediante registro manual.<br><br><strong>Escenario 5: Protección de la fotografía</strong><br>Dado que el paciente ha enviado una fotografía para su reconocimiento<br>Cuando el sistema finaliza el procesamiento<br>Entonces el sistema no conserva la fotografía ni la procesa con datos que identifiquen al paciente.</td>
   </tr>
 </table>
 
-<br>***US09 — Confirmación o ajuste de estimación de porción***
+<p class="caption"><strong>Tabla 35</strong><br><em>Historia de usuario US09: Confirmación o ajuste de estimación de porción</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -891,7 +948,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US10 — Registro manual de comida mediante catálogo***
+<p class="caption"><strong>Tabla 36</strong><br><em>Historia de usuario US10: Registro manual de comida mediante catálogo</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -923,7 +981,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US11 — Registro de consumo fuera del plan***
+<p class="caption"><strong>Tabla 37</strong><br><em>Historia de usuario US11: Indicación de adherencia al plan en un registro</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -939,26 +998,60 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
   <tr>
     <th colspan="2">Title</th>
-    <td colspan="6">Registro de consumo fuera del plan</td>
+    <td colspan="6">Indicación de adherencia al plan en un registro</td>
   </tr>
   <tr>
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como paciente, deseo registrar que consumí algo fuera de mi plan sin tener que proporcionar información detallada, para mantener un registro más completo de mi alimentación.</td>
+    <td colspan="8">Como paciente, deseo indicar si una comida que registro estaba dentro de mi plan, sin tener que justificarme, para mantener un registro honesto de mi alimentación.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Registro del consumo</strong><br>Dado que el paciente desea declarar un consumo fuera del plan<br>Cuando el paciente registra el consumo fuera del plan<br>Entonces el sistema conserva la declaración con su fecha y hora sin exigir el detalle del alimento consumido.<br><br><strong>Escenario 2: Tratamiento no punitivo</strong><br>Dado que el paciente tiene un consumo fuera del plan registrado<br>Cuando el paciente consulta posteriormente el consumo registrado fuera del plan<br>Entonces el sistema conserva el dato sin asignarle una valoración punitiva.</td>
+    <td colspan="8"><strong>Escenario 1: Indicación al registrar</strong><br>Dado que el paciente confirma una comida registrada por fotografía o la registra manualmente<br>Cuando el paciente indica si la comida estaba dentro o fuera de su plan<br>Entonces el sistema conserva la indicación junto con la ingesta registrada.<br><br><strong>Escenario 2: Indicación obligatoria</strong><br>Dado que el paciente confirma o registra una comida<br>Cuando el paciente intenta guardarla sin indicar si estaba dentro de su plan<br>Entonces el sistema rechaza el registro e identifica la información faltante.<br><br><strong>Escenario 3: Tratamiento no punitivo</strong><br>Dado que el paciente tiene registradas comidas indicadas como fuera de su plan<br>Cuando el paciente consulta posteriormente sus registros<br>Entonces el sistema conserva el dato sin asignarle una valoración punitiva.</td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 38</strong><br><em>Historia de usuario US44: Alimentos locales del catálogo</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">US44</td>
+    <td colspan="2">Nutricionista</td>
+    <td colspan="2">Baja</td>
+    <td colspan="2">EP02</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Alimentos locales del catálogo</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como nutricionista, deseo consultar el catálogo de alimentos y agregar alimentos locales cuando no exista el que necesito, para que el registro de mis pacientes refleje los platos que realmente consumen.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Consulta del catálogo</strong><br>Dado que el nutricionista consulta el catálogo de alimentos<br>Cuando el nutricionista busca un alimento por nombre<br>Entonces el sistema presenta los alimentos que coinciden con sus valores nutricionales por cada 100 g.<br><br><strong>Escenario 2: Alimento local agregado</strong><br>Dado que el nutricionista no encuentra un alimento en el catálogo<br>Cuando el nutricionista registra un alimento local con su nombre y sus valores de energía y macronutrientes<br>Entonces el sistema lo incorpora al catálogo y evita que una actualización posterior de las fuentes externas lo sobrescriba.<br><br><strong>Escenario 3: Datos inválidos o duplicados</strong><br>Dado que el nutricionista registra un alimento local<br>Cuando omite el nombre o los valores nutricionales, o el nombre ya existe como alimento local<br>Entonces el sistema rechaza el registro e identifica el motivo.</td>
   </tr>
 </table>
 <br>
 
 ### EP03 — Seguimiento de Respuesta Corporal
 
-<br>***US12 — Registro de autopesaje***
+<p class="caption"><strong>Tabla 39</strong><br><em>Historia de usuario US12: Registro de autopesaje</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -990,7 +1083,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US13 — Visualización de tendencia de peso***
+<p class="caption"><strong>Tabla 40</strong><br><em>Historia de usuario US13: Visualización de tendencia de peso</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1025,7 +1119,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 
 ### EP04 — Monitoreo y Seguimiento del Plan Nutricional
 
-<br>***US14 — Consulta del cumplimiento nutricional diario***
+<p class="caption"><strong>Tabla 41</strong><br><em>Historia de usuario US14: Consulta del cumplimiento nutricional diario</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1057,7 +1152,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US15 — Visualización de señal de consistencia***
+<p class="caption"><strong>Tabla 42</strong><br><em>Historia de usuario US15: Visualización de señal de consistencia</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1089,7 +1185,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US16 — Consulta del monitoreo del paciente***
+<p class="caption"><strong>Tabla 43</strong><br><em>Historia de usuario US16: Consulta del monitoreo del paciente</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1117,11 +1214,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Información disponible</strong><br>Dado que el nutricionista atiende a un paciente con vínculo activo que ha generado información de seguimiento<br>Cuando el nutricionista consulta el monitoreo del paciente<br>Entonces el sistema proporciona la tendencia de peso, cumplimiento, registros de alimentación y demás datos autorizados disponibles.<br><br><strong>Escenario 2: Procedencia de registros estimados</strong><br>Dado que el nutricionista consulta una ingesta que proviene de una estimación<br>Cuando el nutricionista consulta una ingesta estimada dentro del monitoreo<br>Entonces el sistema conserva su procedencia y nivel de confianza.<br><br><strong>Escenario 3: Ausencia de información</strong><br>Dado que el nutricionista consulta un periodo sin suficientes registros<br>Cuando el nutricionista consulta el seguimiento del periodo<br>Entonces el sistema distingue la ausencia de datos de una desviación del tratamiento.</td>
+    <td colspan="8"><strong>Escenario 1: Información disponible</strong><br>Dado que el nutricionista atiende a un paciente con vínculo activo que ha generado información de seguimiento<br>Cuando el nutricionista consulta el monitoreo del paciente<br>Entonces el sistema proporciona la tendencia de peso, cumplimiento, registros de alimentación y demás datos autorizados disponibles.<br><br><strong>Escenario 2: Procedencia de registros estimados</strong><br>Dado que el nutricionista consulta una ingesta que proviene de una estimación<br>Cuando el nutricionista consulta una ingesta estimada dentro del monitoreo<br>Entonces el sistema conserva su procedencia y nivel de confianza.<br><br><strong>Escenario 3: Ausencia de información</strong><br>Dado que el nutricionista consulta un periodo sin suficientes registros<br>Cuando el nutricionista consulta el seguimiento del periodo<br>Entonces el sistema distingue la ausencia de datos de una desviación del tratamiento.<br><br><strong>Escenario 4: Resumen del periodo con apoyo de IA</strong><br>Dado que el nutricionista consulta el seguimiento de un paciente con registros en el periodo<br>Cuando el nutricionista solicita el resumen del periodo<br>Entonces el sistema presenta los datos del periodo y, si la IA está habilitada y existe consentimiento, un texto que los resume; en caso contrario presenta solo los datos, sin error.</td>
   </tr>
 </table>
 
-<br>***US17 — Revisión y resolución de señales de seguimiento***
+<p class="caption"><strong>Tabla 44</strong><br><em>Historia de usuario US17: Revisión y resolución de señales de seguimiento</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1149,14 +1247,81 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Situación disponible para revisión</strong><br>Dado que el nutricionista tiene una condición de seguimiento que cumple la regla vigente de escalamiento<br>Cuando el nutricionista consulta los elementos pendientes de revisión<br>Entonces el sistema incluye la situación correspondiente.<br><br><strong>Escenario 2: Resolución sin cambio del plan</strong><br>Dado que el nutricionista revisa una situación y determina que no requiere modificación del tratamiento<br>Cuando el nutricionista registra su decisión<br>Entonces el sistema conserva la resolución sin alterar el plan vigente.<br><br><strong>Escenario 3: Resolución con ajuste</strong><br>Dado que el nutricionista determina que corresponde ajustar el tratamiento<br>Cuando el nutricionista inicia el ajuste del plan<br>Entonces el sistema procesa el cambio mediante una nueva versión del plan con su motivo correspondiente.<br><br><strong>Escenario 4: Ausencia de modificación automática</strong><br>Dado que el nutricionista tiene una señal de seguimiento generada por el sistema<br>Cuando el nutricionista consulta una señal de seguimiento escalada para revisión<br>Entonces el sistema mantiene el plan sin cambios hasta que exista una decisión profesional.</td>
+    <td colspan="8"><strong>Escenario 1: Situación disponible para revisión</strong><br>Dado que el nutricionista tiene una condición de seguimiento que cumple la regla vigente de escalamiento<br>Cuando el nutricionista consulta los elementos pendientes de revisión<br>Entonces el sistema incluye la situación correspondiente.<br><br><strong>Escenario 2: Resolución sin cambio del plan</strong><br>Dado que el nutricionista revisa una situación y determina que no requiere modificación del tratamiento<br>Cuando el nutricionista registra su decisión<br>Entonces el sistema conserva la resolución sin alterar el plan vigente.<br><br><strong>Escenario 3: Resolución con ajuste</strong><br>Dado que el nutricionista determina que corresponde ajustar el tratamiento<br>Cuando el nutricionista inicia el ajuste del plan<br>Entonces el sistema procesa el cambio mediante una nueva versión del plan con su motivo correspondiente.<br><br><strong>Escenario 4: Ausencia de modificación automática</strong><br>Dado que el nutricionista tiene una señal de seguimiento generada por el sistema<br>Cuando el nutricionista consulta una señal de seguimiento escalada para revisión<br>Entonces el sistema mantiene el plan sin cambios hasta que exista una decisión profesional.<br><br><strong>Escenario 5: Propuesta de plan con apoyo de IA</strong><br>Dado que el nutricionista abre una señal de desviación sostenida<br>Cuando el sistema dispone de una propuesta de plan generada con IA<br>Entonces el sistema la presenta para que el nutricionista la acepte con ediciones o la descarte, sin asignarla al paciente hasta que exista su decisión.</td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 45</strong><br><em>Historia de usuario US39: Agenda de consultas</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">US39</td>
+    <td colspan="2">Nutricionista</td>
+    <td colspan="2">Alta</td>
+    <td colspan="2">EP04</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Agenda de consultas</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como nutricionista, deseo agendar, reprogramar y cancelar las consultas de mis pacientes, para organizar el seguimiento entre consultas y preparar cada atención.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Consulta agendada</strong><br>Dado que el nutricionista mantiene un vínculo activo con el paciente<br>Cuando el nutricionista agenda una consulta en una fecha y hora futuras, con su modalidad e indicaciones de preparación<br>Entonces el sistema registra la consulta en la agenda del nutricionista y la deja visible para el paciente.<br><br><strong>Escenario 2: Fecha no futura</strong><br>Dado que el nutricionista intenta agendar una consulta<br>Cuando indica una fecha y hora que no son futuras<br>Entonces el sistema rechaza el registro e informa que la fecha debe ser posterior al momento actual.<br><br><strong>Escenario 3: Consulta ya agendada</strong><br>Dado que el paciente ya tiene una consulta agendada pendiente<br>Cuando el nutricionista intenta agendar otra consulta para el mismo paciente<br>Entonces el sistema rechaza la operación y conserva la consulta vigente.<br><br><strong>Escenario 4: Reprogramación o cancelación</strong><br>Dado que el nutricionista tiene una consulta agendada<br>Cuando el nutricionista la reprograma o la cancela<br>Entonces el sistema actualiza la agenda, conserva la respuesta previa del paciente cuando se reprograma y retira la consulta de las próximas cuando se cancela.<br><br><strong>Escenario 5: Consulta no acudida</strong><br>Dado que una consulta agendada ha vencido sin completarse<br>Cuando transcurre el periodo de revisión del sistema<br>Entonces el sistema la marca como no acudida y la conserva en la agenda sin finalizar el vínculo de cuidado.</td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 46</strong><br><em>Historia de usuario US40: Preparación y respuesta previa a la consulta</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">US40</td>
+    <td colspan="2">Paciente</td>
+    <td colspan="2">Media</td>
+    <td colspan="2">EP04</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Preparación y respuesta previa a la consulta</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como paciente, deseo conocer cómo prepararme para mi próxima consulta y contarle a mi nutricionista cómo me ha ido antes de ella, para aprovechar mejor la cita.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Indicaciones de preparación</strong><br>Dado que el paciente tiene una próxima consulta agendada<br>Cuando el paciente consulta los detalles de su próxima consulta<br>Entonces el sistema presenta la fecha, la modalidad y las indicaciones de preparación definidas por el nutricionista, o informa que no existen indicaciones.<br><br><strong>Escenario 2: Respuesta previa enviada</strong><br>Dado que el paciente tiene una consulta pendiente<br>Cuando el paciente indica cómo se sintió, las dificultades que tuvo y hasta tres preguntas propias, y las envía<br>Entonces el sistema conserva una sola respuesta para esa consulta y la deja visible para el nutricionista.<br><br><strong>Escenario 3: Edición hasta la hora de la consulta</strong><br>Dado que el paciente ha enviado su respuesta previa<br>Cuando el paciente intenta editarla antes o después de la hora de la consulta<br>Entonces el sistema permite la edición mientras la consulta no haya llegado a su hora y la rechaza después.<br><br><strong>Escenario 4: Respuesta sin señal</strong><br>Dado que el paciente ha enviado su respuesta previa<br>Cuando el sistema la registra<br>Entonces el sistema no genera una señal de seguimiento a partir de la respuesta.</td>
   </tr>
 </table>
 <br>
 
 ### EP05 — Expediente y Continuidad del Cuidado
 
-<br>***US18 — Acceso al expediente personal unificado***
+<p class="caption"><strong>Tabla 47</strong><br><em>Historia de usuario US18: Acceso al expediente personal unificado</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1188,7 +1353,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US19 — Registro de derivación a otro especialista***
+<p class="caption"><strong>Tabla 48</strong><br><em>Historia de usuario US19: Registro de derivación a otro especialista</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1216,11 +1382,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Derivación válida</strong><br>Dado que el nutricionista atiende a un paciente con tratamiento activo<br>Cuando el nutricionista registra una derivación con el motivo correspondiente<br>Entonces el sistema conserva la derivación asociada al expediente del paciente.<br><br><strong>Escenario 2: Consulta histórica</strong><br>Dado que el nutricionista ha registrado una derivación<br>Cuando el nutricionista consulta posteriormente el expediente autorizado del paciente<br>Entonces el sistema conserva la derivación como parte del historial.</td>
+    <td colspan="8"><strong>Escenario 1: Derivación válida</strong><br>Dado que el nutricionista atiende a un paciente con tratamiento activo<br>Cuando el nutricionista registra una derivación con el motivo correspondiente<br>Entonces el sistema conserva la derivación asociada al expediente del paciente.<br><br><strong>Escenario 2: Consulta histórica</strong><br>Dado que el nutricionista ha registrado una derivación<br>Cuando el nutricionista consulta posteriormente el expediente autorizado del paciente<br>Entonces el sistema conserva la derivación como parte del historial.<br><br><strong>Escenario 3: Cierre de la derivación</strong><br>Dado que el nutricionista tiene una derivación abierta de un paciente<br>Cuando el nutricionista registra el cierre de la derivación<br>Entonces el sistema marca la derivación como cerrada y conserva su historial.</td>
   </tr>
 </table>
 
-<br>***US20 — Acceso al expediente unificado del paciente***
+<p class="caption"><strong>Tabla 49</strong><br><em>Historia de usuario US20: Acceso al expediente unificado del paciente</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1255,7 +1422,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 
 ### EP06 — Evaluación y Diagnóstico Nutricional
 
-<br>***US21 — Registro y finalización de la evaluación nutricional***
+<p class="caption"><strong>Tabla 50</strong><br><em>Historia de usuario US21: Registro y finalización de la evaluación nutricional</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1283,11 +1451,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Creación de evaluación</strong><br>Dado que el nutricionista mantiene un vínculo de cuidado activo y autorizado con el paciente<br>Cuando el nutricionista inicia una nueva evaluación nutricional<br>Entonces el sistema registra una nueva evaluación asociada al paciente.<br><br><strong>Escenario 2: Incorporación de mediciones</strong><br>Dado que el nutricionista tiene una evaluación abierta<br>Cuando el nutricionista registra una medición clínica válida<br>Entonces el sistema incorpora la medición clínica a la evaluación nutricional.<br><br><strong>Escenario 3: Cierre de evaluación</strong><br>Dado que el nutricionista ha completado la información requerida de una evaluación<br>Cuando el nutricionista finaliza la evaluación nutricional<br>Entonces el sistema registra la evaluación como cerrada.<br><br><strong>Escenario 4: Modificación posterior al cierre</strong><br>Dado que el nutricionista tiene una evaluación cerrada<br>Cuando el nutricionista intenta modificar una evaluación cerrada<br>Entonces el sistema conserva la evaluación cerrada sin alteraciones y requiere un nuevo registro para una corrección posterior.</td>
+    <td colspan="8"><strong>Escenario 1: Creación de evaluación</strong><br>Dado que el nutricionista mantiene un vínculo de cuidado activo y autorizado con el paciente<br>Cuando el nutricionista inicia una nueva evaluación nutricional<br>Entonces el sistema registra una nueva evaluación asociada al paciente.<br><br><strong>Escenario 2: Incorporación de mediciones</strong><br>Dado que el nutricionista tiene una evaluación abierta<br>Cuando el nutricionista registra una medición clínica válida<br>Entonces el sistema incorpora la medición clínica a la evaluación nutricional.<br><br><strong>Escenario 3: Cierre de evaluación</strong><br>Dado que el nutricionista ha completado la información requerida de una evaluación<br>Cuando el nutricionista finaliza la evaluación nutricional<br>Entonces el sistema registra la evaluación como cerrada.<br><br><strong>Escenario 4: Modificación posterior al cierre</strong><br>Dado que el nutricionista tiene una evaluación cerrada<br>Cuando el nutricionista intenta modificar una evaluación cerrada<br>Entonces el sistema conserva la evaluación cerrada sin alteraciones y requiere un nuevo registro para una corrección posterior.<br><br><strong>Escenario 5: Datos base del paciente</strong><br>Dado que el nutricionista atiende a un paciente que aún no tiene datos base<br>Cuando el nutricionista registra los datos base del paciente, como fecha de nacimiento, sexo, talla y antecedentes<br>Entonces el sistema los conserva una sola vez y los reutiliza en las evaluaciones posteriores sin volver a solicitarlos.<br><br><strong>Escenario 6: Evaluación reanudable</strong><br>Dado que el nutricionista tiene una consulta en curso que ha interrumpido<br>Cuando el nutricionista vuelve a la consulta del paciente<br>Entonces el sistema le permite reanudarla desde el paso en que quedó, sin perder la información ingresada.</td>
   </tr>
 </table>
 
-<br>***US22 — Emisión del diagnóstico nutricional***
+<p class="caption"><strong>Tabla 51</strong><br><em>Historia de usuario US22: Emisión del diagnóstico nutricional</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1315,14 +1484,15 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Diagnóstico con fundamento</strong><br>Dado que el nutricionista dispone de una evaluación del paciente<br>Cuando el nutricionista registra un diagnóstico con su justificación<br>Entonces el sistema conserva ambos elementos asociados al tratamiento.<br><br><strong>Escenario 2: Diagnóstico sin fundamento requerido</strong><br>Dado que el nutricionista registra un diagnóstico que requiere justificación clínica<br>Cuando el nutricionista intenta registrar el diagnóstico sin proporcionar la justificación clínica requerida<br>Entonces el sistema rechaza el registro.<br><br><strong>Escenario 3: Conservación histórica</strong><br>Dado que el nutricionista tiene un diagnóstico previamente registrado<br>Cuando el nutricionista registra una nueva evaluación o un nuevo diagnóstico<br>Entonces el sistema conserva los antecedentes anteriores.</td>
+    <td colspan="8"><strong>Escenario 1: Diagnóstico con fundamento</strong><br>Dado que el nutricionista dispone de una evaluación del paciente<br>Cuando el nutricionista registra un diagnóstico con su justificación<br>Entonces el sistema conserva ambos elementos asociados al tratamiento.<br><br><strong>Escenario 2: Diagnóstico sin fundamento requerido</strong><br>Dado que el nutricionista registra un diagnóstico que requiere justificación clínica<br>Cuando el nutricionista intenta registrar el diagnóstico sin proporcionar la justificación clínica requerida<br>Entonces el sistema rechaza el registro.<br><br><strong>Escenario 3: Conservación histórica</strong><br>Dado que el nutricionista tiene un diagnóstico previamente registrado<br>Cuando el nutricionista registra una nueva evaluación o un nuevo diagnóstico<br>Entonces el sistema conserva los antecedentes anteriores.<br><br><strong>Escenario 4: Sugerencia de diagnóstico</strong><br>Dado que el nutricionista ha registrado la medición de la consulta<br>Cuando el nutricionista solicita una sugerencia de diagnóstico<br>Entonces el sistema propone un diagnóstico apoyado en la medición y, si la IA no está disponible, en una regla determinista, sin registrarlo hasta que el nutricionista lo acepte y se conserve su origen.</td>
   </tr>
 </table>
 <br>
 
 ### EP07 — Prescripción y Gestión del Plan Nutricional
 
-<br>***US23 — Visualización de metas nutricionales vigentes***
+<p class="caption"><strong>Tabla 52</strong><br><em>Historia de usuario US23: Visualización de metas nutricionales vigentes</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1350,11 +1520,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Existen metas vigentes</strong><br>Dado que el paciente posee un plan nutricional activo<br>Cuando el paciente consulta sus metas<br>Entonces el sistema proporciona las metas correspondientes a la versión vigente del plan.<br><br><strong>Escenario 2: No existe plan activo</strong><br>Dado que el paciente no posee un plan nutricional activo<br>Cuando el paciente solicita sus metas<br>Entonces el sistema informa que no existen metas vigentes.<br><br><strong>Escenario 3: Protección de las metas prescritas</strong><br>Dado que el paciente tiene metas prescritas por el nutricionista<br>Cuando el paciente consulta la información<br>Entonces el sistema no permite que el paciente modifique los valores prescritos.</td>
+    <td colspan="8"><strong>Escenario 1: Existen metas vigentes</strong><br>Dado que el paciente posee un plan nutricional activo<br>Cuando el paciente consulta sus metas<br>Entonces el sistema proporciona las metas correspondientes a la versión vigente del plan.<br><br><strong>Escenario 2: No existe plan activo</strong><br>Dado que el paciente no posee un plan nutricional activo<br>Cuando el paciente solicita sus metas<br>Entonces el sistema informa que no existen metas vigentes.<br><br><strong>Escenario 3: Protección de las metas prescritas</strong><br>Dado que el paciente tiene metas prescritas por el nutricionista<br>Cuando el paciente consulta la información<br>Entonces el sistema no permite que el paciente modifique los valores prescritos.<br><br><strong>Escenario 4: Versiones anteriores del plan</strong><br>Dado que el paciente tiene un plan con versiones anteriores a la vigente<br>Cuando el paciente consulta las versiones anteriores de su plan<br>Entonces el sistema las presenta como historial de solo lectura, distinguiéndolas de la versión vigente.</td>
   </tr>
 </table>
 
-<br>***US24 — Confirmación de recepción de nuevas metas nutricionales***
+<p class="caption"><strong>Tabla 53</strong><br><em>Historia de usuario US24: Confirmación de recepción de nuevas metas nutricionales</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1386,7 +1557,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US25 — Obtención de propuesta de metas nutricionales calculadas***
+<p class="caption"><strong>Tabla 54</strong><br><em>Historia de usuario US25: Obtención de propuesta de metas nutricionales calculadas</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1418,7 +1590,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US26 — Prescripción y publicación del plan nutricional***
+<p class="caption"><strong>Tabla 55</strong><br><em>Historia de usuario US26: Prescripción y publicación del plan nutricional</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1446,11 +1619,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Publicación válida</strong><br>Dado que el nutricionista atiende a un paciente que cuenta con diagnóstico y base de cálculo requeridos<br>Cuando el nutricionista publica el plan nutricional<br>Entonces el sistema registra una versión activa con sus metas, pautas y restricciones.<br><br><strong>Escenario 2: Ausencia de diagnóstico</strong><br>Dado que el nutricionista atiende a un paciente que no cuenta con el diagnóstico requerido<br>Cuando el nutricionista intenta publicar el plan nutricional<br>Entonces el sistema rechaza la publicación.<br><br><strong>Escenario 3: Ausencia de base de cálculo</strong><br>Dado que el nutricionista no ha registrado la base de cálculo necesaria para sustentar las metas<br>Cuando el nutricionista intenta publicar el plan nutricional<br>Entonces el sistema rechaza la publicación.<br><br><strong>Escenario 4: Única versión activa</strong><br>Dado que el nutricionista tiene una versión activa del plan<br>Cuando el nutricionista publica una nueva versión válida del plan<br>Entonces el sistema mantiene una sola versión como vigente y conserva las versiones anteriores en el historial.</td>
+    <td colspan="8"><strong>Escenario 1: Publicación válida</strong><br>Dado que el nutricionista atiende a un paciente que cuenta con diagnóstico y base de cálculo requeridos<br>Cuando el nutricionista publica el plan nutricional<br>Entonces el sistema registra una versión activa con sus metas, pautas y restricciones.<br><br><strong>Escenario 2: Ausencia de diagnóstico</strong><br>Dado que el nutricionista atiende a un paciente que no cuenta con el diagnóstico requerido<br>Cuando el nutricionista intenta publicar el plan nutricional<br>Entonces el sistema rechaza la publicación.<br><br><strong>Escenario 3: Ausencia de base de cálculo</strong><br>Dado que el nutricionista no ha registrado la base de cálculo necesaria para sustentar las metas<br>Cuando el nutricionista intenta publicar el plan nutricional<br>Entonces el sistema rechaza la publicación.<br><br><strong>Escenario 4: Única versión activa</strong><br>Dado que el nutricionista tiene una versión activa del plan<br>Cuando el nutricionista publica una nueva versión válida del plan<br>Entonces el sistema mantiene una sola versión como vigente y conserva las versiones anteriores en el historial.<br><br><strong>Escenario 5: Indicaciones sugeridas</strong><br>Dado que el nutricionista ha registrado el diagnóstico de la consulta<br>Cuando el nutricionista solicita indicaciones sugeridas para el plan<br>Entonces el sistema propone indicaciones de un catálogo cerrado, o de una tabla predefinida si la IA no está disponible, que el nutricionista puede modificar antes de publicar.</td>
   </tr>
 </table>
 
-<br>***US27 — Ajuste del plan nutricional entre consultas***
+<p class="caption"><strong>Tabla 56</strong><br><em>Historia de usuario US27: Ajuste del plan nutricional entre consultas</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1485,7 +1659,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 
 ### EP08 — Identidad y Acceso
 
-<br>***US28 — Creación de cuenta***
+<p class="caption"><strong>Tabla 57</strong><br><em>Historia de usuario US28: Creación de cuenta</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1517,7 +1692,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US29 — Inicio de sesión***
+<p class="caption"><strong>Tabla 58</strong><br><em>Historia de usuario US29: Inicio de sesión</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1545,11 +1721,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Credenciales válidas</strong><br>Dado que el paciente o el nutricionista posee una cuenta activa con credenciales válidas<br>Cuando el paciente o el nutricionista proporciona las credenciales correctas<br>Entonces el sistema autentica la cuenta y habilita las operaciones correspondientes al rol asociado.<br><br><strong>Escenario 2: Credenciales inválidas</strong><br>Dado que el paciente o el nutricionista proporciona credenciales no válidas<br>Cuando el paciente o el nutricionista solicita la autenticación con credenciales no válidas<br>Entonces el sistema rechaza el inicio de sesión sin crear una sesión autorizada.<br><br><strong>Escenario 3: Operación no permitida por rol</strong><br>Dado que el paciente o el nutricionista tiene una cuenta autenticada<br>Cuando el paciente o el nutricionista intenta realizar una operación no permitida para su rol<br>Entonces el sistema rechaza la operación.</td>
+    <td colspan="8"><strong>Escenario 1: Credenciales válidas</strong><br>Dado que el paciente o el nutricionista posee una cuenta activa con credenciales válidas<br>Cuando el paciente o el nutricionista proporciona las credenciales correctas<br>Entonces el sistema autentica la cuenta y habilita las operaciones correspondientes al rol asociado.<br><br><strong>Escenario 2: Credenciales inválidas</strong><br>Dado que el paciente o el nutricionista proporciona credenciales no válidas<br>Cuando el paciente o el nutricionista solicita la autenticación con credenciales no válidas<br>Entonces el sistema rechaza el inicio de sesión sin crear una sesión autorizada.<br><br><strong>Escenario 3: Operación no permitida por rol</strong><br>Dado que el paciente o el nutricionista tiene una cuenta autenticada<br>Cuando el paciente o el nutricionista intenta realizar una operación no permitida para su rol<br>Entonces el sistema rechaza la operación.<br><br><strong>Escenario 4: Renovación de la sesión</strong><br>Dado que el paciente o el nutricionista tiene una sesión vencida y una credencial de renovación vigente<br>Cuando la aplicación solicita renovar la sesión<br>Entonces el sistema emite una nueva sesión sin solicitar de nuevo las credenciales y, si la credencial de renovación no es válida, exige iniciar sesión otra vez.<br><br><strong>Escenario 5: Cuenta bloqueada</strong><br>Dado que el paciente o el nutricionista ha excedido el número permitido de intentos fallidos<br>Cuando intenta iniciar sesión<br>Entonces el sistema rechaza el inicio de sesión e informa que la cuenta está bloqueada temporalmente.</td>
   </tr>
 </table>
 
-<br>***US30 — Cierre de sesión***
+<p class="caption"><strong>Tabla 59</strong><br><em>Historia de usuario US30: Cierre de sesión</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1580,11 +1757,45 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <td colspan="8"><strong>Escenario 1: Cierre de sesión exitoso</strong><br>Dado que el paciente o el nutricionista mantiene una sesión autenticada<br>Cuando el paciente o el nutricionista solicita cerrar sesión<br>Entonces el sistema finaliza el acceso asociado a la sesión.<br><br><strong>Escenario 2: Acceso posterior</strong><br>Dado que el paciente o el nutricionista ha finalizado previamente su sesión<br>Cuando el paciente o el nutricionista intenta acceder a una operación que requiere autenticación<br>Entonces el sistema exige una nueva autenticación.</td>
   </tr>
 </table>
+
+<p class="caption"><strong>Tabla 60</strong><br><em>Historia de usuario US43: Preferencias de la cuenta: idioma y recordatorios</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">US43</td>
+    <td colspan="2">Paciente / Nutricionista</td>
+    <td colspan="2">Media</td>
+    <td colspan="2">EP08</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Preferencias de la cuenta: idioma y recordatorios</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como paciente o nutricionista, deseo elegir el idioma de mi cuenta y, como paciente, configurar recordatorios de registro, para usar Healthify en el idioma que prefiero y no olvidar mis registros.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Cambio de idioma de la cuenta</strong><br>Dado que el paciente o el nutricionista tiene una sesión iniciada<br>Cuando el paciente o el nutricionista selecciona español o inglés como idioma<br>Entonces el sistema muestra la aplicación en ese idioma y conserva la preferencia en la cuenta.<br><br><strong>Escenario 2: Preferencia sin conexión</strong><br>Dado que el paciente o el nutricionista cambia el idioma sin conexión a Internet<br>Cuando la conexión se restablece<br>Entonces el sistema registra la preferencia en la cuenta sin que el usuario deba repetir la acción.<br><br><strong>Escenario 3: Recordatorios de registro</strong><br>Dado que el paciente ha autorizado las notificaciones del dispositivo<br>Cuando el paciente configura un recordatorio de registro<br>Entonces el sistema programa el aviso en el dispositivo sin enviar información a servicios externos.<br><br><strong>Escenario 4: Recordatorios sin autorización</strong><br>Dado que el paciente no ha autorizado las notificaciones del dispositivo<br>Cuando el paciente intenta activar un recordatorio<br>Entonces el sistema solicita la autorización y, si no se concede, no programa el aviso.</td>
+  </tr>
+</table>
 <br>
 
 ### EP09 — Offline y Sincronización
 
-<br>***US31 — Registro y sincronización sin conexión***
+<p class="caption"><strong>Tabla 61</strong><br><em>Historia de usuario US31: Registro y sincronización sin conexión</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1619,7 +1830,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 
 ### EP10 — Landing Page
 
-<br>***US32 — Visualización de la propuesta de valor de Healthify***
+<p class="caption"><strong>Tabla 62</strong><br><em>Historia de usuario US32: Visualización de la propuesta de valor de Healthify</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1651,7 +1863,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US33 — Consulta de las principales funcionalidades de Healthify***
+<p class="caption"><strong>Tabla 63</strong><br><em>Historia de usuario US33: Consulta de las principales funcionalidades de Healthify</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1679,11 +1892,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Funcionalidades disponibles</strong><br>Dado que el visitante consulta la información del producto<br>Cuando el visitante solicita conocer sus principales capacidades<br>Entonces el sistema proporciona una descripción de las funcionalidades más relevantes de Healthify.<br><br><strong>Escenario 2: Funcionalidades de ambos segmentos</strong><br>Dado que el visitante consulta información de Healthify dirigida a pacientes y nutricionistas<br>Cuando el visitante consulta las capacidades de la solución<br>Entonces el sistema proporciona información que permite distinguir el valor ofrecido a cada segmento.</td>
+    <td colspan="8"><strong>Escenario 1: Funcionalidades disponibles</strong><br>Dado que el visitante consulta la información del producto<br>Cuando el visitante solicita conocer sus principales capacidades<br>Entonces el sistema proporciona una descripción de las funcionalidades más relevantes de Healthify.<br><br><strong>Escenario 2: Funcionalidades de ambos segmentos</strong><br>Dado que el visitante consulta información de Healthify dirigida a pacientes y nutricionistas<br>Cuando el visitante consulta las capacidades de la solución<br>Entonces el sistema proporciona información que permite distinguir el valor ofrecido a cada segmento.<br><br><strong>Escenario 3: Funcionamiento del proceso</strong><br>Dado que el visitante consulta la información del producto<br>Cuando el visitante solicita conocer cómo funciona Healthify<br>Entonces el sistema describe la consulta guiada en cuatro pasos y el seguimiento que continúa entre consultas.</td>
   </tr>
 </table>
 
-<br>***US34 — Conocimiento de la startup, misión y visión***
+<p class="caption"><strong>Tabla 64</strong><br><em>Historia de usuario US34: Conocimiento de la startup, misión y visión</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1715,7 +1929,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US35 — Cambio de idioma del Landing Page***
+<p class="caption"><strong>Tabla 65</strong><br><em>Historia de usuario US35: Cambio de idioma del Landing Page</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1747,7 +1962,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US36 — Acceso a la descarga de Healthify desde el Landing Page***
+<p class="caption"><strong>Tabla 66</strong><br><em>Historia de usuario US36: Acceso al inicio de uso de Healthify desde el Landing Page</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1763,23 +1979,24 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
   <tr>
     <th colspan="2">Title</th>
-    <td colspan="6">Acceso a la descarga de Healthify desde el Landing Page</td>
+    <td colspan="6">Acceso al inicio de uso de Healthify desde el Landing Page</td>
   </tr>
   <tr>
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como visitante, deseo acceder desde el Landing Page al medio de distribución de Healthify, para obtener la aplicación móvil cuando decida utilizar la solución.</td>
+    <td colspan="8">Como visitante, deseo identificar desde el Landing Page cómo comenzar a usar Healthify según mi rol, para acceder a la solución cuando decida utilizarla.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Acceso al medio de distribución</strong><br>Dado que el visitante consulta el Landing Page<br>Cuando el visitante selecciona la opción para obtener Healthify<br>Entonces el sistema lo dirige al medio de distribución disponible de la aplicación móvil.<br><br><strong>Escenario 2: Aplicación no disponible para distribución</strong><br>Dado que el visitante desea obtener la aplicación móvil Healthify<br>Cuando el visitante selecciona la opción correspondiente y no existe una versión disponible para distribución<br>Entonces el sistema informa que la aplicación aún no se encuentra disponible para su descarga.</td>
+    <td colspan="8"><strong>Escenario 1: Nutricionista interesado</strong><br>Dado que el visitante consulta el Landing Page y es nutricionista<br>Cuando el visitante selecciona la opción dirigida a nutricionistas<br>Entonces el sistema lo dirige al formulario de contacto con el rol de nutricionista preseleccionado.<br><br><strong>Escenario 2: Paciente invitado</strong><br>Dado que el visitante consulta el Landing Page y fue invitado por su nutricionista<br>Cuando el visitante selecciona la opción dirigida a pacientes invitados<br>Entonces el sistema le presenta la información dirigida al paciente sobre cómo registrar su alimentación y vincularse con su invitación.</td>
   </tr>
 </table>
 
-<br>***US37 — Envío de consulta mediante formulario de contacto***
+<p class="caption"><strong>Tabla 67</strong><br><em>Historia de usuario US37: Envío de consulta mediante formulario de contacto</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1811,7 +2028,8 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
 </table>
 
-<br>***US38 — Consulta de términos y políticas de Healthify***
+<p class="caption"><strong>Tabla 68</strong><br><em>Historia de usuario US38: Consulta de términos y políticas de Healthify</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1842,11 +2060,114 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <td colspan="8"><strong>Escenario 1: Documentos vigentes disponibles</strong><br>Dado que el visitante solicita consultar los términos o políticas<br>Cuando el visitante accede a la información legal<br>Entonces el sistema proporciona la versión vigente de los documentos disponibles.<br><br><strong>Escenario 2: Correspondencia con el idioma activo</strong><br>Dado que el visitante ha seleccionado un idioma para el que existe una versión del documento<br>Cuando el visitante solicita consultar el documento<br>Entonces el sistema proporciona el documento correspondiente a dicho idioma.</td>
   </tr>
 </table>
+
+<p class="caption"><strong>Tabla 69</strong><br><em>Historia de usuario US45: Consulta de preguntas frecuentes</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">US45</td>
+    <td colspan="2">Visitante</td>
+    <td colspan="2">Media</td>
+    <td colspan="2">EP10</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Consulta de preguntas frecuentes</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como visitante, deseo consultar las preguntas frecuentes de Healthify por tema, para resolver mis dudas sobre el uso, la privacidad y la IA antes de contactar al equipo.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Preguntas disponibles</strong><br>Dado que el visitante consulta el Landing Page<br>Cuando el visitante accede a las preguntas frecuentes<br>Entonces el sistema presenta las preguntas con su respuesta, que el visitante puede abrir o cerrar.<br><br><strong>Escenario 2: Filtro por tema</strong><br>Dado que el visitante consulta las preguntas frecuentes<br>Cuando el visitante selecciona un tema, como pacientes, nutricionistas, privacidad o IA<br>Entonces el sistema muestra solo las preguntas del tema seleccionado.<br><br><strong>Escenario 3: Duda no resuelta</strong><br>Dado que el visitante no encuentra la respuesta que busca<br>Cuando el visitante selecciona la opción para escribir al equipo<br>Entonces el sistema lo dirige al formulario de contacto.</td>
+  </tr>
+</table>
+<br>
+
+### EP11 — Asistencia con IA
+
+<p class="caption"><strong>Tabla 70</strong><br><em>Historia de usuario US41: Control de las funciones con IA</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">US41</td>
+    <td colspan="2">Paciente</td>
+    <td colspan="2">Alta</td>
+    <td colspan="2">EP11</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Control de las funciones con IA</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como paciente, deseo decidir si autorizo el uso de IA sobre mis datos y qué funciones con IA utilizo, para mantener el control sobre cómo se procesa mi información.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Consentimiento de IA otorgado</strong><br>Dado que el paciente tiene un vínculo activo con su nutricionista<br>Cuando el paciente otorga su consentimiento para las funciones con IA, al consentir el vínculo o después<br>Entonces el sistema habilita las funciones con IA y activa sus preferencias, que el paciente puede modificar una por una.<br><br><strong>Escenario 2: Activación sin consentimiento</strong><br>Dado que el paciente no ha otorgado el consentimiento para las funciones con IA<br>Cuando el paciente intenta activar una función con IA<br>Entonces el sistema rechaza la activación e informa que requiere su consentimiento.<br><br><strong>Escenario 3: Desactivación de una función</strong><br>Dado que el paciente tiene una función con IA activa<br>Cuando el paciente la desactiva<br>Entonces el sistema deja de generar ese contenido y elimina el que ya se había generado.<br><br><strong>Escenario 4: Retiro del consentimiento o alta</strong><br>Dado que el paciente retira su consentimiento, se revoca el vínculo o el nutricionista registra el alta<br>Cuando el sistema cierra el acceso del vínculo<br>Entonces el sistema desactiva las funciones con IA de ese vínculo y elimina el contenido generado a partir de los datos del paciente.</td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 71</strong><br><em>Historia de usuario US42: Resumen semanal, ideas de comidas y preguntas sugeridas con IA</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">US42</td>
+    <td colspan="2">Paciente</td>
+    <td colspan="2">Media</td>
+    <td colspan="2">EP11</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Resumen semanal, ideas de comidas y preguntas sugeridas con IA</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como paciente, deseo recibir un resumen de mi semana, ideas de comidas acordes a mi plan y preguntas sugeridas para mi consulta, para entender mi progreso y decidir qué comer sin presión.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Resumen semanal disponible</strong><br>Dado que el paciente tiene el consentimiento de IA y registros suficientes en la semana terminada<br>Cuando el paciente consulta su resumen semanal<br>Entonces el sistema presenta un resumen con un tono de invitación, cuyas cifras provienen de sus registros y no de la IA, sin diagnósticos ni juicios.<br><br><strong>Escenario 2: Datos insuficientes</strong><br>Dado que el paciente tiene menos de tres días registrados en la semana<br>Cuando el paciente consulta su resumen semanal<br>Entonces el sistema informa que aún no existe información suficiente para generarlo.<br><br><strong>Escenario 3: Ideas de comidas acordes al plan</strong><br>Dado que el paciente tiene metas activas y energía restante en el día<br>Cuando el paciente solicita ideas de comidas<br>Entonces el sistema propone ideas que caben en lo restante del día y respetan sus restricciones.<br><br><strong>Escenario 4: Registro desde una idea</strong><br>Dado que el paciente tiene ideas de comidas disponibles<br>Cuando el paciente registra una de ellas<br>Entonces el sistema crea las entradas manuales de sus ingredientes en una sola operación y evalúa el día una vez.<br><br><strong>Escenario 5: Preguntas sugeridas para la consulta</strong><br>Dado que el paciente tiene una consulta agendada y registros en el periodo<br>Cuando el paciente solicita preguntas sugeridas<br>Entonces el sistema propone preguntas con tono de invitación que el paciente puede llevar a su respuesta previa.<br><br><strong>Escenario 6: Función no disponible</strong><br>Dado que la IA no está habilitada o el paciente no ha dado su consentimiento<br>Cuando el paciente intenta usar una función con IA<br>Entonces el sistema informa que la función no está disponible sin afectar el resto de sus registros.</td>
+  </tr>
+</table>
 <br>
 
 ### EP_TS — RESTful API — Technical Stories
 
-<br>***TS01 — Servicios de registro, autenticación y autorización***
+<p class="caption"><strong>Tabla 72</strong><br><em>Historia técnica TS01: Servicios de registro, autenticación y autorización</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1874,11 +2195,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Registro exitoso</strong><br>Dado que el Developer dispone de datos de registro válidos y un correo no registrado<br>Cuando el Developer envía una solicitud de registro con datos válidos y un correo disponible<br>Entonces el sistema responde 201 Created con la identificación de la cuenta creada y su rol.<br><br><strong>Escenario 2: Cuenta duplicada</strong><br>Dado que el Developer dispone de un correo previamente registrado<br>Cuando el Developer envía una solicitud de registro con un correo previamente registrado<br>Entonces el sistema responde 409 Conflict sin crear una segunda cuenta.<br><br><strong>Escenario 3: Autenticación válida</strong><br>Dado que el Developer dispone de credenciales válidas de una cuenta existente<br>Cuando el Developer envía una solicitud de autenticación con credenciales válidas<br>Entonces el sistema responde 200 OK con una credencial de acceso que identifica el rol autorizado.<br><br><strong>Escenario 4: Operación no autorizada</strong><br>Dado que el Developer dispone de una credencial válida asociada a un rol sin permiso para la operación solicitada<br>Cuando el Developer envía una solicitud para una operación no permitida por el rol autenticado<br>Entonces el sistema responde 403 Forbidden.</td>
+    <td colspan="8"><strong>Escenario 1: Registro exitoso</strong><br>Dado que el Developer dispone de datos de registro válidos y un correo no registrado<br>Cuando el Developer envía una solicitud de registro con datos válidos y un correo disponible<br>Entonces el sistema responde 201 Created con la identificación de la cuenta creada y su rol.<br><br><strong>Escenario 2: Cuenta duplicada</strong><br>Dado que el Developer dispone de un correo previamente registrado<br>Cuando el Developer envía una solicitud de registro con un correo previamente registrado<br>Entonces el sistema responde 409 Conflict sin crear una segunda cuenta.<br><br><strong>Escenario 3: Autenticación válida</strong><br>Dado que el Developer dispone de credenciales válidas de una cuenta existente<br>Cuando el Developer envía una solicitud de autenticación con credenciales válidas<br>Entonces el sistema responde 200 OK con una credencial de acceso que identifica el rol autorizado.<br><br><strong>Escenario 4: Operación no autorizada</strong><br>Dado que el Developer dispone de una credencial válida asociada a un rol sin permiso para la operación solicitada<br>Cuando el Developer envía una solicitud para una operación no permitida por el rol autenticado<br>Entonces el sistema responde 403 Forbidden.<br><br><strong>Escenario 5: Renovación de sesión</strong><br>Dado que el Developer dispone de una credencial de renovación vigente<br>Cuando el Developer envía una solicitud de renovación de la sesión<br>Entonces el sistema responde 200 OK con una nueva credencial de acceso y rota la credencial de renovación; si la credencial ya fue usada fuera del periodo de gracia, el sistema termina la sesión.<br><br><strong>Escenario 6: Cuenta bloqueada</strong><br>Dado que el Developer dispone de una cuenta que excedió el número permitido de intentos fallidos<br>Cuando el Developer envía una solicitud de autenticación mientras dura el bloqueo temporal<br>Entonces el sistema responde 401 Unauthorized con el código AccountLocked.</td>
   </tr>
 </table>
 
-<br>***TS02 — Servicios de gestión de vínculos de cuidado***
+<p class="caption"><strong>Tabla 73</strong><br><em>Historia técnica TS02: Servicios de gestión de vínculos de cuidado</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1906,11 +2228,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Creación de invitación</strong><br>Dado que el Developer dispone de una solicitud autenticada de un Nutricionista autorizado para generar una invitación<br>Cuando el Developer envía una solicitud válida para generar una invitación<br>Entonces el sistema responde 201 Created con una invitación única y vigente.<br><br><strong>Escenario 2: Canje válido</strong><br>Dado que el Developer dispone de una invitación válida, vigente y no utilizada<br>Cuando el Developer envía una solicitud para canjear una invitación válida y no utilizada<br>Entonces el sistema responde con éxito y establece el vínculo correspondiente.<br><br><strong>Escenario 3: Invitación inválida o reutilizada</strong><br>Dado que el Developer dispone de una invitación vencida, ya utilizada o inválida<br>Cuando el Developer envía una solicitud para canjear una invitación vencida, inválida o ya utilizada<br>Entonces el sistema rechaza la operación sin crear un nuevo vínculo.<br><br><strong>Escenario 4: Acceso sin consentimiento vigente</strong><br>Dado que el Developer recibe una solicitud de acceso sin un vínculo activo y consentimiento vigente<br>Cuando el Developer envía una solicitud de acceso a información protegida sin consentimiento vigente<br>Entonces el sistema responde 403 Forbidden.</td>
+    <td colspan="8"><strong>Escenario 1: Creación de invitación</strong><br>Dado que el Developer dispone de una solicitud autenticada de un Nutricionista autorizado para generar una invitación<br>Cuando el Developer envía una solicitud válida para generar una invitación<br>Entonces el sistema responde 201 Created con una invitación única y vigente.<br><br><strong>Escenario 2: Canje válido</strong><br>Dado que el Developer dispone de una invitación válida, vigente y no utilizada<br>Cuando el Developer envía una solicitud para canjear una invitación válida y no utilizada<br>Entonces el sistema responde con éxito y establece el vínculo correspondiente.<br><br><strong>Escenario 3: Invitación inválida o reutilizada</strong><br>Dado que el Developer dispone de una invitación vencida, ya utilizada o inválida<br>Cuando el Developer envía una solicitud para canjear una invitación vencida, inválida o ya utilizada<br>Entonces el sistema rechaza la operación sin crear un nuevo vínculo.<br><br><strong>Escenario 4: Acceso sin consentimiento vigente</strong><br>Dado que el Developer recibe una solicitud de acceso sin un vínculo activo y consentimiento vigente<br>Cuando el Developer envía una solicitud de acceso a información protegida sin consentimiento vigente<br>Entonces el sistema responde 403 Forbidden.<br><br><strong>Escenario 5: Retiro del consentimiento</strong><br>Dado que el Developer dispone de un vínculo activo con consentimiento vigente del paciente<br>Cuando el Developer envía la solicitud de retiro del consentimiento<br>Entonces el sistema responde 204 No Content, revoca el vínculo y desactiva las funciones con IA asociadas.<br><br><strong>Escenario 6: Alta clínica</strong><br>Dado que el Developer dispone de un vínculo activo y de una solicitud de alta del nutricionista<br>Cuando el Developer envía la solicitud de alta con su motivo clínico, o sin él<br>Entonces el sistema responde 200 OK, cierra el vínculo, cancela las consultas futuras y desactiva la IA, y responde 400 Bad Request si falta el motivo.<br><br><strong>Escenario 7: Reemplazo del vínculo</strong><br>Dado que el Developer dispone de la invitación de otro nutricionista para un paciente con vínculo activo<br>Cuando el Developer envía el canje sin indicar el reemplazo, o indicándolo de forma explícita<br>Entonces el sistema responde 409 Conflict sin el reemplazo explícito y, con él, responde 201 Created y revoca el vínculo anterior.</td>
   </tr>
 </table>
 
-<br>***TS03 — Servicios de evaluación y diagnóstico nutricional***
+<p class="caption"><strong>Tabla 74</strong><br><em>Historia técnica TS03: Servicios de evaluación y diagnóstico nutricional</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1932,17 +2255,18 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como Developer, deseo disponer de servicios RESTful para registrar evaluaciones, mediciones y diagnósticos nutricionales, para que el backend mantenga la información clínica y sus reglas de integridad.</td>
+    <td colspan="8">Como Developer, deseo disponer de servicios RESTful para conducir la consulta guiada, con los datos base, la evaluación, las mediciones y el diagnóstico, para que el backend mantenga la información clínica y sus reglas de integridad.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Creación de evaluación</strong><br>Dado que el Developer dispone de una solicitud autenticada con datos válidos para crear una evaluación nutricional<br>Cuando el Developer envía una solicitud válida para crear una evaluación nutricional<br>Entonces el sistema responde 201 Created con la evaluación registrada.<br><br><strong>Escenario 2: Cierre de evaluación</strong><br>Dado que el Developer dispone de una evaluación abierta que contiene la información requerida<br>Cuando el Developer envía una solicitud para cerrar una evaluación que contiene la información requerida<br>Entonces el sistema confirma el cambio de estado y conserva la evaluación como inmutable.<br><br><strong>Escenario 3: Modificación de evaluación cerrada</strong><br>Dado que el Developer dispone de una evaluación nutricional que ya se encuentra cerrada<br>Cuando el Developer envía una solicitud para modificar una evaluación cerrada<br>Entonces el sistema rechaza la operación.<br><br><strong>Escenario 4: Registro de diagnóstico</strong><br>Dado que el Developer dispone de un diagnóstico válido acompañado de su fundamento clínico<br>Cuando el Developer envía una solicitud para registrar un diagnóstico con su fundamento requerido<br>Entonces el sistema responde 201 Created y lo asocia al paciente correspondiente.</td>
+    <td colspan="8"><strong>Escenario 1: Creación de evaluación</strong><br>Dado que el Developer dispone de una solicitud autenticada con datos válidos para crear una evaluación nutricional<br>Cuando el Developer envía una solicitud válida para crear una evaluación nutricional<br>Entonces el sistema responde 201 Created con la evaluación registrada.<br><br><strong>Escenario 2: Cierre de evaluación</strong><br>Dado que el Developer dispone de una evaluación abierta que contiene la información requerida<br>Cuando el Developer envía una solicitud para cerrar una evaluación que contiene la información requerida<br>Entonces el sistema confirma el cambio de estado y conserva la evaluación como inmutable.<br><br><strong>Escenario 3: Modificación de evaluación cerrada</strong><br>Dado que el Developer dispone de una evaluación nutricional que ya se encuentra cerrada<br>Cuando el Developer envía una solicitud para modificar una evaluación cerrada<br>Entonces el sistema rechaza la operación.<br><br><strong>Escenario 4: Registro de diagnóstico</strong><br>Dado que el Developer dispone de un diagnóstico válido acompañado de su fundamento clínico<br>Cuando el Developer envía una solicitud para registrar un diagnóstico con su fundamento requerido<br>Entonces el sistema responde 200 OK y conserva el diagnóstico como pendiente de la consulta; solo pasa a ser el diagnóstico activo cuando se publica el plan.<br><br><strong>Escenario 5: Datos base del paciente</strong><br>Dado que el Developer dispone de datos base válidos de un paciente con vínculo activo<br>Cuando el Developer envía la solicitud de registro de datos base<br>Entonces el sistema responde 201 Created y, si los datos base ya existen, responde 409 Conflict y admite su corrección mediante una actualización.<br><br><strong>Escenario 6: Una consulta en curso por paciente</strong><br>Dado que el Developer dispone de un paciente con una consulta en curso<br>Cuando el Developer solicita iniciar otra consulta para el mismo paciente<br>Entonces el sistema responde 409 Conflict y permite consultar y retomar la consulta en curso.</td>
   </tr>
 </table>
 
-<br>***TS04 — Servicios de prescripción y gestión del plan nutricional***
+<p class="caption"><strong>Tabla 75</strong><br><em>Historia técnica TS04: Servicios de prescripción y gestión del plan nutricional</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1970,11 +2294,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Solicitud de cálculo válida</strong><br>Dado que el Developer dispone de todos los parámetros requeridos para calcular las metas nutricionales<br>Cuando el Developer envía una solicitud de cálculo con todos los parámetros requeridos<br>Entonces el sistema responde 200 OK con los valores calculados y su base de cálculo.<br><br><strong>Escenario 2: Publicación válida del plan</strong><br>Dado que el Developer dispone de un diagnóstico y una base de cálculo válidos para el paciente<br>Cuando el Developer envía una solicitud para publicar un plan con diagnóstico y base de cálculo válidos<br>Entonces el sistema registra una nueva versión activa del plan.<br><br><strong>Escenario 3: Publicación sin requisitos clínicos</strong><br>Dado que el Developer recibe una solicitud de publicación sin diagnóstico o sin la base de cálculo requerida<br>Cuando el Developer envía una solicitud para publicar un plan sin diagnóstico o base de cálculo requeridos<br>Entonces el sistema rechaza la solicitud.<br><br><strong>Escenario 4: Ajuste del plan</strong><br>Dado que el Developer tiene un plan activo<br>Cuando el Developer envía una solicitud de ajuste del plan con el motivo requerido<br>Entonces el sistema crea una nueva versión y conserva las anteriores.</td>
+    <td colspan="8"><strong>Escenario 1: Solicitud de cálculo válida</strong><br>Dado que el Developer dispone de todos los parámetros requeridos para calcular las metas nutricionales<br>Cuando el Developer envía una solicitud de cálculo con todos los parámetros requeridos<br>Entonces el sistema responde 200 OK con los valores calculados y su base de cálculo.<br><br><strong>Escenario 2: Publicación válida del plan</strong><br>Dado que el Developer dispone de un diagnóstico y una base de cálculo válidos para el paciente<br>Cuando el Developer envía una solicitud para publicar un plan con diagnóstico y base de cálculo válidos<br>Entonces el sistema registra una nueva versión activa del plan.<br><br><strong>Escenario 3: Publicación sin requisitos clínicos</strong><br>Dado que el Developer recibe una solicitud de publicación sin diagnóstico o sin la base de cálculo requerida<br>Cuando el Developer envía una solicitud para publicar un plan sin diagnóstico o base de cálculo requeridos<br>Entonces el sistema rechaza la solicitud.<br><br><strong>Escenario 4: Ajuste del plan</strong><br>Dado que el Developer tiene un plan activo<br>Cuando el Developer envía una solicitud de ajuste del plan con el motivo requerido<br>Entonces el sistema crea una nueva versión y conserva las anteriores.<br><br><strong>Escenario 5: Publicación con clave de idempotencia</strong><br>Dado que el Developer envía la publicación de una consulta con una clave de idempotencia<br>Cuando el Developer reenvía la misma publicación con la misma clave, o con una clave inválida<br>Entonces el sistema procesa la publicación una sola vez sin crear una segunda versión, y rechaza la clave inválida con 400 Bad Request.<br><br><strong>Escenario 6: Versiones del plan para el paciente</strong><br>Dado que el Developer dispone de un paciente con versiones anteriores de su plan<br>Cuando el Developer solicita el historial de versiones como Paciente<br>Entonces el sistema responde 200 OK con las versiones sin el diagnóstico ni la base de cálculo.</td>
   </tr>
 </table>
 
-<br>***TS05 — Servicios de registro de ingesta alimentaria***
+<p class="caption"><strong>Tabla 76</strong><br><em>Historia técnica TS05: Servicios de registro de ingesta alimentaria</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -1996,17 +2321,18 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como Developer, deseo disponer de servicios RESTful para registrar y consultar las ingestas alimentarias del paciente, para soportar los registros manuales, estimados y fuera del plan sin perder su procedencia.</td>
+    <td colspan="8">Como Developer, deseo disponer de servicios RESTful para registrar y consultar las ingestas alimentarias del paciente, para soportar los registros manuales y estimados, con su adherencia al plan, sin perder su procedencia.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Registro válido de ingesta</strong><br>Dado que el Developer dispone de datos válidos para registrar una ingesta alimentaria<br>Cuando el Developer envía una solicitud válida para registrar una ingesta<br>Entonces el sistema responde 201 Created y conserva fecha, hora y procedencia del registro.<br><br><strong>Escenario 2: Confirmación de estimación</strong><br>Dado que el Developer dispone de una estimación de ingesta pendiente de confirmación<br>Cuando el Developer envía una solicitud con los valores confirmados o corregidos de una estimación<br>Entonces el sistema registra la ingesta confirmada conservando la procedencia de la estimación.<br><br><strong>Escenario 3: Consumo fuera del plan</strong><br>Dado que el Developer dispone de una solicitud válida para registrar un consumo fuera del plan<br>Cuando el Developer envía una solicitud válida para registrar un consumo fuera del plan<br>Entonces el sistema registra el evento sin exigir un detalle nutricional adicional.<br><br><strong>Escenario 4: Eliminación del historial</strong><br>Dado que el Developer dispone de una entrada histórica de ingesta confirmada<br>Cuando el Developer envía una solicitud para eliminar una entrada histórica perdiendo su trazabilidad<br>Entonces el sistema rechaza la operación de acuerdo con las reglas de integridad del diario.</td>
+    <td colspan="8"><strong>Escenario 1: Registro válido de ingesta</strong><br>Dado que el Developer dispone de datos válidos para registrar una ingesta alimentaria<br>Cuando el Developer envía una solicitud válida para registrar una ingesta<br>Entonces el sistema responde 201 Created y conserva fecha, hora y procedencia del registro.<br><br><strong>Escenario 2: Confirmación de estimación</strong><br>Dado que el Developer dispone de una estimación de ingesta pendiente de confirmación<br>Cuando el Developer envía una solicitud con los valores confirmados o corregidos de una estimación<br>Entonces el sistema registra la ingesta confirmada conservando la procedencia de la estimación.<br><br><strong>Escenario 3: Adherencia al plan</strong><br>Dado que el Developer dispone de una solicitud de registro de ingesta que indica si la comida estaba dentro del plan<br>Cuando el Developer envía una solicitud sin la indicación de adherencia al plan<br>Entonces el sistema responde 400 Bad Request e identifica la información faltante.<br><br><strong>Escenario 4: Eliminación del historial</strong><br>Dado que el Developer dispone de una entrada histórica de ingesta confirmada<br>Cuando el Developer intenta eliminar la entrada<br>Entonces el sistema no expone una operación de eliminación y conserva la entrada.<br><br><strong>Escenario 5: Análisis de fotografía</strong><br>Dado que el Developer dispone de una fotografía de una comida en formato admitido<br>Cuando el Developer envía la fotografía para su análisis<br>Entonces el sistema responde 201 Created con la propuesta de estimación, y rechaza con 413 Payload Too Large una fotografía que supera el tamaño permitido o con 400 Bad Request un formato no admitido.<br><br><strong>Escenario 6: Reenvío idempotente</strong><br>Dado que el Developer reenvía un registro con el mismo identificador de cliente<br>Cuando el sistema recibe el registro<br>Entonces el sistema devuelve la misma entrada sin duplicarla y responde con conflicto si el identificador pertenece a otro paciente.<br><br><strong>Escenario 7: Registro por lote desde una idea de comida</strong><br>Dado que el Developer dispone de entre 1 y 10 ingredientes de una idea de comida<br>Cuando el Developer envía el lote de registros manuales<br>Entonces el sistema responde 201 Created, crea las entradas como un solo grupo y rechaza el lote con cantidades fuera de ese rango.</td>
   </tr>
 </table>
 
-<br>***TS06 — Servicios de autopesaje y seguimiento corporal***
+<p class="caption"><strong>Tabla 77</strong><br><em>Historia técnica TS06: Servicios de autopesaje y seguimiento corporal</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2034,11 +2360,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Autopesaje válido</strong><br>Dado que el Developer dispone de un autopesaje con valor válido y condiciones de protocolo cumplidas<br>Cuando el Developer envía una solicitud de autopesaje con valor válido y condiciones de protocolo cumplidas<br>Entonces el sistema responde 201 Created y lo clasifica como elegible para la tendencia.<br><br><strong>Escenario 2: Registro fuera del protocolo</strong><br>Dado que el Developer dispone de un autopesaje con valor válido que no cumple las condiciones del protocolo<br>Cuando el Developer envía una solicitud de autopesaje válido que no cumple el protocolo<br>Entonces el sistema conserva el registro y lo marca como no elegible para el cálculo de tendencia.<br><br><strong>Escenario 3: Consulta de tendencia</strong><br>Dado que el Developer dispone de suficientes registros elegibles para calcular la tendencia de peso<br>Cuando el Developer envía una solicitud para consultar la tendencia de peso del periodo<br>Entonces el sistema responde 200 OK con los datos derivados de los registros elegibles.</td>
+    <td colspan="8"><strong>Escenario 1: Autopesaje válido</strong><br>Dado que el Developer dispone de un autopesaje con valor válido y condiciones de protocolo cumplidas<br>Cuando el Developer envía una solicitud de autopesaje con valor válido y condiciones de protocolo cumplidas<br>Entonces el sistema responde 201 Created y lo clasifica como elegible para la tendencia.<br><br><strong>Escenario 2: Registro fuera del protocolo</strong><br>Dado que el Developer dispone de un autopesaje con valor válido que no cumple las condiciones del protocolo<br>Cuando el Developer envía una solicitud de autopesaje válido que no cumple el protocolo<br>Entonces el sistema conserva el registro y lo marca como no elegible para el cálculo de tendencia.<br><br><strong>Escenario 3: Consulta de tendencia</strong><br>Dado que el Developer dispone de suficientes registros elegibles para calcular la tendencia de peso<br>Cuando el Developer envía una solicitud para consultar la tendencia de peso del periodo<br>Entonces el sistema responde 200 OK con los datos derivados de los registros elegibles.<br><br><strong>Escenario 4: Tendencia sin datos suficientes</strong><br>Dado que el Developer no dispone de registros elegibles suficientes para calcular la tendencia<br>Cuando el Developer envía una solicitud para consultar la tendencia de peso<br>Entonces el sistema responde 404 Not Found e indica que aún no existe una tendencia.<br><br><strong>Escenario 5: Valor de peso implausible</strong><br>Dado que el Developer dispone de un autopesaje con un valor fuera del rango plausible<br>Cuando el Developer envía la solicitud de autopesaje<br>Entonces el sistema responde 400 Bad Request y no registra el valor.</td>
   </tr>
 </table>
 
-<br>***TS07 — Servicios de monitoreo y expediente del paciente***
+<p class="caption"><strong>Tabla 78</strong><br><em>Historia técnica TS07: Servicios de monitoreo y expediente del paciente</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2066,11 +2393,12 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Consulta autorizada del nutricionista</strong><br>Dado que el Developer recibe una solicitud autenticada de un Nutricionista con vínculo activo y consentimiento vigente<br>Cuando el Developer envía una solicitud autorizada para consultar la información del paciente como Nutricionista<br>Entonces el sistema responde 200 OK con la información clínica y de seguimiento correspondiente.<br><br><strong>Escenario 2: Consulta autorizada del paciente</strong><br>Dado que el Developer recibe una solicitud autenticada del Paciente para consultar su propio expediente<br>Cuando el Developer envía una solicitud autenticada para consultar el expediente como Paciente<br>Entonces el sistema responde 200 OK con la información permitida para el rol Paciente.<br><br><strong>Escenario 3: Consulta sin autorización</strong><br>Dado que el Developer recibe una solicitud para consultar un expediente sin autorización vigente<br>Cuando el Developer envía una solicitud de expediente sin autorización vigente<br>Entonces el sistema responde 403 Forbidden.<br><br><strong>Escenario 4: Resolución de una situación de revisión</strong><br>Dado que el Developer dispone de una situación de seguimiento pendiente de revisión profesional<br>Cuando el Developer envía una solicitud para registrar la resolución de una situación de revisión<br>Entonces el sistema conserva la decisión sin modificar automáticamente el plan nutricional.</td>
+    <td colspan="8"><strong>Escenario 1: Consulta autorizada del nutricionista</strong><br>Dado que el Developer recibe una solicitud autenticada de un Nutricionista con vínculo activo y consentimiento vigente<br>Cuando el Developer envía una solicitud autorizada para consultar la información del paciente como Nutricionista<br>Entonces el sistema responde 200 OK con la información clínica y de seguimiento correspondiente.<br><br><strong>Escenario 2: Consulta autorizada del paciente</strong><br>Dado que el Developer recibe una solicitud autenticada del Paciente para consultar su propio expediente<br>Cuando el Developer envía una solicitud autenticada para consultar el expediente como Paciente<br>Entonces el sistema responde 200 OK con la información permitida para el rol Paciente.<br><br><strong>Escenario 3: Consulta sin autorización</strong><br>Dado que el Developer recibe una solicitud para consultar un expediente sin autorización vigente<br>Cuando el Developer envía una solicitud de expediente sin autorización vigente<br>Entonces el sistema responde 403 Forbidden.<br><br><strong>Escenario 4: Resolución de una situación de revisión</strong><br>Dado que el Developer dispone de una situación de seguimiento pendiente de revisión profesional<br>Cuando el Developer envía una solicitud para registrar la resolución de una situación de revisión<br>Entonces el sistema conserva la decisión sin modificar automáticamente el plan nutricional.<br><br><strong>Escenario 5: Indicador de consistencia y acuse</strong><br>Dado que el Developer dispone de un paciente con un aviso de consistencia pendiente de mostrar<br>Cuando el Developer consulta el indicador y envía el acuse de que el paciente lo vio<br>Entonces el sistema responde 200 OK con el indicador y 204 No Content al acuse, que habilita la escalación al profesional solo después de ese aviso.<br><br><strong>Escenario 6: Cartera y resumen de pacientes</strong><br>Dado que el Developer recibe una solicitud autenticada de un Nutricionista con pacientes vinculados<br>Cuando el Developer envía la solicitud de la cartera o del resumen de un paciente<br>Entonces el sistema responde 200 OK solo con los pacientes y datos del nutricionista autenticado.</td>
   </tr>
 </table>
 
-<br>***TS08 — Sincronización de registros offline***
+<p class="caption"><strong>Tabla 79</strong><br><em>Historia técnica TS08: Sincronización de registros offline</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2098,14 +2426,81 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Sincronización de registros pendientes</strong><br>Dado que el Developer dispone de registros locales válidos pendientes de sincronización<br>Cuando el Developer envía una solicitud con registros locales pendientes válidos<br>Entonces el sistema responde con el estado de sincronización correspondiente a cada registro.<br><br><strong>Escenario 2: Reenvío del mismo registro</strong><br>Dado que el Developer recibe nuevamente una operación de sincronización que ya fue procesada<br>Cuando el Developer reenvía una operación que ya fue procesada previamente<br>Entonces el sistema evita crear un registro duplicado y devuelve un resultado consistente.<br><br><strong>Escenario 3: Fallo parcial</strong><br>Dado que el Developer recibe una solicitud de sincronización que contiene registros válidos y registros que no pueden ser procesados<br>Cuando el Developer envía una solicitud de sincronización que contiene registros válidos y registros con error<br>Entonces el sistema identifica los registros sincronizados y aquellos que permanecen pendientes.<br><br><strong>Escenario 4: Conflicto de información</strong><br>Dado que el Developer recibe una solicitud de sincronización con un conflicto entre la versión local y la información disponible en el servidor<br>Cuando el Developer envía una solicitud de sincronización que presenta un conflicto con la información del servidor<br>Entonces el sistema aplica la política de resolución de conflictos vigente y devuelve el resultado al cliente.</td>
+    <td colspan="8"><strong>Escenario 1: Sincronización de registros pendientes</strong><br>Dado que el Developer dispone de registros locales válidos pendientes de sincronización<br>Cuando el Developer envía una solicitud con registros locales pendientes válidos, ya sean comidas o autopesajes<br>Entonces el sistema responde con el estado de sincronización correspondiente a cada registro.<br><br><strong>Escenario 2: Reenvío del mismo registro</strong><br>Dado que el Developer recibe nuevamente una operación de sincronización que ya fue procesada<br>Cuando el Developer reenvía una operación que ya fue procesada previamente<br>Entonces el sistema evita crear un registro duplicado y devuelve un resultado consistente.<br><br><strong>Escenario 3: Fallo parcial</strong><br>Dado que el Developer recibe una solicitud de sincronización que contiene registros válidos y registros que no pueden ser procesados<br>Cuando el Developer envía una solicitud de sincronización que contiene registros válidos y registros con error<br>Entonces el sistema identifica los registros sincronizados y aquellos que permanecen pendientes.<br><br><strong>Escenario 4: Conflicto de información</strong><br>Dado que el Developer recibe una solicitud de sincronización con un conflicto entre la versión local y la información disponible en el servidor<br>Cuando el Developer envía una solicitud de sincronización que presenta un conflicto con la información del servidor<br>Entonces el sistema aplica la política de resolución de conflictos vigente, en la que la última escritura prevalece solo sobre la estimación y el momento declarado por el paciente nunca se reescribe, y devuelve el resultado al cliente.</td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 80</strong><br><em>Historia técnica TS09: Servicios de asistencia con IA</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">TS09</td>
+    <td colspan="2">Developer</td>
+    <td colspan="2">Alta</td>
+    <td colspan="2">EP_TS</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Servicios de asistencia con IA</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como Developer, deseo disponer de un módulo técnico de IA con controles de uso, para que las funciones con IA se ofrezcan solo con consentimiento, con salidas validadas y sin exponer datos identificatorios.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Funciones deshabilitadas por defecto</strong><br>Dado que el Developer opera el backend con la IA deshabilitada<br>Cuando el Developer solicita una función con IA del paciente<br>Entonces el sistema responde 503 Service Unavailable, y las funciones del nutricionista responden con su alternativa determinista.<br><br><strong>Escenario 2: Consentimiento verificado</strong><br>Dado que el paciente no ha otorgado el consentimiento o desactivó la función<br>Cuando el Developer solicita la función con IA<br>Entonces el sistema responde 403 Forbidden sin invocar al proveedor de IA.<br><br><strong>Escenario 3: Salida validada</strong><br>Dado que el proveedor de IA devuelve una salida que no cumple el formato o las reglas definidas<br>Cuando el sistema valida la salida<br>Entonces el sistema responde 502 Bad Gateway, no guarda el contenido y registra el rechazo.<br><br><strong>Escenario 4: Límite de uso</strong><br>Dado que el usuario ha agotado su cuota de generaciones<br>Cuando el Developer solicita una nueva generación<br>Entonces el sistema responde 429 Too Many Requests.</td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 81</strong><br><em>Historia técnica TS10: Servicios de agenda y respuesta previa a la consulta</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">TS10</td>
+    <td colspan="2">Developer</td>
+    <td colspan="2">Media</td>
+    <td colspan="2">EP_TS</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Servicios de agenda y respuesta previa a la consulta</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como Developer, deseo disponer de servicios RESTful para gestionar la agenda de consultas y la respuesta previa del paciente, para que las aplicaciones cliente organicen el seguimiento entre consultas.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Consulta agendada</strong><br>Dado que el Developer dispone de una solicitud válida con una fecha futura para un paciente con vínculo activo<br>Cuando el Developer envía la solicitud de agendamiento<br>Entonces el sistema responde 201 Created y registra la consulta en estado programado.<br><br><strong>Escenario 2: Fecha no futura o consulta duplicada</strong><br>Dado que el Developer envía una solicitud con una fecha no futura o para un paciente que ya tiene una consulta agendada<br>Cuando el sistema valida la solicitud<br>Entonces el sistema rechaza la operación y conserva la agenda sin cambios.<br><br><strong>Escenario 3: Respuesta previa fuera de plazo</strong><br>Dado que el Developer envía la respuesta previa de una consulta cuya hora ya pasó<br>Cuando el sistema valida la solicitud<br>Entonces el sistema responde 409 Conflict y conserva la respuesta anterior.<br><br><strong>Escenario 4: Reprogramación y cancelación</strong><br>Dado que el Developer dispone de una consulta agendada del nutricionista autenticado<br>Cuando el Developer envía la solicitud de reprogramación o de cancelación<br>Entonces el sistema responde 200 OK con la nueva fecha en la reprogramación y 204 No Content en la cancelación, conservando la respuesta previa del paciente.</td>
   </tr>
 </table>
 <br>
 
 ### EP_SS — Spike Stories
 
-<br>***SS01 — Investigación de Google ML Kit para el reconocimiento de alimentos***
+<p class="caption"><strong>Tabla 82</strong><br><em>Spike SS01: Investigación de tecnologías para el reconocimiento de alimentos</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2121,23 +2516,24 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
   <tr>
     <th colspan="2">Title</th>
-    <td colspan="6">Investigación de Google ML Kit para el reconocimiento de alimentos</td>
+    <td colspan="6">Investigación de tecnologías para el reconocimiento de alimentos</td>
   </tr>
   <tr>
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como equipo de desarrollo, deseamos investigar y prototipar el uso de Google ML Kit para apoyar el reconocimiento de alimentos a partir de fotografías, para determinar su viabilidad, limitaciones y el esfuerzo requerido antes de implementar el registro fotográfico de comidas en Healthify.</td>
+    <td colspan="8">Como equipo de desarrollo, deseamos investigar y prototipar el uso de Google ML Kit y de modelos de IA generativa para apoyar el reconocimiento de alimentos a partir de fotografías, para determinar su viabilidad, limitaciones y el esfuerzo requerido antes de implementar el registro fotográfico de comidas en Healthify.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Revisión técnica</strong><br>Dado que el equipo de desarrollo necesita conocer las capacidades de Google ML Kit relevantes para el procesamiento de imágenes<br>Cuando el equipo de desarrollo revisa la documentación y las restricciones técnicas aplicables de Google ML Kit<br>Entonces el equipo de desarrollo documenta las capacidades, dependencias y limitaciones identificadas.<br><br><strong>Escenario 2: Prueba de concepto</strong><br>Dado que el equipo de desarrollo ha identificado las capacidades de Google ML Kit potencialmente aplicables<br>Cuando el equipo de desarrollo implementa una prueba de concepto con fotografías representativas<br>Entonces el equipo de desarrollo registra los resultados obtenidos y los casos en los que el reconocimiento no resulta suficiente.<br><br><strong>Escenario 3: Estrategia de contingencia</strong><br>Dado que el equipo de desarrollo ha identificado que el reconocimiento puede producir resultados incompletos o inciertos<br>Cuando el equipo de desarrollo analiza los resultados obtenidos en la prueba de concepto<br>Entonces el equipo de desarrollo documenta una alternativa funcional que permita al paciente confirmar, corregir o registrar manualmente la información.<br><br><strong>Escenario 4: Conclusión del Spike</strong><br>Dado que el equipo de desarrollo ha finalizado la investigación y la prueba de concepto<br>Cuando el equipo de desarrollo consolida los hallazgos de la investigación y del prototipo<br>Entonces el equipo de desarrollo documenta una recomendación sobre viabilidad, riesgos y esfuerzo estimado para la implementación.</td>
+    <td colspan="8"><strong>Escenario 1: Revisión técnica</strong><br>Dado que el equipo de desarrollo necesita conocer las capacidades de Google ML Kit y de los modelos de IA generativa relevantes para el procesamiento de imágenes<br>Cuando el equipo de desarrollo revisa la documentación y las restricciones técnicas aplicables de ambas alternativas<br>Entonces el equipo de desarrollo documenta las capacidades, dependencias y limitaciones identificadas.<br><br><strong>Escenario 2: Prueba de concepto</strong><br>Dado que el equipo de desarrollo ha identificado las capacidades potencialmente aplicables de ambas alternativas<br>Cuando el equipo de desarrollo implementa una prueba de concepto con fotografías representativas<br>Entonces el equipo de desarrollo registra los resultados obtenidos y los casos en los que el reconocimiento no resulta suficiente.<br><br><strong>Escenario 3: Estrategia de contingencia</strong><br>Dado que el equipo de desarrollo ha identificado que el reconocimiento puede producir resultados incompletos o inciertos<br>Cuando el equipo de desarrollo analiza los resultados obtenidos en la prueba de concepto<br>Entonces el equipo de desarrollo documenta una alternativa funcional que permita al paciente confirmar, corregir o registrar manualmente la información.<br><br><strong>Escenario 4: Conclusión del Spike</strong><br>Dado que el equipo de desarrollo ha finalizado la investigación y la prueba de concepto<br>Cuando el equipo de desarrollo consolida los hallazgos de la investigación y del prototipo<br>Entonces el equipo de desarrollo documenta una recomendación sobre viabilidad, riesgos y esfuerzo estimado para la implementación: el reconocimiento de comidas se realiza en el servidor con un modelo de IA generativa, y Google ML Kit se destina a la lectura del código QR de invitación.</td>
   </tr>
 </table>
 
-<br>***SS02 — Investigación de Open Food Facts para el catálogo de alimentos***
+<p class="caption"><strong>Tabla 83</strong><br><em>Spike SS02: Investigación de Open Food Facts y USDA para el catálogo de alimentos</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2153,23 +2549,24 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
   </tr>
   <tr>
     <th colspan="2">Title</th>
-    <td colspan="6">Investigación de Open Food Facts para el catálogo de alimentos</td>
+    <td colspan="6">Investigación de Open Food Facts y USDA para el catálogo de alimentos</td>
   </tr>
   <tr>
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como equipo de desarrollo, deseamos investigar la integración de Open Food Facts como fuente externa del catálogo nutricional, para determinar su cobertura, calidad de información y adecuación para los alimentos relevantes para los usuarios de Healthify.</td>
+    <td colspan="8">Como equipo de desarrollo, deseamos investigar la integración de Open Food Facts y de USDA FoodData Central como fuentes externas del catálogo nutricional, para determinar su cobertura, calidad de información y adecuación para los alimentos relevantes para los usuarios de Healthify.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Revisión de la API</strong><br>Dado que el equipo de desarrollo necesita evaluar Open Food Facts como fuente externa de alimentos<br>Cuando el equipo de desarrollo revisa la documentación disponible de Open Food Facts<br>Entonces el equipo de desarrollo documenta los recursos, campos, restricciones y condiciones de uso relevantes para Healthify.<br><br><strong>Escenario 2: Evaluación de cobertura</strong><br>Dado que el equipo de desarrollo necesita evaluar la cobertura de alimentos relevantes para el contexto peruano<br>Cuando el equipo de desarrollo consulta una muestra representativa de alimentos relevantes para el contexto peruano<br>Entonces el equipo de desarrollo documenta la disponibilidad, completitud y principales vacíos encontrados.<br><br><strong>Escenario 3: Prueba de integración</strong><br>Dado que el equipo de desarrollo ha identificado los recursos necesarios de Open Food Facts<br>Cuando el equipo de desarrollo implementa una prueba de concepto de consulta y transformación de datos<br>Entonces el equipo de desarrollo demuestra que la información puede convertirse al modelo utilizado por Healthify sin depender directamente de los términos internos del proveedor.<br><br><strong>Escenario 4: Conclusión del Spike</strong><br>Dado que el equipo de desarrollo ha evaluado la cobertura y la integración de Open Food Facts<br>Cuando el equipo de desarrollo consolida los resultados de cobertura e integración<br>Entonces el equipo de desarrollo documenta si Open Food Facts resulta suficiente, requiere una fuente complementaria o necesita una estrategia local adicional.</td>
+    <td colspan="8"><strong>Escenario 1: Revisión de la API</strong><br>Dado que el equipo de desarrollo necesita evaluar Open Food Facts como fuente externa de alimentos<br>Cuando el equipo de desarrollo revisa la documentación disponible de Open Food Facts<br>Entonces el equipo de desarrollo documenta los recursos, campos, restricciones y condiciones de uso relevantes para Healthify.<br><br><strong>Escenario 2: Evaluación de cobertura</strong><br>Dado que el equipo de desarrollo necesita evaluar la cobertura de alimentos relevantes para el contexto peruano<br>Cuando el equipo de desarrollo consulta una muestra representativa de alimentos relevantes para el contexto peruano<br>Entonces el equipo de desarrollo documenta la disponibilidad, completitud y principales vacíos encontrados.<br><br><strong>Escenario 3: Prueba de integración</strong><br>Dado que el equipo de desarrollo ha identificado los recursos necesarios de Open Food Facts<br>Cuando el equipo de desarrollo implementa una prueba de concepto de consulta y transformación de datos<br>Entonces el equipo de desarrollo demuestra que la información puede convertirse al modelo utilizado por Healthify sin depender directamente de los términos internos del proveedor.<br><br><strong>Escenario 4: Conclusión del Spike</strong><br>Dado que el equipo de desarrollo ha evaluado la cobertura y la integración de Open Food Facts<br>Cuando el equipo de desarrollo consolida los resultados de cobertura e integración<br>Entonces el equipo de desarrollo documenta si Open Food Facts resulta suficiente, requiere una fuente complementaria, como USDA FoodData Central, o necesita una estrategia local adicional, como los alimentos locales que agrega el nutricionista.</td>
   </tr>
 </table>
 
-<br>***SS03 — Investigación y definición de la lógica de la señal de consistencia***
+<p class="caption"><strong>Tabla 84</strong><br><em>Spike SS03: Investigación y definición de la lógica de la señal de consistencia</em></p>
+
 <table>
   <tr>
     <th colspan="2">Story ID</th>
@@ -2197,7 +2594,40 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Identificación de variables relevantes</strong><br>Dado que el equipo de desarrollo necesita definir qué información registrada a lo largo del tiempo puede intervenir en la señal de consistencia<br>Cuando el equipo de desarrollo analiza los datos disponibles y las reglas del dominio relacionadas con la consistencia<br>Entonces el equipo de desarrollo documenta qué variables pueden formar parte de la evaluación y cuáles deben excluirse.<br><br><strong>Escenario 2: Tratamiento de información faltante</strong><br>Dado que el equipo de desarrollo ha identificado que pueden existir días con registros incompletos o ausentes<br>Cuando el equipo de desarrollo define reglas candidatas para tratar registros incompletos o ausentes<br>Entonces el equipo de desarrollo documenta cómo se tratarán esos periodos sin clasificarlos automáticamente como desviación.<br><br><strong>Escenario 3: Validación con casos representativos</strong><br>Dado que el equipo de desarrollo dispone de una propuesta de lógica para la señal de consistencia<br>Cuando el equipo de desarrollo aplica la lógica propuesta a casos de prueba representativos<br>Entonces el equipo de desarrollo documenta los resultados, falsos positivos potenciales y situaciones ambiguas identificadas.<br><br><strong>Escenario 4: Conclusión del Spike</strong><br>Dado que el equipo de desarrollo ha evaluado las alternativas propuestas para la señal de consistencia<br>Cuando el equipo de desarrollo consolida las alternativas evaluadas y los resultados de la investigación<br>Entonces el equipo de desarrollo documenta la regla recomendada, sus parámetros pendientes de validación y las condiciones bajo las cuales una señal puede escalarse para revisión profesional, sin modificar automáticamente el tratamiento.</td>
+    <td colspan="8"><strong>Escenario 1: Identificación de variables relevantes</strong><br>Dado que el equipo de desarrollo necesita definir qué información registrada a lo largo del tiempo puede intervenir en la señal de consistencia<br>Cuando el equipo de desarrollo analiza los datos disponibles y las reglas del dominio relacionadas con la consistencia<br>Entonces el equipo de desarrollo documenta qué variables pueden formar parte de la evaluación y cuáles deben excluirse.<br><br><strong>Escenario 2: Tratamiento de información faltante</strong><br>Dado que el equipo de desarrollo ha identificado que pueden existir días con registros incompletos o ausentes<br>Cuando el equipo de desarrollo define reglas candidatas para tratar registros incompletos o ausentes<br>Entonces el equipo de desarrollo documenta cómo se tratarán esos periodos sin clasificarlos automáticamente como desviación.<br><br><strong>Escenario 3: Validación con casos representativos</strong><br>Dado que el equipo de desarrollo dispone de una propuesta de lógica para la señal de consistencia<br>Cuando el equipo de desarrollo aplica la lógica propuesta a casos de prueba representativos<br>Entonces el equipo de desarrollo documenta los resultados, falsos positivos potenciales y situaciones ambiguas identificadas.<br><br><strong>Escenario 4: Conclusión del Spike</strong><br>Dado que el equipo de desarrollo ha evaluado las alternativas propuestas para la señal de consistencia<br>Cuando el equipo de desarrollo consolida las alternativas evaluadas y los resultados de la investigación<br>Entonces el equipo de desarrollo documenta la regla recomendada, sus parámetros pendientes de validación y las condiciones bajo las cuales una señal se muestra primero al paciente y solo después puede escalarse para revisión profesional, sin modificar automáticamente el tratamiento.</td>
+  </tr>
+</table>
+
+<p class="caption"><strong>Tabla 85</strong><br><em>Spike SS04: Investigación de los controles de uso de la IA generativa</em></p>
+
+<table>
+  <tr>
+    <th colspan="2">Story ID</th>
+    <th colspan="2">User</th>
+    <th colspan="2">Priority</th>
+    <th colspan="2">Epic</th>
+  </tr>
+  <tr>
+    <td colspan="2">SS04</td>
+    <td colspan="2">Equipo de desarrollo</td>
+    <td colspan="2">Alta</td>
+    <td colspan="2">EP_SS</td>
+  </tr>
+  <tr>
+    <th colspan="2">Title</th>
+    <td colspan="6">Investigación de los controles de uso de la IA generativa</td>
+  </tr>
+  <tr>
+    <th colspan="8">Description</th>
+  </tr>
+  <tr>
+    <td colspan="8">Como equipo de desarrollo, deseamos investigar cómo usar un modelo de IA generativa de forma controlada, para definir las reglas de consentimiento, validación de salidas, privacidad y límites de uso antes de implementar las funciones con IA de Healthify.</td>
+  </tr>
+  <tr>
+    <th colspan="8">Acceptance Criteria</th>
+  </tr>
+  <tr>
+    <td colspan="8"><strong>Escenario 1: Revisión de requisitos de privacidad</strong><br>Dado que el equipo de desarrollo necesita enviar información a un proveedor externo de IA<br>Cuando el equipo de desarrollo revisa qué datos se necesitan y cuáles pueden omitirse<br>Entonces el equipo de desarrollo documenta los datos que pueden enviarse sin identificar al paciente y las condiciones de consentimiento necesarias.<br><br><strong>Escenario 2: Validación de salidas</strong><br>Dado que el equipo de desarrollo ha identificado que una salida de IA puede ser incorrecta o inadecuada<br>Cuando el equipo de desarrollo prueba el formato esperado y las reglas de contenido con casos representativos<br>Entonces el equipo de desarrollo documenta qué salidas se aceptan, cuáles se rechazan y qué alternativa determinista se usa cuando la IA no está disponible.<br><br><strong>Escenario 3: Límites de uso y costo</strong><br>Dado que el equipo de desarrollo necesita acotar el uso del proveedor de IA<br>Cuando el equipo de desarrollo estima el volumen de generaciones por usuario<br>Entonces el equipo de desarrollo documenta las cuotas, el almacenamiento temporal de resultados y la forma de desactivar las funciones.<br><br><strong>Escenario 4: Conclusión del Spike</strong><br>Dado que el equipo de desarrollo ha finalizado la investigación<br>Cuando el equipo de desarrollo consolida los hallazgos<br>Entonces el equipo de desarrollo documenta una recomendación sobre las reglas que deben cumplir todas las funciones con IA.</td>
   </tr>
 </table>
 
@@ -2206,12 +2636,18 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 ### 2.4.2. Impact Mapping
 
 ### Impact Mapping - Paciente
+
+<p class="caption"><strong>Figura 16</strong><br><em>Impact Mapping del paciente</em></p>
+
 ![Impact Mapping Paciente](../assets/img/chapter2/ImpactmapPaciente.png)
 
 El Impact Mapping del paciente se orienta a promover un registro continuo de información durante el tratamiento nutricional. Para alcanzar este objetivo, se consideran como impactos principales el registro frecuente de la alimentación, el seguimiento de la evolución corporal, la consulta del seguimiento del plan nutricional y la continuidad de los registros sin conexión. Estos comportamientos se apoyan en los Deliverables y User Stories definidos previamente.
 <br>
 
 ### Impact Mapping - Nutricionista
+
+<p class="caption"><strong>Figura 17</strong><br><em>Impact Mapping del nutricionista</em></p>
+
 ![Impact Mapping Nutricionista](../assets/img/chapter2/ImpactmapNutri.png)
 
 El Impact Mapping del nutricionista se orienta al uso recurrente de la información registrada para el seguimiento de los pacientes entre consultas. Los impactos considerados comprenden la consulta de la evolución del paciente, la revisión de situaciones que requieren atención profesional, la gestión del plan nutricional y la consulta de una visión continua del tratamiento.
@@ -2220,59 +2656,74 @@ El Impact Mapping del nutricionista se orienta al uso recurrente de la informaci
 
 ### 2.4.3. Product Backlog
 
+<p class="caption"><strong>Tabla 86</strong><br><em>Product Backlog priorizado de Healthify</em></p>
+
 | **# Order** | **User Story ID** | **Title** | **Story Points** <br>**(1/2/3/5/8)** | **Sprint** |
 | :--- | :--- | :--- | :--- | :--- |
 | 1 | US08 | Registro de comida por fotografía | 8 | Sprint 1 |
-| 2 | SS01 | Investigación de Google ML Kit para el reconocimiento de alimentos | 3 | Sprint 1 |
-| 3 | TS05 | Servicios de registro de ingesta alimentaria | 5 | Sprint 1 |
-| 4 | US10 | Registro manual de comida mediante catálogo | 5 | Sprint 1 |
-| 5 | SS02 | Investigación de Open Food Facts para el catálogo de alimentos | 3 | Sprint 1 |
-| 6 | US09 | Confirmación o ajuste de estimación de porción | 3 | Sprint 1 |
-| 7 | US11 | Registro de consumo fuera del plan | 2 | Sprint 1 |
-| 8 | US23 | Visualización de metas nutricionales vigentes | 3 | Sprint 1 |
-| 9 | US26 | Prescripción y publicación del plan nutricional | 8 | Sprint 2 |
-| 10 | US25 | Obtención de propuesta de metas nutricionales calculadas | 5 | Sprint 2 |
-| 11 | TS04 | Servicios de prescripción y gestión del plan nutricional | 8 | Sprint 1 |
-| 12 | US14 | Consulta del cumplimiento nutricional diario | 5 | Sprint 2 |
-| 13 | US16 | Consulta del monitoreo del paciente | 5 | Sprint 2 |
-| 14 | TS07 | Servicios de monitoreo y expediente del paciente | 8 | Sprint 2 |
-| 15 | US21 | Registro y finalización de la evaluación nutricional | 5 | Sprint 2 |
-| 16 | US22 | Emisión del diagnóstico nutricional | 5 | Sprint 2 |
-| 17 | TS03 | Servicios de evaluación y diagnóstico nutricional | 5 | Sprint 1 |
-| 18 | US01 | Vinculación mediante invitación QR | 5 | Sprint 1 |
-| 19 | US04 | Generación de invitación QR para un nuevo paciente | 5 | Sprint 1 |
-| 20 | US02 | Otorgamiento de consentimiento para compartir información | 3 | Sprint 1 |
-| 21 | TS02 | Servicios de gestión de vínculos de cuidado | 5 | Sprint 1 |
-| 22 | US12 | Registro de autopesaje | 3 | Sprint 2 |
-| 23 | US13 | Visualización de tendencia de peso | 5 | Sprint 2 |
-| 24 | TS06 | Servicios de autopesaje y seguimiento corporal | 5 | Sprint 1 |
-| 25 | US20 | Acceso al expediente unificado del paciente | 5 | Sprint 2 |
-| 26 | US05 | Consulta de pacientes con vínculo activo | 3 | Sprint 2 |
-| 27 | US17 | Revisión y resolución de señales de seguimiento | 5 | Sprint 3 |
-| 28 | SS03 | Investigación y definición de la lógica de la señal de consistencia | 3 | Sprint 3 |
-| 29 | US15 | Visualización de señal de consistencia | 8 | Sprint 3 |
-| 30 | US27 | Ajuste del plan nutricional entre consultas | 5 | Sprint 3 |
-| 31 | US31 | Registro y sincronización sin conexión | 8 | Sprint 2 |
-| 32 | TS08 | Sincronización de registros offline | 8 | Sprint 2 |
-| 33 | US18 | Acceso al expediente personal unificado | 5 | Sprint 3 |
-| 34 | US24 | Confirmación de recepción de nuevas metas nutricionales | 2 | Sprint 2 |
-| 35 | US19 | Registro de derivación a otro especialista | 2 | Sprint 3 |
-| 36 | US06 | Alta del paciente al finalizar el tratamiento | 2 | Sprint 3 |
-| 37 | US07 | Revocación del vínculo de cuidado | 2 | Sprint 3 |
-| 38 | US03 | Revocación del consentimiento | 2 | Sprint 3 |
-| 39 | US28 | Creación de cuenta | 3 | Sprint 1 |
-| 40 | US29 | Inicio de sesión | 3 | Sprint 1 |
-| 41 | US30 | Cierre de sesión | 1 | Sprint 1 |
-| 42 | TS01 | Servicios de registro, autenticación y autorización | 5 | Sprint 1 |
-| 43 | US32 | Visualización de la propuesta de valor de Healthify | 2 | Sprint 1 |
-| 44 | US33 | Consulta de las principales funcionalidades de Healthify | 2 | Sprint 1 |
-| 45 | US36 | Acceso a la descarga de Healthify desde el Landing Page | 2 | Sprint 1 |
-| 46 | US38 | Consulta de términos y políticas de Healthify | 2 | Sprint 1 |
-| 47 | US35 | Cambio de idioma del Landing Page | 3 | Sprint 1 |
-| 48 | US37 | Envío de consulta mediante formulario de contacto | 3 | Sprint 1 |
-| 49 | US34 | Conocimiento de la startup, misión y visión | 1 | Sprint 1 |
+| 2 | SS01 | Investigación de tecnologías para el reconocimiento de alimentos | 3 | Sprint 1 |
+| 3 | SS04 | Investigación de los controles de uso de la IA generativa | 3 | Sprint 1 |
+| 4 | TS09 | Servicios de asistencia con IA | 8 | Sprint 1 |
+| 5 | TS05 | Servicios de registro de ingesta alimentaria | 5 | Sprint 1 |
+| 6 | US10 | Registro manual de comida mediante catálogo | 5 | Sprint 1 |
+| 7 | SS02 | Investigación de Open Food Facts y USDA para el catálogo de alimentos | 3 | Sprint 1 |
+| 8 | US09 | Confirmación o ajuste de estimación de porción | 3 | Sprint 1 |
+| 9 | US11 | Indicación de adherencia al plan en un registro | 2 | Sprint 1 |
+| 10 | US23 | Visualización de metas nutricionales vigentes | 3 | Sprint 1 |
+| 11 | US26 | Prescripción y publicación del plan nutricional | 8 | Sprint 2 |
+| 12 | US25 | Obtención de propuesta de metas nutricionales calculadas | 5 | Sprint 2 |
+| 13 | TS04 | Servicios de prescripción y gestión del plan nutricional | 8 | Sprint 1 |
+| 14 | US14 | Consulta del cumplimiento nutricional diario | 5 | Sprint 2 |
+| 15 | US16 | Consulta del monitoreo del paciente | 5 | Sprint 2 |
+| 16 | TS07 | Servicios de monitoreo y expediente del paciente | 8 | Sprint 2 |
+| 17 | US21 | Registro y finalización de la evaluación nutricional | 5 | Sprint 2 |
+| 18 | US22 | Emisión del diagnóstico nutricional | 5 | Sprint 2 |
+| 19 | TS03 | Servicios de evaluación y diagnóstico nutricional | 5 | Sprint 1 |
+| 20 | US01 | Vinculación mediante invitación QR | 5 | Sprint 1 |
+| 21 | US04 | Generación de invitación QR para un nuevo paciente | 5 | Sprint 1 |
+| 22 | US02 | Otorgamiento de consentimiento para compartir información | 3 | Sprint 1 |
+| 23 | TS02 | Servicios de gestión de vínculos de cuidado | 5 | Sprint 1 |
+| 24 | US12 | Registro de autopesaje | 3 | Sprint 2 |
+| 25 | US13 | Visualización de tendencia de peso | 5 | Sprint 2 |
+| 26 | TS06 | Servicios de autopesaje y seguimiento corporal | 5 | Sprint 1 |
+| 27 | US20 | Acceso al expediente unificado del paciente | 5 | Sprint 2 |
+| 28 | US44 | Alimentos locales del catálogo | 2 | Sprint 2 |
+| 29 | US05 | Consulta de pacientes con vínculo activo | 3 | Sprint 2 |
+| 30 | US39 | Agenda de consultas | 5 | Sprint 2 |
+| 31 | TS10 | Servicios de agenda y respuesta previa a la consulta | 5 | Sprint 2 |
+| 32 | US17 | Revisión y resolución de señales de seguimiento | 5 | Sprint 3 |
+| 33 | SS03 | Investigación y definición de la lógica de la señal de consistencia | 3 | Sprint 3 |
+| 34 | US15 | Visualización de señal de consistencia | 8 | Sprint 3 |
+| 35 | US27 | Ajuste del plan nutricional entre consultas | 5 | Sprint 3 |
+| 36 | US41 | Control de las funciones con IA | 5 | Sprint 2 |
+| 37 | US42 | Resumen semanal, ideas de comidas y preguntas sugeridas con IA | 8 | Sprint 3 |
+| 38 | US31 | Registro y sincronización sin conexión | 8 | Sprint 2 |
+| 39 | TS08 | Sincronización de registros offline | 8 | Sprint 2 |
+| 40 | US18 | Acceso al expediente personal unificado | 5 | Sprint 3 |
+| 41 | US40 | Preparación y respuesta previa a la consulta | 3 | Sprint 3 |
+| 42 | US24 | Confirmación de recepción de nuevas metas nutricionales | 2 | Sprint 2 |
+| 43 | US19 | Registro de derivación a otro especialista | 2 | Sprint 3 |
+| 44 | US06 | Alta del paciente al finalizar el tratamiento | 2 | Sprint 3 |
+| 45 | US07 | Cambio de nutricionista | 2 | Sprint 3 |
+| 46 | US03 | Revocación del consentimiento | 2 | Sprint 3 |
+| 47 | US28 | Creación de cuenta | 3 | Sprint 1 |
+| 48 | US29 | Inicio de sesión | 3 | Sprint 1 |
+| 49 | US30 | Cierre de sesión | 1 | Sprint 1 |
+| 50 | US43 | Preferencias de la cuenta: idioma y recordatorios | 3 | Sprint 2 |
+| 51 | TS01 | Servicios de registro, autenticación y autorización | 5 | Sprint 1 |
+| 52 | US32 | Visualización de la propuesta de valor de Healthify | 2 | Sprint 1 |
+| 53 | US33 | Consulta de las principales funcionalidades de Healthify | 2 | Sprint 1 |
+| 54 | US36 | Acceso al inicio de uso de Healthify desde el Landing Page | 2 | Sprint 1 |
+| 55 | US38 | Consulta de términos y políticas de Healthify | 2 | Sprint 1 |
+| 56 | US45 | Consulta de preguntas frecuentes | 2 | Sprint 3 |
+| 57 | US35 | Cambio de idioma del Landing Page | 3 | Sprint 1 |
+| 58 | US37 | Envío de consulta mediante formulario de contacto | 3 | Sprint 3 |
+| 59 | US34 | Conocimiento de la startup, misión y visión | 1 | Sprint 3 |
 
 A continuación, se presenta el Product Backlog elaborado en Trello:
+
+<p class="caption"><strong>Figura 18</strong><br><em>Product Backlog de Healthify</em></p>
+
 ![Product Backlog](../assets/img/chapter2/ProductBacklog.png)
 
 *Product Backlog URL:* [Healthify Product Backlog](https://trello.com/b/u2pRzwEi/healthify-product-backlog)
@@ -2287,7 +2738,7 @@ Esta sección documenta el proceso de diseño estratégico con el que el equipo 
 
 Esta sección documenta la segunda sesión de EventStorming, realizada por el equipo en Miro con una duración aproximada de dos horas, orientada a alcanzar el mayor nivel de detalle posible sobre el dominio ya explorado. Mientras que la sesión de Big Picture se limitó a actores, eventos, políticas y algunos read models, esta sesión incorporó los elementos que permiten pasar del relato del negocio a un modelo accionable.
 
-El trabajo consistió en recorrer la línea de tiempo del tablero anterior y, para cada evento de dominio, reconstruir hacia atrás la cadena completa que lo produce. Para cada hecho el equipo se preguntó qué intención humana o automática lo desencadenó, lo que dio origen a los comandos en notas azules; qué pieza del modelo es responsable de aceptarlo o rechazarlo, lo que dio origen a los agregados en notas amarillo intenso; qué regla protege ese agregado, lo que dio origen a las reglas de negocio en notas rojas; y qué vista necesita alguien para tomar la siguiente decisión, lo que dio origen a los read models en notas verdes. Adicionalmente se marcaron en notas rosa claro los servicios externos, que en el tablero fueron cuatro: el proveedor de autenticación, ML Kit para la estimación de porción en el dispositivo, y Open Food Facts y USDA Food Data Central como fuentes del catálogo. En la implementación, el proveedor de autenticación no se integró como un servicio de terceros, sino que quedó resuelto dentro de `IAM` mediante hashing con BCrypt y emisión propia de tokens JWT, por lo que la solución depende únicamente de tres servicios externos.
+El trabajo consistió en recorrer la línea de tiempo del tablero anterior y, para cada evento de dominio, reconstruir hacia atrás la cadena completa que lo produce. Para cada hecho el equipo se preguntó qué intención humana o automática lo desencadenó, lo que dio origen a los comandos en notas azules; qué pieza del modelo es responsable de aceptarlo o rechazarlo, lo que dio origen a los agregados en notas amarillo intenso; qué regla protege ese agregado, lo que dio origen a las reglas de negocio en notas rojas; y qué vista necesita alguien para tomar la siguiente decisión, lo que dio origen a los read models en notas verdes. Adicionalmente se marcaron en notas rosa claro los servicios externos, que en el tablero fueron cuatro: el proveedor de autenticación, ML Kit para la estimación de porción en el dispositivo, y Open Food Facts y USDA Food Data Central como fuentes del catálogo. En la implementación dos de esos cuatro servicios cambiaron. El proveedor de autenticación no se integró como un servicio de terceros, sino que quedó resuelto dentro de `IAM` mediante hashing con BCrypt y emisión propia de tokens JWT. La estimación de porción dejó de hacerse en el dispositivo: la foto se envía al servidor, donde un modelo de IA generativa la analiza en memoria sin guardarla, y ML Kit se reservó para leer el código QR de invitación. Los servicios externos de la solución son, por tanto, Open Food Facts, USDA Food Data Central y el proveedor de IA.
 
 **Convención de composición.** El equipo acordó una regla de encadenamiento que se respeta en todo el tablero y que facilita después la traducción a código:
 
@@ -2300,9 +2751,13 @@ Las reglas de negocio cuelgan siempre del agregado, porque es el agregado quien 
 
 Enlace del Event-Storming: [https://miro.com/welcomeonboard/MU44Nlk4L2dlOVFveWtDZ05SOTU5cThreUNlUUM1SytYY1lJZ29UeU9uWStqbEY4RVBQWWxxNXoxWjhqTXYvMkhIeFVQR1FFNUN2NEtSVWZRVVlDdzd6U0hDZUFBcjhESm5VZ3pkSHh2cEdHRWRJVTVWR3ZEclhJN3hucXdsZzF0R2lncW1vRmFBVnlLcVJzTmdFdlNRPT0hdjE=?share_link_id=478718202765](https://miro.com/welcomeonboard/MU44Nlk4L2dlOVFveWtDZ05SOTU5cThreUNlUUM1SytYY1lJZ29UeU9uWStqbEY4RVBQWWxxNXoxWjhqTXYvMkhIeFVQR1FFNUN2NEtSVWZRVVlDdzd6U0hDZUFBcjhESm5VZ3pkSHh2cEdHRWRJVTVWR3ZEclhJN3hucXdsZzF0R2lncW1vRmFBVnlLcVJzTmdFdlNRPT0hdjE=?share_link_id=478718202765)
 
+<p class="caption"><strong>Figura 19</strong><br><em>Tablero completo del Design Level EventStorming</em></p>
+
 ![Design Level EventStorming - Tablero completo](../assets/img/artifacts/event-storming/design-level-eventstorming-completo.png)
 
 El modelo resultante quedó organizado en treinta y seis subflujos distribuidos en seis contextos, con cincuenta y cinco comandos, dieciocho agregados, ciento veinticinco reglas de negocio, sesenta y cuatro eventos de dominio y treinta políticas.
+
+<p class="caption"><strong>Tabla 87</strong><br><em>Resumen del Design Level EventStorming por bounded context</em></p>
 
 | Bounded context | Agregados | Comandos | Reglas | Eventos | Políticas |
 |---|---|---:|---:|---:|---:|
@@ -2313,6 +2768,8 @@ El modelo resultante quedó organizado en treinta y seis subflujos distribuidos 
 | `Monitoring & Adherence` | 5 | 16 | 33 | 18 | 16 |
 | `Food Catalog` | 1 | 4 | 8 | 6 | 2 |
 | **Total** | **18** | **55** | **125** | **64** | **30** |
+
+<p class="caption"><strong>Figura 20</strong><br><em>Detalle de un subflujo del Design Level EventStorming</em></p>
 
 ![Design Level EventStorming - Detalle de un subflujo](../assets/img/artifacts/event-storming/design-level-eventstorming-detalle-subflujo.png)
 
@@ -2326,6 +2783,8 @@ El equipo recorrió la línea de tiempo buscando los eventos que cambian el esta
 
 El corte más importante quedó entre las fases 2 y 3 del tablero. El equipo verificó que a cada lado de esa línea cambian simultáneamente el número de actores, el requisito de consistencia y el modo de conectividad, lo que confirma que se trata de una frontera real y no de un cambio de pantalla. Sobre esa base se dibujaron las agrupaciones candidatas y cada una se sometió a cinco pruebas.
 
+<p class="caption"><strong>Tabla 88</strong><br><em>Pruebas aplicadas para descubrir los bounded contexts candidatos</em></p>
+
 | # | Prueba | Pregunta que responde |
 |---|---|---|
 | 1 | Lingüística | ¿Alguna palabra significa dos cosas distintas a cada lado de la línea? |
@@ -2337,6 +2796,8 @@ El corte más importante quedó entre las fases 2 y 3 del tablero. El equipo ver
 La prueba lingüística fue la más productiva, porque cada ambigüedad encontrada justifica por sí sola una frontera: el término peso designa la medición clínica del profesional y también el autopesaje del paciente, que solo significa algo como tendencia; el término alimento designa el ítem del catálogo externo y también el evento de consumo de una persona concreta; y el término plan designa el artefacto clínico versionado y también el conjunto de metas del día. La primera ambigüedad separa `Nutritional Care` de `Intake & Body Response`, la segunda justifica el Anticorruption Layer sobre `Food Catalog` y la tercera justifica publicar un contrato reducido en lugar de exponer el plan completo.
 
 El resultado de la sesión fueron seis bounded contexts, clasificados por su aporte a la diferenciación del producto.
+
+<p class="caption"><strong>Tabla 89</strong><br><em>Bounded contexts resultantes y su clasificación</em></p>
 
 | Clasificación | Bounded context | Responsabilidad | Consistencia |
 |---|---|---|---|
@@ -2351,15 +2812,19 @@ La clasificación de `Nutritional Care` como Supporting merece justificación ex
 
 La sesión también descartó explícitamente siete contextos candidatos, decisión que quedó registrada junto con la condición que los haría reaparecer.
 
+<p class="caption"><strong>Tabla 90</strong><br><em>Contextos candidatos descartados y su razón</em></p>
+
 | Candidato descartado | Razón del descarte |
 |---|---|
 | `Patient Record` | Es un read model compuesto que une tres contextos y se compone en el módulo `ReadModels` de la API; confundir una vista con un contexto es uno de los errores más frecuentes en DDD |
 | `Assessment` como contexto propio | Acoplamiento máximo con diagnóstico e intervención y ninguna ambigüedad lingüística en la frontera |
-| `Portion Estimation / AI` | Es una capacidad técnica, no un lenguaje distinto; vive dentro de `Intake & Body Response` |
+| `Portion Estimation / AI` | Es una capacidad técnica, no un lenguaje distinto. En la implementación quedó como un módulo técnico de IA en `Shared`, desactivado por defecto, que los contextos invocan; `Intake & Body Response` lo usa para reconocer el plato |
 | `Target Calculation` | Es aritmética determinista con parámetros elegidos por un humano; son reglas del agregado `Nutrition Plan` |
 | `Notifications` | Infraestructura genérica frente a la cual el sistema es conformista |
 | `Scheduling` | Demasiado delgado; se absorbe como el agregado `Scheduled Follow Up` |
 | `Gamification` | No existe por decisión ética del producto; convertirlo en contexto institucionalizaría algo que el equipo prohibió |
+
+<p class="caption"><strong>Figura 21</strong><br><em>Agrupación de contextos candidatos sobre el EventStorming</em></p>
 
 ![Candidate Context Discovery - Agrupación de contextos sobre el EventStorm](../assets/img/artifacts/event-storming/candidate-context-discovery.png)
 
@@ -2371,17 +2836,25 @@ Se modelaron cuatro escenarios, elegidos por ser los que más fronteras atravies
 
 **Escenario 1 — Vinculación del paciente durante la consulta.** El profesional emite la invitación, el paciente la redime escaneando el código QR y otorga su consentimiento; `Care Relationship` publica `Care Link Established` y `Monitoring & Adherence` reacciona abriendo la ventana de evaluación. El escenario demuestra que el vínculo es condición previa de todo lo demás.
 
+<p class="caption"><strong>Figura 22</strong><br><em>Domain Message Flow: vinculación del paciente</em></p>
+
 ![Domain Message Flow - Vinculación del paciente](../assets/img/artifacts/domain-storytelling/domain-storytelling-vinculacion.svg)
 
 **Escenario 2 — Prescripción y publicación de metas.** El profesional registra la evaluación, emite el diagnóstico, elige la base de cálculo, prescribe las metas y publica el plan; `Nutritional Care` publica `Active Targets Updated`, que es consumido simultáneamente por `Intake & Body Response` para refrescar su caché de metas, por `Monitoring & Adherence` para tomar el snapshot del día y por `Care Relationship` para marcar las metas como pendientes de acuse de recibo. El escenario evidencia que lo que cruza la frontera es el contrato reducido y no el plan clínico: el diagnóstico y la base de cálculo nunca salen de `Nutritional Care`.
 
+<p class="caption"><strong>Figura 23</strong><br><em>Domain Message Flow: prescripción y publicación de metas</em></p>
+
 ![Domain Message Flow - Prescripción y publicación de metas](../assets/img/artifacts/domain-storytelling/domain-storytelling-prescripcion.svg)
 
-**Escenario 3 — Registro de comida entre consultas, con y sin conexión.** El paciente fotografía su comida, ML Kit propone la estimación en el dispositivo, el paciente la confirma o la ajusta y `Intake & Body Response` publica `Meal Logged` y `Estimate Confirmed By Patient`; `Monitoring & Adherence` evalúa el día contra el snapshot correspondiente. La variante sin conexión muestra la entrada encolada y el reprocesamiento de la ventana tras `Entry Synchronized`. El escenario demuestra que el profesional no participa en ningún paso de la cadena.
+**Escenario 3 — Registro de comida entre consultas, con y sin conexión.** El paciente fotografía su comida, el servidor propone la estimación con un modelo de IA a partir de la foto (que no se conserva), el paciente la confirma o la ajusta y `Intake & Body Response` publica `Meal Logged` y `Estimate Confirmed By Patient`; `Monitoring & Adherence` evalúa el día contra el snapshot correspondiente. La variante sin conexión, que por no disponer de la IA se resuelve con registro manual, muestra la entrada encolada y el reprocesamiento de la ventana tras `Entry Synchronized`. El escenario demuestra que el profesional no participa en ningún paso de la cadena.
+
+<p class="caption"><strong>Figura 24</strong><br><em>Domain Message Flow: registro de comida y sincronización</em></p>
 
 ![Domain Message Flow - Registro de comida y sincronización](../assets/img/artifacts/domain-storytelling/domain-storytelling-registro-comida.svg)
 
 **Escenario 4 — Detección de desviación y decisión del profesional.** `Monitoring & Adherence` detecta la desviación sostenida y publica la señal; `Nutritional Care` la recibe mediante una política, crea un ítem de revisión y lo deposita en la bandeja del profesional, quien decide si ajusta el plan o cierra el ítem sin ajustarlo. El escenario es el que más se discutió en la sesión, porque hace visible la decisión de diseño más importante del modelo: la cadena automática entra por una política y muere en una bandeja de entrada, de manera que ningún algoritmo modifica un plan clínico.
+
+<p class="caption"><strong>Figura 25</strong><br><em>Domain Message Flow: detección de desviación y decisión clínica</em></p>
 
 ![Domain Message Flow - Detección de desviación y decisión clínica](../assets/img/artifacts/domain-storytelling/domain-storytelling-desviacion.svg)
 
@@ -2389,31 +2862,43 @@ Se modelaron cuatro escenarios, elegidos por ser los que más fronteras atravies
 
 Esta sección presenta el Bounded Context Canvas de cada uno de los seis contextos identificados. La elaboración siguió el proceso iterativo propuesto por la técnica: se definió primero el Context Overview con el propósito y la clasificación estratégica del contexto, se destilaron después las reglas de negocio y el lenguaje ubicuo propio del contexto, se analizaron sus capabilities distinguiendo los comandos que recibe, las consultas que atiende y los eventos que publica, se capturaron sus dependencias entrantes y salientes con el patrón de relación correspondiente, y finalmente se sometió cada canvas a una crítica de diseño en la que el equipo buscó señales de frontera mal trazada, como un número desproporcionado de dependencias o un lenguaje que se repite en dos contextos.
 
-Los canvases se elaboraron en el orden de importancia estratégica de cada contexto, comenzando por los dos contextos Core.
+Los canvases se elaboraron en el orden de importancia estratégica de cada contexto, comenzando por los dos contextos Core. Cada canvas sigue la versión 5 de la plantilla del DDD Crew (Name, Purpose, Strategic Classification, Domain Roles, Inbound y Outbound Communication, Ubiquitous Language, Business Decisions, Assumptions, Verification Metrics y Open Questions). En las comunicaciones, los mensajes se agrupan por colaborador y se colorean según su tipo: azul para comandos, verde para consultas y amarillo para eventos.
 
 **`Intake & Body Response` (Core).** Su propósito es capturar fielmente lo que el paciente come y cómo responde su cuerpo, sin emitir ningún juicio sobre ello. Es de escritura exclusiva del paciente: no existe ningún comando del profesional en este contexto, y el profesional accede a la información únicamente a través de un read model. Sus reglas más características son que una entrada nunca se elimina, que la procedencia y la marca de tiempo local son obligatorias, que la estimación de la fotografía se almacena solo como propuesta junto con su nivel de confianza, y que el valor diario del autopesaje nunca se expone como titular sino como tendencia.
 
-![Intake & Body Response Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/intake-body-response.puml)
+<p class="caption"><strong>Figura 26</strong><br><em>Bounded Context Canvas de Intake &amp; Body Response</em></p>
+
+![Intake & Body Response Bounded Context Canvas](../assets/img/artifacts/bounded-context-canvas/intake-body-response.png)
 
 **`Monitoring & Adherence` (Core).** Su propósito es comparar lo prescrito contra lo realmente registrado e interpretar la diferencia. Es el contexto que concentra dieciséis de las treinta políticas del modelo, lo que confirma su naturaleza reactiva: casi nadie lo invoca directamente, sino que actúa a partir de lo que ocurre en los demás contextos. Sus reglas más características son que ningún día se evalúa contra metas distintas de las vigentes ese día, que una ventana menor a siete días nunca produce desviación, y que el vacío de registro se excluye del cálculo de desviación y nunca escala al profesional.
 
-![Monitoring & Adherence Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/monitoring-adherence.puml)
+<p class="caption"><strong>Figura 27</strong><br><em>Bounded Context Canvas de Monitoring &amp; Adherence</em></p>
+
+![Monitoring & Adherence Bounded Context Canvas](../assets/img/artifacts/bounded-context-canvas/monitoring-adherence.png)
 
 **`Nutritional Care` (Supporting).** Su propósito es sostener el acto clínico completo: evaluación, diagnóstico, prescripción y ajuste del plan entre consultas. Sus reglas más características son que una evaluación cerrada es inmutable y su corrección genera una evaluación nueva, que no existe plan sin diagnóstico vigente, que todo ajuste exige una razón y que la versión anterior se supersede pero nunca se elimina. Es también el contexto que define el Published Language `Active Targets`.
 
-![Nutritional Care Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/nutritional-care.puml)
+<p class="caption"><strong>Figura 28</strong><br><em>Bounded Context Canvas de Nutritional Care</em></p>
+
+![Nutritional Care Bounded Context Canvas](../assets/img/artifacts/bounded-context-canvas/nutritional-care.png)
 
 **`Care Relationship` (Supporting).** Su propósito es determinar quién puede ver a quién y con qué consentimiento. Publica una única pregunta al resto del sistema, `Is Care Link Active`, y es donde se hace cumplir técnicamente el principio de asimetría entre los dos roles. Sus reglas más características son que la invitación es de un solo uso y con vencimiento, que el paciente no puede autovincularse, que el vínculo nace inactivo hasta que exista consentimiento y que el consentimiento es siempre revocable sin justificación.
 
-![Care Relationship Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/care-relationship.puml)
+<p class="caption"><strong>Figura 29</strong><br><em>Bounded Context Canvas de Care Relationship</em></p>
+
+![Care Relationship Bounded Context Canvas](../assets/img/artifacts/bounded-context-canvas/care-relationship.png)
 
 **`Food Catalog` (Generic).** Su propósito es traducir el catálogo nutricional externo al dominio y mantenerlo disponible localmente. Sus reglas más características son que ningún identificador externo entra al dominio, que la traducción de taxonomía es obligatoria y que la búsqueda cae en la caché local cuando no hay conexión.
 
-![Food Catalog Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/food-catalog.puml)
+<p class="caption"><strong>Figura 30</strong><br><em>Bounded Context Canvas de Food Catalog</em></p>
+
+![Food Catalog Bounded Context Canvas](../assets/img/artifacts/bounded-context-canvas/food-catalog.png)
 
 **`Identity & Access Management (IAM)` (Generic).** Su propósito es autenticar y emitir el claim de rol. Es el único contexto que no publica ningún evento hacia los demás, porque el claim viaja dentro del token de sesión, que es infraestructura y no dominio. Sus reglas más características son que el rol se declara en el registro, que es inmutable durante la sesión y que cambiar de rol exige volver a autenticarse.
 
-![IAM Bounded Context Canvas](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/bounded-context-canvas/iam.puml)
+<p class="caption"><strong>Figura 31</strong><br><em>Bounded Context Canvas de IAM</em></p>
+
+![IAM Bounded Context Canvas](../assets/img/artifacts/bounded-context-canvas/iam.png)
 
 ### 2.5.2. Context Mapping
 
@@ -2421,11 +2906,15 @@ Esta sección documenta la elaboración del Context Map, que representa las rela
 
 De esa discusión surgieron cuatro decisiones. La primera fue no trasladar el cálculo del índice de consistencia a `Intake & Body Response` pese a que allí están sus dos insumos, porque si el contexto que registra también juzga, el registro deja de ser un lugar seguro para declarar y se incentiva exactamente la omisión selectiva que el producto busca eliminar. La segunda fue mantener la tendencia de peso dentro de `Intake & Body Response`, porque es un suavizado de los datos del propio paciente que no necesita el plan y debe estar disponible sin conexión, a diferencia de la desviación y del índice, que sí requieren el plan y umbrales de interpretación. La tercera fue no crear un contexto compartido de expediente, ya que `Patient Record` es un read model compuesto que se arma en el módulo `ReadModels` de la API a partir de las fachadas ACL de los contextos involucrados. La cuarta fue reducir el shared kernel al mínimo deliberado: únicamente los identificadores `PatientId`, `PractitionerId`, `CareLinkId` y `PlanId`, y las unidades de medida, bajo el criterio de que un shared kernel grande es un bounded context que no se llegó a dibujar.
 
+<p class="caption"><strong>Figura 32</strong><br><em>Context Map de Healthify</em></p>
+
 ![Context Map de Healthify](../assets/img/artifacts/context-map.png)
 
 El mapa se lee de upstream a downstream en el sentido de las flechas, y cada contexto conserva el color de su clasificación estratégica: rojo para los dos contextos Core, azul para los Supporting, gris para los Generic y amarillo para el sistema externo. Las líneas continuas representan dependencias de las que el contexto downstream necesita para operar, ya sea un contrato consultado o datos que alimentan su modelo; las líneas punteadas representan acoplamientos deliberadamente débiles, en los que el downstream solo se conforma con un modelo ajeno o reacciona a una notificación sin depender de ella para funcionar.
 
 Los patrones de relación seleccionados para cada integración son los siguientes.
+
+<p class="caption"><strong>Tabla 91</strong><br><em>Patrones de relación del Context Map</em></p>
 
 | Relación | Patrón | Justificación |
 |---|---|---|
@@ -2460,8 +2949,11 @@ El Diagrama de Contexto (Nivel 1 del modelo C4) representa a Healthify como un s
 - **Patient:** Persona que registra sus comidas y peso entre consultas, y sigue el plan prescrito por su nutricionista.
 - **Practitioner:** Persona que realiza el acto clínico (evaluación, diagnóstico, prescripción) y revisa las señales de adherencia de sus pacientes.
 - **External Systems:**
-	- `ML Kit:` Motor de visión artificial on-device que estima la porción del plato a partir de la foto de la comida, sin salida de red.
+	- `AI Provider (Gemini):` Modelo de IA generativa al que el servidor envía la foto de la comida, a través del módulo técnico de IA, para obtener el plato, la porción estimada y su nivel de confianza. La foto se procesa en memoria y no se conserva. ML Kit se usa únicamente en el dispositivo para leer el código QR de invitación.
 	- `Nutritional Data Providers:` Fuentes externas de catálogo nutricional (Open Food Facts, USDA) consultadas a través del Anticorruption Layer de Food Catalog.
+
+<p class="caption"><strong>Figura 33</strong><br><em>Diagrama de contexto de Healthify (C4, nivel 1)</em></p>
+
 ![Context Diagram](../assets/img/artifacts/healthify-SystemContext.png)
 
 #### 2.5.3.2. Software Architecture Container Level Diagrams
@@ -2479,9 +2971,13 @@ El Diagrama de Contenedores (Nivel 2 del modelo C4) desglosa el sistema Healthif
 - **Database:** Almacena usuarios, vínculos de cuidado, evaluaciones, diagnósticos, planes, entradas del diario y ventanas de monitoreo.
    - **Tecnología:** `MySQL 8.4`.
 - **External Systems:** APIs de terceros que se integran con el backend y con el cliente para extender las capacidades del sistema.
-   - **Tecnología:** `JSON/HTTPS (REST)` para el backend; llamada on-device sin red para ML Kit.
+   - **Tecnología:** `JSON/HTTPS (REST)` para el backend; las llamadas al proveedor de IA y a los catálogos nutricionales las hace el backend. ML Kit se ejecuta en el dispositivo, sin red, solo para leer el código QR.
+
+<p class="caption"><strong>Figura 34</strong><br><em>Diagrama de contenedores de Healthify (C4, nivel 2)</em></p>
 
 ![Container Diagram](../assets/img/artifacts/healthify-ContainerDiagram.png)
+
+<p class="caption"><strong>Figura 35</strong><br><em>Diagrama de contenedores resumido de Healthify</em></p>
 
 ![Container Diagram Summarized](../assets/img/artifacts/healthify-ContainerDiagram1.png)
 
@@ -2495,6 +2991,8 @@ La aplicación Flutter se organiza en 6 Bounded Contexts, cada uno con 4 capas s
 
 El diagrama a continuación muestra todos los componentes de la arquitectura en un único bloque.
 
+<p class="caption"><strong>Figura 36</strong><br><em>Diagrama de componentes del frontend móvil</em></p>
+
 ![Frontend Component Diagram](../assets/img/artifacts/healthify-FrontendBCsDiagram.png)
 
 Cada Bounded Context contiene una capa de Presentation con las pantallas y widgets de Flutter, una capa de Application con los servicios Dart que orquestan la lógica del cliente, una capa de Domain con los modelos del lado cliente, y una capa de Infrastructure con el cliente HTTP Dio que se comunica con el API Application. Todos los BCs del frontend utilizan el Frontend Shared, que provee las utilidades BaseApi, el cliente de Outbox y almacenamiento local, los objetos de valor compartidos como units.record y active-targets-cache.record, y los widgets de presentación transversales como el app shell y el selector de navigation shell.
@@ -2505,15 +3003,21 @@ Para apreciar la separación por capas Domain-Driven Design de cada Bounded Cont
 
 Módulo transversal utilizado por todos los Bounded Contexts del frontend que agrupa las utilidades HTTP base, el almacenamiento local, la cola de sincronización Outbox y los widgets de presentación reutilizables. Se organiza en 3 capas DDD: Presentation, Domain e Infrastructure. No contiene lógica de negocio propia.
 
+<p class="caption"><strong>Figura 37</strong><br><em>Diagrama de componentes del módulo Shared del frontend</em></p>
+
 ![Frontend Shared Diagram](../assets/img/artifacts/healthify-FrontendSharedDiagram.png)
 
 La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter reutilizables a lo largo de toda la aplicación. El detalle de sus vistas y componentes se presenta a continuación:
 
  - **Views:**
 
+   <p class="caption"><strong>Figura 38</strong><br><em>Diagrama de componentes del módulo Shared del frontend: vistas</em></p>
+
    ![Frontend Shared Views Diagram](../assets/img/artifacts/healthify-FrontendSharedViewsDiagram.png)
 
  - **Components:**
+
+   <p class="caption"><strong>Figura 39</strong><br><em>Diagrama de componentes del módulo Shared del frontend: componentes</em></p>
 
    ![Frontend Shared Components Diagram](../assets/img/artifacts/healthify-FrontendSharedComponentsDiagram.png)
 
@@ -2521,15 +3025,21 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 
  - **IAM:** Gestiona las pantallas de inicio de sesión y registro.
 
+   <p class="caption"><strong>Figura 40</strong><br><em>Diagrama de componentes del frontend del bounded context IAM</em></p>
+
    ![IAM Frontend Diagram](../assets/img/artifacts/healthify-IAMFrontendDiagram.png)
 
    La capa Presentation contiene únicamente vistas Flutter para este Bounded Context. El detalle de sus vistas se presenta a continuación:
 
    - **Views:**
 
+     <p class="caption"><strong>Figura 41</strong><br><em>Diagrama de vistas de la capa Presentation del bounded context IAM</em></p>
+
      ![IAM Presentation Views Diagram](../assets/img/artifacts/healthify-IAMPresentationViewsDiagram.png)
 
  - **Care Relationship:** Gestiona el escaneo del código QR de invitación, el consentimiento del paciente y el reconocimiento de metas activas.
+
+   <p class="caption"><strong>Figura 42</strong><br><em>Diagrama de componentes del frontend del bounded context Care Relationship</em></p>
 
    ![Care Relationship Frontend Diagram](../assets/img/artifacts/healthify-CareRelationshipFrontendDiagram.png)
 
@@ -2537,13 +3047,19 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 
    - **Views:**
 
+     <p class="caption"><strong>Figura 43</strong><br><em>Diagrama de vistas de la capa Presentation del bounded context Care Relationship</em></p>
+
      ![Care Relationship Presentation Views Diagram](../assets/img/artifacts/healthify-CareRelationshipPresentationViewsDiagram.png)
 
    - **Components:**
 
+     <p class="caption"><strong>Figura 44</strong><br><em>Diagrama de componentes de la capa Presentation del bounded context Care Relationship</em></p>
+
      ![Care Relationship Presentation Components Diagram](../assets/img/artifacts/healthify-CareRelationshipPresentationComponentsDiagram.png)
 
  - **Nutritional Care:** Gestiona las pantallas de evaluación, diagnóstico y prescripción del plan, usadas por el Practitioner durante la consulta.
+
+   <p class="caption"><strong>Figura 45</strong><br><em>Diagrama de componentes del frontend del bounded context Nutritional Care</em></p>
 
    ![Nutritional Care Frontend Diagram](../assets/img/artifacts/healthify-NutritionalCareFrontendDiagram.png)
 
@@ -2551,13 +3067,19 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 
    - **Views:**
 
+     <p class="caption"><strong>Figura 46</strong><br><em>Diagrama de vistas de la capa Presentation del bounded context Nutritional Care</em></p>
+
      ![Nutritional Care Presentation Views Diagram](../assets/img/artifacts/healthify-NutritionalCarePresentationViewsDiagram.png)
 
    - **Components:**
 
+     <p class="caption"><strong>Figura 47</strong><br><em>Diagrama de componentes de la capa Presentation del bounded context Nutritional Care</em></p>
+
      ![Nutritional Care Presentation Components Diagram](../assets/img/artifacts/healthify-NutritionalCarePresentationComponentsDiagram.png)
 
  - **Intake & Body Response:** Gestiona el registro de comidas por foto, la estimación de porción, el autopesaje y el diario offline. Escritura exclusiva del Patient.
+
+   <p class="caption"><strong>Figura 48</strong><br><em>Diagrama de componentes del frontend del bounded context Intake &amp; Body Response</em></p>
 
    ![Intake Frontend Diagram](../assets/img/artifacts/healthify-IntakeFrontendDiagram.png)
 
@@ -2565,13 +3087,19 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 
    - **Views:**
 
+     <p class="caption"><strong>Figura 49</strong><br><em>Diagrama de vistas de la capa Presentation del bounded context Intake &amp; Body Response</em></p>
+
      ![Intake Presentation Views Diagram](../assets/img/artifacts/healthify-IntakePresentationViewsDiagram.png)
 
    - **Components:**
 
+     <p class="caption"><strong>Figura 50</strong><br><em>Diagrama de componentes de la capa Presentation del bounded context Intake &amp; Body Response</em></p>
+
      ![Intake Presentation Components Diagram](../assets/img/artifacts/healthify-IntakePresentationComponentsDiagram.png)
 
  - **Monitoring & Adherence:** Gestiona el indicador de cumplimiento diario y el panel de monitoreo del paciente.
+
+   <p class="caption"><strong>Figura 51</strong><br><em>Diagrama de componentes del frontend del bounded context Monitoring &amp; Adherence</em></p>
 
    ![Monitoring Frontend Diagram](../assets/img/artifacts/healthify-MonitoringFrontendDiagram.png)
 
@@ -2579,13 +3107,19 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 
    - **Views:**
 
+     <p class="caption"><strong>Figura 52</strong><br><em>Diagrama de vistas de la capa Presentation del bounded context Monitoring &amp; Adherence</em></p>
+
      ![Monitoring Presentation Views Diagram](../assets/img/artifacts/healthify-MonitoringPresentationViewsDiagram.png)
 
    - **Components:**
 
+     <p class="caption"><strong>Figura 53</strong><br><em>Diagrama de componentes de la capa Presentation del bounded context Monitoring &amp; Adherence</em></p>
+
      ![Monitoring Presentation Components Diagram](../assets/img/artifacts/healthify-MonitoringPresentationComponentsDiagram.png)
 
  - **Food Catalog:** Gestiona la búsqueda de alimentos contra el catálogo de referencia cacheado localmente.
+
+   <p class="caption"><strong>Figura 54</strong><br><em>Diagrama de componentes del frontend del bounded context Food Catalog</em></p>
 
    ![Food Catalog Frontend Diagram](../assets/img/artifacts/healthify-FoodCatalogFrontendDiagram.png)
 
@@ -2593,9 +3127,13 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 
    - **Views:**
 
+     <p class="caption"><strong>Figura 55</strong><br><em>Diagrama de vistas de la capa Presentation del bounded context Food Catalog</em></p>
+
      ![Food Catalog Presentation Views Diagram](../assets/img/artifacts/healthify-FoodCatalogPresentationViewsDiagram.png)
 
    - **Components:**
+
+     <p class="caption"><strong>Figura 56</strong><br><em>Diagrama de componentes de la capa Presentation del bounded context Food Catalog</em></p>
 
      ![Food Catalog Presentation Components Diagram](../assets/img/artifacts/healthify-FoodCatalogPresentationComponentsDiagram.png)
 
@@ -2604,6 +3142,8 @@ La capa Presentation del Frontend Shared agrupa las vistas y componentes Flutter
 El backend se organiza en 6 Bounded Contexts y un Shared Kernel, cada uno siguiendo el patrón de arquitectura del Domain-Driven Design. Todos los Bounded Contexts comparten una única base de datos MySQL 8.4, accedida a través de los repositorios de Entity Framework Core 10 en la capa de Infrastructure de cada uno.
 
 El diagrama a continuación muestra todos los componentes de la arquitectura en un único bloque.
+
+<p class="caption"><strong>Figura 57</strong><br><em>Diagrama de componentes del backend</em></p>
 
 ![Backend Component Diagram](../assets/img/artifacts/healthify-BackendBCsDiagram.png)
 
@@ -2616,6 +3156,8 @@ El detalle individual se acota a la capa de Interfaces porque es la única que e
 **Shared Kernel:**
 
 Componente transversal utilizado por todos los Bounded Contexts del backend. Es mínimo y deliberado: solo agrupa identificadores (PatientId, PractitionerId, CareLinkId, PlanId) y unidades de medida. No contiene lógica de negocio propia ni acceso a base de datos.
+
+<p class="caption"><strong>Figura 58</strong><br><em>Diagrama de componentes del Shared Kernel</em></p>
 
 ![Shared Kernel Diagram](../assets/img/artifacts/healthify-SharedKernelDiagram.png)
 
@@ -2630,15 +3172,21 @@ Módulo de la API que arma las vistas que necesitan datos de más de un Bounded 
 
  - **IAM:** Maneja la autenticación y la emisión del role claim mediante hashing con BCrypt y tokens JWT propios, sin proveedor de identidad externo.
 
+   <p class="caption"><strong>Figura 59</strong><br><em>Diagrama de componentes del backend del bounded context IAM</em></p>
+
    ![IAM Backend Diagram](../assets/img/artifacts/healthify-IAMBackendDiagram.png)
 
    La capa Interfaces contiene un contrato ACL (`IIamContextFacade`, con el que los demás Bounded Contexts resuelven identidades y roles puntuales) y endpoints REST para este Bounded Context. El detalle de los endpoints REST se presenta a continuación:
 
    - **REST:**
 
+     <p class="caption"><strong>Figura 60</strong><br><em>Diagrama de componentes REST del bounded context IAM</em></p>
+
      ![IAM REST Diagram](../assets/img/artifacts/healthify-IAMRestDiagram.png)
 
  - **Care Relationship:** Única fuente de verdad sobre quién puede ver a quién. Aplica el principio de asimetría entre paciente y profesional.
+
+   <p class="caption"><strong>Figura 61</strong><br><em>Diagrama de componentes del backend del bounded context Care Relationship</em></p>
 
    ![Care Relationship Backend Diagram](../assets/img/artifacts/healthify-CareRelationshipBackendDiagram.png)
 
@@ -2646,13 +3194,19 @@ Módulo de la API que arma las vistas que necesitan datos de más de un Bounded 
 
    - **ACL:**
 
+     <p class="caption"><strong>Figura 62</strong><br><em>Diagrama de componentes ACL del bounded context Care Relationship</em></p>
+
      ![Care Relationship ACL Diagram](../assets/img/artifacts/healthify-CareRelationshipAclDiagram.png)
 
    - **REST:**
 
+     <p class="caption"><strong>Figura 63</strong><br><em>Diagrama de componentes REST del bounded context Care Relationship</em></p>
+
      ![Care Relationship REST Diagram](../assets/img/artifacts/healthify-CareRelationshipRestDiagram.png)
 
  - **Nutritional Care:** Ejecuta el acto clínico completo: evaluación, diagnóstico y prescripción, con versionado y trazabilidad.
+
+   <p class="caption"><strong>Figura 64</strong><br><em>Diagrama de componentes del backend del bounded context Nutritional Care</em></p>
 
    ![Nutritional Care Backend Diagram](../assets/img/artifacts/healthify-NutritionalCareBackendDiagram.png)
 
@@ -2660,13 +3214,19 @@ Módulo de la API que arma las vistas que necesitan datos de más de un Bounded 
 
    - **ACL:**
 
+     <p class="caption"><strong>Figura 65</strong><br><em>Diagrama de componentes ACL del bounded context Nutritional Care</em></p>
+
      ![Nutritional Care ACL Diagram](../assets/img/artifacts/healthify-NutritionalCareAclDiagram.png)
 
    - **REST:**
 
+     <p class="caption"><strong>Figura 66</strong><br><em>Diagrama de componentes REST del bounded context Nutritional Care</em></p>
+
      ![Nutritional Care REST Diagram](../assets/img/artifacts/healthify-NutritionalCareRestDiagram.png)
 
  - **Intake & Body Response:** Persiste el consumo declarado del paciente y su respuesta corporal. Escritura exclusiva del paciente.
+
+   <p class="caption"><strong>Figura 67</strong><br><em>Diagrama de componentes del backend del bounded context Intake &amp; Body Response</em></p>
 
    ![Intake Backend Diagram](../assets/img/artifacts/healthify-IntakeBackendDiagram.png)
 
@@ -2674,13 +3234,19 @@ Módulo de la API que arma las vistas que necesitan datos de más de un Bounded 
 
    - **ACL:**
 
+     <p class="caption"><strong>Figura 68</strong><br><em>Diagrama de componentes ACL del bounded context Intake &amp; Body Response</em></p>
+
      ![Intake ACL Diagram](../assets/img/artifacts/healthify-IntakeAclDiagram.png)
 
    - **REST:**
 
+     <p class="caption"><strong>Figura 69</strong><br><em>Diagrama de componentes REST del bounded context Intake &amp; Body Response</em></p>
+
      ![Intake REST Diagram](../assets/img/artifacts/healthify-IntakeRestDiagram.png)
 
  - **Monitoring & Adherence:** Compara lo prescrito contra lo real e interpreta la diferencia. Nunca escribe directamente sobre Nutritional Care.
+
+   <p class="caption"><strong>Figura 70</strong><br><em>Diagrama de componentes del backend del bounded context Monitoring &amp; Adherence</em></p>
 
    ![Monitoring Backend Diagram](../assets/img/artifacts/healthify-MonitoringBackendDiagram.png)
 
@@ -2688,13 +3254,19 @@ Módulo de la API que arma las vistas que necesitan datos de más de un Bounded 
 
    - **ACL:**
 
+     <p class="caption"><strong>Figura 71</strong><br><em>Diagrama de componentes ACL del bounded context Monitoring &amp; Adherence</em></p>
+
      ![Monitoring ACL Diagram](../assets/img/artifacts/healthify-MonitoringAclDiagram.png)
 
    - **REST:**
 
+     <p class="caption"><strong>Figura 72</strong><br><em>Diagrama de componentes REST del bounded context Monitoring &amp; Adherence</em></p>
+
      ![Monitoring REST Diagram](../assets/img/artifacts/healthify-MonitoringRestDiagram.png)
 
  - **Food Catalog:** Traduce el catálogo externo hacia el dominio y lo cachea. Aplica Anticorruption Layer frente a Open Food Facts y USDA.
+
+   <p class="caption"><strong>Figura 73</strong><br><em>Diagrama de componentes del backend del bounded context Food Catalog</em></p>
 
    ![Food Catalog Backend Diagram](../assets/img/artifacts/healthify-FoodCatalogBackendDiagram.png)
 
@@ -2702,9 +3274,13 @@ Módulo de la API que arma las vistas que necesitan datos de más de un Bounded 
 
    - **ACL:**
 
+     <p class="caption"><strong>Figura 74</strong><br><em>Diagrama de componentes ACL del bounded context Food Catalog</em></p>
+
      ![Food Catalog ACL Diagram](../assets/img/artifacts/healthify-FoodCatalogAclDiagram.png)
 
    - **REST:**
+
+     <p class="caption"><strong>Figura 75</strong><br><em>Diagrama de componentes REST del bounded context Food Catalog</em></p>
 
      ![Food Catalog REST Diagram](../assets/img/artifacts/healthify-FoodCatalogRestDiagram.png)
 
@@ -2728,6 +3304,8 @@ El Deployment Diagram (diagrama suplementario del modelo C4, elaborado en notaci
 - `Mobile Device → GitHub Pages` (`HTTPS`): el dispositivo accede al Landing Page como contenido estático.
 - `API Application → Database` (`SQL/TCP`): la API se conecta a MySQL 8.4 a través de la red interna de Docker, pese a correr en contenedores independientes.
 
+<p class="caption"><strong>Figura 76</strong><br><em>Diagrama de despliegue de Healthify</em></p>
+
 ![Deployment Diagram](../assets/img/artifacts/healthify-DeploymentDiagram.png)
 
 ## 2.6. Tactical-Level Domain-Driven Design
@@ -2736,11 +3314,13 @@ El Deployment Diagram (diagrama suplementario del modelo C4, elaborado en notaci
 
 #### 2.6.1.1. Domain Layer
 
-El bounded context Intake & Body Response, implementado en `Healthify.Platform.IntakeBodyResponse`, funciona como el diario del paciente y guarda tanto las comidas que este declara haber consumido como los autopesajes que realiza en casa. Su Domain Layer está formado por cuatro aggregate roots, un conjunto de value objects que validan sus propios valores y cuatro abstracciones de repositorio. Todo lo que hace este contexto es registrar información, nunca evaluarla, de manera que ninguno de sus atributos o métodos habla de cumplimiento, desviación, racha o penalización. Esa comparación entre lo prescrito y lo comido le corresponde a Monitoring & Adherence.
+El bounded context Intake & Body Response, implementado en `Healthify.Platform.IntakeBodyResponse`, funciona como el diario del paciente y guarda tanto las comidas que este declara haber consumido como los autopesajes que realiza en casa. Su Domain Layer está formado por cinco aggregate roots, un conjunto de value objects que validan sus propios valores y cinco abstracciones de repositorio. Todo lo que hace este contexto es registrar información, nunca evaluarla, de manera que ninguno de sus atributos o métodos habla de cumplimiento, desviación, racha o penalización. Esa comparación entre lo prescrito y lo comido le corresponde a Monitoring & Adherence.
 
 **Aggregates (Aggregate Roots)**
 
 `ActiveTargetsCache` es la copia local que el paciente guarda del contrato publicado por el profesional, es decir aquello que debe apuntar durante el día. El paciente actúa como raíz del agregado, con un caché por persona que se reemplaza en el sitio, y esa decisión es la que permite que la app siga funcionando sin conectividad.
+
+<p class="caption"><strong>Tabla 92</strong><br><em>Atributos de ActiveTargetsCache</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -2751,6 +3331,8 @@ El bounded context Intake & Body Response, implementado en `Healthify.Platform.I
 | `RefreshedAt` | `DateTimeOffset` | `public get / private set` | Momento del último refresco. |
 | `Guidelines`, `Restrictions` | `IReadOnlyList<string>` | `public` (computada) | Texto libre que este contexto no interpreta. |
 
+<p class="caption"><strong>Tabla 93</strong><br><em>Métodos de ActiveTargetsCache</em></p>
+
 | Método | Scope | Descripción |
 |---|---|---|
 | `ActiveTargetsCache(RefreshActiveTargetsCacheCommand)` | `public` | Constructor, que delega en `Apply`. |
@@ -2760,6 +3342,8 @@ El bounded context Intake & Body Response, implementado en `Healthify.Platform.I
 Las reglas *Published Contract Only* y *Diagnosis And Basis Never Cached* se cumplen por la propia estructura de la clase, ya que no existen campos para el diagnóstico, el razonamiento clínico, la ecuación ni el déficit, y por lo tanto esa información no puede llegar a almacenarse en el caché.
 
 `DiaryEntry` es el registro de un consumo declarado por el paciente y constituye el agregado central del contexto.
+
+<p class="caption"><strong>Tabla 94</strong><br><em>Atributos de DiaryEntry</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -2776,6 +3360,8 @@ Las reglas *Published Contract Only* y *Diagnosis And Basis Never Cached* se cum
 | `ClientEntryId` | `Guid?` | `public get / private set` | Identificador generado por el dispositivo offline, que vuelve idempotente la sincronización. |
 | `LocalDate` | `DateOnly` | `public` (computada) | El día de calendario que el paciente estaba viviendo, no el del servidor. |
 
+<p class="caption"><strong>Tabla 95</strong><br><em>Métodos de DiaryEntry</em></p>
+
 | Método | Scope | Reglas que aplica |
 |---|---|---|
 | `DiaryEntry(int, LocalTimestamp, Provenance, SyncState, string?, Guid?)` | `public` | Aplica *Local Timestamp Required* y *Provenance Required*. |
@@ -2791,6 +3377,8 @@ El agregado no ofrece ningún método para eliminar entradas, y así se aplica l
 
 `SelfWeighIn` es una lectura de peso que el paciente se tomó a sí mismo. No es una medición clínica y el contexto nunca pretende lo contrario, ya que se toma sin supervisión y en una báscula desconocida, razón por la cual el protocolo se declara junto a ella.
 
+<p class="caption"><strong>Tabla 96</strong><br><em>Atributos de SelfWeighIn</em></p>
+
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `Id` | `SelfWeighInId` | `public get / private set` | Identidad tipada. |
@@ -2804,6 +3392,8 @@ Conviene añadir la regla *Excluded Weigh Ins Are Kept As Data*, según la cual 
 
 `WeightTrend` es la serie de peso suavizada del paciente y constituye la unidad que este contexto publica sobre peso corporal, con el paciente como raíz.
 
+<p class="caption"><strong>Tabla 97</strong><br><em>Atributos de WeightTrend</em></p>
+
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `DefaultWindowSize` | `const int = 7` | `public` | Siete días absorben un ritmo semanal sin llegar a ocultar un cambio real. |
@@ -2811,6 +3401,8 @@ Conviene añadir la regla *Excluded Weigh Ins Are Kept As Data*, según la cual 
 | `WindowSize` | `int` | `public get / private set` | Largo de la media móvil. |
 | `LastRecalculatedAt` | `DateTimeOffset` | `public get / private set` | Auditoría del cálculo. |
 | `Points` | `IReadOnlyList<WeightTrendPoint>` | `public` (computada) | La serie suavizada, ordenada de lo más antiguo a lo más reciente. |
+
+<p class="caption"><strong>Tabla 98</strong><br><em>Métodos de WeightTrend</em></p>
 
 | Método | Scope | Descripción |
 |---|---|---|
@@ -2821,9 +3413,11 @@ El filtrado vive dentro del agregado, que recibe todas las lecturas y devuelve l
 
 **Value Objects**
 
+<p class="caption"><strong>Tabla 99</strong><br><em>Value objects y clases auxiliares de la capa Domain de Intake &amp; Body Response</em></p>
+
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
-| `ProposedEstimate` | Lo que el estimador on-device cree que se comió, que es una propuesta y nunca un hecho. | `ReferenceFoodId > 0`, `PortionGrams > 0`, `Confidence` y `EstimatedAt`. |
+| `ProposedEstimate` | Lo que el modelo de IA estima que se comió, que es una propuesta y nunca un hecho. | `ReferenceFoodId > 0`, `PortionGrams > 0`, `Confidence` y `EstimatedAt`. |
 | `ConfirmedEstimate` | Lo que el paciente dijo que comió. | No lleva nivel de confianza, ya que el valor lo declara el paciente y no un estimador. |
 | `ProtocolCompliance` | Las tres condiciones que hacen comparable un autopesaje con el anterior. | `FastedState`, `SameTimeOfDay` y `SameScale`, donde `FollowsProtocol` exige las tres a la vez. |
 | `WeightTrendPoint` | Un punto de la serie suavizada. | `Date : DateOnly` y `SmoothedValueKg > 0`. |
@@ -2836,15 +3430,15 @@ El filtrado vive dentro del agregado, que recibe todas las lecturas y devuelve l
 
 **Commands**
 
-Los diez commands son `RefreshActiveTargetsCacheCommand`, `LogMealByPhotoCommand`, `EstimatePortionCommand`, `ConfirmEstimateCommand`, `AdjustEstimateCommand`, `LogMealManuallyCommand`, `LogOffPlanMealCommand`, `RecordSelfWeighInCommand`, `RecalculateWeightTrendCommand` y `SyncPendingEntriesCommand`, este último acompañado de un lote de registros `PendingDiaryEntry`. `LogOffPlanMealCommand` no incluye alimento, porción, motivo ni nota, ya que exigir esos datos desincentivaría que el paciente declarara las comidas fuera del plan.
+Los diecisiete commands son `RefreshActiveTargetsCacheCommand`, `LogMealByPhotoCommand`, `EstimatePortionCommand`, `ConfirmEstimateCommand`, `AdjustEstimateCommand`, `LogMealManuallyCommand`, `LogOffPlanMealCommand`, `RecordSelfWeighInCommand`, `RecalculateWeightTrendCommand` y `SyncPendingEntriesCommand`, este último acompañado de un lote de registros `PendingDiaryEntry`. `LogOffPlanMealCommand` no incluye alimento, porción, motivo ni nota, ya que exigir esos datos desincentivaría que el paciente declarara las comidas fuera del plan. Completan el conjunto `AnalyzeMealPhotoCommand`, `GenerateMealIdeasCommand`, `LogMealGroupManuallyCommand`, que registra los ingredientes de una idea de comida como un solo grupo, `SyncSelfWeighInsCommand` y los tres de purga, `PurgeMealPhotoAnalysesCommand`, `PurgeExpiredMealPhotoAnalysesCommand` y `PurgeMealIdeasCommand`.
 
 **Queries**
 
-Las seis queries son `GetActiveTargetsByPatientIdQuery`, `GetDiaryEntriesByPatientIdQuery`, `GetDiaryEntryByIdQuery`, `GetWeightTrendByPatientIdQuery`, `GetPendingSyncQueueByPatientIdQuery` y `GetSelfWeighInsByPatientIdQuery`.
+Las diez queries son `GetActiveTargetsByPatientIdQuery`, `GetDiaryEntriesByPatientIdQuery`, `GetDiaryEntryByIdQuery`, `GetWeightTrendByPatientIdQuery`, `GetPendingSyncQueueByPatientIdQuery`, `GetSelfWeighInsByPatientIdQuery`, `GetFoodNamesQuery`, `GetPatientIdsWithSelfWeighInsQuery`, `GetWeightTrendBetweenByPatientIdQuery` y `GetWeightTrendRangeByPatientIdQuery`.
 
 **Domain Events**
 
-Los doce domain events heredan de `DomainEventBase`. Cinco de ellos cruzan la frontera hacia Monitoring & Adherence, y son `MealLogged`, `EstimateConfirmedByPatient`, `OffPlanEntryLogged`, `WeightTrendRecalculated` y `EntrySynchronized`. Los internos son `ActiveTargetsCacheRefreshed`, `EstimateProposed`, `EstimateAdjustedByPatient`, `SelfWeighInRecorded`, `SelfWeighInExcludedFromTrend`, `EntryQueuedOffline` y `SyncConflictResolved`. `EstimateProposed` se mantiene interno a propósito, dado que una propuesta no es ingesta y dejarla cruzar permitiría que la conjetura de un modelo se evaluara como si la hubiera dicho el paciente.
+Los quince domain events heredan de `DomainEventBase`. Siete de ellos cruzan la frontera hacia Monitoring & Adherence, y son `MealLogged`, `EstimateConfirmedByPatient`, `OffPlanEntryLogged`, `WeightTrendRecalculated`, `EntrySynchronized`, `MealGroupLogged` y `DiaryBatchSynchronized`. Los internos son `ActiveTargetsCacheRefreshed`, `EstimateProposed`, `EstimateAdjustedByPatient`, `SelfWeighInRecorded`, `SelfWeighInExcludedFromTrend`, `EntryQueuedOffline`, `SyncConflictResolved` y `SelfWeighInBatchSynchronized`. `EstimateProposed` se mantiene interno a propósito, dado que una propuesta no es ingesta y dejarla cruzar permitiría que la conjetura de un modelo se evaluara como si la hubiera dicho el paciente.
 
 **Errors**
 
@@ -2856,17 +3450,27 @@ Son cuatro: `IActiveTargetsCacheRepository`, `IDiaryEntryRepository`, `ISelfWeig
 
 **Domain Services**
 
-Este contexto no declara servicios de dominio propios y se limita a consumir los ACL de Food Catalog y Care Relationship desde la capa de aplicación. El servidor no ejecuta ningún modelo de visión, puesto que la estimación de porciones corre en el dispositivo y llega ya calculada.
+Este contexto declara cinco servicios de dominio, que se describen al final de esta sección, y consume los ACL de Food Catalog y Care Relationship desde la capa de aplicación. El servidor reconoce la comida de una fotografía a través del módulo de IA de `Shared`.
 
 **Relaciones entre clases:** `DiaryEntry` compone `DiaryEntryId`, `Provenance` y `SyncState`, y agrega de forma reconstruida `ProposedEstimate` y `ConfirmedEstimate`, con 0..1 de cada uno, derivados de columnas planas. `SelfWeighIn` compone `SelfWeighInId` y reconstruye `ProtocolCompliance`. `WeightTrend` agrega 0..* `WeightTrendPoint` y depende de `SelfWeighIn` únicamente como parámetro de `Recalculate`, nunca por navegación. Los cuatro agregados son raíces independientes que se referencian entre sí mediante un `PatientId` plano, respetando así la regla de no navegar entre raíces de agregado.
 
+El modelo del contexto cubre además el reconocimiento de comidas por foto, las ideas de comidas y la declaración de adherencia al plan. En total hay 5 agregados, 17 commands, 10 queries y 15 domain events.
+
+- **`MealPhotoAnalysis`:** agregado que guarda el resultado temporal del análisis de una fotografía: el plato reconocido, los gramos estimados, la confianza, hasta tres alternativas (`MealPhotoAlternative`) y la fecha de expiración. La fotografía nunca se almacena, y un análisis expirado no puede usarse para registrar una comida.
+- **Atributos de los demás agregados:** `DiaryEntry` guarda `PlanAdherence`, `Origin` (`EntryOrigin`), `MealGroupId`, que agrupa los ingredientes de una misma idea de comida, y `MealPhotoAnalysisId`. `SelfWeighIn` guarda el `ClientEntryId` que hace idempotente la sincronización. `ActiveTargetsCache` conserva también las indicaciones, el cambio respecto de la versión anterior del plan y el mensaje del nutricionista.
+- **Value objects:** `PlanAdherence` (`InPlan`, `OffPlan` o `NotAnswered`), `EntryOrigin`, `MealPhoto`, `MealPhotoPortion`, `MealIdea`, `MealIdeaIngredient`, `RemainingTargets`, `SelfWeighInProtocol`, `WeightTrendRange`, `WeightTrendSummary`, `CachedGuideline` y `CachedPlanChange`.
+- **Servicios de dominio:** `IPhotoMetadataStripper`, `IRestrictionLexicon`, `ISelfWeighInProtocolProvider`, `MealIdeaRules` y `MealNutrients`.
+- **Adherencia al plan:** el paciente declara con `PlanAdherence` si una comida estaba dentro de su plan al confirmarla o registrarla. `Provenance.OffPlan` y el endpoint `off-plan-logs` se mantienen por compatibilidad.
+
 #### 2.6.1.2. Interface Layer
 
-La Interface Layer de Intake & Body Response expone el diario al cliente móvil del paciente y publica el contrato de solo lectura que los demás bounded contexts consultan. Los tres controllers están anotados con `[Authorize(Roles = "Patient")]`, ya que este diario lo escribe el paciente y nadie más.
+La Interface Layer de Intake & Body Response expone el diario al cliente móvil del paciente y publica el contrato de solo lectura que los demás bounded contexts consultan. Los cinco controllers están anotados con `[Authorize(Roles = "Patient")]`, ya que este diario lo escribe el paciente y nadie más.
 
 **Controllers**
 
 `DiaryEntriesController` se publica bajo `[Route("api/v1/diary-entries")] [Tags("Intake and Body Response")]`. Recibe las escrituras del diario y traduce `Result<T, IntakeError>` a respuestas HTTP.
+
+<p class="caption"><strong>Tabla 100</strong><br><em>Endpoints de DiaryEntriesController (Intake &amp; Body Response)</em></p>
 
 | Verbo / Ruta | Acción | Respuestas |
 |---|---|---|
@@ -2882,6 +3486,8 @@ Cuenta además con el método privado `PatientWriteOnly()`. No existe ningún ve
 `SelfWeighInsController`, bajo `[Route("api/v1/self-weigh-ins")]`, expone un único `POST /` resuelto por `RecordSelfWeighIn(RecordSelfWeighInResource)`, con respuestas 201 · 400 · 401 · 403. La operación `Recalculate Weight Trend` tampoco tiene endpoint, puesto que la dispara la política que escucha `SelfWeighInRecorded`.
 
 `PatientIntakeController`, bajo `[Route("api/v1/patients")]`, sirve los cuatro read models del paciente y declara los métodos privados `IsSelf(int)` y `NotThisPatient()`.
+
+<p class="caption"><strong>Tabla 101</strong><br><em>Endpoints de PatientIntakeController (Intake &amp; Body Response)</em></p>
 
 | Verbo / Ruta | Acción | Read Model |
 |---|---|---|
@@ -2902,6 +3508,8 @@ Las clases de entrada viven en `IntakeResources.cs` y son `LogMealByPhotoResourc
 
 Por su parte, `IntakeActionResultAssembler.cs` concentra la traducción de errores a HTTP mediante `ToDiaryEntryResult`, `ToSelfWeighInResult`, `ToSyncResult`, `ToNotFoundResult` y el privado `FailureResult`.
 
+<p class="caption"><strong>Tabla 102</strong><br><em>Mapeo de errores de dominio a códigos HTTP en Intake &amp; Body Response</em></p>
+
 | Errores | Status |
 |---|---|
 | `ActiveTargetsCacheNotFound`, `DiaryEntryNotFound`, `SelfWeighInNotFound`, `WeightTrendNotFound` | **404** |
@@ -2919,6 +3527,19 @@ Por su parte, `IntakeActionResultAssembler.cs` concentra la traducción de error
 
 Los mensajes localizados se declaran en `IntakeBodyResponse/Resources/IntakeMessages.cs`, clase marcador de los archivos `.resx` en inglés y español.
 
+Además de los endpoints del diario, el contexto expone el reconocimiento de comidas, las ideas de comidas, el registro por lote y la sincronización de autopesajes:
+
+<p class="caption"><strong>Tabla 103</strong><br><em>Endpoints adicionales de Intake &amp; Body Response</em></p>
+
+| Endpoint | Controller | Respuesta | Descripción |
+|---|---|---|---|
+| `POST /patients/{id}/meal-photo-analyses` | `PatientMealPhotoAnalysesController` | 201 · 400 · 403 · 413 · 422 · 429 · 503 | Recibe la foto (JPEG o WebP, hasta 2 MB) y devuelve la propuesta de estimación. |
+| `POST /patients/{id}/meal-ideas` | `PatientMealIdeasController` | 200 · 400 · 403 · 422 · 429 · 502 · 503 | Propone ideas de comidas que caben en lo que resta del día. |
+| `POST /diary-entries/manual-logs/batch` | `DiaryEntriesController` | 201 · 400 · 422 | Registra de una vez los ingredientes de una idea de comida. |
+| `POST /self-weigh-ins/synchronization` | `SelfWeighInsController` | 200 | Sincroniza autopesajes registrados sin conexión. |
+
+`photo-logs` acepta `analysisId`, `confirmation`, `planAdherence` y `clientEntryId`, y `manual-logs` acepta `planAdherence` y `clientEntryId`. El endpoint `off-plan-logs` se mantiene por compatibilidad. Para estos casos hay 18 resources y 5 assemblers, y los errores `PhotoTooLarge` (413), `UnsupportedPhotoFormat` (400) y `MealPhotoAnalysisNotFound` (404).
+
 #### 2.6.1.3. Application Layer
 
 La Application Layer orquesta los seis subflujos del contexto, numerados del 4.1 al 4.6, mediante command services, query services y tres event handlers que implementan las políticas. Las interfaces públicas viven en `Application/CommandServices` y `Application/QueryServices`, mientras que las implementaciones están en `Application/Internal/...`.
@@ -2928,6 +3549,8 @@ La Application Layer orquesta los seis subflujos del contexto, numerados del 4.1
 `ActiveTargetsCacheCommandService`, que implementa `IActiveTargetsCacheCommandService`, depende de `IActiveTargetsCacheRepository`, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. Su único método, `Handle(RefreshActiveTargetsCacheCommand)`, implementa el subflujo 4.1: valida *Published Contract Only*, exige un `CareLink` activo y, si el vínculo desapareció, deja el caché existente exactamente como está en lugar de borrarlo. Publica `ActiveTargetsCacheRefreshed`. Este servicio nunca habla con Nutritional Care y solo ve aquello que el evento publicado decidió llevar consigo.
 
 `DiaryEntryCommandService`, que implementa `IDiaryEntryCommandService`, depende de `IDiaryEntryRepository`, `IUnitOfWork`, `IFoodCatalogContextFacade`, `IConfiguration`, `ILogger<...>` e `IMediator`, y declara la constante `DefaultRetroactiveLoggingWindowHours = 48`.
+
+<p class="caption"><strong>Tabla 104</strong><br><em>Métodos de DiaryEntryCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -2951,7 +3574,9 @@ Sus métodos privados son tres. `ReconcileAsync(int, PendingDiaryEntry, CT)` es 
 
 **Event Handlers (políticas)**
 
-Los tres handlers crean un scope de DI aislado, ya que las notificaciones se manejan en paralelo y compartir el `DbContext` del request produciría un error de concurrencia.
+Los seis handlers crean un scope de DI aislado, ya que las notificaciones se manejan en paralelo y compartir el `DbContext` del request produciría un error de concurrencia.
+
+<p class="caption"><strong>Tabla 105</strong><br><em>Event handlers de Intake &amp; Body Response</em></p>
 
 | Handler | Escucha | Política | Emite |
 |---|---|---|---|
@@ -2967,11 +3592,18 @@ Los tres handlers crean un scope de DI aislado, ya que las notificaciones se man
 
 `IntakeContextFacade` implementa `IIntakeContextFacade` apoyándose en los query services y en `IFoodCatalogContextFacade`, con la constante `NutrientBasisGrams = 100m`. Los totales diarios se calculan aquí y no se almacenan, ya que un total almacenado sería una segunda fuente de verdad, y solo se cuentan los estimados confirmados, porque una propuesta que el paciente no confirmó no representa su consumo. Si el alimento de una entrada no puede resolverse, se conserva su identificador y únicamente se omite el nombre.
 
+- **`MealPhotoAnalysisCommandService`:** valida la foto, elimina sus metadatos, consulta el módulo de IA con el catálogo local como pista, resuelve o crea el alimento reconocido y guarda el `MealPhotoAnalysis`. Si la IA no está disponible o el paciente no dio su consentimiento, devuelve un error y la aplicación continúa con el registro manual.
+- **`MealIdeasCommandService`:** calcula lo que resta del día con `DailyIntakeCalculator`, pide las ideas a la IA y valida cada una con `MealIdeaRules` (energía, restricciones y términos prohibidos) antes de devolverlas. Los resultados se guardan en caché dos horas.
+- **Handlers de IA y de lotes:** `OnAiProcessingConsentChangedIntakeHandler` y `OnAiPreferencesChangedIntakeHandler` eliminan los análisis y las ideas cuando se retira el consentimiento o se apaga una función. `OnSelfWeighInBatchSynchronizedHandler` recalcula la tendencia una vez por lote.
+- **Validadores de salida de IA:** `MealPhotoRecognitionOutputValidator` y `MealIdeasOutputValidator`.
+
 #### 2.6.1.4. Infrastructure Layer
 
-La Infrastructure Layer de este bounded context se limita a la persistencia, de modo que no consume ningún servicio externo, no ejecuta modelos de visión y no aloja hosted services. Las cuatro configuraciones de EF Core viven en `IntakeEntityTypeConfigurations.cs` y los cuatro repositorios en `IntakeRepositories.cs`.
+La Infrastructure Layer de este bounded context contiene la persistencia, el procesamiento de imágenes, las cachés de IA y un hosted service que elimina los análisis vencidos. Cuatro configuraciones de EF Core viven en `IntakeEntityTypeConfigurations.cs` y cuatro repositorios en `IntakeRepositories.cs`; `MealPhotoAnalysis` tiene los suyos en archivos propios.
 
 **Configuraciones de EF Core**
+
+<p class="caption"><strong>Tabla 106</strong><br><em>Configuraciones de EF Core de Intake &amp; Body Response</em></p>
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
@@ -2980,9 +3612,11 @@ La Infrastructure Layer de este bounded context se limita a la persistencia, de 
 | `SelfWeighInEntityTypeConfiguration` | `self_weigh_ins` | La PK usa el converter `SelfWeighInId.FromRaw`, `value_kg` se declara como `decimal(10,2)`, las tres banderas de protocolo son requeridas y existe el índice `ix_self_weigh_ins_patient_id`. |
 | `WeightTrendEntityTypeConfiguration` | `weight_trends` | Usa `HasKey(t => t.PatientId)` con `ValueGeneratedNever()`, y la serie `points` se persiste como `json` desde el backing field `_points`, con el comparador estático `PointListComparer`. |
 
-Las cuatro configuraciones declaran `Ignore(...)` sobre cada propiedad calculada, entre ellas `DeclaredLocalTimestamp`, `LocalDate`, `ProposedEstimate`, `ConfirmedEstimate`, `FollowsProtocol` y `Points`, todas las cuales existen en el dominio pero no corresponden a columnas.
+Las configuraciones declaran `Ignore(...)` sobre cada propiedad calculada, entre ellas `DeclaredLocalTimestamp`, `LocalDate`, `ProposedEstimate`, `ConfirmedEstimate`, `FollowsProtocol` y `Points`, todas las cuales existen en el dominio pero no corresponden a columnas.
 
 **Repositorios (implementaciones)**
+
+<p class="caption"><strong>Tabla 107</strong><br><em>Repositorios de Intake &amp; Body Response</em></p>
 
 | Clase | Detalles de implementación |
 |---|---|
@@ -2995,13 +3629,21 @@ Los cuatro heredan de `BaseRepository<T>` y reimplementan de forma explícita `I
 
 **Servicios externos**
 
-Este contexto no consume ninguno. La estimación de porciones se ejecuta en el dispositivo del paciente con ML Kit, y el servidor se limita a persistir la propuesta que recibe.
+Este contexto consume un único servicio externo, el proveedor de IA generativa, a través del módulo técnico de IA de `Shared`. El servidor recibe la foto, la analiza en memoria sin conservarla y persiste solo la propuesta de estimación con su nivel de confianza. ML Kit no interviene en este contexto: en el dispositivo solo se usa para leer el código QR de invitación.
+
+- **Persistencia de análisis:** la tabla `meal_photo_analyses` con `MealPhotoAnalysisRepository` y su configuración de EF Core, y las columnas `plan_adherence`, `origin`, `meal_group_id`, `meal_photo_analysis_id` y `proposed_ai_generation_id` en `diary_entries`.
+- **Procesamiento de imágenes:** `PhotoMetadataStripper` reescribe el archivo JPEG o WebP sin EXIF, XMP ni ICC.
+- **IA:** `InMemoryMealIdeasCache` y `InMemoryCatalogNameHintsCache` guardan resultados temporales, y `EmbeddedRestrictionLexicon` aporta los términos que se usan para respetar las restricciones del paciente.
+- **Procesos en segundo plano:** `MealPhotoAnalysisPurgeHostedService` elimina los análisis vencidos y `WeightTrendRecalculationJob` permite recalcular las tendencias.
+- **Protocolo de pesaje:** `ConfiguredSelfWeighInProtocolProvider` define cuándo un autopesaje sigue el protocolo.
 
 #### 2.6.1.5. Bounded Context Software Architecture Component Level Diagrams
 
 **Intake & Body Response**
 
 Component:
+
+<p class="caption"><strong>Figura 77</strong><br><em>Diagrama de componentes del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/intake-body-response.puml)
 
@@ -3013,17 +3655,25 @@ Component:
 
 Domain:
 
+<p class="caption"><strong>Figura 78</strong><br><em>Diagrama de clases de la capa Domain del bounded context Intake &amp; Body Response</em></p>
+
 ![Intake & Body Response Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/domain.puml)
 
 Infrastructure:
+
+<p class="caption"><strong>Figura 79</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/infrastructure.puml)
 
 Application:
 
+<p class="caption"><strong>Figura 80</strong><br><em>Diagrama de clases de la capa Application del bounded context Intake &amp; Body Response</em></p>
+
 ![Intake & Body Response Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/application.puml)
 
 Interfaces:
+
+<p class="caption"><strong>Figura 81</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/interfaces.puml)
 
@@ -3033,17 +3683,21 @@ Interfaces:
 
 Database:
 
+<p class="caption"><strong>Figura 82</strong><br><em>Diagrama de base de datos del bounded context Intake &amp; Body Response</em></p>
+
 ![Intake & Body Response Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/intake-body-response.puml)
 
 ### 2.6.2. Bounded Context: Monitoring & Adherence
 
 #### 2.6.2.1. Domain Layer
 
-El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.MonitoringAdherence`, es el único que compara lo prescrito con lo registrado e interpreta la diferencia. Su Domain Layer aloja cinco aggregate roots y concentra la lógica de interpretación dentro de ellos, sin recurrir a domain services. Tres invariantes gobiernan toda la capa. El primero establece que ninguna desviación se evalúa sobre una ventana de menos de siete días. El segundo, que el paciente recibe una notificación antes de que una alerta escale al profesional. El tercero, que una señal escalada nunca modifica un plan.
+El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.MonitoringAdherence`, es el único que compara lo prescrito con lo registrado e interpreta la diferencia. Su Domain Layer aloja siete aggregate roots y concentra la lógica de interpretación dentro de ellos; sus únicos domain services son el calendario clínico de las consultas y las reglas que comprueban los textos generados con IA. Tres invariantes gobiernan toda la capa. El primero establece que ninguna desviación se evalúa sobre una ventana de menos de siete días. El segundo, que el paciente recibe una notificación antes de que una alerta escale al profesional. El tercero, que una señal escalada nunca modifica un plan.
 
 **Aggregates (Aggregate Roots)**
 
 `EvaluationWindow` representa el periodo sobre el que se compara lo prescrito contra lo registrado. Existe una ventana por relación de cuidado, que abre cuando se establece el vínculo y cierra cuando este se revoca, y dentro de ella conviven tres series que de forma deliberada nunca se mezclan entre sí.
+
+<p class="caption"><strong>Tabla 108</strong><br><em>Atributos de EvaluationWindow</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -3058,6 +3712,8 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 | `DailyComplianceSeries` | `IReadOnlyList<DailyCompliance>` | `public` (computada) | El resultado día a día. |
 | `AnthropometrySeries` | `IReadOnlyList<AnthropometryPoint>` | `public` (computada) | Contiene solo mediciones clínicas, ya que los autopesajes del paciente no forman parte de esta serie. |
 | `IntakeSummary` | `IntakeSummary` | `public` (computada) | Se calcula y nunca se almacena, de modo que no puede discrepar con la serie que resume. |
+
+<p class="caption"><strong>Tabla 109</strong><br><em>Métodos de EvaluationWindow</em></p>
 
 | Método | Scope | Reglas que aplica |
 |---|---|---|
@@ -3075,6 +3731,8 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 
 `Deviation` modela la diferencia entre lo prescrito y lo registrado cuando esta supera la tolerancia y se repite a lo largo de varios días de la ventana.
 
+<p class="caption"><strong>Tabla 110</strong><br><em>Atributos de Deviation</em></p>
+
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `Id` | `DeviationId` | `public get / private set` | Identidad tipada. |
@@ -3084,6 +3742,8 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 | `Direction` | `DeviationDirection` | `public get / private set` | Puede ser `Above` o `Below`. |
 | `IsSustained` / `SustainedAt` | `bool` / `DateTimeOffset?` | `public get / private set` | Sostienen *Sustained If Persists Across Majority Of Window*. |
 | `LoggedDaysConsidered`, `DeviatingDaysConsidered` | `int` | `public get / private set` | Los dos conteos con los que se decidió la mayoría, guardados para que la evidencia enviada al inbox no tenga que recalcularse desde una ventana que ya se movió. |
+
+<p class="caption"><strong>Tabla 111</strong><br><em>Métodos de Deviation</em></p>
 
 | Método | Scope | Descripción |
 |---|---|---|
@@ -3095,6 +3755,8 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 
 `ConsistencyIndex` mide cuán bien concuerdan entre sí la serie de peso y la serie de ingesta registrada, y tiene al paciente como raíz.
 
+<p class="caption"><strong>Tabla 112</strong><br><em>Atributos de ConsistencyIndex</em></p>
+
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
 | `EnergyKcalPerKg` | `const decimal = 7700m` | `public` | Es una regla de dedo idéntica para todos, y justamente por eso sirve como chequeo de consistencia y no como predicción. |
@@ -3102,6 +3764,8 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 | `Value` | `decimal` | `public get / private set` | Movimiento de peso inexplicado, expresado en kg por semana. |
 | `State` | `ConsistencyState` | `public get / private set` | Puede ser `Normal`, `Watch` o `Alert`. |
 | `FirstFlaggedAt`, `ShownToPatientAt`, `EscalatedAt`, `AlertSinceAt` | `DateTimeOffset?` | `public get / private set` | Componen la cronología del episodio, y `ShownToPatientAt` es precondición de la escalación. |
+
+<p class="caption"><strong>Tabla 113</strong><br><em>Métodos de ConsistencyIndex</em></p>
 
 | Método | Scope | Descripción |
 |---|---|---|
@@ -3118,6 +3782,8 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 
 **Value Objects**
 
+<p class="caption"><strong>Tabla 114</strong><br><em>Value objects y clases auxiliares de la capa Domain de Monitoring &amp; Adherence</em></p>
+
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
 | `TargetsSnapshot` | La copia de los objetivos diarios vigentes en un momento dado. | `PlanVersion > 0`, `EnergyKcal > 0`, los macros, `TakenAt` y `EffectiveFrom`. No incluye diagnóstico, razonamiento clínico ni base de cálculo. |
@@ -3133,7 +3799,7 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 
 **Commands**
 
-Los dieciséis commands van desde `OpenEvaluationWindowCommand` y `SnapshotActiveTargetsCommand` hasta `CloseEvaluationWindowCommand`. Solo dos de ellos tienen endpoint, que son `RecordReferralCommand` y `ScheduleFollowUpCommand`, ya que el contexto es principalmente reactivo y se activa por eventos y por políticas temporales. Conviene notar que `ReEvaluateWindowCommand` recibe una sola fecha y no un rango.
+Los veintinueve commands van desde `OpenEvaluationWindowCommand` y `SnapshotActiveTargetsCommand` hasta `CloseEvaluationWindowCommand`, e incluyen los de la agenda, la respuesta previa, el cierre de derivaciones, el acuse del aviso de consistencia y los de IA, además de los de purga. Solo `RecordReferralCommand`, `CloseReferralCommand`, `ScheduleFollowUpCommand`, `RescheduleFollowUpCommand`, `CancelFollowUpCommand`, `SubmitPreVisitCheckInCommand`, `AcknowledgeConsistencyPromptCommand`, `SuggestQuestionsCommand` y `SummarizeMonitoringCommand` tienen endpoint, ya que el contexto es principalmente reactivo y se activa por eventos y por políticas temporales. Conviene notar que `ReEvaluateWindowCommand` recibe una sola fecha y no un rango.
 
 **Queries**
 
@@ -3153,13 +3819,24 @@ Son cinco: `IEvaluationWindowRepository`, `IDeviationRepository`, `IConsistencyI
 
 **Relaciones entre clases:** `EvaluationWindow` compone `WindowId` y `WindowState`, y agrega 0..* `TargetsSnapshot`, 0..* `DailyCompliance` y 0..* `AnthropometryPoint`, tres series independientes que se serializan como JSON. `Deviation` referencia la ventana mediante `WindowRef : WindowId`, en una asociación por identificador y sin navegación, y compone `DeviationMagnitude` y `DeviationDirection`. `ConsistencyIndex` compone `ConsistencyState` y depende de `DailyCompliance` y de los puntos de tendencia solo como parámetros de `Recompute`. Por último, `Referral` compone `Specialty` y `ReferralReason`, y `ScheduledFollowUp` compone `FollowUpState`.
 
+El contexto cubre además la agenda de consultas, la respuesta previa del paciente y los resúmenes con IA. En total hay 7 agregados, 29 commands, 19 queries y 23 domain events.
+
+- **`PreVisitCheckIn` y `WeeklySummary`:** `PreVisitCheckIn` guarda cómo se sintió el paciente, sus dificultades y hasta tres preguntas, con una sola respuesta por consulta. `WeeklySummary` guarda el resumen semanal de un paciente y se elimina a los 180 días.
+- **Atributos de los demás agregados:** `ScheduledFollowUp` guarda la modalidad, las indicaciones de preparación, la cancelación, la reprogramación y el cierre por consulta completada. `Referral` tiene estado abierto o cerrado. `ConsistencyIndex` registra el momento en que se avisó al paciente y el momento en que lo vio.
+- **Value objects:** `ConsultationModality`, `PreparationInstruction`, `CheckInDifficulty`, `PlanFeeling`, `PatientQuestion`, `QuestionOrigin`, `ComplianceDay`, `ComplianceSummary`, `MealSlot`, `MonitoringPeriodFacts` y los identificadores `PreVisitCheckInId` y `WeeklySummaryId`.
+- **Commands de agenda, respuesta previa e IA:** `SubmitPreVisitCheckInCommand`, `RescheduleFollowUpCommand`, `CancelFollowUpCommand`, `CloseReferralCommand`, `AcknowledgeConsistencyPromptCommand`, `GenerateWeeklySummaryCommand`, `SuggestQuestionsCommand` y `SummarizeMonitoringCommand`, entre otros de purga y cierre.
+- **Domain events:** `PreVisitCheckInSubmitted`, `FollowUpRescheduled`, `FollowUpCancelled`, `ReferralClosed` y `ConsistencyPromptAcknowledged`.
+- **Servicios de dominio:** `IFollowUpCalendar`, `IAiLanguageLexicon` y `GeneratedTextRules`.
+
 #### 2.6.2.2. Interface Layer
 
-La Interface Layer de Monitoring & Adherence es notablemente pequeña en escritura y rica en lectura, y la razón está en que el contexto es reactivo: de sus dieciséis comandos solo dos se exponen como endpoint. Los tres controllers trasladan a la API el principio *Patient First Always*.
+La Interface Layer de Monitoring & Adherence es notablemente pequeña en escritura y rica en lectura, y la razón está en que el contexto es reactivo: de sus veintinueve comandos solo nueve se exponen como endpoint. Los siete controllers trasladan a la API el principio *Patient First Always*.
 
 **Controllers**
 
 `PatientMonitoringController` se publica bajo `[Route("api/v1/patients")] [Authorize] [Tags("Monitoring and Adherence")]` y depende de los cuatro query services de lectura y de `IStringLocalizer<MonitoringMessages>`.
+
+<p class="caption"><strong>Tabla 115</strong><br><em>Endpoints de PatientMonitoringController (Monitoring &amp; Adherence)</em></p>
 
 | Verbo / Ruta | Acción | Rol | Read Model |
 |---|---|---|---|
@@ -3184,6 +3861,8 @@ Los permisos son deliberadamente asimétricos, de modo que el paciente ve su ind
 
 `MonitoringAssemblers.cs` reúne dos command assemblers, que son `RecordReferralCommandAssembler` y `ScheduleFollowUpCommandAssembler`, junto con ocho resource assemblers: `DailyComplianceResourceAssembler`, `TargetsSnapshotResourceAssembler`, `AnthropometryPointResourceAssembler`, `EvaluationWindowResourceAssembler`, `DeviationResourceAssembler`, `ConsistencyIndexResourceAssembler`, `ReferralResourceAssembler` y `ScheduledFollowUpResourceAssembler`. Por su parte, `MonitoringActionResultAssembler.cs` expone `ToReferralResult`, `ToScheduledFollowUpResult`, `ToNotFoundResult` y el privado `FailureResult`, y es el único lugar donde `MonitoringError` se convierte en un código HTTP.
 
+<p class="caption"><strong>Tabla 116</strong><br><em>Mapeo de errores de dominio a códigos HTTP en Monitoring &amp; Adherence</em></p>
+
 | Errores | Status |
 |---|---|
 | `EvaluationWindowNotFound`, `DeviationNotFound`, `ScheduledFollowUpNotFound` | **404** |
@@ -3201,6 +3880,21 @@ Los permisos son deliberadamente asimétricos, de modo que el paciente ve su ind
 
 Los mensajes localizados se declaran en `MonitoringAdherence/Resources/MonitoringMessages.cs`, que contiene los textos del recordatorio y de la notificación al paciente, redactados sin lenguaje acusatorio.
 
+Además de la lectura del seguimiento, el contexto expone la agenda, la respuesta previa del paciente, el acuse del aviso de consistencia y los textos con IA:
+
+<p class="caption"><strong>Tabla 117</strong><br><em>Endpoints adicionales de Monitoring &amp; Adherence</em></p>
+
+| Endpoint | Controller | Respuesta | Descripción |
+|---|---|---|---|
+| `PUT` y `GET /scheduled-follow-ups/{id}/check-in` | `FollowUpCheckInController` | 200 · 400 · 403 · 404 · 409 | Respuesta previa del paciente; se bloquea desde la hora de la consulta. |
+| `POST /scheduled-follow-ups/{id}/cancellation` y `/rescheduling` | `ScheduledFollowUpsController` | 204 · 200 | Cancela o reprograma una consulta de la agenda del nutricionista. |
+| `GET /patients/{id}/scheduled-follow-ups` y `/next` | `PatientScheduledFollowUpsController` | 200 · 404 | Consultas de un paciente. |
+| `POST /patients/{id}/consistency-index/prompt-acknowledgement` | `ConsistencyPromptController` | 204 · 409 | El paciente acusa haber visto el aviso de consistencia. |
+| `GET /patients/{id}/weekly-summaries/latest`, `/suggested-questions` y `/monitoring-summary` | `PatientAiSummariesController` | 200 · 404 · 429 · 502 · 503 | Resumen semanal y preguntas sugeridas del paciente, y resumen del periodo para el nutricionista. |
+| `POST /referrals/{id}/closure` | `ReferralsController` | 200 · 409 | Cierra una derivación. |
+
+La agenda incluye `preparation` y `modality`, y rechaza con 400 una fecha que no es futura. Para estos casos hay 16 resources y 13 assemblers.
+
 #### 2.6.2.3. Application Layer
 
 La Application Layer de este contexto orquesta once subflujos, numerados del 5.1 al 5.11, y aloja el mayor número de event handlers de toda la plataforma, con trece políticas disparadas por eventos de las cuales nueve reaccionan a eventos de otros bounded contexts. A ellas se suman tres políticas temporales ejecutadas como `BackgroundService`, que atienden el vacío de registro, la escalación de consistencia y la cita no acudida, para un total de dieciséis. Es aquí donde quedan a la vista los capabilities del contexto, esto es evaluar días, detectar y sostener desviaciones, calcular el índice de consistencia, preguntar al paciente, escalar al profesional, detectar huecos de registro y gestionar derivaciones y citas.
@@ -3208,6 +3902,8 @@ La Application Layer de este contexto orquesta once subflujos, numerados del 5.1
 **Command Services**
 
 `EvaluationWindowCommandService` depende de `IEvaluationWindowRepository`, `IIntakeContextFacade`, `IUnitOfWork`, `IConfiguration`, `ILogger<...>` e `IMediator`. Es la clase que compara lo prescrito con lo registrado, para lo cual obtiene lo registrado mediante el ACL de Intake & Body Response y lo prescrito desde los snapshots guardados en la ventana, sin modificar ninguno de los dos.
+
+<p class="caption"><strong>Tabla 118</strong><br><em>Métodos de EvaluationWindowCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -3225,6 +3921,8 @@ Su método privado clave es `EvaluateSingleDay(int, DateOnly, bool, CT)`, que re
 `DeviationCommandService` depende de `IDeviationRepository`, `IEvaluationWindowRepository`, `IUnitOfWork`, `IConfiguration`, `ILogger<...>` e `IMediator`. Su método `Handle(DetectDeviationCommand)` exige `HasMinimumSpan`, conforme al primer invariante, toma el horizonte rodante, delega en `Deviation.DetectFrom(...)` y, cuando ya existe una desviación en esa ventana y dirección, la vuelve a enunciar en lugar de duplicarla. `Handle(FlagSustainedDeviationCommand)`, por su parte, aplica el ratio configurable `Monitoring:SustainedDeviationRatio`, que por defecto vale 0.5, y publica `SustainedDeviationDetected` únicamente en la transición.
 
 `ConsistencyIndexCommandService` depende de `IConsistencyIndexRepository`, `IEvaluationWindowRepository`, `IIntakeContextFacade`, `ICareRelationshipContextFacade`, `IUnitOfWork`, `IConfiguration`, `ILogger<...>` e `IMediator`, y declara la constante `TrendDays = 90`. Para cumplir el tercer invariante, la clase no tiene ninguna dependencia hacia los planes nutricionales.
+
+<p class="caption"><strong>Tabla 119</strong><br><em>Métodos de ConsistencyIndexCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -3244,6 +3942,8 @@ Son cinco: `EvaluationWindowQueryService`, `DeviationQueryService`, `Consistency
 
 Son trece clases y todas trabajan con un scope de DI aislado.
 
+<p class="caption"><strong>Tabla 120</strong><br><em>Event handlers de Monitoring &amp; Adherence</em></p>
+
 | Handler | Escucha | Origen | Emite |
 |---|---|---|---|
 | `OnCareLinkEstablishedHandler` | `CareLinkEstablished` | Care Relationship | `OpenEvaluationWindowCommand` |
@@ -3260,19 +3960,26 @@ Son trece clases y todas trabajan con un scope de DI aislado.
 | `OnConsistencyAlertRaisedHandler` | `ConsistencyAlertRaised` | Interno | `PromptPatientCommand`, como único suscriptor, notificando primero al paciente |
 | `OnLoggingGapDetectedHandler` | `LoggingGapDetected` | Interno | `RemindPatientCommand`, como único suscriptor |
 
-Los tres handlers de entradas de diario comparten un método auxiliar que emite `EvaluateDayCommand(patientId, date)`, donde `date` es el día de calendario que el paciente estaba viviendo, tomado del timestamp local declarado en el evento y nunca del reloj del servidor.
+Los cinco handlers de entradas de diario comparten un método auxiliar que emite `EvaluateDayCommand(patientId, date)`, donde `date` es el día de calendario que el paciente estaba viviendo, tomado del timestamp local declarado en el evento y nunca del reloj del servidor.
 
 **ACL Facade**
 
 `MonitoringContextFacade` implementa `IMonitoringContextFacade` apoyándose exclusivamente en los query services propios, y ante un fallo devuelve `null` o una lista vacía en lugar de propagar la excepción.
 
+- **Servicios de comandos de la respuesta previa y de la IA:** `PreVisitCheckInCommandService`, `WeeklySummaryCommandService`, `SuggestedQuestionsCommandService`, `MonitoringSummaryCommandService` y `MonitoringAiContentCommandService` (purgas). Los tres que usan IA siguen el mismo orden: comprobar el consentimiento, reunir los hechos del periodo, redactar el texto, validarlo y guardarlo. Si la IA no está disponible, el resumen del nutricionista devuelve solo los hechos.
+- **Servicios de consulta:** `PreVisitCheckInQueryService` y `WeeklySummaryQueryService`.
+- **Handlers de consultas, altas y lotes:** `OnConsultationCompletedHandler` marca la consulta como completada al publicar el plan, `OnTreatmentDischargedHandler` cancela las consultas futuras al dar el alta, y `OnMealGroupLoggedHandler` y `OnDiaryBatchSynchronizedHandler` evalúan el día una sola vez por grupo o por lote. Los handlers de consentimiento y de preferencias de IA eliminan el contenido generado.
+- **Lectura de hechos:** `MonitoringFactsReader` reúne el cumplimiento, la tendencia y las franjas de comida que alimentan los textos, de modo que la IA no calcula ninguna cifra.
+
 #### 2.6.2.4. Infrastructure Layer
 
-La Infrastructure Layer de Monitoring & Adherence contiene la persistencia sobre MySQL 8.4 y tres `BackgroundService`, más que cualquier otro bounded context de la plataforma, y la razón es que tres de sus políticas no las dispara ni un usuario ni un evento sino el paso del tiempo. No consume servicios externos de terceros.
+La Infrastructure Layer de Monitoring & Adherence contiene la persistencia sobre MySQL 8.4 y cuatro `BackgroundService` (los tres de detección de huecos, escalación y consultas no acudidas, más el que genera el resumen semanal), y la razón es que sus políticas no las dispara ni un usuario ni un evento sino el paso del tiempo. No consume servicios externos de terceros fuera del módulo de IA de `Shared`.
 
 **Configuraciones de EF Core**
 
 Las cinco viven en `MonitoringEntityTypeConfigurations.cs`.
+
+<p class="caption"><strong>Tabla 121</strong><br><em>Configuraciones de EF Core de Monitoring &amp; Adherence</em></p>
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
@@ -3288,7 +3995,9 @@ Las cinco clases de `MonitoringRepositories.cs` heredan de `BaseRepository<T>`, 
 
 **Scheduling**
 
-Los tres hosted services siguen las cinco guardas obligatorias del proyecto, con el cuerpo del ciclo dentro de un `try/catch`, los servicios *scoped* resueltos en un scope propio, la propagación del `stoppingToken`, un ciclo idempotente y las migraciones ya aplicadas antes del arranque. Todos usan `PeriodicTimer` con el método privado `SafeWaitAsync` y declaran `BatchSize = 200`.
+Los cuatro hosted services siguen las cinco guardas obligatorias del proyecto, con el cuerpo del ciclo dentro de un `try/catch`, los servicios *scoped* resueltos en un scope propio, la propagación del `stoppingToken`, un ciclo idempotente y las migraciones ya aplicadas antes del arranque. Todos usan `PeriodicTimer` con el método privado `SafeWaitAsync` y declaran `BatchSize = 200`.
+
+<p class="caption"><strong>Tabla 122</strong><br><em>Hosted services de Monitoring &amp; Adherence</em></p>
 
 | Hosted Service | Política implementada | Intervalo (configuración) | Flujo |
 |---|---|---|---|
@@ -3298,13 +4007,20 @@ Los tres hosted services siguen las cinco guardas obligatorias del proyecto, con
 
 **Servicios externos**
 
-Este contexto no consume ninguno. Todo su cálculo es aritmética local sobre datos que ya posee o que lee a través de los ACL de Intake & Body Response y Care Relationship.
+Este contexto solo consume el proveedor de IA generativa, a través del módulo técnico de IA de `Shared`, para el resumen semanal, las preguntas sugeridas y el resumen del periodo. El cálculo de cumplimiento, desviación y consistencia es aritmética local sobre datos que ya posee o que lee a través de los ACL de Intake & Body Response y Care Relationship.
+
+- **Persistencia de la respuesta previa y los resúmenes:** las tablas `pre_visit_check_ins` y `weekly_summaries` con sus repositorios y configuraciones de EF Core, y las columnas de agenda de `scheduled_follow_ups`, de cierre de `referrals` y de aviso de `consistency_indices`.
+- **Procesos en segundo plano:** `WeeklySummaryHostedService` genera el resumen cada lunes con `CronSchedule`, junto con los servicios de detección de huecos, escalación y consultas no acudidas.
+- **Calendario clínico:** `ClinicalTimeZoneFollowUpCalendar` interpreta las fechas de las consultas en la zona horaria clínica.
+- **IA:** `InMemoryMonitoringAiCache` y `EmbeddedAiLanguageLexicon`, que impide que los textos contengan términos de diagnóstico o de reproche.
 
 #### 2.6.2.5. Bounded Context Software Architecture Component Level Diagrams
 
 **Monitoring & Adherence**
 
 Component:
+
+<p class="caption"><strong>Figura 83</strong><br><em>Diagrama de componentes del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/monitoring-adherence.puml)
 
@@ -3316,17 +4032,25 @@ Component:
 
 Domain:
 
+<p class="caption"><strong>Figura 84</strong><br><em>Diagrama de clases de la capa Domain del bounded context Monitoring &amp; Adherence</em></p>
+
 ![Monitoring & Adherence Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/domain.puml)
 
 Infrastructure:
+
+<p class="caption"><strong>Figura 85</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/infrastructure.puml)
 
 Application:
 
+<p class="caption"><strong>Figura 86</strong><br><em>Diagrama de clases de la capa Application del bounded context Monitoring &amp; Adherence</em></p>
+
 ![Monitoring & Adherence Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/application.puml)
 
 Interfaces:
+
+<p class="caption"><strong>Figura 87</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/interfaces.puml)
 
@@ -3336,17 +4060,21 @@ Interfaces:
 
 Database:
 
+<p class="caption"><strong>Figura 88</strong><br><em>Diagrama de base de datos del bounded context Monitoring &amp; Adherence</em></p>
+
 ![Monitoring & Adherence Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/monitoring-adherence.puml)
 
 ### 2.6.3. Bounded Context: Care Relationship
 
 #### 2.6.3.1. Domain Layer
 
-El bounded context Care Relationship, implementado en `Healthify.Platform.CareRelationship`, gobierna la relación consentida entre paciente y profesional y constituye la única fuente de verdad sobre quién puede ver a quién. Es aquí donde el principio de asimetría de la plataforma se hace cumplir técnicamente y no por simple convención. Su Domain Layer declara dos aggregate roots, cinco value objects y diez eventos de dominio, de los cuales solo dos llegan a cruzar la frontera.
+El bounded context Care Relationship, implementado en `Healthify.Platform.CareRelationship`, gobierna la relación consentida entre paciente y profesional y constituye la única fuente de verdad sobre quién puede ver a quién. Es aquí donde el principio de asimetría de la plataforma se hace cumplir técnicamente y no por simple convención. Su Domain Layer declara tres aggregate roots, seis value objects y doce eventos de dominio, de los cuales cuatro llegan a cruzar la frontera.
 
 **Aggregates (Aggregate Roots)**
 
 `Invitation` es el token de un solo uso que el profesional muestra como código QR durante la consulta. Se trata del único medio por el que un paciente se vincula a un profesional, ya que crear una cuenta no otorga acceso a ninguna información.
+
+<p class="caption"><strong>Tabla 123</strong><br><em>Atributos de Invitation</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -3358,6 +4086,8 @@ El bounded context Care Relationship, implementado en `Healthify.Platform.CareRe
 | `ExpiredAt` | `DateTimeOffset?` | `public get / private set` | Momento en que la política de expiración la retiró, que no debe confundirse con `ExpiresAt`. |
 | `IsRedeemed` / `IsExpired` | `bool` | `public` (computadas) | Se derivan de las dos fechas anteriores. |
 
+<p class="caption"><strong>Tabla 124</strong><br><em>Métodos de Invitation</em></p>
+
 | Método | Scope | Reglas que aplica |
 |---|---|---|
 | `Invitation(IssueInvitationCommand)` | `public` | Aplica *Expiration Date Required*, exigiendo una fecha futura, y *Single Use Token*, generando el token con `InvitationToken.Generate()`. |
@@ -3366,6 +4096,8 @@ El bounded context Care Relationship, implementado en `Healthify.Platform.CareRe
 | `Expire(DateTimeOffset)` | `public` | Aplica *Redeemed Invitation Cannot Expire*. Si la invitación ya estaba expirada se comporta como un no-op, y eso vuelve idempotente la política temporal. |
 
 `CareLink` modela la relación consentida entre paciente y profesional. El consentimiento se almacena como cuatro columnas y se reconstruye como value object mediante la propiedad calculada `Consent`, ya que un *owned type* nullable resulta frágil en EF Core y el consentimiento está genuinamente ausente durante el tramo que va desde establecer el vínculo hasta que el paciente lo otorga.
+
+<p class="caption"><strong>Tabla 125</strong><br><em>Atributos de CareLink</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -3378,6 +4110,8 @@ El bounded context Care Relationship, implementado en `Healthify.Platform.CareRe
 | `Consent` | `Consent?` | `public` (computada) | Se reconstruye a partir de las cuatro columnas anteriores. |
 | `IsActive` | `bool` | `public` (computada) | Indica consentimiento vigente, sin revocar y sin alta. Es el valor que el Open Host Service devuelve a Nutritional Care, Intake & Body Response, Monitoring & Adherence y a la capa de read models compuestos. |
 | `IsRevoked` / `IsDischarged` | `bool` | `public` (computadas) | Representan los dos estados de cierre. |
+
+<p class="caption"><strong>Tabla 126</strong><br><em>Métodos de CareLink</em></p>
 
 | Método | Scope | Reglas que aplica |
 |---|---|---|
@@ -3393,6 +4127,8 @@ Los métodos reflejan la asimetría entre roles, ya que el alta exige una razón
 
 **Value Objects**
 
+<p class="caption"><strong>Tabla 127</strong><br><em>Value objects y clases auxiliares de la capa Domain de Care Relationship</em></p>
+
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
 | `Consent` | El permiso que el paciente otorga y puede retirar en cualquier momento sin explicar por qué. | `IsGranted`, `Scope` con un máximo de 200 caracteres, `GrantedAt` y `WithdrawnAt?`. El método `Withdraw(DateTimeOffset)` devuelve una instancia nueva y así preserva la inmutabilidad. |
@@ -3402,15 +4138,15 @@ Los métodos reflejan la asimetría entre roles, ya que el alta exige una razón
 
 **Commands**
 
-Los diez commands son `IssueInvitationCommand`, `ExpireInvitationCommand`, `RedeemInvitationCommand`, `EstablishCareLinkCommand`, `GrantConsentCommand`, `MarkTargetsPendingAcknowledgementCommand`, `AcknowledgeActiveTargetsCommand`, `WithdrawConsentCommand`, `RevokeCareLinkCommand` y `DischargePatientCommand`. Cuatro de ellos carecen de endpoint, ya que los emiten exclusivamente las políticas.
+Los trece commands son `IssueInvitationCommand`, `ExpireInvitationCommand`, `RedeemInvitationCommand`, `EstablishCareLinkCommand`, `GrantConsentCommand`, `MarkTargetsPendingAcknowledgementCommand`, `AcknowledgeActiveTargetsCommand`, `WithdrawConsentCommand`, `RevokeCareLinkCommand` y `DischargePatientCommand`, más `ChangeAiProcessingConsentCommand`, `UpdateAiPreferencesCommand` y `SyncAiPreferencesWithConsentCommand`. Cinco de ellos carecen de endpoint, ya que los emiten exclusivamente las políticas.
 
 **Queries**
 
-Las seis queries son `GetInvitationByIdQuery`, `GetInvitationByTokenQuery`, `GetExpirableInvitationsQuery`, `GetCareLinkByIdQuery`, `GetActiveCareLinkByPatientIdQuery`, que respalda el Open Host Service, y `GetCareLinksByPractitionerIdQuery`.
+Las siete queries son `GetInvitationByIdQuery`, `GetInvitationByTokenQuery`, `GetExpirableInvitationsQuery`, `GetCareLinkByIdQuery`, `GetActiveCareLinkByPatientIdQuery`, que respalda el Open Host Service, `GetCareLinksByPractitionerIdQuery` y `GetAiPreferencesByPatientIdQuery`.
 
 **Domain Events**
 
-Los diez domain events heredan de `DomainEventBase` y solo dos cruzan la frontera, ambos hacia Monitoring & Adherence: `CareLinkEstablished`, que abre la ventana de evaluación, y `CareLinkRevoked`, que la cierra. `ConsentGranted` es interno a propósito, puesto que preguntar si un vínculo está activo no equivale a reaccionar a un hecho pasado, y de ahí que Care Link Status se consulte de forma síncrona por el OHS. Los restantes son internos y comprenden `InvitationIssued`, `InvitationExpired`, `InvitationRedeemed`, `ConsentWithdrawn`, `TreatmentDischarged`, `TargetsPendingAcknowledgement` y `ActiveTargetsAcknowledged`.
+Los doce domain events heredan de `DomainEventBase` y cuatro cruzan la frontera. `CareLinkEstablished`, que abre la ventana de evaluación, y `CareLinkRevoked`, que la cierra, van hacia Monitoring & Adherence, y `AiProcessingConsentChanged` y `AiPreferencesChanged` van hacia Intake & Body Response, Monitoring & Adherence y Nutritional Care, que eliminan lo generado con IA. `ConsentGranted` es interno a propósito, puesto que preguntar si un vínculo está activo no equivale a reaccionar a un hecho pasado, y de ahí que Care Link Status se consulte de forma síncrona por el OHS. Los restantes son internos y comprenden `InvitationIssued`, `InvitationExpired`, `InvitationRedeemed`, `ConsentWithdrawn`, `TreatmentDischarged`, `TargetsPendingAcknowledgement` y `ActiveTargetsAcknowledged`.
 
 **Errors**
 
@@ -3426,13 +4162,23 @@ Este bounded context no declara interfaces de domain service propias y se limita
 
 **Relaciones entre clases:** `Invitation` compone `InvitationId` e `InvitationToken`. `CareLink` compone `CareLinkId`, agrega de forma reconstruida 0..1 `Consent` y depende de `ClinicalReason` como parámetro de `Discharge`. Entre `Invitation` y `CareLink` existe una asociación por identificador y a través de una política, de 1 a 0..1 y etiquetada *redeemedInto*, sin navegación de EF ni columna `invitation_id` en el vínculo. Ambas raíces realizan `IAuditableEntity` y los diez eventos generalizan `DomainEventBase`, que a su vez realiza `IEvent`.
 
+El contexto gestiona también el consentimiento para el uso de IA y el cambio de nutricionista. En total hay 3 agregados, 13 commands, 7 queries y 12 domain events.
+
+- **`AiPreferences`:** agregado que indica cuáles de las funciones con IA permite el paciente (`WeeklySummaryEnabled`, `MealIdeasEnabled`, `SuggestedQuestionsEnabled` y `MealPhotoRecognitionEnabled`).
+- **`CareLink`:** guarda el consentimiento específico para IA (`ConsentAiProcessingGranted` y su fecha), el motivo de revocación (`RevocationReason`, por ejemplo `SwitchedPractitioner`) y la última versión de metas reconocida por el paciente.
+- **Commands de IA:** `ChangeAiProcessingConsentCommand`, `UpdateAiPreferencesCommand` y `SyncAiPreferencesWithConsentCommand`.
+- **Domain events de IA:** `AiProcessingConsentChanged` y `AiPreferencesChanged`, que los demás contextos usan para eliminar el contenido generado.
+- **Cambio de nutricionista:** al canjear una invitación con `replaceActiveLink = true`, el vínculo anterior se revoca con el motivo `SwitchedPractitioner`.
+
 #### 2.6.3.2. Interface Layer
 
-La Interface Layer de Care Relationship expone cuatro controllers y, sobre todo, publica el Open Host Service de la plataforma. Ese contrato es el que usan los tres bounded contexts que manejan información del paciente, esto es Nutritional Care, Intake & Body Response y Monitoring & Adherence, junto con la capa de read models compuestos, para preguntar si un vínculo está activo antes de servir nada.
+La Interface Layer de Care Relationship expone cinco controllers y, sobre todo, publica el Open Host Service de la plataforma. Ese contrato es el que usan los tres bounded contexts que manejan información del paciente, esto es Nutritional Care, Intake & Body Response y Monitoring & Adherence, junto con la capa de read models compuestos, para preguntar si un vínculo está activo antes de servir nada.
 
 **Controllers**
 
 `InvitationsController` se publica bajo `[Route("api/v1/invitations")] [Authorize] [Tags("Invitations")]` y depende de `IInvitationCommandService`, `IInvitationQueryService` e `IStringLocalizer<CareRelationshipMessages>`.
+
+<p class="caption"><strong>Tabla 128</strong><br><em>Endpoints de InvitationsController (Care Relationship)</em></p>
 
 | Verbo / Ruta | Acción | Rol | Read Model | Respuestas |
 |---|---|---|---|---|
@@ -3443,6 +4189,8 @@ La Interface Layer de Care Relationship expone cuatro controllers y, sobre todo,
 El token solo viaja en la respuesta que crea la invitación, y toda lectura posterior lo reporta como `null`.
 
 `CareLinksController` se publica bajo `[Route("api/v1/care-links")] [Authorize] [Tags("Care Links")]` y concentra las transiciones del vínculo.
+
+<p class="caption"><strong>Tabla 129</strong><br><em>Endpoints de CareLinksController (Care Relationship)</em></p>
 
 | Verbo / Ruta | Acción | Rol | Respuestas |
 |---|---|---|---|
@@ -3469,6 +4217,8 @@ Los command assemblers son `IssueInvitationCommandAssembler`, `RedeemInvitationC
 
 `CareRelationshipActionResultAssembler` es el único lugar donde el error de dominio se convierte en HTTP, y lo hace mediante `ToIssueInvitationResult`, `ToRedeemInvitationResult`, `ToCareLinkResult`, `ToWithdrawConsentResult`, `ToNotFoundResult` y el privado `FailureResult`.
 
+<p class="caption"><strong>Tabla 130</strong><br><em>Mapeo de errores de dominio a códigos HTTP en Care Relationship</em></p>
+
 | Errores | Status |
 |---|---|
 | `InvitationNotFound`, `CareLinkNotFound` | **404** |
@@ -3486,6 +4236,18 @@ Los command assemblers son `IssueInvitationCommandAssembler`, `RedeemInvitationC
 
 Los mensajes localizados se declaran en `CareRelationship/Resources/CareRelationshipMessages.cs`, clase marcador de los recursos `.resx`.
 
+Además del flujo de invitación y consentimiento, el contexto expone las preferencias de IA y el alta clínica:
+
+<p class="caption"><strong>Tabla 131</strong><br><em>Endpoints adicionales de Care Relationship</em></p>
+
+| Endpoint | Controller | Respuesta |
+|---|---|---|
+| `GET` y `PUT /patients/{id}/ai-preferences` | `PatientAiPreferencesController` | 200 · 401 · 403 · 409 |
+| `PUT /care-links/{id}/ai-processing-consent` | `CareLinksController` | 204 · 403 · 404 · 409 |
+| `POST /care-links/{id}/discharge` | `CareLinksController` | 200 · 400 · 409 (exige motivo clínico) |
+
+`POST /invitations/redemption` acepta `replaceActiveLink`, y `POST /care-links/{id}/consent` acepta `aiProcessingGranted`. Activar una función de IA sin consentimiento responde 409 `AiConsentRequiredToEnableFeature`. Para estos casos hay 3 resources y 3 assemblers.
+
 #### 2.6.3.3. Application Layer
 
 La Application Layer maneja los cinco subflujos del contexto, numerados del 2.1 al 2.5, y deja a la vista sus capabilities, que son emitir y expirar invitaciones, canjearlas, establecer el vínculo, otorgar y retirar el consentimiento, acusar recibo de los objetivos, revocar y dar de alta.
@@ -3493,6 +4255,8 @@ La Application Layer maneja los cinco subflujos del contexto, numerados del 2.1 
 **Command Services**
 
 `InvitationCommandService`, que implementa `IInvitationCommandService`, depende de `IInvitationRepository`, `ICareLinkRepository`, `IUnitOfWork`, `IIamContextFacade`, `ILogger<...>` e `IMediator`.
+
+<p class="caption"><strong>Tabla 132</strong><br><em>Métodos de InvitationCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -3503,6 +4267,8 @@ La Application Layer maneja los cinco subflujos del contexto, numerados del 2.1 
 Vale la pena detenerse en una decisión arquitectónica: el `CareLink` no se crea aquí. Canjear una invitación publica `InvitationRedeemed`, y la política que reacciona a ese evento emite `EstablishCareLinkCommand`, que es el único camino existente hacia un vínculo. Como la publicación de eventos espera a sus handlers, el vínculo ya existe en el momento en que el método vuelve a leerlo.
 
 `CareLinkCommandService`, que implementa `ICareLinkCommandService`, depende de `ICareLinkRepository`, `IUnitOfWork`, `IIamContextFacade`, `ILogger<...>` e `IMediator`.
+
+<p class="caption"><strong>Tabla 133</strong><br><em>Métodos de CareLinkCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -3520,7 +4286,9 @@ Vale la pena detenerse en una decisión arquitectónica: el `CareLink` no se cre
 
 **Event Handlers (políticas)**
 
-Los tres handlers crean un scope de DI aislado mediante `IServiceScopeFactory.CreateAsyncScope()`, dado que las notificaciones se manejan en paralelo.
+Los cinco handlers crean un scope de DI aislado mediante `IServiceScopeFactory.CreateAsyncScope()`, dado que las notificaciones se manejan en paralelo.
+
+<p class="caption"><strong>Tabla 134</strong><br><em>Event handlers de Care Relationship</em></p>
 
 | Handler | Escucha | Política | Emite |
 |---|---|---|---|
@@ -3536,11 +4304,17 @@ Los tres handlers crean un scope de DI aislado mediante `IServiceScopeFactory.Cr
 
 `CareRelationshipContextFacade` implementa `ICareRelationshipContextFacade` apoyándose en `ICareLinkQueryService` y nunca en un repositorio, con lo cual no se puentea la capa de aplicación. Ante cualquier fallo, `IsCareLinkActive` devuelve `false`, de modo que un error termina traduciéndose en denegación de acceso.
 
+- **`AiPreferencesCommandService` y `AiPreferencesQueryService`:** leen y cambian las preferencias, y las alinean con el consentimiento.
+- **`CareRelationshipAiConsentPolicy`:** fachada que el módulo de IA consulta antes de cada generación para saber si el paciente la permite.
+- **Handlers de IA:** `OnAiProcessingConsentChangedHandler` y `OnAiPreferencesChangedHandler`. Retirar el consentimiento, revocar el vínculo o dar el alta apagan la IA del vínculo en la misma operación.
+
 #### 2.6.3.4. Infrastructure Layer
 
 La Infrastructure Layer de Care Relationship comprende la persistencia sobre MySQL 8.4 y un único `BackgroundService`. Este bounded context no consume APIs de terceros.
 
 **Configuraciones de EF Core**
+
+<p class="caption"><strong>Tabla 135</strong><br><em>Configuraciones de EF Core de Care Relationship</em></p>
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
@@ -3548,6 +4322,8 @@ La Infrastructure Layer de Care Relationship comprende la persistencia sobre MyS
 | `CareLinkEntityTypeConfiguration` | `care_links` | La PK usa el converter `CareLinkId.FromRaw`, y tanto `patient_id` como `practitioner_id` son requeridos, con sus índices y sin clave foránea. El cierre se resuelve con `revoked_at`, `discharged_at` y `discharge_reason` como `VARCHAR(500)`, mientras que el acuse lo hacen `pending_targets_version` y `last_acknowledged_version`. El VO `Consent` se proyecta en cuatro columnas, que son `consent_granted` requerida, `consent_scope` como `VARCHAR(200)`, `consent_granted_at` y `consent_withdrawn_at`. Se aplica `Ignore` sobre `Consent`, `IsActive`, `IsRevoked` e `IsDischarged`. |
 
 **Repositorios (implementaciones)**
+
+<p class="caption"><strong>Tabla 136</strong><br><em>Repositorios de Care Relationship</em></p>
 
 | Clase | Detalles de implementación |
 |---|---|
@@ -3564,11 +4340,16 @@ Depende de `IServiceScopeFactory`, `IConfiguration` e `ILogger<...>`, declara la
 
 Este contexto no consume ninguno. El generador criptográfico del token de invitación es la biblioteca estándar de .NET y no un proveedor externo.
 
+- La tabla `ai_preferences` con `AiPreferencesRepository` y su configuración de EF Core.
+- Las columnas `consent_ai_processing`, `consent_ai_decided_at`, `revocation_reason` y `last_acknowledged_at` en `care_links`.
+
 #### 2.6.3.5. Bounded Context Software Architecture Component Level Diagrams
 
 **Care Relationship**
 
 Component:
+
+<p class="caption"><strong>Figura 89</strong><br><em>Diagrama de componentes del bounded context Care Relationship</em></p>
 
 ![Care Relationship Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/care-relationship.puml)
 
@@ -3580,17 +4361,25 @@ Component:
 
 Domain:
 
+<p class="caption"><strong>Figura 90</strong><br><em>Diagrama de clases de la capa Domain del bounded context Care Relationship</em></p>
+
 ![Care Relationship Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/care-relationship/domain.puml)
 
 Infrastructure:
+
+<p class="caption"><strong>Figura 91</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Care Relationship</em></p>
 
 ![Care Relationship Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/care-relationship/infrastructure.puml)
 
 Application:
 
+<p class="caption"><strong>Figura 92</strong><br><em>Diagrama de clases de la capa Application del bounded context Care Relationship</em></p>
+
 ![Care Relationship Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/care-relationship/application.puml)
 
 Interfaces:
+
+<p class="caption"><strong>Figura 93</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Care Relationship</em></p>
 
 ![Care Relationship Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/care-relationship/interfaces.puml)
 
@@ -3599,6 +4388,8 @@ Interfaces:
 **Care Relationship**
 
 Database:
+
+<p class="caption"><strong>Figura 94</strong><br><em>Diagrama de base de datos del bounded context Care Relationship</em></p>
 
 ![Care Relationship Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/care-relationship.puml)
 
@@ -3611,6 +4402,8 @@ El bounded context Nutritional Care, implementado en `Healthify.Platform.Nutriti
 **Aggregates (Aggregate Roots)**
 
 `NutritionalAssessment` corresponde a la primera fase clínica y reúne hábitos, historia, actividad física, antropometría y bioquímica, todos ellos registrados dentro de la consulta. Una vez cerrada se vuelve inmutable, y una corrección no la edita sino que crea una evaluación nueva que la referencia.
+
+<p class="caption"><strong>Tabla 137</strong><br><em>Atributos de NutritionalAssessment</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -3631,6 +4424,8 @@ Sus métodos son el constructor `NutritionalAssessment(RecordAssessmentCommand)`
 
 `NutritionPlan` corresponde a la tercera fase clínica y es además la raíz del versionado. Un plan atraviesa tres estados dentro de una misma consulta, ya que los objetivos primero se proponen mediante cálculo, después los prescribe el profesional y recién entonces se publican. Sus tres value objects compuestos se almacenan como columnas planas y se reconstruyen mediante propiedades calculadas.
 
+<p class="caption"><strong>Tabla 138</strong><br><em>Grupos de atributos de NutritionPlan</em></p>
+
 | Grupo de atributos | Miembros | Scope |
 |---|---|---|
 | Identidad y referencias | `Id : PlanId`, `PatientId`, `PractitionerId`, `DiagnosisId`, `Version` | `public get / private set` |
@@ -3639,6 +4434,8 @@ Sus métodos son el constructor `NutritionalAssessment(RecordAssessmentCommand)`
 | Proyección de `PrescribedTargets` | Los cuatro objetivos nullable, `PrescribedOutcome`, `PrescribedOverrideReason` | `public get / private set` |
 | Estado | `ChangeReason?`, `PublishedAt?`, `SupersededAt?`, `IsActive` | `public get / private set` |
 | Listas y computadas | `Guidelines`, `Restrictions`, `CalculationBasis`, `TargetProposal`, `PrescribedTargets?`, `IsPrescribed`, `IsPublished`, `IsSuperseded` | `public` |
+
+<p class="caption"><strong>Tabla 139</strong><br><em>Métodos de NutritionPlan</em></p>
 
 | Método | Scope | Reglas que aplica |
 |---|---|---|
@@ -3658,6 +4455,8 @@ Sus métodos son el constructor `NutritionalAssessment(RecordAssessmentCommand)`
 **Value Objects**
 
 El contexto declara dieciséis value objects.
+
+<p class="caption"><strong>Tabla 140</strong><br><em>Value objects y clases auxiliares de la capa Domain de Nutritional Care</em></p>
 
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
@@ -3680,11 +4479,11 @@ Son once y van desde `RecordAssessmentCommand` hasta `ResolveReviewItemCommand`.
 
 **Queries**
 
-Las ocho queries son `GetAssessmentByIdQuery`, `GetAssessmentsByPatientIdQuery`, `GetActiveDiagnosisByPatientIdQuery`, `GetPlanByIdQuery`, `GetActivePlanByPatientIdQuery`, `GetPlansByPatientIdQuery` y las dos de la bandeja, que son `GetOpenReviewItemsByPractitionerIdQuery` y `GetReviewItemByIdQuery`.
+Las veintidós queries son `GetAssessmentByIdQuery`, `GetAssessmentsByPatientIdQuery`, `GetActiveDiagnosisByPatientIdQuery`, `GetPlanByIdQuery`, `GetActivePlanByPatientIdQuery`, `GetPlansByPatientIdQuery` y las dos de la bandeja, que son `GetOpenReviewItemsByPractitionerIdQuery` y `GetReviewItemByIdQuery`. Las demás sirven a la consulta guiada, a los datos base y a las propuestas de plan: `GetConsultationByIdQuery`, `GetConsultationsByPatientIdQuery`, `GetInProgressConsultationByPatientIdQuery`, `GetInProgressConsultationsByPatientIdsQuery`, `GetConsultationDiagnosisSuggestionQuery`, `GetConsultationGuidelineSuggestionsQuery`, `GetPatientBaselineByPatientIdQuery`, `GetPatientBaselinesByPatientIdsQuery`, `GetPatientPlanVersionsQuery`, `GetPlanProposalByReviewItemIdQuery`, `GetReviewInboxEntryByIdQuery`, `GetReviewItemExistenceQuery`, `GetReviewItemsByPractitionerIdQuery` y `GetActivePlansByPatientIdsQuery`.
 
 **Domain Events**
 
-Los trece domain events son `NutritionalAssessmentRecorded`, `ClinicalMeasurementTaken`, `AssessmentClosed`, `NutritionalDiagnosisIssued`, `TargetsProposed`, `TargetsAcceptedAsProposed`, `TargetsOverridden`, `NutritionPlanPublished`, `ActiveTargetsUpdated`, `NutritionPlanAdjusted`, `PlanVersionSuperseded`, `ReviewItemCreated` y `ReviewItemResolved`. Solo dos cruzan la frontera, que son `ClinicalMeasurementTaken` hacia Monitoring y `ActiveTargetsUpdated` hacia Intake, Monitoring y Care Relationship. Este último constituye el Published Language del contexto y lleva paciente, versión, vigencia, objetivos diarios, pautas y restricciones, aunque deja fuera el diagnóstico, el razonamiento clínico y la base de cálculo conforme a la regla *Diagnosis And Basis Never Leave The Context*. Los objetivos diarios viajan en el record `DailyTargets(decimal, decimal, decimal, decimal)`, que no es un evento. Los demás eventos son internos, y entre ellos `NutritionalDiagnosisIssued` no se publica porque el paciente no consulta su diagnóstico en la app, mientras que `ReviewItemCreated` solo alimenta la bandeja del profesional.
+Los diecinueve domain events son `NutritionalAssessmentRecorded`, `ClinicalMeasurementTaken`, `AssessmentClosed`, `NutritionalDiagnosisIssued`, `TargetsProposed`, `TargetsAcceptedAsProposed`, `TargetsOverridden`, `NutritionPlanPublished`, `ActiveTargetsUpdated`, `NutritionPlanAdjusted`, `PlanVersionSuperseded`, `ReviewItemCreated`, `ReviewItemResolved`, `ConsultationStarted`, `ConsultationCompleted`, `PatientBaselineRecorded`, `PatientBaselineUpdated`, `PlanProposalAccepted` y `NutritionalDiagnosisSuperseded`. Solo tres cruzan la frontera, que son `ClinicalMeasurementTaken` y `ConsultationCompleted` hacia Monitoring y `ActiveTargetsUpdated` hacia Intake, Monitoring y Care Relationship. Este último constituye el Published Language del contexto y lleva paciente, versión, vigencia, objetivos diarios, pautas y restricciones, aunque deja fuera el diagnóstico, el razonamiento clínico y la base de cálculo conforme a la regla *Diagnosis And Basis Never Leave The Context*. Los objetivos diarios viajan en el record `DailyTargets(decimal, decimal, decimal, decimal)`, que no es un evento. Los demás eventos son internos, y entre ellos `NutritionalDiagnosisIssued` no se publica porque el paciente no consulta su diagnóstico en la app, mientras que `ReviewItemCreated` solo alimenta la bandeja del profesional.
 
 **Errors**
 
@@ -3700,13 +4499,24 @@ El único es `IBmrCalculator`, con el record de entrada `BmrInputs` y el método
 
 **Relaciones entre clases:** `NutritionalAssessment` compone 0..* `ClinicalMeasurement`, que es la única relación de composición entre entidades del contexto y se configura con cascada, y compone además `AssessmentId` y `BiologicalSex`. `NutritionalDiagnosis` referencia la evaluación por identificador y compone `ClinicalRationale`. `NutritionPlan` referencia el diagnóstico por identificador, agrega de forma reconstruida `CalculationBasis`, `TargetProposal` y 0..1 `PrescribedTargets`, y depende de `ChangeReason`; entre versiones existe además una asociación reflexiva *supersedes* de 1 a 0..1 que se resuelve por `Version` y `SupersededAt`. `ReviewItem` compone `SignalType` y `ReviewItemState`, y no guarda relación alguna con `NutritionPlan`, ausencia que constituye la regla misma.
 
+El acto clínico se conduce mediante la consulta guiada, que recorre cuatro pasos y se puede reanudar. Los pasos sueltos de evaluación, diagnóstico y prescripción se mantienen por compatibilidad. En total hay 6 agregados, 28 commands, 22 queries y 19 domain events.
+
+- **`Consultation` y `PatientBaseline`:** `Consultation` es la consulta de cuatro pasos, con un borrador de publicación. `PatientBaseline` guarda la fecha de nacimiento, el sexo, la talla y las condiciones del paciente, que se registran una sola vez. `PlanAdjustmentProposal` es una entidad que guarda el plan que la IA propone ante una desviación sostenida.
+- **Atributos de los demás agregados:** `NutritionalAssessment` guarda los hábitos, la actividad física y el panel bioquímico. `NutritionalDiagnosis` tiene un código del catálogo, su origen (`DiagnosisSource`), y puede quedar pendiente hasta la publicación. `NutritionPlan` registra las indicaciones, los cambios respecto de la versión anterior, el mensaje al paciente y el motivo estructurado del cambio. `ReviewItem` guarda la evidencia, las notas de resolución y la fecha de nueva revisión.
+- **Value objects:** `DiagnosisCode`, `ActivityLevel`, `BodyMassIndex`, `HeightCm`, `EatingHabits`, `BiochemistryPanel`, `MedicalCondition`, `Guideline`, `DietaryRestriction`, `PlanChange`, `PublicationDraft`, `IdempotencyKey`, `ConsultationState`, `ConsultationStep` y los identificadores `ConsultationId` y `PatientBaselineId`, entre otros.
+- **Commands de la consulta guiada:** `StartConsultationCommand`, `RecordConsultationMeasurementCommand`, `IssueConsultationDiagnosisCommand`, `ProposeConsultationTargetsCommand`, `PrescribeConsultationTargetsCommand`, `SaveConsultationPublicationDraftCommand`, `PublishFromConsultationCommand`, `AbandonConsultationCommand`, `RecordPatientBaselineCommand`, `UpdatePatientBaselineCommand`, `AcceptPlanProposalCommand` y los de generación y purga de propuestas.
+- **Domain events de la consulta guiada:** `ConsultationStarted`, `ConsultationCompleted`, `PatientBaselineRecorded`, `PatientBaselineUpdated`, `PlanProposalAccepted` y `NutritionalDiagnosisSuperseded`.
+- **Servicios de dominio:** `PlanAdjustmentSafety`, `PlanVersionDiff`, `PatientMessageRules` y las políticas `IActivityFactorProvider`, `ICalorieFloorPolicy`, `IDefaultGuidelinesProvider` e `IDefaultTargetParametersPolicy`.
+
 #### 2.6.4.2. Interface Layer
 
-La Interface Layer de Nutritional Care expone cinco controllers y todos llevan la anotación `[Authorize(Roles = "Practitioner")]`, así que no existe ni una sola ruta orientada al paciente. Lo que el paciente recibe es el contrato publicado, y ese contrato viaja como evento hacia Intake & Body Response en lugar de exponerse como endpoint.
+La Interface Layer de Nutritional Care expone nueve controllers y todos llevan la anotación `[Authorize(Roles = "Practitioner")]`, salvo `PatientPlanVersionsController`, que es la única ruta orientada al paciente y devuelve las versiones del plan sin el diagnóstico ni la base de cálculo. Lo que el paciente recibe es el contrato publicado, y ese contrato viaja como evento hacia Intake & Body Response en lugar de exponerse como endpoint.
 
 **Controllers**
 
 `NutritionalAssessmentsController` se publica bajo `[Route("api/v1/nutritional-assessments")] [Tags("Nutritional Assessments")]` y cubre la primera fase clínica.
+
+<p class="caption"><strong>Tabla 141</strong><br><em>Endpoints de NutritionalAssessmentsController (Nutritional Care)</em></p>
 
 | Verbo / Ruta | Acción | Respuestas |
 |---|---|---|
@@ -3719,6 +4529,8 @@ La Interface Layer de Nutritional Care expone cinco controllers y todos llevan l
 
 `NutritionPlansController` se publica bajo `[Route("api/v1/nutrition-plans")]` y recorre las cuatro transiciones del plan.
 
+<p class="caption"><strong>Tabla 142</strong><br><em>Endpoints de NutritionPlansController (Nutritional Care)</em></p>
+
 | Verbo / Ruta | Acción | Respuestas |
 |---|---|---|
 | `POST /target-proposals` | `ProposeTargets(ProposeTargetsResource)` | 201 · 400 · 401 · 403 · 422 |
@@ -3729,6 +4541,8 @@ La Interface Layer de Nutritional Care expone cinco controllers y todos llevan l
 La operación `Publish Active Targets` no tiene endpoint, ya que la ejecuta una política al publicar o ajustar un plan, y es la única información del plan que llega hasta el paciente.
 
 `PatientClinicalRecordController` se publica bajo `[Route("api/v1/patients")] [Tags("Nutritional Care")]`, depende adicionalmente de `ICareRelationshipContextFacade` y usa el método privado `IsLinkedToAsync(int)`, que consulta el Open Host Service y degrada a `false` para denegar el acceso ante cualquier fallo.
+
+<p class="caption"><strong>Tabla 143</strong><br><em>Endpoints de PatientClinicalRecordController (Nutritional Care)</em></p>
 
 | Verbo / Ruta | Acción | Read Model |
 |---|---|---|
@@ -3749,6 +4563,8 @@ Hay nueve command assemblers, que son `RecordAssessmentCommandAssembler`, `TakeC
 
 Por su parte, `NutritionalCareActionResultAssembler` expone cuatro métodos con estado de éxito parametrizable, que son `ToAssessmentResult`, `ToDiagnosisResult`, `ToPlanResult` y `ToReviewItemResult`, además de `ToNotFoundResult` y el privado `FailureResult`.
 
+<p class="caption"><strong>Tabla 144</strong><br><em>Mapeo de errores de dominio a códigos HTTP en Nutritional Care</em></p>
+
 | Errores | Status |
 |---|---|
 | `AssessmentNotFound`, `DiagnosisNotFound`, `PlanNotFound`, `ReviewItemNotFound` | **404** |
@@ -3766,6 +4582,24 @@ Por su parte, `NutritionalCareActionResultAssembler` expone cuatro métodos con 
 
 Los mensajes localizados se declaran en `NutritionalCare/Resources/NutritionalCareMessages.cs`.
 
+La consulta guiada, los datos base, el historial de versiones y las propuestas de plan se exponen con los siguientes endpoints:
+
+<p class="caption"><strong>Tabla 145</strong><br><em>Endpoints adicionales de Nutritional Care</em></p>
+
+| Endpoint | Controller | Respuesta |
+|---|---|---|
+| `GET`, `POST` y `PUT /patients/{id}/baseline` | `PatientBaselineController` | 200 · 201 · 400 · 409 |
+| `POST /patients/{id}/consultations`, `GET .../consultations/in-progress` y `GET .../consultations` | `PatientConsultationsController` | 201 · 200 · 409 · 422 |
+| `PUT /consultations/{id}/measurement` (paso 1) | `ConsultationsController` | 200 · 400 · 422 |
+| `POST .../diagnosis-suggestion` y `PUT .../diagnosis` (paso 2) | `ConsultationsController` | 200 · 409 · 422 |
+| `POST .../target-proposal` y `PUT .../targets` (paso 3) | `ConsultationsController` | 200 · 400 · 409 |
+| `POST .../guideline-suggestions`, `PUT .../publication-draft` y `POST .../publication` (paso 4) | `ConsultationsController` | 200 · 400 · 409 · 422 |
+| `DELETE /consultations/{id}` | `ConsultationsController` | 204 · 409 |
+| `GET /patients/{id}/plan-versions` | `PatientPlanVersionsController` | 200 (único endpoint clínico del paciente) |
+| `GET /review-items?state=`, `GET .../plan-proposal` y `POST .../plan-proposal/acceptance` | `ReviewItemsController` | 200 · 202 · 400 · 409 · 422 |
+
+La publicación exige un encabezado `Idempotency-Key`. Para estos casos hay 33 resources y 10 assemblers.
+
 #### 2.6.4.3. Application Layer
 
 La Application Layer de Nutritional Care orquesta los siete subflujos del acto clínico, numerados del 3.1 al 3.7. Sus capabilities consisten en registrar y cerrar evaluaciones, emitir diagnósticos, proponer, prescribir, publicar y ajustar objetivos, y gestionar la bandeja de revisión.
@@ -3773,6 +4607,8 @@ La Application Layer de Nutritional Care orquesta los siete subflujos del acto c
 **Command Services**
 
 `NutritionalAssessmentCommandService` depende de `INutritionalAssessmentRepository`, `IUnitOfWork`, `IIamContextFacade`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`.
+
+<p class="caption"><strong>Tabla 146</strong><br><em>Métodos de NutritionalAssessmentCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -3783,6 +4619,8 @@ La Application Layer de Nutritional Care orquesta los siete subflujos del acto c
 `NutritionalDiagnosisCommandService` depende de los repositorios de diagnóstico y evaluación, `IUnitOfWork`, `ICareRelationshipContextFacade`, `ILogger<...>` e `IMediator`. Su método `Handle(IssueDiagnosisCommand)`, correspondiente al subflujo 3.2, aplica las guardas en un orden preciso: razonamiento no vacío, vínculo activo, evaluación existente y perteneciente al paciente, evaluación cerrada, ya que un diagnóstico lee una foto terminada y no una que todavía se está editando, y finalmente *One Active Diagnosis Per Patient*.
 
 `NutritionPlanCommandService` depende de los tres repositorios clínicos, `IUnitOfWork`, `IBmrCalculator`, `ILogger<...>` e `IMediator`, y declara las constantes privadas `KcalPerGramProtein = 4m`, `KcalPerGramCarbohydrate = 4m` y `KcalPerGramFat = 9m`.
+
+<p class="caption"><strong>Tabla 147</strong><br><em>Métodos de NutritionPlanCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -3804,6 +4642,8 @@ Son cuatro: `NutritionalAssessmentQueryService`, `NutritionalDiagnosisQueryServi
 
 Son cuatro y todos trabajan con un scope de DI aislado.
 
+<p class="caption"><strong>Tabla 148</strong><br><em>Event handlers de Nutritional Care</em></p>
+
 | Handler | Escucha | Política | Emite |
 |---|---|---|---|
 | `OnNutritionPlanPublishedHandler` | `NutritionPlanPublished`, propio | *When Nutrition Plan Published*, del subflujo 3.5 | `PublishActiveTargetsCommand` |
@@ -3817,13 +4657,22 @@ Los dos últimos handlers se limitan a emitir el comando que abre un ítem de re
 
 `NutritionalCareContextFacade` depende de `INutritionPlanQueryService` e `IReviewItemQueryService`. Su método `GetActiveTargetsByPatientId` solo devuelve datos cuando el plan está publicado y tiene objetivos prescritos, y lo único que cruza es el contrato publicado, sin diagnóstico y sin base de cálculo.
 
+- **`ConsultationCommandService`:** recorre los cuatro pasos, valida el orden, guarda el borrador y publica el plan una sola vez por clave de idempotencia. Al publicar, el diagnóstico pendiente pasa a ser el activo y se cierra la consulta.
+- **`ConsultationAiCommandService`:** sugiere el diagnóstico (con una regla por IMC cuando la IA no está disponible) y las indicaciones del plan. La IA solo puede devolver códigos de catálogos cerrados.
+- **`PatientBaselineCommandService`:** registra y corrige los datos base.
+- **`PlanProposalCommandService` y `PlanAdjustmentProposer`:** generan, aceptan y eliminan las propuestas de plan que se asocian a una señal de revisión. Aceptar una propuesta siempre es una decisión explícita del nutricionista.
+- **Consultas:** `ConsultationQueryService` y `PatientBaselineQueryService`.
+- **Handler de IA:** `OnAiProcessingConsentChangedNutritionalCareHandler` elimina las propuestas de IA cuando se retira el consentimiento.
+
 #### 2.6.4.4. Infrastructure Layer
 
-La Infrastructure Layer de Nutritional Care contiene la implementación del único domain service del contexto junto con la persistencia de sus cinco tablas. No consume APIs de terceros ni aloja hosted services.
+La Infrastructure Layer de Nutritional Care contiene la implementación del domain service de cálculo, las políticas de cálculo configurables y la persistencia de sus ocho tablas, y aloja hosted services que generan y recuperan las propuestas de plan. No consume APIs de terceros directamente.
 
 **Calculadores**
 
 `BmrCalculator` implementa `IBmrCalculator` seleccionando la ecuación con un `switch` y redondeando el resultado a dos decimales. Cada constante proviene de la literatura publicada y todo resultado puede reproducirse a mano, lo que sostiene el principio de trazabilidad del cálculo.
+
+<p class="caption"><strong>Tabla 149</strong><br><em>Ecuaciones de estimación calculadas por BmrCalculator</em></p>
 
 | Método privado | Ecuación | Nota |
 |---|---|---|
@@ -3833,6 +4682,8 @@ La Infrastructure Layer de Nutritional Care contiene la implementación del úni
 | `KatchMcArdle(BmrInputs)` | Katch-McArdle | Se basa en la masa magra, y es la única que ignora edad y sexo y la única que exige una lectura de composición corporal. |
 
 **Configuraciones de EF Core**
+
+<p class="caption"><strong>Tabla 150</strong><br><em>Configuraciones de EF Core de Nutritional Care</em></p>
 
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
@@ -3848,6 +4699,8 @@ Los tres value objects compuestos del plan se aplanan en columnas en lugar de us
 
 Las cuatro clases de `NutritionalCareRepositories.cs` heredan de `BaseRepository<T>` y reimplementan de forma explícita `IBaseRepository<T>.FindByIdAsync`.
 
+<p class="caption"><strong>Tabla 151</strong><br><em>Repositorios de Nutritional Care</em></p>
+
 | Clase | Detalles de implementación |
 |---|---|
 | `NutritionalAssessmentRepository` | Declara el helper privado `WithRelations()`, que aplica `.Include(a => a.Measurements)`, ya que el cálculo necesita la antropometría. |
@@ -3857,13 +4710,20 @@ Las cuatro clases de `NutritionalCareRepositories.cs` heredan de `BaseRepository
 
 **Servicios externos**
 
-Este contexto no consume ninguno. El `BmrCalculator` es aritmética local antes que una API de terceros, y ninguna decisión clínica tomada aquí sale de la aplicación.
+Este contexto solo consume el proveedor de IA generativa, a través del módulo técnico de IA de `Shared`, para sugerir un diagnóstico, sugerir indicaciones y proponer un plan ante una desviación. Cada sugerencia tiene una alternativa determinista, y ninguna decisión clínica se toma sin la acción explícita del nutricionista. El `BmrCalculator` sigue siendo aritmética local.
+
+- **Persistencia de la consulta guiada:** las tablas `consultations`, `patient_baselines` y `review_item_plan_proposals`, con `ConsultationRepository`, `PatientBaselineRepository` y sus configuraciones, además de los convertidores JSON para indicaciones, cambios, motivos y evidencia.
+- **Procesos en segundo plano:** `PlanProposalGenerationHostedService` y `PlanProposalRecoveryHostedService` (con su cola `InMemoryPlanProposalGenerationQueue`) generan y recuperan las propuestas, y `ReviewItemRecheckHostedService` reabre los ítems que deben revisarse de nuevo.
+- **Cálculo y políticas:** `ConfiguredActivityFactorProvider`, `ConfiguredCalorieFloorPolicy`, `ConfiguredDefaultGuidelinesProvider` y `DefaultTargetParametersPolicy`.
+- **Otros:** `ClinicalTimeZoneDateProvider` y `EmbeddedPatientMessageLexicon`, que filtra los mensajes dirigidos al paciente.
 
 #### 2.6.4.5. Bounded Context Software Architecture Component Level Diagrams
 
 **Nutritional Care**
 
 Component:
+
+<p class="caption"><strong>Figura 95</strong><br><em>Diagrama de componentes del bounded context Nutritional Care</em></p>
 
 ![Nutritional Care Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/nutritional-care.puml)
 
@@ -3875,17 +4735,25 @@ Component:
 
 Domain:
 
+<p class="caption"><strong>Figura 96</strong><br><em>Diagrama de clases de la capa Domain del bounded context Nutritional Care</em></p>
+
 ![Nutritional Care Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/nutritional-care/domain.puml)
 
 Infrastructure:
+
+<p class="caption"><strong>Figura 97</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Nutritional Care</em></p>
 
 ![Nutritional Care Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/nutritional-care/infrastructure.puml)
 
 Application:
 
+<p class="caption"><strong>Figura 98</strong><br><em>Diagrama de clases de la capa Application del bounded context Nutritional Care</em></p>
+
 ![Nutritional Care Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/nutritional-care/application.puml)
 
 Interfaces:
+
+<p class="caption"><strong>Figura 99</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Nutritional Care</em></p>
 
 ![Nutritional Care Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/nutritional-care/interfaces.puml)
 
@@ -3895,17 +4763,21 @@ Interfaces:
 
 Database:
 
+<p class="caption"><strong>Figura 100</strong><br><em>Diagrama de base de datos del bounded context Nutritional Care</em></p>
+
 ![Nutritional Care Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/nutritional-care.puml)
 
 ### 2.6.5. Bounded Context: IAM
 
 #### 2.6.5.1. Domain Layer
 
-El bounded context IAM, implementado en `Healthify.Platform.Iam`, se encarga de la identidad de los usuarios y gestiona las cuentas, la autenticación, el *role claim* inmutable por sesión y la selección del *navigation shell* que monta el cliente. Su Domain Layer declara dos aggregate roots, seis value objects y dos interfaces de domain service. Conviene subrayar que crear una cuenta no otorga por sí sola acceso a la información clínica, de manera que un paciente sin `CareLink` no ve objetivos, no tiene diario y tampoco puede registrar comidas.
+El bounded context IAM, implementado en `Healthify.Platform.Iam`, se encarga de la identidad de los usuarios y gestiona las cuentas, la autenticación, el *role claim* inmutable por sesión y la selección del *navigation shell* que monta el cliente. Su Domain Layer declara dos aggregate roots, ocho value objects y cuatro interfaces de domain service. Conviene subrayar que crear una cuenta no otorga por sí sola acceso a la información clínica, de manera que un paciente sin `CareLink` no ve objetivos, no tiene diario y tampoco puede registrar comidas.
 
 **Aggregates (Aggregate Roots)**
 
 `User` modela una cuenta dentro de la plataforma y se limita a representar la identidad del usuario, ya que la relación con un profesional le corresponde a Care Relationship. Está implementada como `partial class` repartida entre `User.cs`, donde vive el dominio, y `UserAudit.cs`, donde se implementa `IAuditableEntity`, con lo que el modelo de dominio queda separado de los campos de auditoría.
+
+<p class="caption"><strong>Tabla 152</strong><br><em>Atributos de User</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -3918,6 +4790,8 @@ El bounded context IAM, implementado en `Healthify.Platform.Iam`, se encarga de 
 | `LockedOutAt` | `DateTimeOffset?` | `public get / private set` | Momento en que se produjo el bloqueo. |
 | `IsLockedOut` | `bool` | `public` (computada) | Se deriva de `LockedOutAt` y no corresponde a ninguna columna. |
 
+<p class="caption"><strong>Tabla 153</strong><br><em>Métodos de User</em></p>
+
 | Método | Scope | Descripción |
 |---|---|---|
 | `User(RegisterAccountCommand, string passwordHash)` | `public` | Valida la regla *Role Declared At Registration* junto con la presencia del hash, y construye los VO `Email` y `Role`. |
@@ -3926,6 +4800,8 @@ El bounded context IAM, implementado en `Healthify.Platform.Iam`, se encarga de 
 | `StartSession() : UserSession` | `public` | Factory Method que abre una sesión copiando el role claim, y que es el único camino posible para crear un `UserSession`. |
 
 `UserSession` modela una sesión autenticada. Transporta el role claim que el resto de la plataforma lee desde el token y el navigation shell que el cliente monta a raíz de ese rol. Es un aggregate root independiente dentro del mismo bounded context y referencia a `User` mediante un `int` plano, sin navegación de EF, con lo que se respeta la regla de no navegar entre agregados.
+
+<p class="caption"><strong>Tabla 154</strong><br><em>Atributos de UserSession</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -3937,6 +4813,8 @@ El bounded context IAM, implementado en `Healthify.Platform.Iam`, se encarga de 
 | `IsActive` | `bool` | `public` (computada) | Indica que la sesión todavía no ha terminado. |
 | `ActiveRoleClaim` | `Role?` | `public` (computada) | El rol que la sesión aún otorga, que queda en `null` cuando ya terminó. |
 
+<p class="caption"><strong>Tabla 155</strong><br><em>Métodos de UserSession</em></p>
+
 | Método | Scope | Descripción |
 |---|---|---|
 | `UserSession(int, Role)` | `internal` | Es `internal` de forma deliberada, ya que solo `User.StartSession()` debería poder crearla. |
@@ -3944,6 +4822,8 @@ El bounded context IAM, implementado en `Healthify.Platform.Iam`, se encarga de 
 | `Terminate()` | `public` | Cierra la sesión y lanza una excepción si esta ya estaba terminada. |
 
 **Value Objects**
+
+<p class="caption"><strong>Tabla 156</strong><br><em>Value objects y clases auxiliares de la capa Domain de IAM</em></p>
 
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
@@ -3955,7 +4835,7 @@ El bounded context IAM, implementado en `Healthify.Platform.Iam`, se encarga de 
 
 **Commands**
 
-Los cuatro commands son `RegisterAccountCommand`, `SignInCommand`, `SelectNavigationShellCommand` y `SignOutCommand`. El tercero no tiene endpoint REST y lo emite únicamente la política.
+Los seis commands son `RegisterAccountCommand`, `SignInCommand`, `SelectNavigationShellCommand`, `SignOutCommand`, `RefreshSessionCommand` y `ChangePreferredLanguageCommand`. `SelectNavigationShellCommand` no tiene endpoint REST y lo emite únicamente la política.
 
 **Queries**
 
@@ -3963,7 +4843,7 @@ También son cuatro. `GetUserByIdQuery` alimenta el read model Welcome Screen y 
 
 **Domain Events**
 
-Los cinco domain events son `AccountCreated`, `SessionStarted`, `RoleClaimIssued`, `NavigationShellSelected` y `SessionTerminated`. Ninguno cruza la frontera del bounded context y ningún otro contexto puede declarar un handler para ellos, ya que la infraestructura de cuentas y sesiones carece de significado de dominio fuera de IAM. El role claim viaja hacia los demás contextos dentro del token JWT, que es infraestructura y no un evento de dominio.
+Los seis domain events son `AccountCreated`, `SessionStarted`, `RoleClaimIssued`, `NavigationShellSelected`, `SessionTerminated` y `RefreshTokenReuseDetected`. Ninguno cruza la frontera del bounded context y ningún otro contexto puede declarar un handler para ellos, ya que la infraestructura de cuentas y sesiones carece de significado de dominio fuera de IAM. El role claim viaja hacia los demás contextos dentro del token JWT, que es infraestructura y no un evento de dominio.
 
 **Errors**
 
@@ -3979,6 +4859,11 @@ El `enum IamError` reúne 14 valores, uno por cada regla que el contexto hace cu
 
 **Relaciones entre clases:** `User` compone `UserId`, `Email` y `Role`, y depende de `UserSession` como creador a través de `StartSession()`, en una relación 1 → 0..* que no usa navegación de EF. `UserSession` compone `SessionId` y `Role`, este último en su papel de role claim congelado, junto con 0..1 `NavigationShell`, que a su vez depende de `Role` mediante `ForRole` y `MatchesRole`. `IHashingService` depende de `Password` e `ITokenService` depende tanto de `User` como de `UserSession`. Ambos agregados realizan `IAuditableEntity` y los cinco eventos generalizan `DomainEventBase`.
 
+- **`User`:** guarda el nombre (`PersonName`, con nombres y apellidos) y el idioma preferido (`PreferredLanguage`, español o inglés), que se cambia con `ChangePreferredLanguageCommand`.
+- **`UserSession`:** guarda el hash del token de renovación vigente y del anterior, de modo que reintentar la renovación dentro de un periodo de gracia devuelve el mismo resultado.
+- **Renovación de sesión:** `RefreshSessionCommand` renueva la sesión y `RefreshTokenReuseDetected` termina la sesión cuando se reutiliza un token fuera del periodo de gracia. El contexto tiene 6 commands, 5 queries y 6 domain events.
+- **Servicios de dominio:** `IRefreshTokenService` y `ISignInLockoutPolicy`: cinco intentos fallidos bloquean la cuenta durante 15 minutos.
+
 #### 2.6.5.2. Interface Layer
 
 La Interface Layer de IAM expone tres controllers y el contrato ACL por el que los demás bounded contexts resuelven identidades puntuales. Todas las respuestas de error se construyen con `ProblemDetailsFactory.Create(...)`, siguiendo el RFC 7807, y con textos localizados a través de `IStringLocalizer<IamMessages>`.
@@ -3986,6 +4871,8 @@ La Interface Layer de IAM expone tres controllers y el contrato ACL por el que l
 **Controllers**
 
 `AuthenticationController` se publica bajo `[ApiController] [Route("api/v1/authentication")] [Authorize] [Tags("Authentication")]`, con `[Produces]` y `[Consumes]` en `application/json`, y depende de `IUserCommandService`, `IUserSessionCommandService` e `IStringLocalizer<IamMessages>`.
+
+<p class="caption"><strong>Tabla 157</strong><br><em>Endpoints de AuthenticationController (IAM)</em></p>
 
 | Verbo / Ruta | Acción | Autorización | Respuestas |
 |---|---|---|---|
@@ -3996,6 +4883,8 @@ La Interface Layer de IAM expone tres controllers y el contrato ACL por el que l
 La operación de cierre de sesión no recibe body y toma tanto el identificador de sesión como el de usuario del propio token, de modo que nadie puede cerrar la sesión de otra persona enviando un identificador ajeno.
 
 `UsersController` se publica bajo `[Route("api/v1/users")] [Authorize] [Tags("Users")]` y sirve los dos read models de cuenta.
+
+<p class="caption"><strong>Tabla 158</strong><br><em>Endpoints de UsersController (IAM)</em></p>
 
 | Verbo / Ruta | Acción | Read Model | Respuestas |
 |---|---|---|---|
@@ -4008,6 +4897,8 @@ Ambos comparan el identificador de la ruta contra el del token autenticado y dev
 
 **Resources**
 
+<p class="caption"><strong>Tabla 159</strong><br><em>Resources de la capa Interface de IAM</em></p>
+
 | Resource | Campos | Uso |
 |---|---|---|
 | `SignUpResource` | `Email`, `Password`, `Role` | Request de registro. |
@@ -4018,6 +4909,8 @@ Ambos comparan el identificador de la ruta contra el del token autenticado y dev
 | `NavigationShellResource` | `SessionId`, `RoleClaim?`, `NavigationShell?`, `IsActive` | App Shell. |
 
 **Transform / Assemblers**
+
+<p class="caption"><strong>Tabla 160</strong><br><em>Assemblers de la capa Interface de IAM</em></p>
 
 | Assembler | Dirección | Método |
 |---|---|---|
@@ -4030,6 +4923,8 @@ Ambos comparan el identificador de la ruta contra el del token autenticado y dev
 | `IamActionResultAssembler` | `Result<T, IamError>` → `IActionResult` | `ToRegisterAccountResult`, `ToSignInResult`, `ToSignOutResult`, `ToNotFoundResult` y el privado `FailureResult` |
 
 El mapeo de errores a HTTP ocurre en un único lugar, y así se evita que una misma regla termine reportando dos códigos distintos.
+
+<p class="caption"><strong>Tabla 161</strong><br><em>Mapeo de errores de dominio a códigos HTTP en IAM</em></p>
 
 | Errores | Status |
 |---|---|
@@ -4048,6 +4943,17 @@ El mapeo de errores a HTTP ocurre en un único lugar, y así se evita que una mi
 
 Los mensajes localizados se declaran en `Iam/Resources/IamMessages.cs`, clase marcador de los archivos `.resx` en inglés y español.
 
+Además del registro, el inicio y el cierre de sesión, el contexto expone la renovación de sesión y el idioma de la cuenta:
+
+<p class="caption"><strong>Tabla 162</strong><br><em>Endpoints adicionales de IAM</em></p>
+
+| Endpoint | Respuesta | Descripción |
+|---|---|---|
+| `POST /authentication/token-refreshes` | 200 · 401 | Renueva la sesión con el token de renovación. |
+| `PUT /users/{id}/preferred-language` | 204 · 400 · 403 | Cambia el idioma de la cuenta. |
+
+`POST /authentication/sign-in` es un inicio de sesión único para ambos roles y responde con los nombres, el idioma y el token de renovación. La recuperación de contraseña aún no está disponible. Para estos casos hay 3 resources y 3 assemblers.
+
 #### 2.6.5.3. Application Layer
 
 La Application Layer de IAM maneja los tres subflujos del contexto, que son el registro en 1.1, la autenticación junto con la selección de shell en 1.2 y el cierre de sesión en 1.3. Sigue la estructura estándar del proyecto, con las interfaces públicas en `Application/CommandServices` y `Application/QueryServices`, las implementaciones en `Application/Internal/...`, los handlers de eventos en `Application/Internal/EventHandlers` y la fachada ACL en `Application/Acl`.
@@ -4059,6 +4965,8 @@ La Application Layer de IAM maneja los tres subflujos del contexto, que son el r
 Su método `Handle(RegisterAccountCommand, CancellationToken) : Task<Result<User, IamError>>` implementa el subflujo 1.1 con las guardas dispuestas en un orden deliberado. Primero valida el value object `Email` y reporta `InvalidEmail` si falla, luego comprueba que el rol venga declarado con `RoleNotDeclared` y que sea válido con `InvalidRole`, y a continuación construye el `Password` aplicando la política de fortaleza, que puede devolver `WeakPassword`. Después verifica la unicidad del correo con `EmailAlreadyTaken`, construye el agregado con el hash producido por el servicio de hashing, persiste, hace commit y publica `AccountCreated` siempre después del commit. En los logs deja registrado el correo, pero nunca la contraseña.
 
 `UserSessionCommandService`, que implementa `IUserSessionCommandService`, depende de `IUserRepository`, `IUserSessionRepository`, `IUnitOfWork`, `IHashingService`, `ITokenService`, `ILogger<...>` e `IMediator`.
+
+<p class="caption"><strong>Tabla 163</strong><br><em>Métodos de UserSessionCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -4090,12 +4998,16 @@ La Infrastructure Layer de IAM implementa la persistencia de cuentas y sesiones 
 
 **Configuraciones de EF Core**
 
+<p class="caption"><strong>Tabla 164</strong><br><em>Configuraciones de EF Core de IAM</em></p>
+
 | Clase | Tabla | Decisiones de mapeo |
 |---|---|---|
 | `UserEntityTypeConfiguration` | `users` | La PK `id` usa la conversión `UserId.FromRaw` con `ValueGeneratedOnAdd()`. La columna `email` lleva converter, 255 caracteres, es requerida y tiene el índice único `ix_users_email`, que funciona como segunda línea de defensa de *Unique Email Required*. Le siguen `password_hash` con 255 caracteres, `role` con 20 y converter, `failed_sign_in_attempts` y `locked_out_at`. Se aplica `Ignore(u => u.IsLockedOut)` por tratarse de una propiedad calculada. |
 | `UserSessionEntityTypeConfiguration` | `user_sessions` | La PK usa el converter `SessionId.FromRaw` y `user_id` se guarda como `int` plano sin navegación de EF, con el índice `ix_user_sessions_user_id`. La columna `role_claim` ocupa 20 caracteres con converter y `navigation_shell` ocupa 30 y es opcional, resuelta con un `ValueConverter<NavigationShell?, string?>` explícito en lugar de un `OwnsOne` nullable más frágil. Finalmente `started_at` es requerida, `terminated_at` opcional, y se aplica `Ignore` sobre `IsActive` y `ActiveRoleClaim`. |
 
 **Repositorios (implementaciones)**
+
+<p class="caption"><strong>Tabla 165</strong><br><em>Repositorios de IAM</em></p>
 
 | Clase | Base | Detalles de implementación |
 |---|---|---|
@@ -4118,11 +5030,18 @@ Además de sus propios registros de repositorios, servicios de dominio, command 
 
 Este contexto no consume ninguno. El *auth provider* que aparece en el event storming está implementado dentro del mismo contenedor, así que no interviene ningún proveedor de identidad externo.
 
+- `RefreshTokenService` rota el token de renovación y guarda solo su hash SHA-256.
+- `ConfiguredSignInLockoutPolicy` aplica el bloqueo temporal configurado.
+- `LanguageClaimRequestCultureProvider` toma el idioma de las respuestas del claim `lang` del token.
+- Las columnas `given_names`, `family_names` y `preferred_language` en `users`, y las del token de renovación en `user_sessions`.
+
 #### 2.6.5.5. Bounded Context Software Architecture Component Level Diagrams
 
 **IAM**
 
 Component:
+
+<p class="caption"><strong>Figura 101</strong><br><em>Diagrama de componentes del bounded context IAM</em></p>
 
 ![IAM Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/iam.puml)
 
@@ -4134,17 +5053,25 @@ Component:
 
 Domain:
 
+<p class="caption"><strong>Figura 102</strong><br><em>Diagrama de clases de la capa Domain del bounded context IAM</em></p>
+
 ![IAM Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/iam/domain.puml)
 
 Infrastructure:
+
+<p class="caption"><strong>Figura 103</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context IAM</em></p>
 
 ![IAM Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/iam/infrastructure.puml)
 
 Application:
 
+<p class="caption"><strong>Figura 104</strong><br><em>Diagrama de clases de la capa Application del bounded context IAM</em></p>
+
 ![IAM Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/iam/application.puml)
 
 Interfaces:
+
+<p class="caption"><strong>Figura 105</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context IAM</em></p>
 
 ![IAM Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/iam/interfaces.puml)
 
@@ -4154,17 +5081,21 @@ Interfaces:
 
 Database:
 
+<p class="caption"><strong>Figura 106</strong><br><em>Diagrama de base de datos del bounded context IAM</em></p>
+
 ![IAM Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/iam.puml)
 
 ### 2.6.6. Bounded Context: Food Catalog
 
 #### 2.6.6.1. Domain Layer
 
-El bounded context Food Catalog, implementado en `Healthify.Platform.FoodCatalog`, mantiene el catálogo local de alimentos de referencia con su nombre y sus nutrientes por cada 100 gramos. Se trata de un subdominio genérico y su modelo es simple, ya que la mayor parte de la lógica vive en la capa anticorrupción encargada de traducir las fuentes externas. Su Domain Layer declara un único aggregate root junto con cuatro value objects, y hay tres decisiones de diseño que lo definen. La primera es que la importación traduce y anuncia, pero nunca escribe. La segunda es que ningún identificador externo llega a entrar al dominio. La tercera es que toda búsqueda empieza por lo local.
+El bounded context Food Catalog, implementado en `Healthify.Platform.FoodCatalog`, mantiene el catálogo local de alimentos de referencia con su nombre y sus nutrientes por cada 100 gramos. Se trata de un subdominio genérico y su modelo es simple, ya que la mayor parte de la lógica vive en la capa anticorrupción encargada de traducir las fuentes externas. Su Domain Layer declara un único aggregate root junto con cinco value objects, y hay tres decisiones de diseño que lo definen. La primera es que la importación traduce y anuncia, pero nunca escribe. La segunda es que ningún identificador externo llega a entrar al dominio. La tercera es que toda búsqueda empieza por lo local.
 
 **Aggregate Root**
 
 `ReferenceFood` representa una entrada del catálogo local, es decir un nombre acompañado de sus nutrientes por 100 gramos. El value object compuesto `NutrientsPer100g` se almacena como columnas planas y se reconstruye mediante una propiedad calculada, siguiendo el mismo patrón que usa el resto del proyecto.
+
+<p class="caption"><strong>Tabla 166</strong><br><em>Atributos de ReferenceFood</em></p>
 
 | Atributo | Tipo | Scope | Descripción |
 |---|---|---|---|
@@ -4176,6 +5107,8 @@ El bounded context Food Catalog, implementado en `Healthify.Platform.FoodCatalog
 | `LocalName` | `LocalName` | `public` (computada) | Se reconstruye a partir de `LocalNameText`. |
 | `NutrientsPer100g` | `NutrientsPer100g` | `public` (computada) | Se reconstruye a partir de las cuatro columnas de nutrientes. |
 
+<p class="caption"><strong>Tabla 167</strong><br><em>Métodos de ReferenceFood</em></p>
+
 | Método | Scope | Descripción |
 |---|---|---|
 | `ReferenceFood(LocalName, NutrientsPer100g, SourceHash)` | `public` | Constructor que usa la importación, y que deja `IsLocalOverride` en falso. |
@@ -4184,6 +5117,8 @@ El bounded context Food Catalog, implementado en `Healthify.Platform.FoodCatalog
 | `StoreNutrients(NutrientsPer100g)` | `private` | Aplana el value object en sus cuatro columnas. |
 
 **Value Objects**
+
+<p class="caption"><strong>Tabla 168</strong><br><em>Value objects y clases auxiliares de la capa Domain de Food Catalog</em></p>
 
 | Clase | Propósito | Reglas y miembros |
 |---|---|---|
@@ -4200,11 +5135,11 @@ El contexto declara cuatro commands: `ImportCatalogSnapshotCommand`, `CacheFoodL
 
 **Queries**
 
-Las tres queries son `GetReferenceFoodByIdQuery`, `SearchReferenceFoodsQuery`, que alimenta el read model Food Results List, y `GetLocalFoodCatalogQuery`, que alimenta el read model Local Food Catalog con el que se llena la copia offline del dispositivo.
+Las seis queries son `GetReferenceFoodByIdQuery`, `SearchReferenceFoodsQuery`, que alimenta el read model Food Results List, y `GetLocalFoodCatalogQuery`, que alimenta el read model Local Food Catalog con el que se llena la copia offline del dispositivo. Las otras tres, `GetReferenceFoodsByIdsQuery`, `ListVerifiedReferenceFoodsQuery` y `ResolveReferenceFoodsByNamesQuery`, sirven a la fachada que usa Intake & Body Response.
 
 **Domain Events**
 
-Los seis domain events son `ExternalCatalogSnapshotImported`, `ReferenceFoodTranslated`, `TranslationFailed`, `ReferenceFoodCached`, `FoodSearchPerformed` y `LocalFoodOverrideCreated`. Ninguno cruza la frontera del bounded context, ya que Intake & Body Response lee el catálogo de forma síncrona a través del ACL y necesita el alimento en el mismo instante en que el paciente registra su comida. `TranslationFailed` no representa una excepción sino un resultado previsto, y el registro se descarta para evitar que un alimento incompleto termine usándose luego en el cálculo de la ingesta.
+Los siete domain events son `ExternalCatalogSnapshotImported`, `ReferenceFoodTranslated`, `TranslationFailed`, `ReferenceFoodCached`, `FoodSearchPerformed`, `LocalFoodOverrideCreated` y `AiEstimatedFoodCreated`. Ninguno cruza la frontera del bounded context, ya que Intake & Body Response lee el catálogo de forma síncrona a través del ACL y necesita el alimento en el mismo instante en que el paciente registra su comida. `TranslationFailed` no representa una excepción sino un resultado previsto, y el registro se descarta para evitar que un alimento incompleto termine usándose luego en el cálculo de la ingesta.
 
 **Errors**
 
@@ -4220,6 +5155,10 @@ El único domain service es `IExternalFoodCatalogProvider`, que expone la propie
 
 **Relaciones entre clases:** `ReferenceFood` compone `ReferenceFoodId` y `SourceHash`, y agrega de forma reconstruida `LocalName` y `NutrientsPer100g`, derivados respectivamente de `LocalNameText` y de las cuatro columnas de nutrientes. `ExternalFoodRecord` compone esos mismos tres value objects y `ExternalCatalogSnapshot` agrega 0..* `ExternalFoodRecord`. `IExternalFoodCatalogProvider` depende de `ExternalCatalogSnapshot` mediante la relación *fetches*, e `IReferenceFoodRepository` depende de `SourceHash` mediante *findsBy*. Dentro del contexto no hay relaciones entre agregados, dado que solo existe uno.
 
+- **`ReferenceFood`:** guarda la fuente (`FoodSource`), si está verificado, quién lo verificó y el identificador de la generación de IA cuando el alimento fue estimado por IA. Los alimentos estimados por IA se almacenan como cualquier otro alimento y no muestran ninguna marca al usuario.
+- **Alimentos estimados por IA:** `CreateAiEstimatedFoodCommand`, `ResolveFoodWithProvidersCommand` y `AiEstimatedFoodCreated`. El contexto tiene 6 commands, 6 queries y 7 domain events.
+- **Servicios de dominio:** `FoodNameMatcher` (coincidencia de nombres), `NutrientCoherence` y `NutrientTolerance`, que comprueban que los nutrientes estimados por IA no se alejen de los del catálogo.
+
 #### 2.6.6.2. Interface Layer
 
 La Interface Layer de Food Catalog expone dos controllers y aplica entre ellos una asimetría deliberada de autorización, porque buscar en el catálogo es abierto y escribir en él no lo es.
@@ -4227,6 +5166,8 @@ La Interface Layer de Food Catalog expone dos controllers y aplica entre ellos u
 **Controllers**
 
 `ReferenceFoodsController` se publica bajo `[Route("api/v1/reference-foods")] [Tags("Food Catalog")]` y no lleva `[Authorize]` a nivel de clase, dado que la lectura del catálogo es pública. Recibe tanto las consultas como las dos escrituras del contexto.
+
+<p class="caption"><strong>Tabla 169</strong><br><em>Endpoints de ReferenceFoodsController (Food Catalog)</em></p>
 
 | Verbo / Ruta | Acción | Autorización | Respuestas |
 |---|---|---|---|
@@ -4241,6 +5182,8 @@ Los alimentos y sus nutrientes por 100 g son datos de referencia públicos que n
 
 **Resources**
 
+<p class="caption"><strong>Tabla 170</strong><br><em>Resources de la capa Interface de Food Catalog</em></p>
+
 | Resource | Tipo | Campos |
 |---|---|---|
 | `CreateLocalOverrideResource` | request | `LocalName`, `EnergyKcalPer100g`, `ProteinGPer100g`, `CarbGPer100g`, `FatGPer100g` |
@@ -4253,6 +5196,8 @@ Los alimentos y sus nutrientes por 100 g son datos de referencia públicos que n
 **Transform / Assemblers**
 
 `FoodCatalogAssemblers.cs` reúne `CreateLocalOverrideCommandAssembler`, `ImportCatalogSnapshotCommandAssembler`, `ReferenceFoodResourceAssembler` y `CatalogImportSummaryResourceAssembler`. Por su parte, `FoodCatalogActionResultAssembler.cs` expone `ToReferenceFoodResult`, cuyo estado es parametrizable, junto con `ToReferenceFoodListResult`, `ToCatalogImportResult`, que responde 202 Accepted por defecto, `ToNotFoundResult` y el privado `FailureResult`.
+
+<p class="caption"><strong>Tabla 171</strong><br><em>Mapeo de errores a códigos HTTP en Food Catalog</em></p>
 
 | Error | Status |
 |---|---|
@@ -4274,6 +5219,8 @@ Los dos últimos estados merecen una explicación. Cuando falla la traducción t
 
 Los mensajes localizados se declaran en `FoodCatalog/Resources/FoodCatalogMessages.cs`.
 
+La fachada `IFoodCatalogContextFacade` expone `ResolveByNames` y la creación de alimentos estimados por IA, con los items `ResolvedFoodItem` y `FoodNutrientsItem`. `POST /reference-foods/catalog-imports` responde 202 con un resumen de la importación.
+
 #### 2.6.6.3. Application Layer
 
 La Application Layer de Food Catalog orquesta los cuatro subflujos del contexto, numerados del 6.1 al 6.4, que consisten en importar un snapshot, cachear un alimento, buscar y crear un override local. Su decisión principal es que la importación no escribe en el catálogo y que solo la política de caching lo hace, con lo cual toda fila almacenada pasó necesariamente por la traducción.
@@ -4281,6 +5228,8 @@ La Application Layer de Food Catalog orquesta los cuatro subflujos del contexto,
 **Command Service**
 
 `ReferenceFoodCommandService`, que implementa `IReferenceFoodCommandService`, depende de `IReferenceFoodRepository`, `IUnitOfWork`, `IEnumerable<IExternalFoodCatalogProvider>` con todas las implementaciones registradas, `ILogger<...>` e `IMediator`, y declara la constante privada `MaxRecordsPerProvider = 100`.
+
+<p class="caption"><strong>Tabla 172</strong><br><em>Métodos de ReferenceFoodCommandService</em></p>
 
 | Método | Subflujo | Comportamiento |
 |---|---|---|
@@ -4306,6 +5255,8 @@ Sus métodos privados son tres. `TopUpFromExternalProvidersAsync(string, int, CT
 **ACL Facade**
 
 `FoodCatalogContextFacade` implementa `IFoodCatalogContextFacade` apoyándose en `IReferenceFoodQueryService` y en el método privado estático `ToItem(ReferenceFood) : ReferenceFoodItem`, y ante un fallo devuelve `null` o una lista vacía según corresponda. Es el contrato que Intake & Body Response consulta de forma síncrona para resolver el alimento que el paciente está registrando.
+
+`ReferenceFoodCommandService` resuelve un alimento con el catálogo local, luego con los proveedores externos y, si no lo encuentra, lo crea con los nutrientes estimados por la IA (`FoodNameResolution`).
 
 #### 2.6.6.4. Infrastructure Layer
 
@@ -4343,6 +5294,8 @@ Los dos servicios consumidos son Open Food Facts, en `https://world.openfoodfact
 
 Component:
 
+<p class="caption"><strong>Figura 107</strong><br><em>Diagrama de componentes del bounded context Food Catalog</em></p>
+
 ![Food Catalog Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/food-catalog.puml)
 
 #### 2.6.6.6. Bounded Context Software Architecture Code Level Diagrams
@@ -4353,17 +5306,25 @@ Component:
 
 Domain:
 
+<p class="caption"><strong>Figura 108</strong><br><em>Diagrama de clases de la capa Domain del bounded context Food Catalog</em></p>
+
 ![Food Catalog Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/food-catalog/domain.puml)
 
 Infrastructure:
+
+<p class="caption"><strong>Figura 109</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Food Catalog</em></p>
 
 ![Food Catalog Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/food-catalog/infrastructure.puml)
 
 Application:
 
+<p class="caption"><strong>Figura 110</strong><br><em>Diagrama de clases de la capa Application del bounded context Food Catalog</em></p>
+
 ![Food Catalog Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/food-catalog/application.puml)
 
 Interfaces:
+
+<p class="caption"><strong>Figura 111</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Food Catalog</em></p>
 
 ![Food Catalog Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/food-catalog/interfaces.puml)
 
@@ -4372,5 +5333,7 @@ Interfaces:
 **Food Catalog**
 
 Database:
+
+<p class="caption"><strong>Figura 112</strong><br><em>Diagrama de base de datos del bounded context Food Catalog</em></p>
 
 ![Food Catalog Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/food-catalog.puml)
