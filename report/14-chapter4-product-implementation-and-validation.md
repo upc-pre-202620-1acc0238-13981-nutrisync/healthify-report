@@ -1478,7 +1478,96 @@ Commits relacionados con la documentación de servicios. La configuración de Sw
 
 #### 4.2.1.8. Software Deployment Evidence for Sprint Review
 
+Durante el Sprint 1 se desplegaron el landing page y el backend, y se generó la versión de la aplicación móvil. El landing page se publicó en GitHub Pages con el dominio propio `landing.healthify.lat`. El backend se empaquetó en contenedores de Docker, se publicó en la máquina virtual de Oracle Cloud con el dominio `platform.healthify.lat` y se automatizó la creación de sus versiones con GitHub Actions. La configuración general de cada producto está descrita en la sección 4.1.4; aquí se resumen los pasos realizados durante el sprint.
+
+**Landing Page**
+
+*Repositorio y ramas.* Se creó el repositorio público `healthify-website` en la organización del curso, con las ramas `main` (publicación) y `develop` (integración). Las cinco ramas de funcionalidad se integraron en `develop` mediante los pull requests #1 a #5, y la corrección de fuentes mediante el pull request #7.
+
+<p class="caption"><strong>Figura 172</strong><br><em>Captura de GitHub: repositorio del landing page</em></p>
+
+![Repositorio del landing page](../assets/img/chapter4/sprint1/gh-website-repo.png)
+
+*Releases.* Se integró `develop` en `main` con el pull request #6 (`Release/1.0.0`) y se publicó la versión `v1.0.0`. Antes de la versión siguiente se restauraron, en la rama `fix/restore-sources` (pull request #7), la estructura de `index.html`, el arranque y las funciones de `main.js`, el objeto de traducciones y el orden de las reglas de la hoja de estilos. La versión `v1.0.1` se publicó con el pull request #8.
+
+<p class="caption"><strong>Figura 173</strong><br><em>Captura de GitHub: tags del landing page</em></p>
+
+![Tags del landing page](../assets/img/chapter4/sprint1/gh-website-tags.png)
+
+*GitHub Pages y dominio propio.* GitHub Pages publica el contenido de `main` (carpeta raíz). El dominio `landing.healthify.lat` se definió con el archivo `CNAME` de la raíz, que se creó, se eliminó y se volvió a crear el 06/10/2026 (commits `8098a5b`, `cfa70b0` y `b32908f`) hasta quedar configurado el dominio.
+
+*URL de despliegue:* https://landing.healthify.lat
+
+**Web Services (backend)**
+
+*Repositorio, ramas y versiones.* Se creó el repositorio público `healthify-platform`. Cada bounded context se desarrolló en una rama `feature/*` y se integró en `develop` mediante los pull requests #1, #3, #4, #5, #6 y #8. Los pull requests #2, #7 y #9 integraron `develop` en `main` y corresponden a las versiones `v0.1.0`, `v0.5.0` y `v1.0.0`.
+
+<p class="caption"><strong>Figura 174</strong><br><em>Captura de GitHub: repositorio del backend</em></p>
+
+![Repositorio del backend](../assets/img/chapter4/sprint1/gh-platform-repo.png)
+
+*Release automático.* El flujo `Release` (`.github/workflows/release.yml`) se ejecuta con cada push a `main`: restaura y compila la solución en *Release*, lee `<Version>` de `Healthify.Platform.csproj` y crea el release `v<versión>` con notas generadas a partir de los pull requests. La primera ejecución (versión 0.1.0) falló en la compilación porque `Program.cs` de la base ya registraba el contexto IAM, que se integró en el pull request siguiente; las ejecuciones de las versiones 0.5.0 y 1.0.0 terminaron correctamente.
+
+<p class="caption"><strong>Figura 175</strong><br><em>Captura de GitHub Actions: ejecuciones del flujo Release</em></p>
+
+![Ejecuciones del flujo Release](../assets/img/chapter4/sprint1/gh-platform-actions.png)
+
+<p class="caption"><strong>Figura 176</strong><br><em>Captura de GitHub: releases del backend</em></p>
+
+![Releases del backend](../assets/img/chapter4/sprint1/gh-platform-releases.png)
+
+*Contenedores.* El `Dockerfile` usa dos etapas: `dotnet/sdk:10.0` restaura y publica en *Release*, y `dotnet/aspnet:10.0` ejecuta el resultado en el puerto 8080. El `docker-compose.yml` define `healthify-api` y `healthify-mysql` (MySQL 8.4 con volumen persistente y comprobación de salud); la API espera a que la base de datos esté disponible y aplica las migraciones al iniciar.
+
+*Máquina virtual y dominio.* Se desplegó siguiendo el procedimiento de la sección 4.1.4:
+
+1. Clonar el repositorio en la rama `main` en la máquina virtual de Oracle Cloud.
+2. Definir las variables de entorno sin guardarlas en el repositorio: `JWT_SECRET` (obligatoria, de al menos 32 caracteres), las credenciales de MySQL y `USDA_API_KEY`. Las funciones de IA quedan desactivadas por defecto (`Ai__Enabled`).
+3. Ejecutar `docker compose up --build -d`.
+4. Apuntar el dominio `platform.healthify.lat` a la máquina virtual.
+5. Comprobar el servicio en `/swagger` y con la búsqueda anónima de alimentos, como se muestra en la sección 4.2.1.7.
+
+*URLs de despliegue:*
+
+- API: https://platform.healthify.lat
+- Documentación: https://platform.healthify.lat/swagger
+
+**Mobile Application (Android)**
+
+*Repositorio, ramas y versión.* Se creó el repositorio público `healthify-android-app`. Cada módulo se desarrolló en una rama `feature/*` y se integró en `develop` con los pull requests #1 a #5. El pull request #6 integró `develop` en `main` y corresponde a la versión `v1.0.0` (`versionName` 1.0, `versionCode` 1).
+
+<p class="caption"><strong>Figura 177</strong><br><em>Captura de GitHub: repositorio de la aplicación móvil</em></p>
+
+![Repositorio de la aplicación móvil](../assets/img/chapter4/sprint1/gh-android-repo.png)
+
+<p class="caption"><strong>Figura 178</strong><br><em>Captura de GitHub: release de la aplicación móvil</em></p>
+
+![Release de la aplicación móvil](../assets/img/chapter4/sprint1/gh-android-releases.png)
+
+*Compilación.* La app se compila con Gradle, con `minSdk` 24 y `targetSdk` 37. La dirección del backend (`BASE_URL`) se fija en `https://platform.healthify.lat/api/v1/` en los tipos de compilación `debug` y `release`. El 09/10/2026 se ejecutó `./gradlew :app:testDebugUnitTest`, con las 567 pruebas superadas, y `./gradlew :app:assembleRelease`, que generó `app-release-unsigned.apk` de 38,8 MiB (`app/build/outputs/apk/release/`).
+
+*Instalación.* En este sprint la app no se publica en una tienda ni tiene un flujo de integración continua. El APK se instala en dispositivos Android 7.0 (API 24) o superior, y para las capturas de la sección 4.2.1.6 se instaló en un emulador desde Android Studio. 
+
 #### 4.2.1.9. Team Collaboration Insights during Sprint
+
+Los cinco integrantes participaron en la implementación de los tres productos del sprint. Cada uno lideró un bounded context del backend, un módulo de la app y una parte del landing page (sección 4.2.1.2) y registró sus commits en esas ramas. La integración a `develop` y `main` la hizo Nevatrix.
+
+Backend (`healthify-platform`):
+
+<p class="caption"><strong>Figura 179</strong><br><em>Captura de GitHub: contribuyentes del backend</em></p>
+
+![Contribuyentes del backend](../assets/img/chapter4/sprint1/gh-platform-contributors.png)
+
+Landing page (`healthify-website`):
+
+<p class="caption"><strong>Figura 180</strong><br><em>Captura de GitHub: contribuyentes del landing page</em></p>
+
+![Contribuyentes del landing page](../assets/img/chapter4/sprint1/gh-website-contributors.png)
+
+Aplicación móvil (`healthify-android-app`):
+
+<p class="caption"><strong>Figura 181</strong><br><em>Captura de GitHub: contribuyentes de la aplicación móvil</em></p>
+
+![Contribuyentes de la aplicación móvil](../assets/img/chapter4/sprint1/gh-android-contributors.png)
 
 <div style="page-break-after: always"></div>
 
