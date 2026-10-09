@@ -769,6 +769,169 @@ Los mock-ups aplican el sistema de diseño «Healthify M3» sobre los wireframes
 
 #### 3.1.4.4. Mobile Applications User Flow Diagrams
 
+Cada User Flow parte del mismo objetivo que su Wireflow y se construye con los mock-ups de las pantallas. Muestra la ruta esperada (happy path) y las rutas alternativas (unhappy paths) con las condiciones que las activan. Los user flows son consistentes con los wireflows de 3.1.4.2.
+
+##### User Flow 1: Atender una consulta
+
+<p class="caption"><strong>Tabla 202</strong><br><em>User goal del User Flow 1: Atender una consulta</em></p>
+
+| **User Goal N°1** | Como nutricionista, quiero conducir la consulta de un paciente en cuatro pasos guiados, con apoyo de IA en el diagnóstico, para publicar un plan actualizado de forma rápida y precisa. |
+|---|---|
+
+<p class="caption"><strong>Tabla 203</strong><br><em>Happy path del User Flow 1: Atender una consulta</em></p>
+
+| **Happy Path** |
+|---|
+| 1. El nutricionista abre «Mis pacientes» y toca a Ana Flores. |
+| 2. Ve la pestaña Resumen de Ana y toca «Iniciar consulta». |
+| 3. Registra la medición de hoy (paso 1) y toca «Continuar a diagnóstico». |
+| 4. Revisa el diagnóstico con apoyo de IA (paso 2) y toca «Continuar a metas». |
+| 5. Revisa las metas calculadas (paso 3) y toca «Aceptar metas». |
+| 6. Escribe las indicaciones (paso 4) y toca «Publicar y cerrar consulta». |
+| 7. Vuelve al Resumen del paciente y ve el aviso «Plan publicado». |
+
+<p class="caption"><strong>Tabla 204</strong><br><em>Unhappy path 1 (falla la publicación) del User Flow 1: Atender una consulta</em></p>
+
+| **Unhappy Path 1: falla la publicación** |
+|---|
+| 1. El nutricionista toca «Publicar y cerrar consulta» en el paso 4. |
+| 2. Ve el error «No se pudo publicar» y toca «Intentar de nuevo». |
+| 3. Vuelve al paso 4 para publicar otra vez. |
+
+<p class="caption"><strong>Tabla 205</strong><br><em>Unhappy path 2 (salir de la consulta) del User Flow 1: Atender una consulta</em></p>
+
+| **Unhappy Path 2: salir de la consulta** |
+|---|
+| 1. El nutricionista toca «Atrás» durante el paso 1 (Medición de hoy). |
+| 2. Ve «¿Salir de la consulta?» y toca «Salir y continuar después». |
+| 3. Ve el perfil del paciente con la consulta en curso y toca «Continuar consulta». |
+| 4. Retoma la consulta en el paso 1. |
+
+La consulta se puede interrumpir sin perder lo ingresado: queda como borrador y se reanuda desde el perfil del paciente.
+
+<p class="caption"><strong>Figura 137</strong><br><em>User Flow 1: Atender una consulta</em></p>
+
+<img src="../assets/img/chapter3/userflows/01_Attend_Consultation_Userflow.png" alt="User Flow 1: Atender una consulta" width="100%" />
+
+##### User Flow 2: Evaluar a un paciente nuevo
+
+<p class="caption"><strong>Tabla 206</strong><br><em>User goal del User Flow 2: Evaluar a un paciente nuevo</em></p>
+
+| **User Goal N°2** | Como nutricionista, quiero registrar los datos base de un paciente nuevo una sola vez, para iniciar su primera consulta sin volver a pedir la misma información. |
+|---|---|
+
+<p class="caption"><strong>Tabla 207</strong><br><em>Happy path del User Flow 2: Evaluar a un paciente nuevo</em></p>
+
+| **Happy Path** |
+|---|
+| 1. El nutricionista abre «Mis pacientes» y toca a Luz Ramírez. |
+| 2. Ve el perfil del paciente nuevo, sin datos base, y toca «Registrar datos base». |
+| 3. Ingresa los datos base y toca «Guardar e iniciar consulta». |
+| 4. Inicia la primera consulta en el paso 1 (Medición de hoy). |
+
+<p class="caption"><strong>Tabla 208</strong><br><em>Unhappy path 1 (guardar sin iniciar la consulta) del User Flow 2: Evaluar a un paciente nuevo</em></p>
+
+| **Unhappy Path 1: guardar sin iniciar la consulta** |
+|---|
+| 1. El nutricionista ingresa los datos base y toca «Guardar y salir». |
+| 2. Vuelve al perfil del paciente sin iniciar la consulta. |
+
+<p class="caption"><strong>Figura 138</strong><br><em>User Flow 2: Evaluar a un paciente nuevo</em></p>
+
+<img src="../assets/img/chapter3/userflows/02_Evaluate_New_Patient_Userflow.png" alt="User Flow 2: Evaluar a un paciente nuevo" width="75%" />
+
+##### User Flow 3: Atender una señal de la bandeja
+
+<p class="caption"><strong>Tabla 209</strong><br><em>User goal del User Flow 3: Atender una señal de la bandeja</em></p>
+
+| **User Goal N°3** | Como nutricionista, quiero revisar las señales de mis pacientes en la bandeja y ajustar un plan propuesto por la IA, para actuar entre consultas sin perder el control del plan. |
+|---|---|
+
+<p class="caption"><strong>Tabla 210</strong><br><em>Happy path del User Flow 3: Atender una señal de la bandeja</em></p>
+
+| **Happy Path** |
+|---|
+| 1. El nutricionista abre la Bandeja de revisión y toca la señal de Ana Flores (desviación sostenida). |
+| 2. Revisa la señal y el plan propuesto por la IA y toca «Ajustar». |
+| 3. Ajusta el plan propuesto y toca «Asignar plan ajustado». |
+| 4. Vuelve a la bandeja y ve la señal marcada como resuelta. |
+
+Este flujo no tiene ruta alternativa documentada: la pantalla de la señal solo ofrece «Ajustar», «Resolver» y el retroceso.
+
+<p class="caption"><strong>Figura 139</strong><br><em>User Flow 3: Atender una señal de la bandeja</em></p>
+
+<img src="../assets/img/chapter3/userflows/03_Handle_Inbox_Signal_Userflow.png" alt="User Flow 3: Atender una señal de la bandeja" width="75%" />
+
+##### User Flow 4: Registrar una comida con foto
+
+<p class="caption"><strong>Tabla 211</strong><br><em>User goal del User Flow 4: Registrar una comida con foto</em></p>
+
+| **User Goal N°4** | Como paciente, quiero registrar una comida tomándole una foto y confirmando la porción estimada, para mantener mi diario al día con el mínimo esfuerzo. |
+|---|---|
+
+<p class="caption"><strong>Tabla 212</strong><br><em>Happy path del User Flow 4: Registrar una comida con foto</em></p>
+
+| **Happy Path** |
+|---|
+| 1. El paciente abre Inicio y toca «Registrar comida». |
+| 2. Toma una foto de la comida con la cámara. |
+| 3. Ve la foto y toca «Usar esta foto». |
+| 4. Espera mientras se estima el plato. |
+| 5. Ve la estimación propuesta y toca «Ajustar gramos». |
+| 6. Ajusta la porción y toca «Confirmar». |
+| 7. Ve el Diario con el aviso «Comida registrada». |
+
+<p class="caption"><strong>Tabla 213</strong><br><em>Unhappy path 1 (no se pudo estimar el plato) del User Flow 4: Registrar una comida con foto</em></p>
+
+| **Unhappy Path 1: no se pudo estimar el plato** |
+|---|
+| 1. El paciente ve «No pudimos estimar» y toca «Registrar a mano». |
+| 2. Busca el alimento manualmente. |
+| 3. Ve el alimento encontrado y toca «Registrar». |
+| 4. Ve el Diario con el aviso «Comida registrada» (registro manual). |
+
+Si la foto no se reconoce, el paciente no pierde el registro: la app le ofrece la búsqueda de alimentos de 3.1.2.4 con el mismo destino final.
+
+<p class="caption"><strong>Figura 140</strong><br><em>User Flow 4: Registrar una comida con foto</em></p>
+
+<img src="../assets/img/chapter3/userflows/04_Log_Meal_With_Photo_Userflow.png" alt="User Flow 4: Registrar una comida con foto" width="100%" />
+
+##### User Flow 5: Prepararme para la consulta
+
+<p class="caption"><strong>Tabla 214</strong><br><em>User goal del User Flow 5: Prepararme para la consulta</em></p>
+
+| **User Goal N°5** | Como paciente, quiero saber cómo prepararme para mi próxima consulta y contarle a mi nutricionista cómo me ha ido, para aprovechar mejor la cita. |
+|---|---|
+
+<p class="caption"><strong>Tabla 215</strong><br><em>Happy path del User Flow 5: Prepararme para la consulta</em></p>
+
+| **Happy Path** |
+|---|
+| 1. El paciente abre Inicio y toca «Próxima consulta». |
+| 2. Lee cómo prepararse para la consulta y toca «Ver mis consultas». |
+| 3. Ve «Mis consultas» y toca «Responder». |
+| 4. Le cuenta a su nutricionista cómo le fue y toca «Enviar a mi nutricionista». |
+| 5. Ve «Mis consultas» con la respuesta enviada. |
+
+<p class="caption"><strong>Tabla 216</strong><br><em>Unhappy path 1 (falla el envío) del User Flow 5: Prepararme para la consulta</em></p>
+
+| **Unhappy Path 1: falla el envío** |
+|---|
+| 1. El paciente toca «Enviar a mi nutricionista». |
+| 2. Ve «No se pudo enviar» y toca «Intentar de nuevo». |
+| 3. Vuelve al formulario de respuesta para enviarla otra vez. |
+
+<p class="caption"><strong>Figura 141</strong><br><em>User Flow 5: Prepararme para la consulta</em></p>
+
+<img src="../assets/img/chapter3/userflows/05_Prepare_For_Consultation_Userflow.png" alt="User Flow 5: Prepararme para la consulta" width="100%" />
+
 #### 3.1.4.5. Mobile Applications Prototyping
+
+<p class="caption"><strong>Figura 142</strong><br><em>Prototipo del landing page en móvil (Mobile Web Browser)</em></p>
+
+|<center> Mobile Web Browser|
+|---|
+|![Mobile Web Browser](../assets/img/chapter3/prototyping/mobile.png)|
+|[Link video Mobile Web Browser](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQBGTplwBUVkRaZOZoRPKNXUAabFknjnSM3TRiy17Mg37Js?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=9b2JMj)|
 
 <div style="page-break-after: always"></div>
