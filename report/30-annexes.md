@@ -9,4 +9,4 @@
 | **Healthify Website** | [Enlace a la Landing Page](https://landing.healthify.lat)|
 | **Healthify WebService** | [Enlace al Swagger](https://platform.healthify.lat/swagger)|
 | **Video de exposición de AV1** | [Enlace del video AV1](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQDHSvJw_2WEQY3_rCRUYdF6ATTE7RUI60esNMow3wX6ALk?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=4bboKL)|
-| **Video de exposición de TB1** | [Enlace del video TB1]()|
+| **Video de exposición de TB1** | [Enlace del video TB1](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQB77YRy-N9jQIi09y3AoUgEAW3z54ysCGGfvrYuExi4m4o?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=q2XKSk)|
