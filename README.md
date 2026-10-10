@@ -10,7 +10,7 @@
 <p align="center">NRC</p>
 <p align="center"><strong>13981</strong></p>
 
-<h2 align="center">Informe del Avance 1</h2>
+<h2 align="center">Informe del Trabajo 1</h2>
 
 <p align="center">Docente</p>
 <p align="center"><strong>Mayta Guillermo, Jorge Luis</strong></p>
@@ -60,15 +60,21 @@
 | 0.10.0 | 12/09/2026 | Todos los integrantes | Integración de ramas a `develop` (PR #3–#7); entradas de los bounded contexts en la tabla de contenidos del README |
 | 0.11.0 | 13/09/2026 | Todos los integrantes | Acciones y conclusiones ABET 7.c.1 y 7.c.2; objetivos SMART de cada integrante; adición de las entrevistas |
 | 1.0.0 | 16/09/2026 | Angel Villarreal | AV1 Report |
+| 1.1.0 | 01/10/2026 – 09/10/2026 | Angel Villarreal | Configuración del repositorio (`.gitignore`, exportación a PDF con Markdown PDF y hoja de estilos de impresión); repositorios del proyecto y evidencia de insights en el README; leyendas de tablas en README, glosario y objetivos SMART; enunciado del criterio ABET; fotos del equipo con tamaño fijo y comprimidas; enlaces de prototipo, website, webservice y video TB1 en anexos (`feature/report-setup-tb1`) |
+| 1.2.0 | 01/10/2026 – 09/10/2026 | Joel Mora | Diagramas de componentes C4 y de base de datos actualizados para los seis bounded contexts; extensiones de los diagramas de clases de Intake & Body Response, Monitoring & Adherence, Nutritional Care, Care Relationship, IAM y Food Catalog; generador y imágenes del Bounded Context Canvas v5 (`feature/diagrams-tb1`) |
+| 1.3.0 | 01/10/2026 – 08/10/2026 | Rose Vergaray | Cap. 2: actualización de las user stories (vínculo de cuidado, ingesta, monitoreo, expediente, flujo clínico, identidad y offline, landing page, IA), technical y spike stories, product backlog, correcciones en competidores, entrevistas y needfinding, y secciones de DDD estratégico, arquitectura y DDD táctico (`feature/chapter2-report`) |
+| 1.4.0 | 01/10/2026 – 09/10/2026 | Angela Espinoza | Cap. 3: guía de estilo, sistemas de organización, etiquetado, búsqueda y navegación, SEO y metaetiquetas, wireframes y mock-ups del landing page, y wireframes, wireflows, mock-ups, user flows y prototipo de la aplicación móvil (`feature/chapter3-uiux`) |
+| 1.5.0 | 02/10/2026 – 09/10/2026 | Olenka Del Aguila | Cap. 4: configuración del entorno de desarrollo, control de código fuente, guía de estilo y despliegue; Sprint 1 con planning, líderes y colaboradores, backlog, evidencias de desarrollo, pruebas, ejecución, documentación de servicios y despliegue, y capturas de la aplicación y la API (`feature/chapter4-sprint1`) |
+| 2.0.0 | 09/10/2026 | Angel Villarreal | TB1 Report |
 
 <div style="page-break-after: always"></div>
 
 ## PROJECT REPORT COLLABORATION INSIGHTS
 
-Repositorio del informe del proyecto en GitHub: [healthify-report](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report)
-Repositorio de la website: [healthify-website](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-website)
-Repositorio de la webservices: [healthify-platform](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform)
-Repositorio de la app en Android Studio: [healthify-android-app](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app)
+Repositorio del informe del proyecto en GitHub: [healthify-report](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report) <br>
+Repositorio de la website: [healthify-website](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-website) <br>
+Repositorio de la webservices: [healthify-platform](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform)<br>
+Repositorio de la app en Android Studio: [healthify-android-app](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app)<br>
 
 AV1:<br>
 
