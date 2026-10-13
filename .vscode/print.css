@@ -7,3 +7,9 @@ h1, h2, h3, h4, h5, h6 { break-after: avoid; }
 p.caption { text-align: left; margin: 14px 0 6px; line-height: 1.35; break-after: avoid; page-break-after: avoid; break-inside: avoid; }
 p.caption strong { font-weight: 700; }
 p.caption em { font-style: italic; }
+
+@page horizontal { size: A3 landscape; }
+body:has(.landscape) { page: horizontal; }
+body:has(.landscape) table { width: 100%; font-size: 12px; line-height: 1.4; }
+body:has(.landscape) td:first-child { width: 14%; }
+body:has(.landscape) td:nth-child(2) { width: 52%; }
