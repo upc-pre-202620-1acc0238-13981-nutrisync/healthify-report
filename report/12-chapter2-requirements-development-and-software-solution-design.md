@@ -743,7 +743,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Revocación exitosa</strong><br>Dado que el paciente mantiene un consentimiento vigente<br>Cuando el paciente revoca el consentimiento<br>Entonces el sistema registra el consentimiento como no vigente.<br><br><strong>Escenario 2: Acceso posterior a la revocación</strong><br>Dado que el paciente ha revocado previamente el consentimiento asociado al vínculo<br>Cuando el nutricionista solicita acceder a nueva información protegida del paciente<br>Entonces el sistema rechaza el acceso autorizado por dicho consentimiento.</td>
+    <td colspan="8"><strong>Escenario 1: Revocación exitosa</strong><br>Dado que el paciente mantiene un consentimiento vigente<br>Cuando el paciente revoca el consentimiento<br>Entonces el sistema registra el consentimiento como no vigente y revoca el vínculo de cuidado, conservando su historial.<br><br><strong>Escenario 2: Acceso posterior a la revocación</strong><br>Dado que el paciente ha revocado previamente el consentimiento asociado al vínculo<br>Cuando el nutricionista solicita acceder a nueva información protegida del paciente<br>Entonces el sistema rechaza el acceso autorizado por dicho consentimiento.</td>
   </tr>
 </table>
 
@@ -770,13 +770,13 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como nutricionista, deseo generar una invitación para un paciente, para iniciar de forma controlada el proceso de vinculación en Healthify.</td>
+    <td colspan="8">Como nutricionista, deseo generar una invitación con la vigencia que elija, para iniciar de forma controlada la vinculación de un paciente en Healthify.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Invitación generada</strong><br>Dado que el nutricionista se encuentra autorizado<br>Cuando el nutricionista solicita una nueva invitación<br>Entonces el sistema genera una invitación única asociada al nutricionista y con vigencia limitada.<br><br><strong>Escenario 2: Invitación utilizada</strong><br>Dado que el nutricionista ha generado una invitación que fue canjeada correctamente<br>Cuando el nutricionista consulta el estado de la invitación<br>Entonces el sistema informa que la invitación ya fue utilizada.<br><br><strong>Escenario 3: Reutilización</strong><br>Dado que el nutricionista dispone de una invitación que ya fue utilizada<br>Cuando el nutricionista intenta utilizar nuevamente esa invitación para vincular a otro paciente<br>Entonces el sistema rechaza el nuevo canje de la invitación.</td>
+    <td colspan="8"><strong>Escenario 1: Invitación generada</strong><br>Dado que el nutricionista se encuentra autorizado<br>Cuando el nutricionista solicita una nueva invitación<br>Entonces el sistema genera una invitación única asociada al nutricionista y con vigencia limitada.<br><br><strong>Escenario 2: Invitación canjeada</strong><br>Dado que un paciente canjeó la invitación del nutricionista<br>Cuando el nutricionista consulta su cartera de pacientes<br>Entonces el sistema muestra al paciente como pendiente de consentimiento.<br><br><strong>Escenario 3: Invitación vencida</strong><br>Dado que la invitación superó su vigencia sin ser canjeada<br>Cuando el nutricionista la consulta<br>Entonces el sistema la identifica como vencida y permite generar una nueva.</td>
   </tr>
 </table>
 
@@ -842,7 +842,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Alta registrada</strong><br>Dado que el nutricionista mantiene un vínculo de cuidado activo<br>Cuando el nutricionista registra el alta del paciente<br>Entonces el sistema finaliza el vínculo por cierre clínico y conserva su historial.<br><br><strong>Escenario 2: Acceso posterior al alta</strong><br>Dado que el nutricionista ha registrado previamente el alta del paciente<br>Cuando el nutricionista consulta el estado del vínculo después de registrar el alta<br>Entonces el sistema no considera activo el vínculo finalizado por alta.<br><br><strong>Escenario 3: Efectos del alta</strong><br>Dado que el nutricionista ha registrado el alta de un paciente que tenía consultas futuras agendadas y funciones con IA habilitadas<br>Cuando el sistema cierra el vínculo por alta<br>Entonces el sistema cancela las consultas futuras del paciente y desactiva las funciones con IA asociadas a ese vínculo.</td>
+    <td colspan="8"><strong>Escenario 1: Alta registrada</strong><br>Dado que el nutricionista mantiene un vínculo de cuidado activo<br>Cuando el nutricionista registra el alta del paciente indicando el motivo clínico<br>Entonces el sistema finaliza el vínculo por cierre clínico y conserva su historial.<br><br><strong>Escenario 2: Acceso posterior al alta</strong><br>Dado que el nutricionista ha registrado previamente el alta del paciente<br>Cuando el nutricionista consulta el estado del vínculo después de registrar el alta<br>Entonces el sistema no considera activo el vínculo finalizado por alta.<br><br><strong>Escenario 3: Efectos del alta</strong><br>Dado que el nutricionista ha registrado el alta de un paciente que tenía consultas futuras agendadas y funciones con IA habilitadas<br>Cuando el sistema cierra el vínculo por alta<br>Entonces el sistema cancela las consultas futuras del paciente y desactiva las funciones con IA asociadas a ese vínculo.</td>
   </tr>
 </table>
 
