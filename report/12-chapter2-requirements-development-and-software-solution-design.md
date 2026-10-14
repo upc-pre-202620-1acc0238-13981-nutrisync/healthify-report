@@ -1010,7 +1010,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Indicación al registrar</strong><br>Dado que el paciente confirma una comida registrada por fotografía o la registra manualmente<br>Cuando el paciente indica si la comida estaba dentro o fuera de su plan<br>Entonces el sistema conserva la indicación junto con la ingesta registrada.<br><br><strong>Escenario 2: Indicación obligatoria</strong><br>Dado que el paciente confirma o registra una comida<br>Cuando el paciente intenta guardarla sin indicar si estaba dentro de su plan<br>Entonces el sistema rechaza el registro e identifica la información faltante.<br><br><strong>Escenario 3: Tratamiento no punitivo</strong><br>Dado que el paciente tiene registradas comidas indicadas como fuera de su plan<br>Cuando el paciente consulta posteriormente sus registros<br>Entonces el sistema conserva el dato sin asignarle una valoración punitiva.</td>
+    <td colspan="8"><strong>Escenario 1: Indicación al registrar</strong><br>Dado que el paciente confirma una comida registrada por fotografía o la registra manualmente<br>Cuando el paciente indica si la comida estaba dentro o fuera de su plan<br>Entonces el sistema conserva la indicación junto con la ingesta registrada.<br><br><strong>Escenario 2: Indicación obligatoria</strong><br>Dado que el paciente confirma o registra una comida<br>Cuando el paciente intenta guardarla sin indicar si estaba dentro de su plan<br>Entonces el sistema rechaza el registro e identifica la información faltante.<br><br><strong>Escenario 3: Tratamiento no punitivo</strong><br>Dado que el paciente tiene registradas comidas indicadas como fuera de su plan<br>Cuando el paciente consulta posteriormente sus registros<br>Entonces el sistema conserva el dato sin asignarle una valoración punitiva.<br><br><strong>Escenario 4: Sugerencia de respuesta</strong><br>Dado que el paciente tiene un plan publicado y elige un alimento del catálogo<br>Cuando registra la comida<br>Entonces el sistema preselecciona si la comida estaba dentro del plan según sus restricciones y la energía restante del día, sin usar IA, y el paciente puede cambiar la respuesta antes de guardar.</td>
   </tr>
 </table>
 
@@ -1073,7 +1073,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Description</th>
   </tr>
   <tr>
-    <td colspan="8">Como paciente, deseo registrar mi peso siguiendo el protocolo establecido por mi nutricionista, para aportar información comparable sobre mi evolución corporal.</td>
+    <td colspan="8">Como paciente, deseo registrar mi peso indicando si me pesé en ayunas, para que mi tendencia se calcule solo con pesajes comparables entre sí.</td>
   </tr>
   <tr>
     <th colspan="8">Acceptance Criteria</th>
