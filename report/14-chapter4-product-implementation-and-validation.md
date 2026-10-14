@@ -4,7 +4,7 @@
 
 ### 4.1.1. Software Development Environment Configuration
 
-La solución de Healthify tiene tres productos digitales: el **landing page** (sitio estático), los **RESTful Web Services** (backend en ASP.NET Core) y la **aplicación móvil nativa de Android** (Kotlin con Jetpack Compose). Las herramientas que el equipo usa para trabajar sobre ellos se agrupan por tipo de actividad.
+La solución de Healthify tiene cuatro productos digitales: el **landing page** (sitio estático), los **RESTful Web Services** (backend en ASP.NET Core), la **aplicación móvil nativa de Android** (Kotlin con Jetpack Compose), que atiende al paciente y al nutricionista, y la **aplicación Flutter para nutricionistas**, que porta la vista del rol nutricionista de la app nativa. Las herramientas que el equipo usa para trabajar sobre ellos se agrupan por tipo de actividad.
 
 **Project Management**
 
@@ -12,7 +12,8 @@ La solución de Healthify tiene tres productos digitales: el **landing page** (s
 
 | Producto | Tipo | Propósito en el proyecto | Referencia |
 |---|---|---|---|
-| GitHub (Issues, Pull Requests y Projects) | SaaS | Seguimiento de tareas por rama, revisión de cambios mediante pull requests y tablero del product backlog. | [github.com](https://github.com) |
+| GitHub (Issues y Pull Requests) | SaaS | Seguimiento de los cambios por rama y revisión de cada cambio mediante pull requests. | [github.com](https://github.com) |
+| Trello | SaaS | Tablero del product backlog y tablero del sprint backlog. | [trello.com](https://trello.com) |
 | WhatsApp | SaaS / móvil | Coordinación diaria del equipo y avisos de reuniones. | [whatsapp.com](https://www.whatsapp.com) |
 
 **Requirements Management**
@@ -22,7 +23,7 @@ La solución de Healthify tiene tres productos digitales: el **landing page** (s
 | Producto | Tipo | Propósito en el proyecto | Referencia |
 |---|---|---|---|
 | Miro | SaaS | Sesiones de EventStorming (Big Picture y Design Level) y Domain Message Flows. | [miro.com](https://miro.com) |
-| PlantUML (con C4-PlantUML) | Línea de comandos / extensión de IDE | Diagramas C4, Bounded Context Canvas, diagramas de clases y de base de datos, versionados como archivos `.puml` en el repositorio del informe. | [plantuml.com](https://plantuml.com) |
+| PlantUML (con C4-PlantUML) | Línea de comandos / extensión de IDE | Diagramas C4 (incluido el de despliegue), Bounded Context Canvas, diagramas de clases y de base de datos, versionados como archivos `.puml` en la carpeta `docs/` del repositorio del informe. | [plantuml.com](https://plantuml.com) |
 | UXPressia | SaaS | User Personas y User Journey Mapping. | [uxpressia.com](https://uxpressia.com) |
 
 **Product UX/UI Design**
@@ -31,8 +32,7 @@ La solución de Healthify tiene tres productos digitales: el **landing page** (s
 
 | Producto | Tipo | Propósito en el proyecto | Referencia |
 |---|---|---|---|
-| Figma | SaaS | Sistema de diseño «Healthify M3», wireframes, mock-ups y prototipos del landing page y de la aplicación móvil. El archivo «Healthify» contiene las páginas *Landing Page*, *Wireframes Mobile* y *Mockup*. | [figma.com](https://www.figma.com) |
-| draw.io (diagrams.net) | SaaS / escritorio | Wireflows y User Flows de la aplicación móvil. | [app.diagrams.net](https://app.diagrams.net) |
+| Figma | SaaS | Sistema de diseño «Healthify M3», wireframes, mock-ups, wireflows, user flows y prototipos del landing page y de la aplicación móvil. El archivo «Healthify» contiene las páginas *Landing Page*, *Wireframes Mobile*, *Mockup*, *SVG* (íconos e ilustraciones exportables) y *Flujos · Reporte* (los cinco wireflows y los cinco user flows). Las pantallas de la app que muestra el landing page se exportan en WebP desde la página *Mockup*. | [figma.com](https://www.figma.com) |
 
 **Software Development**
 
@@ -40,16 +40,16 @@ La solución de Healthify tiene tres productos digitales: el **landing page** (s
 
 | Producto | Tipo | Propósito en el proyecto | Referencia |
 |---|---|---|---|
-| Android Studio | Escritorio (IDE) | Desarrollo de la aplicación móvil en Kotlin y Jetpack Compose, emulador y vista previa de pantallas (`@Preview`). | [developer.android.com/studio](https://developer.android.com/studio) |
+| Android Studio | Escritorio (IDE) | Desarrollo de la aplicación nativa en Kotlin y Jetpack Compose, con emulador y vista previa de pantallas (`@Preview`), y de la aplicación Flutter con el plugin de Flutter. | [developer.android.com/studio](https://developer.android.com/studio) |
 | JetBrains Rider | Escritorio (IDE) | Desarrollo del backend en C# (.NET 10), migraciones de Entity Framework Core y ejecución de pruebas. | [jetbrains.com/rider](https://www.jetbrains.com/rider/) |
 | WebStorm | Escritorio (IDE) | Desarrollo del landing page (HTML, CSS y JavaScript). | [jetbrains.com/webstorm](https://www.jetbrains.com/webstorm/) |
 | Visual Studio Code | Escritorio (editor) | Edición del informe en Markdown y de los diagramas PlantUML. | [code.visualstudio.com](https://code.visualstudio.com) |
 | .NET SDK 10 | Escritorio | Compilación, ejecución y pruebas del backend. | [dotnet.microsoft.com/download](https://dotnet.microsoft.com/download) |
-| JDK 21 y Gradle 9.6 | Escritorio | Compilación de la aplicación Android; el JDK se resuelve por `gradle-daemon-jvm.properties`. | [gradle.org](https://gradle.org) |
-| MySQL 8 | Escritorio / contenedor | Base de datos del backend. | [dev.mysql.com/downloads](https://dev.mysql.com/downloads/) |
+| JDK 21, Gradle 9.6 y Android Gradle Plugin 9.4 | Escritorio | Compilación de la aplicación nativa; el JDK se resuelve por `gradle-daemon-jvm.properties`. | [gradle.org](https://gradle.org) |
+| Flutter SDK 3.47 (Dart 3.13) | Escritorio | Compilación, análisis estático, pruebas y generación de código (`build_runner`, `gen-l10n`) de la aplicación Flutter. | [flutter.dev](https://flutter.dev) |
+| MySQL 8.4 | Escritorio / contenedor | Base de datos del backend. | [dev.mysql.com/downloads](https://dev.mysql.com/downloads/) |
 | Docker Desktop | Escritorio | Ejecución local del backend y de MySQL con `docker compose`. | [docker.com](https://www.docker.com/products/docker-desktop/) |
 | Node.js (`npx serve`) | Escritorio | Servidor local para revisar el landing page. | [nodejs.org](https://nodejs.org) |
-
 
 **Software Testing**
 
@@ -57,10 +57,12 @@ La solución de Healthify tiene tres productos digitales: el **landing page** (s
 
 | Producto | Tipo | Propósito en el proyecto | Referencia |
 |---|---|---|---|
-| xUnit y NSubstitute | Librerías de .NET | Pruebas unitarias y de integración del backend (`dotnet test`). Las pruebas de integración con MySQL se activan con la variable `HEALTHIFY_IT_MYSQL`. | [xunit.net](https://xunit.net) |
-| JUnit 4, MockK, Turbine y `kotlinx-coroutines-test` | Librerías de Kotlin | Pruebas de JVM de los use cases, ViewModels y mappers de la aplicación (`./gradlew :app:testDebugUnitTest`). | [junit.org](https://junit.org/junit4/) |
+| xUnit y NSubstitute | Librerías de .NET | Pruebas unitarias y de integración del backend (`dotnet test healthify-platform.sln`). Las pruebas de integración con MySQL se activan con la variable `HEALTHIFY_IT_MYSQL`. | [xunit.net](https://xunit.net) |
+| JUnit 4, MockK, Turbine, `kotlinx-coroutines-test` y MockWebServer | Librerías de Kotlin | Pruebas de JVM de los use cases, ViewModels, mappers y clientes HTTP de la aplicación nativa (`./gradlew :app:testDebugUnitTest`). | [junit.org](https://junit.org/junit4/) |
+| `flutter_test`, `bloc_test` y `mocktail` | Librerías de Dart | Pruebas de widgets, cubits, use cases y mappers de la aplicación Flutter (`flutter test --coverage`). | [docs.flutter.dev/testing](https://docs.flutter.dev/testing/overview) |
 | Swagger UI (Swashbuckle) | Incluido en el backend | Exploración y prueba manual de los endpoints REST en `/swagger`. | [swagger.io](https://swagger.io) |
-| Android Lint | Incluido en Android Gradle Plugin | Análisis estático de la aplicación (`./gradlew :app:lintDebug`). | [developer.android.com/studio/write/lint](https://developer.android.com/studio/write/lint) |
+| Android Lint | Incluido en Android Gradle Plugin | Análisis estático de la aplicación nativa (`./gradlew :app:lintDebug`). | [developer.android.com/studio/write/lint](https://developer.android.com/studio/write/lint) |
+| Dart analyzer con `flutter_lints` | Incluido en el SDK de Flutter | Análisis estático de la aplicación Flutter (`flutter analyze`). | [pub.dev/packages/flutter_lints](https://pub.dev/packages/flutter_lints) |
 
 **Software Deployment**
 
@@ -69,7 +71,9 @@ La solución de Healthify tiene tres productos digitales: el **landing page** (s
 | Producto | Tipo | Propósito en el proyecto | Referencia |
 |---|---|---|---|
 | GitHub Pages | SaaS | Publicación del landing page desde la rama `main`, con el dominio propio `landing.healthify.lat`. | [pages.github.com](https://pages.github.com) |
-| GitHub Actions | SaaS | Flujo `Release` del backend: compila la solución y crea la versión en GitHub al hacer push a `main`. | [github.com/features/actions](https://github.com/features/actions) |
+| GitHub Actions | SaaS | Flujo `Release` del backend, y flujos `CI` y `Distribute` de cada aplicación móvil: análisis estático, pruebas, compilación firmada y creación de la versión en GitHub. | [github.com/features/actions](https://github.com/features/actions) |
+| Firebase App Distribution | SaaS | Entrega de los APK firmados de ambas aplicaciones al grupo de prueba `qa`. Los botones de descarga del landing page enlazan a la invitación de Firebase. | [firebase.google.com/products/app-distribution](https://firebase.google.com/products/app-distribution) |
+| GitHub Releases | SaaS | Cada versión de las aplicaciones adjunta su APK (`healthify-vX.Y.Z.apk`); el backend publica sus notas de versión. | [docs.github.com/repositories/releasing-projects-on-github](https://docs.github.com/en/repositories/releasing-projects-on-github) |
 | Docker y Docker Compose | Motor de contenedores | Empaquetado del backend (`Dockerfile`) y orquestación del API con MySQL (`docker-compose.yml`). | [docs.docker.com](https://docs.docker.com) |
 | Oracle Cloud Infrastructure | SaaS / IaaS | Máquina virtual que aloja los contenedores del backend, publicado en `platform.healthify.lat`. | [oracle.com/cloud](https://www.oracle.com/cloud/) |
 
@@ -79,7 +83,7 @@ La solución de Healthify tiene tres productos digitales: el **landing page** (s
 
 | Producto | Tipo | Propósito en el proyecto | Referencia |
 |---|---|---|---|
-| GitHub | SaaS | Repositorio del informe (`healthify-report`) y de los README de cada producto. | [github.com](https://github.com) |
+| GitHub | SaaS | Repositorio del informe (`healthify-report`) y README de cada producto. | [github.com](https://github.com) |
 | Markdown | Formato | Redacción del informe y de la documentación de cada repositorio. | [markdownguide.org](https://www.markdownguide.org) |
 | Swagger / OpenAPI | Incluido en el backend | Documentación interactiva de los servicios REST. | [swagger.io](https://swagger.io) |
 
@@ -93,10 +97,11 @@ El equipo usa **GitHub** como plataforma de control de versiones, dentro de la o
 |---|---|---|
 | Landing Page | `healthify-website` | https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-website |
 | Web Services (backend) | `healthify-platform` | https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform |
-| Mobile Application (Android) | `healthify-mobile` | https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app |
+| Mobile Application (Android nativa) | `healthify-android-app` | https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app |
+| Mobile Application (Flutter, nutricionista) | `healthify-flutter-app` | https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app |
 | Informe del proyecto | `healthify-report` | https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report |
 
-El repositorio del backend contiene el proyecto `Healthify.Platform` y el proyecto de pruebas `Healthify.Platform.Tests` (unitarias y de integración) en la misma solución. El landing page no tiene dependencias: se compone de cuatro archivos HTML, una hoja de estilos y dos scripts.
+El repositorio del backend contiene el proyecto `Healthify.Platform` y el proyecto de pruebas `Healthify.Platform.Tests` (unitarias y de integración) en la misma solución. El landing page no tiene dependencias: se compone de cuatro archivos HTML, una hoja de estilos y dos scripts. La aplicación nativa es un solo módulo Gradle (`app`) con el código en `pe.edu.upc.healthify`, dividido en `core`, `features` (un paquete por bounded context) y `navigation`. La aplicación Flutter sigue la misma división en `lib/core`, `lib/features` y `lib/navigation`, y sus pruebas en `test/` replican esa estructura.
 
 **GitFlow**
 
@@ -110,23 +115,26 @@ El equipo aplica GitFlow, según el modelo de Vincent Driessen en «A successful
 | `develop` | `main` | — | `develop` | Integración continua de lo que se desarrolla. Es la rama base de los features. |
 | Feature | `develop` | `develop` | `feature/<contexto-o-funcionalidad>` en minúsculas y con guiones | Una rama por funcionalidad o bloque de trabajo. |
 | Fix | `develop` | `develop` | `fix/<descripcion-corta>` | Corrección de un defecto detectado antes de publicar. |
+| Refactor | `develop` | `develop` | `refactor/<descripcion-corta>` | Reestructuración del código sin cambio de comportamiento. |
 | Release | `develop` | `main` y `develop` | `release/vX.Y.Z` | Preparación de una versión: ajuste del número de versión y revisión final. |
 | Hotfix | `main` | `main` y `develop` | `hotfix/<descripcion-corta>` | Corrección urgente de un error de la versión publicada. |
 
-Ejemplos reales de los repositorios: `feature/platform-foundation`, `feature/identity-and-care-links`, `feature/nutritional-care`, `feature/food-catalog-and-intake`, `feature/monitoring-and-read-models` y `feature/usda-base-url-fix` en el backend; `feature/foundation`, `feature/home-hero-problem`, `feature/home-showcases`, `feature/home-how-faq-terms` y `feature/about-contact` en el landing page; y `feature/chapter2-bounded-context` en el informe.
+Hasta ahora no se han necesitado ramas `release` ni `hotfix`: el número de versión se sube con un commit en `develop` y la versión se publica al integrar `develop` en `main`.
+
+Ejemplos reales de los repositorios: `feature/platform-foundation`, `feature/password-recovery`, `feature/plan-fit-suggestion`, `fix/monitoring-clinical-day` y `refactor/retire-legacy-clinical-endpoints` en el backend; `feature/redesign-website`, `feature/testimonials` y `fix/restore-sources` en el landing page; `feature/ci-cd-app-distribution`, `feature/home-gauge-roster-and-reminders` y `feature/interview-validation-fixes` en la aplicación nativa; `feature/core-foundation`, `feature/auth-onboarding` y `feature/patient-record-consultation` en la aplicación Flutter; y `feature/chapter2-bounded-context` en el informe.
 
 Flujo de trabajo de una funcionalidad:
 
 1. Se crea `feature/<nombre>` desde `develop`.
 2. Se hacen commits pequeños con Conventional Commits.
 3. Se abre un pull request hacia `develop`, que otro integrante revisa. Al integrarse, la rama se elimina.
-4. Para publicar, se integra `develop` en `main` mediante un pull request y se asigna el tag de la versión.
+4. Para publicar, se sube el número de versión en `develop` y se integra `develop` en `main` mediante un pull request. En el backend y en las aplicaciones móviles, el flujo de GitHub Actions crea el tag a partir de esa versión; en el landing page el tag se crea a mano.
 
 **Semantic Versioning**
 
 Las versiones usan Semantic Versioning 2.0.0 con el formato `vMAJOR.MINOR.PATCH`:
 
-- **MAJOR**: cambios incompatibles, por ejemplo un cambio en el contrato de la API.
+- **MAJOR**: cambios incompatibles, por ejemplo un cambio en el contrato de la API o un rediseño completo.
 - **MINOR**: funcionalidad nueva compatible con lo anterior.
 - **PATCH**: corrección de errores.
 
@@ -134,10 +142,11 @@ Las versiones usan Semantic Versioning 2.0.0 con el formato `vMAJOR.MINOR.PATCH`
 
 | Producto | Tags publicados | Dónde se define la versión |
 |---|---|---|
-| Backend | `v0.1.0`, `v0.5.0` y `v1.0.0` | Elemento `<Version>` de `Healthify.Platform.csproj`. El flujo de GitHub Actions lee ese valor y crea el tag `v<versión>` con las notas de la versión. |
-| Landing Page | `v1.0.0` y `v1.0.1` | Tag en `main`. |
-| Aplicación móvil | `1.0` | `versionName` y `versionCode` de `app/build.gradle.kts`. |
-| Informe | `1.0.0` (AV1) | Registro de versiones del `README.md`. |
+| Backend | `v0.1.0`, `v0.5.0`, `v1.0.0`, `v1.1.0`, `v1.1.1` y de `v1.2.0` a `v1.6.0` | Elemento `<Version>` de `Healthify.Platform.csproj`. El flujo `Release` lee ese valor y crea el tag `v<versión>` con las notas de la versión. |
+| Landing Page | `v1.0.0`, `v1.0.1`, `v2.0.0` y `v2.1.0` | Tag en `main`. La versión `v2.0.0` corresponde al rediseño del sitio. |
+| Aplicación nativa | De `v1.0.0` a `v2.0.0` (13 versiones, entre ellas `v1.4.1`, `v1.5.1` y `v1.7.1`) | `versionName` de `app/build.gradle.kts`. El `versionCode` lo asigna el flujo `Distribute` con el número de ejecución. |
+| Aplicación Flutter | `v1.0.0`, `v1.1.0` y `v1.2.0` | Campo `version` de `pubspec.yaml` (`1.2.0+9`). El número de compilación lo asigna el flujo `Distribute` con el número de ejecución. |
+| Informe | `1.0.0` (AV1) y `2.0.0` (TB1) | Registro de versiones del `README.md`. |
 
 **Conventional Commits**
 
@@ -156,14 +165,14 @@ Los mensajes de commit siguen Conventional Commits 1.0.0, en inglés, en modo im
 | `feat` | Funcionalidad nueva | `feat(care-relationship): add invitation, care link and AI preference endpoints` |
 | `fix` | Corrección de un defecto | `fix(food-catalog): resolve USDA search path relative to the base address` |
 | `docs` | Documentación | `docs(readme): add running instructions` |
-| `test` | Pruebas | `test(composition): add cross-context test support, AI pipeline and DI composition tests` |
-| `refactor` | Cambio interno sin cambio de comportamiento | `refactor(diagrams): remove inline comments from C4 and class diagrams` |
-| `chore` | Mantenimiento y configuración | `chore(csproj): set project version to 1.0.0` |
-| `build` | Sistema de compilación y dependencias | `build(docker): add Dockerfile and compose stack` |
+| `test` | Pruebas | `test(home): cover the tolerance band of the energy goal` |
+| `refactor` | Cambio interno sin cambio de comportamiento | `refactor(nutritionalcare): extract the consultation primary button` |
+| `chore` | Mantenimiento y configuración | `chore(csproj): set project version to 1.6.0` |
+| `build` | Sistema de compilación y dependencias | `build(app): bump version to 2.0.0` |
 | `ci` | Integración y entrega continuas | `ci(release): add release workflow` |
 | `style` | Formato sin cambio de lógica | Sin uso hasta ahora |
 
-El alcance (`scope`) indica el módulo afectado: un bounded context (`iam`, `care-relationship`, `nutritional-care`, `food-catalog`, `intake`, `monitoring`), una página (`index`, `css`, `i18n`) o un archivo de configuración (`csproj`, `readme`).
+El alcance (`scope`) indica el módulo afectado: un bounded context (`iam`, `care-relationship`, `nutritional-care`, `food-catalog`, `intake`, `monitoring` en el backend; `carerelationship`, `nutritionalcare`, `foodcatalog` en las aplicaciones móviles), una capa compartida (`designsystem`, `l10n`, `navigation`), una página (`index`, `css`, `i18n`) o un archivo de configuración (`csproj`, `app`, `release`, `readme`).
 
 ### 4.1.3. Source Code Style Guide & Conventions
 
