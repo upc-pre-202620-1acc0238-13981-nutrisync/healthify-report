@@ -96,17 +96,19 @@ La arquitectura de información de Healthify atiende dos experiencias distintas:
 
 Se aplica una **organización jerárquica** (visual hierarchy). La página principal ordena sus secciones de mayor a menor peso en la decisión del visitante:
 
-1. Héroe (carrusel con propuesta de valor, video del producto y del equipo)
-2. Problema que resuelve Healthify
-3. Para el paciente
-4. Para el nutricionista
-5. Cómo funciona
-6. Preguntas frecuentes
-7. Pie de página (navegación, legal, redes y contacto)
+1. Héroe (carrusel con la propuesta de valor, el video del equipo y el video del producto)
+2. Propuesta de valor (lo que el nutricionista ve en la ficha del paciente)
+3. La consulta, paso a paso
+4. Entre citas (señales de la bandeja)
+5. Para nutricionistas
+6. Para pacientes
+7. Prueba social (testimonios y criterio clínico)
+8. Llamada final a la acción
+9. Pie de página (producto, empresa, legal y contacto)
 
-La secuencia sigue un recorrido de persuasión: se plantea el problema, se muestra la solución para cada rol y se resuelven las dudas antes de invitar a la acción. Dentro de «Cómo funciona» se usa una **organización secuencial** (paso a paso) en cuatro pasos: *Medición de hoy*, *Diagnóstico con apoyo de IA*, *Metas calculadas* e *Indicaciones y publicación*. Las páginas secundarias (Nosotros, Contacto y Términos y condiciones) se organizan **por tópicos**: historia, misión y visión, valores y equipo en Nosotros; datos de contacto y formulario en Contacto; y una cláusula por tema en Términos.
+La secuencia está pensada para el nutricionista, que es quien decide adoptar la herramienta. Primero ve el resultado (los registros de su paciente en la ficha), luego cómo trabaja en consulta y entre citas, después todo lo que incluye y lo que verá su paciente, y al final los testimonios y la invitación a descargar la app. Dentro de «La consulta, paso a paso» se usa una **organización secuencial** en cuatro pasos: *Medición de hoy*, *Diagnóstico con IA*, *Metas calculadas* e *Indicaciones y publicación*. Las páginas secundarias se organizan **por tópicos**: historia, misión y visión, valores, equipo y preguntas frecuentes en Nosotros; tipo de consulta, formulario y otros datos de contacto en Contacto; y una cláusula por tema en Términos y condiciones.
 
-La categorización del contenido combina dos esquemas: **según audiencia** (secciones «Paciente» y «Nutricionista», con el mismo patrón de presentación para comparar) y **por tópicos** en las preguntas frecuentes, filtradas por *Todas*, *Pacientes*, *Nutricionistas*, *Privacidad* e *IA*.
+La categorización del contenido combina dos esquemas: **según audiencia** (secciones «Para nutricionistas» y «Para pacientes») y **por tópicos** en las preguntas frecuentes de Nosotros, filtradas por *Todas*, *Pacientes*, *Nutricionistas*, *Privacidad* e *IA*.
 
 **Aplicación móvil**
 
@@ -116,11 +118,11 @@ Los módulos de la aplicación se agrupan **según audiencia** (paciente o nutri
 
 | Sistema | Dónde se aplica |
 |---|---|
-| **Jerárquico** | *Inicio* del paciente: primero la meta del día (calorías y macros) y el botón naranja «Registrar comida», y debajo «Cómo voy hoy», «Próxima consulta» y avisos. En la ficha del paciente (nutricionista): identidad y estado del plan, próxima consulta, indicadores desde la última consulta y, al final, las acciones de gestión. |
-| **Secuencial** | Registro de cuenta (elegir rol, completar datos); vinculación (escanear invitación, consentimiento y alcance); registro por foto (cámara, previsualización, estimación propuesta, confirmar o ajustar); y la **consulta guiada** del nutricionista en cuatro pasos (medición, diagnóstico con IA, metas, indicaciones y publicación). |
-| **Matricial** | Las tarjetas de indicadores en pares, como «Peso (autopesaje)» y «Cumplimiento» en la ficha del paciente, y la cuadrícula de proteína, carbohidratos y grasa en Inicio, que permiten comparar métricas de un vistazo. |
+| **Jerárquico** | *Inicio* del paciente: primero el medidor de energía con las kcal que quedan hoy y los macros, luego «Tu semana» con los días registrados, y debajo «Cómo voy hoy», «Próxima consulta» y los avisos. En la ficha del paciente (nutricionista): identidad y estado del plan, próxima consulta, indicadores desde la última consulta, las acciones de gestión y el botón «Iniciar consulta» fijo al pie. |
+| **Secuencial** | Registro de cuenta (elegir rol, completar datos y aceptar los términos); recuperación de contraseña (correo, código de 6 dígitos y contraseña nueva); vinculación (escanear invitación, consentimiento y alcance); registro por foto (cámara, previsualización, estimación propuesta, confirmar o ajustar); y la **consulta guiada** del nutricionista en cuatro pasos (medición, diagnóstico con IA, metas, indicaciones y publicación). |
+| **Matricial** | Las tarjetas de indicadores en pares, como «Peso (autopesaje)» y «Cumplimiento» en la ficha del paciente, la fila de proteína, carbohidrato y grasa bajo el medidor de Inicio y los siete días de «Tu semana», que permiten comparar métricas de un vistazo. |
 
-Para ordenar listas se usan dos criterios de categorización: **cronológico** (el diario por día, las próximas consultas en la agenda, la bandeja por fecha de recepción y las versiones del plan de la más reciente a la más antigua) y **por estado** (ítems de revisión abiertos o resueltos, vínculo vigente o dado de alta, consulta próxima o completada). La cartera de pacientes se presenta por vínculo, con la fecha desde la que el paciente está vinculado.
+Para ordenar listas se usan dos criterios de categorización: **cronológico** (el diario por día, las próximas consultas en la agenda, la bandeja por fecha de recepción y las versiones del plan de la más reciente a la más antigua) y **por estado** (ítems de revisión abiertos o resueltos, vínculo vigente o dado de alta, consulta próxima o completada). La cartera de pacientes se divide en dos grupos por estado: «Requieren acción» (señal por revisar, consulta por terminar, faltan datos base o falta publicar el plan) y «Al día».
 
 #### 3.1.2.2. Labelling Systems
 
