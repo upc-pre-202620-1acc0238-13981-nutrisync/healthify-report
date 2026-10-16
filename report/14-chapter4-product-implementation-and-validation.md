@@ -185,23 +185,23 @@ Guías: *HTML Style Guide and Coding Conventions* (W3Schools) y *Google HTML/CSS
 - Etiquetas y atributos en minúsculas, indentación de 2 espacios y `<!DOCTYPE html>` en cada página.
 - Estructura semántica: `header`, `nav`, `main`, `section`, `footer`, con un solo `h1` por página y los encabezados en orden.
 - Atributos de accesibilidad: `lang`, `alt` en imágenes, `aria-label` y `aria-labelledby` en regiones y controles, y un enlace «Saltar al contenido principal».
-- Cada texto traducible lleva un atributo `data-i18n="clave"` y no texto fijo en el código del script.
+- Cada texto traducible lleva un atributo de i18n en lugar de texto fijo en el script: `data-i18n` (texto), `data-i18n-html` (texto con marcado), `data-i18n-placeholder`, `data-i18n-aria` o `data-i18n-alt`.
 
 **CSS**
 
 Guía: *Google HTML/CSS Style Guide*.
 
-- Nomenclatura **BEM** en minúsculas con guiones: bloque `navbar`, elemento `navbar__links`, modificador `btn--primary`.
-- Los colores, tipografías, radios y tamaños se definen una sola vez como variables en `:root` (`--color-orange`, `--font-heading`, `--radius`) con los valores del sistema de diseño de Figma, y no se repiten en las reglas.
-- Enfoque adaptable con puntos de corte en 1100, 900 y 768 px.
+- Nomenclatura **BEM** en minúsculas con guiones: bloque `nav`, elemento `nav__link`, modificador con `--`.
+- Los colores, tipografías, radios y medidas se definen una sola vez como variables en `:root` con los valores del sistema de diseño de Figma (`--orange-400`, `--green-700`, `--font-heading`, `--r-16`), y la escala tipográfica como atajos `font` que llevan en un comentario el nombre del estilo de Figma (`--t-display-xl` es *Web/Display XL*).
+- Enfoque *mobile first*: el diseño de escritorio empieza en 1024 px y el encabezado completo en 1200 px. Las animaciones respetan `prefers-reduced-motion`.
 
 **JavaScript**
 
 Guía: *Google JavaScript Style Guide*.
 
 - `'use strict'`, `const` y `let` (sin `var`), funciones y variables en `camelCase` y constantes en `UPPER_SNAKE_CASE`.
-- Un archivo por responsabilidad: `i18n.js` (traducciones y motor de idioma) y `main.js` (menú móvil, preguntas frecuentes, carruseles, formulario).
-- Funciones de inicialización con nombre `initXxx()` (`initPageScroll()`, `initShowcases()`).
+- Un archivo por responsabilidad: `i18n.js` (traducciones y motor de idioma) y `main.js` (selector de idioma, menú móvil, carrusel de pasos, preguntas frecuentes con filtros, índice de términos y formulario de contacto).
+- Funciones de inicialización con nombre `initXxx()` (`initLangSwitch()`, `initMenu()`, `initFAQ()`, `initContactForm()`).
 
 **C# (backend)**
 
@@ -213,33 +213,34 @@ Guías: *C# Coding Conventions* de Microsoft y la guía de arquitectura del back
 - CQRS con servicios de comandos y de consultas (`CommandServices` y `QueryServices`), y eventos de dominio publicados después de confirmar la transacción.
 - Nulabilidad activada (`<Nullable>enable</Nullable>`), documentación XML de los endpoints para Swagger y mensajes de error con código estable (`extensions.code`) y localizados en español e inglés con archivos `.resx`.
 
-**Kotlin y Jetpack Compose (aplicación móvil)**
+**Kotlin y Jetpack Compose (aplicación nativa) y Dart y Flutter (aplicación para nutricionistas)**
 
-Guías: *Kotlin Coding Conventions* y *Android Kotlin Style Guide*.
+Guías: *Kotlin Coding Conventions* y *Android Kotlin Style Guide* para la aplicación nativa; *Effective Dart* y las reglas de `flutter_lints` para la aplicación Flutter.
 
-<p class="caption"><strong>Tabla 228</strong><br><em>Convenciones de código de la aplicación móvil</em></p>
+<p class="caption"><strong>Tabla 228</strong><br><em>Convenciones de código de las aplicaciones móviles</em></p>
 
-| Elemento | Convención | Ejemplo |
-|---|---|---|
-| Use case | `VerbNounUseCase` | `RedeemInvitationUseCase` |
-| Repositorio | `NounRepository` y `NounRepositoryImpl` | `CareLinkRepository` |
-| DTO y entidad Room | `NounDto` y `NounEntity` | `DiaryEntryDto` |
-| Estado y ViewModel | `ScreenUiState` y `ScreenViewModel` | `DiaryUiState` |
-| Rutas de navegación | `NounRoute`, serializables | `DiaryRoute` |
-| Composables | Con estado `XxxScreen` y sin estado `XxxContent` | `DiaryScreen` |
+| Elemento | Convención | Ejemplo en Kotlin | Ejemplo en Flutter |
+|---|---|---|---|
+| Use case | `VerbNounUseCase` | `RedeemInvitationUseCase` | `IssueInvitationUseCase` |
+| Repositorio | `NounRepository` y `NounRepositoryImpl` | `CareLinkRepository` | `PractitionerCareLinkRepository` |
+| DTO y entidad local | `NounDto` y `NounEntity` | `DiaryEntryDto` | `InvitationDto` |
+| Estado de pantalla | `XxxUiState` con `XxxViewModel` (Kotlin); `XxxState` con `XxxCubit` (Flutter) | `DiaryUiState` | `InvitePatientState` |
+| Rutas de navegación | `NounRoute` | `ConsentRoute` (serializable) | `DischargePatientRoute` |
+| Pantallas | `XxxScreen` con estado; en Kotlin, `XxxContent` sin estado | `DiaryScreen` | `InvitePatientScreen` |
 
-- Arquitectura de cuatro capas por bounded context (`domain`, `application`, `presentation` e `infrastructure`) con dependencias hacia el dominio. `domain` y `application` son Kotlin puro, sin dependencias de Android.
-- Las reglas de negocio y las validaciones viven en entidades y objetos de valor (`init { require(...) }`), no en ViewModels ni en Composables.
-- Un solo `StateFlow<XxxUiState>` por pantalla, eventos únicos mediante `Channel` y `collectAsStateWithLifecycle()`. Cada Composable público recibe `modifier: Modifier = Modifier` como primer parámetro opcional.
-- Nada fijo en el código de las pantallas: los colores, tipografías, dimensiones y formas vienen del tema (`MaterialTheme`, `HealthifyTheme`) y los textos de `strings.xml`.
-- Los DTO de Retrofit y las entidades de Room no salen de `infrastructure`: los mappers (`toDomain()`, `toEntity()`, `toDto()`) los convierten.
-- Cada `XxxContent` tiene un `@Preview` por estado relevante (normal, carga, vacío, sin conexión y error) con `widthDp = 360` y `heightDp = 800`.
-- Las versiones de las dependencias se declaran solo en `gradle/libs.versions.toml`.
+- Arquitectura de cuatro capas por bounded context (`domain`, `application`, `presentation` e `infrastructure`) con dependencias hacia el dominio. `domain` y `application` no dependen del framework.
+- Las reglas de negocio y las validaciones viven en entidades y objetos de valor (en Kotlin, `init { require(...) }`), no en ViewModels, cubits ni pantallas.
+- Kotlin: un solo `StateFlow<XxxUiState>` por pantalla, eventos únicos mediante `Channel` y `collectAsStateWithLifecycle()`. Cada Composable público recibe `modifier: Modifier = Modifier` como primer parámetro opcional, y cada `XxxContent` tiene un `@Preview` por estado relevante (normal, carga, vacío, sin conexión y error) con `widthDp = 360` y `heightDp = 800`.
+- Flutter: archivos en `snake_case` (`invite_patient_cubit.dart`) y clases en `UpperCamelCase`. Los estados son inmutables y se generan con `freezed`; los DTO se serializan con `json_serializable`. La inyección de dependencias usa `get_it` (un módulo por contexto en `infrastructure/di`) y la navegación usa `go_router`.
+- Nada fijo en el código de las pantallas: los colores, tipografías, dimensiones y formas vienen del tema (`HealthifyTheme` en Kotlin y el sistema de diseño de `lib/core/designsystem` en Flutter), y los textos de `strings.xml` o de los archivos ARB (`app_es.arb` como plantilla y `app_en.arb`).
+- Los DTO y las entidades locales no salen de `infrastructure`: los mappers (`toDomain()`, `toEntity()`, `toDto()`) los convierten.
+- Las versiones de las dependencias se declaran solo en `gradle/libs.versions.toml` (Kotlin) o fijas, sin rangos, en `pubspec.yaml` (Flutter).
 
 **Pruebas y especificaciones**
 
 - Pruebas del backend en xUnit, con nombres que describen el comportamiento (`PersonNameTests`, `RefreshRetryGraceTests`) y un archivo de pruebas por clase probada, en una carpeta que replica la del proyecto.
-- Pruebas de la aplicación en JUnit 4 con MockK y Turbine, con los dobles de prueba en la misma ruta que la clase probada.
+- Pruebas de la aplicación nativa en JUnit 4 con MockK y Turbine, con los dobles de prueba en la misma ruta que la clase probada.
+- Pruebas de la aplicación Flutter con `flutter_test`, `bloc_test` y `mocktail`, en archivos `xxx_test.dart` dentro de `test/`, con la misma ruta que el archivo probado en `lib/`.
 - Los criterios de aceptación de las historias de usuario se escriben en **Gherkin** (*Dado que*, *Cuando*, *Entonces*), siguiendo *Gherkin Conventions for Readable Specifications*: un escenario por comportamiento, en tercera persona y sin detalles de interfaz. Son la única parte redactada en español, porque forman parte de las historias del capítulo 2.
 
 ### 4.1.4. Software Deployment Configuration
@@ -248,10 +249,10 @@ Cada producto digital tiene su propio proceso de publicación a partir de su rep
 
 **Landing Page**
 
-El landing page es un sitio estático (HTML, CSS y JavaScript) que se publica con **GitHub Pages** desde la rama `main` del repositorio `healthify-website`, con el dominio propio `landing.healthify.lat` definido en un archivo `CNAME`.
+El landing page es un sitio estático (HTML, CSS y JavaScript) que se publica con **GitHub Pages** desde la rama `main` del repositorio `healthify-website`, con el dominio propio `landing.healthify.lat` definido en un archivo `CNAME`. Sus botones de descarga llevan a la invitación de Firebase App Distribution de la aplicación móvil.
 
 1. El cambio se integra en `develop` mediante un pull request.
-2. Se integra `develop` en `main` con otro pull request y se crea el tag de la versión (`v1.0.0`, `v1.0.1`).
+2. Se integra `develop` en `main` con otro pull request y se crea el tag de la versión (la última es `v2.1.0`).
 3. GitHub Pages publica el contenido de `main` en el dominio configurado.
 4. Para revisarlo en local: `npx serve -l 4173 .`
 
@@ -269,35 +270,43 @@ El backend se empaqueta en una imagen de Docker de dos etapas (`Dockerfile`): la
    | `JWT_SECRET` | Clave de firma de los tokens, de al menos 32 caracteres (obligatoria; sin ella el API no inicia). |
    | `DATABASE_PASSWORD`, `DATABASE_SCHEMA`, `DATABASE_USER`, `DATABASE_HOST` | Credenciales y esquema de MySQL. |
    | `USDA_API_KEY` | Clave de USDA FoodData Central; vacía desactiva ese proveedor. |
-   | `Ai__Enabled`, `Ai__Gemini__ApiKey` | Activan las funciones con IA, desactivadas por defecto. |
+   | `SMTP_HOST`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM` | Servidor de correo para el código de recuperación de contraseña; sin `SMTP_HOST` no se envía ningún correo. |
+   | `ASPNETCORE_ENVIRONMENT` | Entorno de ejecución. `Production` carga `appsettings.Production.json` (zona horaria clínica `America/Lima`, bloqueo de cuenta y vigencia de los códigos de recuperación). |
+   | `Ai__Enabled`, `Ai__Gemini__ApiKey` | Activan las funciones con IA. En `appsettings.Production.json` la IA está apagada (`Ai:Enabled=false`) y configurada con el modelo `gemini-3.5-flash`. |
 
 3. Se ejecuta `docker compose up --build -d`.
 4. El API queda disponible en `https://platform.healthify.lat` y su documentación en `/swagger`.
 
-Además, el flujo de GitHub Actions `Release` (`.github/workflows/release.yml`) se ejecuta con cada push a `main`: restaura y compila la solución en *Release*, lee `<Version>` de `Healthify.Platform.csproj` y crea el release `v<versión>` con las notas generadas automáticamente.
+Además, el flujo de GitHub Actions `Release` (`.github/workflows/release.yml`) se ejecuta con cada push a `main`: restaura y compila la solución en *Release*, lee `<Version>` de `Healthify.Platform.csproj` (hoy `1.6.0`) y crea el release `v<versión>` con las notas generadas automáticamente.
 
-**Mobile Application (Android)**
+**Mobile Applications (Android nativa y Flutter)**
 
-La aplicación se compila con Gradle. La dirección del backend (`BASE_URL`) se fija en cada tipo de compilación a `https://platform.healthify.lat/api/v1/`.
+Las dos aplicaciones apuntan al backend en `https://platform.healthify.lat/api/v1/`. En la aplicación nativa, la dirección (`BASE_URL`) se fija en cada tipo de compilación de `app/build.gradle.kts`; en la Flutter es el valor por defecto de `BASE_URL` y se puede cambiar al compilar con `--dart-define=BASE_URL=...`.
 
-<p class="caption"><strong>Tabla 230</strong><br><em>Pasos de compilación de la aplicación móvil</em></p>
+Cada repositorio tiene dos flujos de GitHub Actions con la misma forma:
 
-| Paso | Comando |
-|---|---|
-| Pruebas de JVM | `./gradlew :app:testDebugUnitTest` |
-| Análisis estático | `./gradlew :app:lintDebug` |
-| APK de depuración | `./gradlew :app:assembleDebug` |
-| APK de publicación | `./gradlew :app:assembleRelease` |
+- **`CI`** (`.github/workflows/ci.yml`): se ejecuta en cada pull request hacia `develop` o `main` y en cada push a `develop`. Hace el análisis estático, corre las pruebas, compila un APK de depuración y guarda los reportes como artefacto.
+- **`Distribute`** (`.github/workflows/distribute.yml`): se ejecuta en cada push a `main`. Primero comprueba que la versión no esté publicada; si ya existe un tag con ese número, falla y pide subir la versión. Después firma el APK con el keystore guardado en los secretos del repositorio, lo sube a Firebase App Distribution para el grupo `qa` con las notas de los últimos diez commits, y crea el release `vX.Y.Z` en GitHub con el APK adjunto. El keystore y las credenciales de Firebase se borran del runner al terminar.
 
-El APK resultante (`app/build/outputs/apk/`) se instala en los dispositivos Android con versión 7.0 (API 24) o superior. Los datos de sesión se guardan cifrados en el dispositivo y la aplicación funciona sin conexión para registrar comidas y autopesajes, que se sincronizan al recuperar la red.
+<p class="caption"><strong>Tabla 230</strong><br><em>Pasos de compilación de las aplicaciones móviles</em></p>
+
+| Paso | Aplicación nativa (Gradle) | Aplicación Flutter |
+|---|---|---|
+| Generación de código | — (KSP corre dentro de la compilación) | `dart run build_runner build -d` y `flutter gen-l10n` |
+| Análisis estático | `./gradlew :app:lintDebug` | `flutter analyze` |
+| Pruebas | `./gradlew :app:testDebugUnitTest` | `flutter test --coverage` |
+| APK de depuración | `./gradlew :app:assembleDebug` | `flutter build apk --debug` |
+| APK firmado y distribución | `./gradlew assembleRelease appDistributionUploadRelease` | `flutter build apk --release` y `firebase appdistribution:distribute` |
+
+La aplicación nativa (`pe.edu.upc.healthify`, versión 2.0.0) se instala en Android 7.0 (API 24) o superior. Guarda los datos de sesión cifrados en el dispositivo y funciona sin conexión para registrar comidas y autopesajes, que se sincronizan al recuperar la red. La aplicación Flutter (`pe.edu.upc.healthify.practitioner`, versión 1.2.0) usa otro identificador de paquete, así que convive en el mismo dispositivo con la nativa; guarda la sesión con `flutter_secure_storage`.
 
 **Deployment Diagram (C4 Model)**
 
-El diagrama de despliegue muestra los nodos donde se ejecuta cada artefacto: el dispositivo móvil del usuario, GitHub Pages para el landing page, y la máquina virtual de Oracle Cloud con Docker Engine, que aloja los contenedores del API (ASP.NET Core 10) y de la base de datos (MySQL 8.4). El dispositivo móvil consume el API por JSON sobre HTTPS, y el API se conecta a la base de datos por la red interna de Docker.
+El diagrama de despliegue muestra los nodos donde se ejecuta cada artefacto. GitHub Pages sirve el landing page y GitHub Actions compila las aplicaciones y sube sus APK a Firebase App Distribution, desde donde se instalan en los dispositivos Android: la aplicación nativa en el del paciente o del nutricionista, y la aplicación Flutter en el del nutricionista. La máquina virtual de Oracle Cloud ejecuta Docker Engine con los contenedores del API (ASP.NET Core 10) y de la base de datos (MySQL 8.4). Las dos aplicaciones consumen el API por JSON sobre HTTPS; el API se conecta a la base de datos por la red interna de Docker y llama a Gemini, a Open Food Facts, a USDA FoodData Central y al servidor SMTP. El fuente del diagrama está en `docs/c4-diagrams/deployment.puml`.
 
 <p class="caption"><strong>Figura 143</strong><br><em>Diagrama de despliegue de Healthify</em></p>
 
-![Deployment Diagram](../assets/img/artifacts/healthify-DeploymentDiagram.png)
+![Deployment Diagram](../assets/img/artifacts/healthify-DeploymentDiagram-tb2.png)
 
 ## 4.2. Landing Page & Mobile Application Implementation
 
