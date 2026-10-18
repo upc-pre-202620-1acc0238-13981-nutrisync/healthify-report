@@ -314,7 +314,7 @@ El diagrama de despliegue muestra los nodos donde se ejecuta cada artefacto. Git
 
 #### 4.2.1.1. Sprint Planning 1
 
-El Sprint 1 es el primer sprint de implementación. Se desarrolló entre el 27/09/2026 y el 09/10/2026 y cubre los tres productos digitales: el **landing page**, los **RESTful Web Services** (backend) y la **aplicación móvil Android**. Las historias incluidas son las ocho historias de usuario del épico EP10 (Landing Page), las diez historias técnicas del épico EP_TS (RESTful API) y las 37 historias de usuario de la aplicación (US01 a US31 y US39 a US44), definidas en la sección 2.4.1.
+El Sprint 1 es el primer sprint de implementación. Se desarrolló entre el 27/09/2026 y el 09/10/2026 y cubre los tres productos digitales: el **landing page**, los **RESTful Web Services** (backend) y la **aplicación móvil Android**. Las historias incluidas son las ocho historias de usuario del épico EP10 (Landing Page), las diez historias técnicas del épico EP_TS (RESTful API) y las 37 historias de usuario de la aplicación (US01 a US31 y US39 a US44), definidas en la sección 2.4.1. Al cierre del sprint, el Product Owner aceptó 45 de las 55 historias comprometidas (197 de 236 Story Points); las otras diez quedaron con escenarios de aceptación pendientes y volvieron al Product Backlog para el Sprint 2 (sección 4.2.1.6).
 
 <p class="caption"><strong>Tabla 231</strong><br><em>Datos de la reunión de Sprint Planning 1</em></p>
 
@@ -984,6 +984,16 @@ En el Sprint 1 se publicó el landing page, se desplegó el backend completo y s
 
 Tres elementos del landing page quedan pendientes de conectar con productos que aún no se publican: el enlace «Iniciar sesión» apunta a un marcador interno hasta que exista la dirección de inicio de sesión de la aplicación, las diapositivas de video del carrusel se activan al configurar el identificador de YouTube de cada video, y el formulario de contacto valida los datos y muestra la confirmación en el navegador sin enviarlos a un servidor.
 
+En la revisión del sprint, el Product Owner aceptó 45 de las 55 historias. Las diez restantes tenían implementada la mayor parte de su alcance, pero no cumplían todos sus escenarios de aceptación, por lo que volvieron al Product Backlog y se incluyeron en el Sprint 2 (sección 4.2.2.1):
+
+- **US11 y TS05:** falta la sugerencia de respuesta a «¿Esta comida estaba en tu plan?» (escenario «Sugerencia de respuesta» y «Sugerencia de adherencia»).
+- **US14:** el cumplimiento del día se evaluaba con la fecha UTC y no con el calendario del paciente, de modo que un registro hecho de noche en Lima podía contarse en el día siguiente.
+- **US18 y TS07:** la opción «Descargar una copia de mis datos» de los ajustes era un marcador sin endpoint detrás (escenario «Descarga de mis datos» y «Exportación de datos del paciente»).
+- **US19:** el backend permite cerrar una derivación, pero la app no ofrece la acción (escenario «Cierre de la derivación»).
+- **US29 y TS01:** no existe la recuperación de contraseña; el enlace de la pantalla de inicio de sesión abre un aviso (escenario «Recuperación de contraseña»).
+- **US32:** el inicio no muestra testimonios (escenario «Testimonios»).
+- **US36:** los botones de acceso no llevan a la descarga de la aplicación, porque la app aún no se distribuye (escenario «Nutricionista interesado»).
+
 **Landing Page**
 
 Hero con carrusel de cuatro diapositivas (nutricionistas, pacientes, video del producto y video del equipo) y botones de acceso según el rol (US32, US36).
@@ -1112,7 +1122,7 @@ Las capturas corresponden a la aplicación ejecutada en un emulador Android con 
     <td align="center"><img src="../assets/img/chapter4/sprint1/app-patient-pending-sync.png" alt="Sincronización pendiente" width="190" /></td>
   </tr>
   <tr>
-    <td valign="top"><strong>Ajustes.</strong> Cuenta, recordatorios, idioma, funciones de IA, sincronización pendiente, retiro del consentimiento, cambio de nutricionista y descarga de datos (US03, US07, US31, US41, US43).</td>
+    <td valign="top"><strong>Ajustes.</strong> Cuenta, recordatorios, idioma, funciones de IA, sincronización pendiente, retiro del consentimiento, cambio de nutricionista y acceso a la descarga de datos, que se completa en el Sprint 2 (US03, US07, US31, US41, US43).</td>
     <td valign="top"><strong>Funciones de IA.</strong> El paciente activa o desactiva cada función, y la app deja de usar su diario para ella al apagarla (US41).</td>
     <td valign="top"><strong>Recordatorios.</strong> Recordatorios de pesaje y de registro de comidas, apagados por defecto (US43).</td>
     <td valign="top"><strong>Sincronización pendiente.</strong> Registros hechos sin conexión que aún no se enviaron (US31).</td>
