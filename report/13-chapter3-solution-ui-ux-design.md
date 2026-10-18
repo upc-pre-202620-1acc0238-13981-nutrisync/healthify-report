@@ -134,13 +134,12 @@ Las etiquetas de Healthify son **breves (una o dos palabras), en español neutro
 
 | Etiqueta | Contenido que representa |
 |---|---|
-| Paciente | Funcionalidades para el paciente: registro por foto, tendencia, plan y consultas |
-| Nutricionista | Funcionalidades para el profesional: señales, consulta guiada y publicación del plan |
-| Cómo funciona | Los cuatro pasos de la consulta guiada y el seguimiento entre citas |
-| Nosotros | Historia, misión, visión, valores y equipo |
-| Contacto | Correo, teléfono y formulario para escribir al equipo |
-| Iniciar sesión | Acceso a la aplicación |
-| Soy nutricionista | Acción principal: solicitar la prueba de la herramienta |
+| Inicio | Página principal |
+| Cómo funciona | Ancla a «La consulta, paso a paso»: los cuatro pasos de la consulta guiada |
+| Para pacientes | Ancla a «Lo que verá su paciente»: registro por foto, plan y peso como tendencia |
+| Nosotros | Historia, misión y visión, valores, equipo y preguntas frecuentes |
+| Contacto | Tipo de consulta, formulario y otros datos de contacto |
+| Descargar para Android | Acción principal: descarga de la app desde Firebase App Distribution (Android 7.0 o superior) |
 | ES / EN | Selector de idioma |
 
 **Aplicación del paciente**
@@ -149,11 +148,13 @@ Las etiquetas de Healthify son **breves (una o dos palabras), en español neutro
 
 | Etiqueta | Contenido que representa |
 |---|---|
-| Inicio | Meta del día, registro rápido, «Cómo voy hoy», próxima consulta y avisos |
-| Diario | Comidas registradas por día, ideas para hoy y pendientes de enviar |
-| Progreso | Tendencia de peso, autopesaje y «Tu semana» (resumen con IA) |
+| Inicio | Medidor de energía del día, «Tu semana», «Cómo voy hoy», próxima consulta y avisos |
+| Diario | Comidas registradas por día, ideas con IA y porciones por confirmar |
+| Registrar | Botón central de la barra inferior: abre la cámara para registrar una comida |
+| Peso | Tendencia de peso, autopesaje y «Tu semana» (resumen con IA) |
 | Expediente | Mis números, mi plan y mis consultas |
-| Ajustes | Cuenta, idioma, funciones con IA, recordatorios, consentimiento y cierre de sesión |
+| Menú (☰) | Mi plan, Mis consultas, Pendientes, Ajustes y Cerrar sesión |
+| Ajustes | Cuenta, recordatorios, idioma, funciones con IA, cambio de nutricionista, copia de mis datos y retiro del consentimiento |
 
 **Aplicación del nutricionista**
 
@@ -161,13 +162,14 @@ Las etiquetas de Healthify son **breves (una o dos palabras), en español neutro
 
 | Etiqueta | Contenido que representa |
 |---|---|
-| Pacientes | Cartera de pacientes vinculados e invitación de nuevos pacientes |
+| Pacientes | Cartera agrupada en «Requieren acción» y «Al día», buscador de pacientes e invitación de nuevos pacientes |
 | Bandeja | Señales por revisar (por ejemplo «desviación sostenida» o «señal de consistencia») |
 | Agenda | Próximas consultas, agendar, reprogramar y cancelar |
-| Ajustes | Cuenta, idioma y cierre de sesión |
+| Menú (☰) | Catálogo de alimentos, Ajustes y Cerrar sesión |
+| Ajustes | Cuenta e idioma |
 | Resumen · Seguimiento · Expediente · Plan | Pestañas de la ficha de cada paciente |
 
-Los títulos dentro de cada pantalla mantienen la misma concisión («Mis pacientes», «Bandeja», «Registrar a mano», «Buscar alimento») y los botones comienzan con un verbo («Invitar paciente», «Iniciar consulta», «Registrar comida»). Las imágenes e íconos llevan texto alternativo para lectores de pantalla.
+Los títulos dentro de cada pantalla mantienen la misma concisión («Mis pacientes», «Bandeja», «Registrar a mano», «Buscar alimento») y los botones comienzan con un verbo («Invitar paciente», «Iniciar consulta», «Registrar mi peso»). Las imágenes e íconos llevan texto alternativo para lectores de pantalla.
 
 #### 3.1.2.3. SEO Tags and Meta Tags
 
