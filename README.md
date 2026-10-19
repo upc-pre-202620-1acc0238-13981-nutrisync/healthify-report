@@ -10,7 +10,7 @@
 <p align="center">NRC</p>
 <p align="center"><strong>13981</strong></p>
 
-<h2 align="center">Informe del Trabajo 1</h2>
+<h2 align="center">Informe del Avance 2</h2>
 
 <p align="center">Docente</p>
 <p align="center"><strong>Mayta Guillermo, Jorge Luis</strong></p>
@@ -38,7 +38,7 @@
 <br>
 
 <p align="center"><strong>Período 202620</strong></p>
-<p align="center"><strong>Octubre 2026</strong></p>
+<p align="center"><strong>Noviembre 2026</strong></p>
 
 <div style="page-break-after: always"></div>
 
