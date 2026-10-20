@@ -1599,6 +1599,180 @@ Aplicación móvil (`healthify-android-app`):
 
 <div style="page-break-after: always"></div>
 
+### 4.2.2. Sprint 2
+
+#### 4.2.2.1. Sprint Planning 2
+
+El Sprint 2 se desarrolló entre el 10/10/2026 y el 03/11/2026. Abarca cuatro productos: el **landing page**, los **RESTful Web Services**, la **aplicación móvil Android** del paciente y una aplicación nueva para el nutricionista, construida en **Flutter**. El sprint retoma las diez historias que el Product Owner no aceptó en el Sprint 1 (sección 4.2.1.6), implementa en Flutter las historias del rol nutricionista y aplica los ajustes que salieron de las entrevistas de validación (sección 4.3).
+
+<p class="caption"><strong>Tabla 256</strong><br><em>Datos de la reunión de Sprint Planning 2</em></p>
+<table>
+  <tr>
+    <th colspan="2">Sprint #</th>
+    <th colspan="2">Sprint 2</th>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint Planning Background</th>
+  </tr>
+  <tr>
+    <td colspan="2">Date</td>
+    <td colspan="2">2026-10-10</td>
+  </tr>
+  <tr>
+    <td colspan="2">Time</td>
+    <td colspan="2">10:00 AM (GMT-5)</td>
+  </tr>
+  <tr>
+    <td colspan="2">Location</td>
+    <td colspan="2">Reunión virtual</td>
+  </tr>
+  <tr>
+    <td colspan="2">Prepared By</td>
+    <td colspan="2">Villarreal Bazan, Angel Martin</td>
+  </tr>
+  <tr>
+    <td colspan="2">Attendees (to planning meeting)</td>
+    <td colspan="2">Del Aguila Del Aguila, Olenka Priscilla / Espinoza Cruz, Angela Milagros / Mora Rivera, Joel Fernando / Vergaray Calderon, Rose Almendra / Villarreal Bazan, Angel Martin</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 1 Review Summary</td>
+    <td colspan="2">Se publicó el landing page en https://landing.healthify.lat, se desplegó el backend con sus seis bounded contexts en https://platform.healthify.lat y se generó la versión 1.0 de la app Android. El Product Owner aceptó 45 de las 55 historias (197 de 236 Story Points). Las diez restantes quedaron con escenarios pendientes: la sugerencia de respuesta al registrar una comida (US11, TS05), la evaluación del día con el calendario del paciente (US14), la descarga de datos (US18, TS07), el cierre de derivaciones en la app (US19), la recuperación de contraseña (US29, TS01), los testimonios (US32) y el enlace de descarga de la app (US36).</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 1 Retrospective Summary</td>
+    <td colspan="2">Funcionó dividir el trabajo por bounded context, con una rama y un pull request por aspecto, y mantener las suites del backend y de la app en verde. Como mejora, el equipo acordó automatizar la compilación y las pruebas de las apps en cada pull request y distribuir los APK firmados, porque en el Sprint 1 la app Android no tenía integración continua y se instalaba desde Android Studio.</td>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint Goal &amp; User Stories</th>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 2 Goal</td>
+    <td colspan="2">Nuestro enfoque está en entregar al nutricionista su propia app en Flutter, completar las historias pendientes del Sprint 1 (recuperación de contraseña, descarga de datos, sugerencia de respuesta al registrar una comida, cierre de derivaciones, testimonios y enlace de descarga) y distribuir las dos apps firmadas por Firebase App Distribution. Creemos que esto da a los nutricionistas una herramienta pensada para la consulta, a los pacientes más control sobre su cuenta y sus datos, y a los visitantes del landing page una forma directa de instalar Healthify. Esto se confirmará cuando un nutricionista instale «Healthify para nutricionistas» desde Firebase, cree su cuenta aceptando los términos, invite a un paciente con QR y complete una consulta guiada; cuando un paciente recupere su contraseña con el código enviado a su correo, descargue el ZIP con sus datos y vea la sugerencia al registrar una comida; y cuando un visitante descargue la app desde el botón del landing page.</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 2 Velocity</td>
+    <td colspan="2">106 Story Points</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sum of Story Points</td>
+    <td colspan="2">106 Story Points (39 de las historias que vuelven del Sprint 1 y 67 de las historias del nutricionista implementadas en Flutter)</td>
+  </tr>
+</table>
+
+La velocidad baja de 236 a 106 Story Points porque el Sprint 1 comprometió más de lo que el equipo pudo cerrar (197 puntos aceptados) y porque la app Flutter parte de cero. Historias incluidas en el Sprint 2:
+
+<p class="caption"><strong>Tabla 257</strong><br><em>Historias de usuario incluidas en el Sprint 2</em></p>
+
+| Épico | Story ID | Título | Origen | Story Points |
+|---|---|---|---|:---:|
+| EP10 | US32 | Visualización de la propuesta de valor de Healthify | Pendiente del Sprint 1 | 2 |
+| EP10 | US36 | Acceso al inicio de uso de Healthify desde el Landing Page | Pendiente del Sprint 1 | 2 |
+| EP_TS | TS01 | Servicios de registro, autenticación y autorización | Pendiente del Sprint 1 | 5 |
+| EP_TS | TS05 | Servicios de registro de ingesta alimentaria | Pendiente del Sprint 1 | 5 |
+| EP_TS | TS07 | Servicios de monitoreo y expediente del paciente | Pendiente del Sprint 1 | 8 |
+| EP02 | US11 | Indicación de adherencia al plan en un registro | Pendiente del Sprint 1 | 2 |
+| EP04 | US14 | Consulta del cumplimiento nutricional diario | Pendiente del Sprint 1 | 5 |
+| EP05 | US18 | Acceso al expediente personal unificado | Pendiente del Sprint 1 | 5 |
+| EP05 | US19 | Registro de derivación a otro especialista | Pendiente del Sprint 1 y app Flutter | 2 |
+| EP08 | US29 | Inicio de sesión | Pendiente del Sprint 1 y app Flutter | 3 |
+| EP01 | US04 | Generación de invitación QR para un nuevo paciente | App Flutter | 5 |
+| EP01 | US05 | Consulta de pacientes con vínculo activo | App Flutter | 3 |
+| EP01 | US06 | Alta del paciente al finalizar el tratamiento | App Flutter | 2 |
+| EP02 | US44 | Alimentos locales del catálogo | App Flutter | 2 |
+| EP04 | US16 | Consulta del monitoreo del paciente | App Flutter | 5 |
+| EP04 | US17 | Revisión y resolución de señales de seguimiento | App Flutter | 5 |
+| EP04 | US39 | Agenda de consultas | App Flutter | 5 |
+| EP05 | US20 | Acceso al expediente unificado del paciente | App Flutter | 5 |
+| EP06 | US21 | Registro y finalización de la evaluación nutricional | App Flutter | 5 |
+| EP06 | US22 | Emisión del diagnóstico nutricional | App Flutter | 5 |
+| EP07 | US25 | Obtención de propuesta de metas nutricionales calculadas | App Flutter | 5 |
+| EP07 | US26 | Prescripción y publicación del plan nutricional | App Flutter | 8 |
+| EP07 | US27 | Ajuste del plan nutricional entre consultas | App Flutter | 5 |
+| EP08 | US28 | Creación de cuenta | App Flutter | 3 |
+| EP08 | US30 | Cierre de sesión | App Flutter | 1 |
+| EP08 | US43 | Preferencias de la cuenta: idioma y recordatorios | App Flutter | 3 |
+| | | **Total** | | **106** |
+
+Algunas historias de la app Flutter también recibieron cambios en la app Android durante el sprint: la aceptación de los términos al crear la cuenta (US28), el descarte de una consulta en curso (US21), la cartera agrupada por acción pendiente (US05) y los recordatorios de consulta (US43). Esos cambios figuran como tareas de cada historia en la sección 4.2.2.3.
+
+#### 4.2.2.2. Aspect Leaders and Collaborators
+
+Los aspectos del Sprint 2 siguen la división del Sprint 1: en el landing page, cada aspecto es un grupo de páginas; en el backend y en las apps, un bounded context, un módulo o un bloque transversal. La app Flutter se dividió en los mismos módulos que la app Android para que cada integrante trabajara sobre el código que ya conocía. La columna de un aspecto marca con **L** al líder, que responde por su diseño, sus commits y su pull request, y con **C** a quienes colaboran en él.
+
+**Landing Page**
+
+- **Estilos V10 y testimonios:** hoja de estilos sobre los tokens de Figma V10, logo blanco, header y testimonios del inicio.
+- **Inicio V10:** nueva estructura del inicio, con la consulta paso a paso, las secciones por rol y los botones de descarga.
+- **Nosotros y Contacto:** rediseño de «Nosotros» y de la página de contacto con selector de caso y resumen de errores.
+- **Términos y textos:** página de términos con índice fijo y móvil, textos V10 en español e inglés y capturas según el idioma.
+- **Interacción y capturas:** carrusel de pasos, trampa de foco del menú móvil, validación del formulario y exportación de capturas de la app.
+
+<p class="caption"><strong>Tabla 258</strong><br><em>Líderes y colaboradores del landing page en el Sprint 2</em></p>
+
+| Team Member (Last Name, First Name) | GitHub Username | Estilos V10 y testimonios | Inicio V10 | Nosotros y Contacto | Términos y textos | Interacción y capturas |
+|---|---|:---:|:---:|:---:|:---:|:---:|
+| Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | C | C | C | C | L |
+| Espinoza Cruz, Angela Milagros | Emy127 | C | C | L | C | C |
+| Mora Rivera, Joel Fernando | xJoelFMRx | C | L | C | C | C |
+| Vergaray Calderon, Rose Almendra | rosealmendra | C | C | C | L | C |
+| Villarreal Bazan, Angel Martin | Nevatrix | L | C | C | C | C |
+
+**Backend (RESTful Web Services)**
+
+- **Exportación de datos:** consultas de cada bounded context, compositor de CSV, escritor ZIP y endpoint de exportación (TS07).
+- **Día clínico:** calendarios con la fecha del paciente, reparación de los días evaluados con la fecha UTC y consulta del diario por rango (US14).
+- **Recuperación de contraseña:** código por correo, verificación, token de un solo uso y cambio de contraseña (TS01).
+- **Sugerencia de plan e ingesta del día:** reglas de la sugerencia, cálculo de la ingesta del día, nombres del catálogo en los prompts y endpoints `plan-fit` y `daily-intake` (TS05).
+- **Release, IA y limpieza:** versiones, registro de servicios, migraciones, nivel de razonamiento de Gemini y retiro de los endpoints obsoletos.
+
+<p class="caption"><strong>Tabla 259</strong><br><em>Líderes y colaboradores del backend en el Sprint 2</em></p>
+
+| Team Member (Last Name, First Name) | GitHub Username | Exportación de datos | Día clínico | Recuperación de contraseña | Sugerencia de plan e ingesta del día | Release, IA y limpieza |
+|---|---|:---:|:---:|:---:|:---:|:---:|
+| Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | C | | L | C | C |
+| Espinoza Cruz, Angela Milagros | Emy127 | C | L | C | C | C |
+| Mora Rivera, Joel Fernando | xJoelFMRx | C | C | C | L | C |
+| Vergaray Calderon, Rose Almendra | rosealmendra | L | C | C | C | C |
+| Villarreal Bazan, Angel Martin | Nevatrix | C | C | C | C | L |
+
+**Mobile Application (Android, paciente)**
+
+- **Inicio y energía del día:** medidor de energía, semana registrada, aviso al superar la meta y avisos que se expanden (US14).
+- **Exportación y expediente:** descarga de mis datos y hojas de detalle de versiones del plan, evaluaciones y derivaciones (US18).
+- **Cuenta y términos:** recuperación de contraseña, visibilidad de la contraseña y aceptación de los términos al registrarse (US28, US29).
+- **Sugerencia de plan:** consumo de `plan-fit` en el registro a mano y por foto, con *debounce* y carga de ideas (US11).
+- **Nutricionista, derivaciones y CI/CD:** cierre de derivaciones, descarte de consulta, cartera agrupada, menús laterales, firma, Firebase App Distribution y releases en GitHub (US05, US19, US21).
+
+<p class="caption"><strong>Tabla 260</strong><br><em>Líderes y colaboradores de la aplicación Android en el Sprint 2</em></p>
+
+| Team Member (Last Name, First Name) | GitHub Username | Inicio y energía del día | Exportación y expediente | Cuenta y términos | Sugerencia de plan | Nutricionista, derivaciones y CI/CD |
+|---|---|:---:|:---:|:---:|:---:|:---:|
+| Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | C | C | L | C | C |
+| Espinoza Cruz, Angela Milagros | Emy127 | C | L | C | C | C |
+| Mora Rivera, Joel Fernando | xJoelFMRx | C | C | C | L | C |
+| Vergaray Calderon, Rose Almendra | rosealmendra | L | C | C | C | C |
+| Villarreal Bazan, Angel Martin | Nevatrix | C | C | C | C | L |
+
+**Mobile Application (Flutter, nutricionista)**
+
+- **Foundation & Design System:** proyecto, dependencias, red con Problem Details y renovación de token, conectividad, localización, tema, componentes y CI.
+- **IAM & Onboarding:** splash, bienvenida, registro, inicio de sesión, recuperación de contraseña, sesión local y cambio de idioma (US28, US29, US43).
+- **Care Links & Shell:** cartera, invitación con QR, alta, shell con menú, cierre de sesión y ajustes (US04, US05, US06, US30, US43).
+- **Expediente y consulta guiada:** pestañas del paciente, seguimiento, datos base y los cuatro pasos de la consulta (US16, US20 a US22, US25, US26).
+- **Bandeja, agenda y release:** bandeja de revisión, propuesta de ajuste, agenda, derivaciones, recordatorios, ícono, splash nativo y flujo de distribución (US17, US19, US27, US39, US43).
+- **Catálogo, términos y derivaciones:** catálogo de alimentos y alimentos locales, aceptación de términos, ajustes de las entrevistas y cierre de derivaciones (US19, US28, US44).
+
+<p class="caption"><strong>Tabla 261</strong><br><em>Líderes y colaboradores de la aplicación Flutter en el Sprint 2</em></p>
+
+| Team Member (Last Name, First Name) | GitHub Username | Foundation & Design System | IAM & Onboarding | Care Links & Shell | Expediente y consulta guiada | Bandeja, agenda y release | Catálogo, términos y derivaciones |
+|---|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | C | L | C | C | C | C |
+| Espinoza Cruz, Angela Milagros | Emy127 | C | C | C | C | L | C |
+| Mora Rivera, Joel Fernando | xJoelFMRx | C | C | L | C | C | C |
+| Vergaray Calderon, Rose Almendra | rosealmendra | C | C | C | L | C | C |
+| Villarreal Bazan, Angel Martin | Nevatrix | L | C | C | C | C | L |
+
+En la app Flutter, cada módulo de los cinco primeros aspectos lo escribió su líder en una sola rama, y los demás colaboraron revisando el pull request y usando el núcleo de Foundation. El último aspecto se repartió entre los cinco integrantes. Nevatrix integró todas las ramas a `develop` y `main` en los cuatro repositorios.
 ## 4.3. Validation Interviews
 
 ### 4.3.1. Diseño de Entrevistas
