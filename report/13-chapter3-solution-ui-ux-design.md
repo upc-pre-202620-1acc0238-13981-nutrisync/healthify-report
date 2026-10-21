@@ -173,7 +173,7 @@ Los títulos dentro de cada pantalla mantienen la misma concisión («Mis pacien
 
 #### 3.1.2.3. SEO Tags and Meta Tags
 
-A continuación se detallan los valores asignados a las páginas del landing page, tomados del código del sitio. Todas las páginas incluyen `charset="UTF-8"`, `viewport`, `robots: index, follow`, `theme-color` y etiquetas Open Graph y Twitter Card para compartir el enlace, además del atributo `lang="es-419"` con `es_419` como idioma principal y `en_US` como alternativo.
+A continuación se detallan los valores asignados a las páginas del landing page, tomados del código del sitio. Todas las páginas incluyen `charset="UTF-8"`, `viewport`, `robots: index, follow`, `theme-color` (`#24461A`) y etiquetas Open Graph y Twitter Card para compartir el enlace, además del atributo `lang="es-419"` con `es_419` como idioma principal y `en_US` como alternativo. Las páginas no declaran la etiqueta `keywords`, que los buscadores actuales ignoran; los términos de búsqueda se trabajan en el título, la descripción y los encabezados.
 
 **Landing Page · Inicio (`index.html`)**
 
@@ -181,9 +181,8 @@ A continuación se detallan los valores asignados a las páginas del landing pag
 
 | Tag | Valor |
 |---|---|
-| Title | Healthify: lo que pasa entre consultas, ahora sí se ve |
-| Description | Healthify es la herramienta clínica que conecta al nutricionista con su paciente entre consultas: registro por foto, tendencias en lugar de cifras sueltas y decisiones siempre en manos del profesional. |
-| Keywords | Healthify, nutricionista, paciente, seguimiento nutricional, registro de comidas, registro por foto, autopesaje, expediente clínico, nutrición |
+| Title | Healthify: una app para los dos lados de la consulta |
+| Description | El paciente registra su comida con una foto. Su nutricionista lo ve en el seguimiento, ajusta el plan y lo publica. Los dos trabajan sobre la misma versión. |
 | Author | Healthify Team |
 
 **Landing Page · Nosotros (`about-us.html`)**
@@ -192,9 +191,8 @@ A continuación se detallan los valores asignados a las páginas del landing pag
 
 | Tag | Valor |
 |---|---|
-| Title | Nosotros \| Healthify |
-| Description | Conoce Healthify: nuestra historia, misión, visión, los principios que nos guían y el equipo detrás de la herramienta de seguimiento nutricional entre consultas. |
-| Keywords | Healthify, nutricionista, paciente, seguimiento nutricional, registro de comidas, registro por foto, autopesaje, expediente clínico, nutrición |
+| Title | Nosotros · Healthify |
+| Description | Healthify muestra qué pasa con el paciente entre una consulta y la siguiente, sin juzgarlo y sin reemplazar el criterio del nutricionista. |
 | Author | Healthify Team |
 
 **Landing Page · Contacto (`contact.html`)**
@@ -203,9 +201,8 @@ A continuación se detallan los valores asignados a las páginas del landing pag
 
 | Tag | Valor |
 |---|---|
-| Title | Contacto \| Healthify |
-| Description | ¿Eres nutricionista y quieres probar Healthify con tus pacientes? Escríbenos y te respondemos en menos de 48 horas hábiles. |
-| Keywords | Healthify, nutricionista, paciente, seguimiento nutricional, registro de comidas, registro por foto, autopesaje, expediente clínico, nutrición |
+| Title | Contacto · Healthify |
+| Description | Escríbanos: le respondemos en menos de 48 horas hábiles. Correo hola@healthify.app, teléfono +51 987 654 321. |
 | Author | Healthify Team |
 
 **Landing Page · Términos y condiciones (`terms.html`)**
@@ -214,14 +211,13 @@ A continuación se detallan los valores asignados a las páginas del landing pag
 
 | Tag | Valor |
 |---|---|
-| Title | Términos y condiciones \| Healthify |
-| Description | Términos y condiciones de uso de Healthify: consentimiento, datos compartidos, privacidad y derechos del paciente y del nutricionista. |
-| Keywords | Healthify, nutricionista, paciente, seguimiento nutricional, registro de comidas, registro por foto, autopesaje, expediente clínico, nutrición |
+| Title | Términos y condiciones · Healthify |
+| Description | Términos y condiciones de Healthify: quién puede usarlo, consentimiento, funciones con IA y protección de datos personales. |
 | Author | Healthify Team |
 
 **Aplicación móvil (Android) · ASO (App Store Optimization)**
 
-Healthify es una aplicación nativa de Android (`pe.edu.upc.healthify`) que, al momento de este informe, aún no se publica en Google Play. Los siguientes elementos ASO quedan definidos para la ficha de publicación:
+Healthify es una aplicación nativa de Android (`pe.edu.upc.healthify`, versión 2.0.0). Al momento de este informe se distribuye por Firebase App Distribution, enlazada desde el landing page, y aún no se publica en Google Play. Los siguientes elementos ASO quedan definidos para la ficha de publicación:
 
 <p class="caption"><strong>Tabla 183</strong><br><em>Etiquetas de la aplicación móvil</em></p>
 
