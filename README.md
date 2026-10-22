@@ -66,6 +66,13 @@
 | 1.4.0 | 01/10/2026 – 09/10/2026 | Angela Espinoza | Cap. 3: guía de estilo, sistemas de organización, etiquetado, búsqueda y navegación, SEO y metaetiquetas, wireframes y mock-ups del landing page, y wireframes, wireflows, mock-ups, user flows y prototipo de la aplicación móvil (`feature/chapter3-uiux`) |
 | 1.5.0 | 02/10/2026 – 09/10/2026 | Olenka Del Aguila | Cap. 4: configuración del entorno de desarrollo, control de código fuente, guía de estilo y despliegue; Sprint 1 con planning, líderes y colaboradores, backlog, evidencias de desarrollo, pruebas, ejecución, documentación de servicios y despliegue, y capturas de la aplicación y la API (`feature/chapter4-sprint1`) |
 | 2.0.0 | 09/10/2026 | Angel Villarreal | TB1 Report |
+| 2.1.0 | 10/10/2026 | Angel Villarreal | Video de la exposición TB1 en anexos; cambio de ML Kit a Gemini en el capítulo 2 (`feature/tb1-release`) |
+| 2.2.0 | 10/10/2026 – 03/11/2026 | Rose Vergaray | Cap. 2: actualización de user stories y criterios de aceptación (invitación con vigencia, pesaje en ayunas, ajuste del plan entre consultas, expediente y evaluación) |
+| 2.3.0 | 10/10/2026 – 03/11/2026 | Angela Espinoza | Cap. 3: guía de estilo y tipografía del landing page V10, nuevas secciones del home y mock-ups y wireframes del landing en escritorio y móvil |
+| 2.4.0 | 10/10/2026 – 03/11/2026 | Joel Mora | Diagrama de despliegue actualizado con la app Flutter y Firebase App Distribution |
+| 2.5.0 | 10/10/2026 – 03/11/2026 | Olenka Del Aguila | Cap. 4: ajuste del Sprint 1 (45 de 55 historias aceptadas) y Sprint 2 con planning, backlog, evidencias de desarrollo, pruebas, ejecución, documentación de servicios, despliegue y colaboración (`feature/sprint-2`) |
+| 2.6.0 | 03/11/2026 | Angel Villarreal | Repositorio de la app Flutter en el README; enlaces de Firebase App Distribution de las apps Android y Flutter en anexos (`feature/sprint-2`) |
+| 3.0.0 | 09/11/2026 | Angel Villarreal | AV2 Report |
 
 <div style="page-break-after: always"></div>
 
