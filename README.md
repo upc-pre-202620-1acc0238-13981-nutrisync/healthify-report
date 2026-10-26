@@ -82,6 +82,7 @@ Repositorio del informe del proyecto en GitHub: [healthify-report](https://githu
 Repositorio de la website: [healthify-website](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-website) <br>
 Repositorio de la webservices: [healthify-platform](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform)<br>
 Repositorio de la app en Android Studio: [healthify-android-app](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app)<br>
+Repositorio de la app en Flutter: [healthify-flutter-app](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app)<br>
 
 AV1:<br>
 
