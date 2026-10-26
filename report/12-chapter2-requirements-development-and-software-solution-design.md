@@ -2664,7 +2664,7 @@ El Impact Mapping del nutricionista se orienta al uso recurrente de la informaci
 | 2 | SS01 | Investigación de tecnologías para el reconocimiento de alimentos | 3 | Sprint 1 |
 | 3 | SS04 | Investigación de los controles de uso de la IA generativa | 3 | Sprint 1 |
 | 4 | TS09 | Servicios de asistencia con IA | 8 | Sprint 1 |
-| 5 | TS05 | Servicios de registro de ingesta alimentaria | 5 | Sprint 1 |
+| 5 | TS05 | Servicios de registro de ingesta alimentaria | 8 | Sprint 1 |
 | 6 | US10 | Registro manual de comida mediante catálogo | 5 | Sprint 1 |
 | 7 | SS02 | Investigación de Open Food Facts y USDA para el catálogo de alimentos | 3 | Sprint 1 |
 | 8 | US09 | Confirmación o ajuste de estimación de porción | 3 | Sprint 1 |
