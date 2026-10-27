@@ -1910,6 +1910,487 @@ URL del Board (Trello): [Enlace del Trello](https://trello.com/b/kg0Z81tZ/sprint
 | — | — | T120 | Corregir la prueba que fallaba en CI | Actualizar la prueba de la pantalla del paciente y sus fakes (texto de la derivación y hora del último guardado), que fallaba desde el pull request #15, y publicar la versión 1.3.1. | 2 | Villarreal Bazan, Angel Martin | Done |
 
 La estimación total es de 508 horas en 120 tareas. Las 120 tareas quedaron en Done. La última se agregó al cierre del sprint: desde el pull request #15 de la app Flutter el flujo CI marcaba una prueba fallida, y el pull request #21 la corrigió antes de publicar la versión 1.3.1 (sección 4.2.2.5).
+
+#### 4.2.2.4. Development Evidence for Sprint Review
+
+En el Sprint 2 el equipo trabajó sobre cuatro repositorios. En el landing page se rehízo el sitio sobre el diseño V10 de Figma y se agregaron los testimonios y los botones de descarga. En el backend se agregaron la exportación de datos, la evaluación del día con el calendario del paciente, la recuperación de contraseña, la sugerencia de plan y la ingesta del día, y se retiraron los ocho endpoints obsoletos. En la app Android se completaron las historias pendientes del paciente, se agregaron los menús laterales y se automatizaron la compilación y la distribución. La app Flutter del nutricionista se creó en este sprint y llegó a la versión 1.3.0.
+
+El trabajo siguió GitFlow como en el Sprint 1: cada bloque se hizo en una rama `feature/*` (o `refactor/*`) y se integró en `develop` con un pull request; los pull requests de `develop` a `main` corresponden a los releases. La columna **Branch** indica la rama en la que se hizo el commit, y las ramas `develop` y `main` solo muestran los merges de pull requests. Cada commit aparece una sola vez.
+
+<p class="caption"><strong>Tabla 263</strong><br><em>Pull requests y releases por producto en el Sprint 2</em></p>
+
+| Producto | Repositorio | Pull requests | Releases |
+|---|---|:---:|---|
+| Web Services | `healthify-platform` | 14 (#10 a #23) | `v1.1.0`, `v1.1.1`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0` |
+| Landing Page | `healthify-website` | 4 (#9 a #12) | `v2.0.0`, `v2.1.0` |
+| Mobile Application (Android) | `healthify-android-app` | 29 (#7 a #35; #29 se cerró sin integrar) | `v1.4.0` a `v2.1.0` (11 versiones) |
+| Mobile Application (Flutter) | `healthify-flutter-app` | 22 (#1 a #22) | `v1.0.0`, `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.3.1` |
+
+<p class="caption"><strong>Figura 183</strong><br><em>Captura de GitHub: pull requests del backend</em></p>
+
+![Pull requests del backend](../assets/img/chapter4/sprint2/gh-platform-pulls.png)
+
+<p class="caption"><strong>Figura 184</strong><br><em>Captura de GitHub: pull requests del landing page</em></p>
+
+![Pull requests del landing page](../assets/img/chapter4/sprint2/gh-website-pulls.png)
+
+<p class="caption"><strong>Figura 185</strong><br><em>Captura de GitHub: pull requests de la aplicación Android</em></p>
+
+![Pull requests de la aplicación Android](../assets/img/chapter4/sprint2/gh-android-pulls.png)
+
+<p class="caption"><strong>Figura 186</strong><br><em>Captura de GitHub: pull requests de la aplicación Flutter</em></p>
+
+![Pull requests de la aplicación Flutter](../assets/img/chapter4/sprint2/gh-flutter-pulls.png)
+
+**Web Services (backend)**
+
+<p class="caption"><strong>Tabla 264</strong><br><em>Commits del Sprint 2 del backend</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 26ebb20 | feat(care-relationship): add care link history lookup for the data export | — | 14/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | a9b3e52 | feat(iam): expose the account profile for the data export | — | 14/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | e9b8856 | feat(nutritional-care): expose published plan versions for the data export | — | 14/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 29db362 | feat(intake): expose diary and self weigh-ins for the data export | — | 15/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 5d4b398 | feat(monitoring): expose the follow-up history for the data export | — | 15/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 0c23d67 | feat(read-models): add localized data export messages | — | 15/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 774c615 | feat(read-models): add the patient data export composer and writer | — | 16/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 957bc0a | feat(read-models): add the patient data export endpoint | — | 16/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 152f2e5 | feat(app): register the patient data export services | — | 16/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 42c6057 | test(read-models): add patient data export tests | — | 17/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 5855fbf | feat(intake): query the diary over a range of days in the database | — | 17/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | e0f967f | test(intake): add diary range tests | — | 17/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 9d0479b | feat(monitoring): add the declared offset and clinical date calendars | — | 18/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | f39491f | feat(monitoring): evaluate snapshot days on the patient and clinical calendar | — | 18/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | ba83583 | feat(monitoring): repair days evaluated against the UTC date at start-up | — | 19/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 09274ef | feat(app): register the clinical day repair worker | — | 19/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 5c2b447 | test(monitoring): add clinical day evaluation tests | — | 19/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 1d9faf1 | feat(intake): add catalog-name prompts for meal ideas and photo recognition | — | 19/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | af832b8 | feat(intake): feed catalog names to meal ideas and resolve photo alternatives | — | 20/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | c02dfdb | test(intake): add catalog vocabulary and alternative resolution tests | — | 20/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 116ce34 | fix(food-catalog): match whole words only in food names | — | 20/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | ecf5165 | chore(migrations): add the diary entry patient timestamp index migration | — | 20/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 513bc81 | chore(csproj): set project version to 1.1.0 | — | 21/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | 0621177 | Merge pull request #10 from upc-pre-202620-1acc0238-13981-nutrisync/feature/data-export-and-clinical-day | Feature/data export and clinical day | 21/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `main` | dbb91cb | Merge pull request #11 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.1.0 | 21/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/gemini-thinking-level-fix` | e8ec491 | fix(shared): bound the Gemini thinking with Ai:Gemini:ThinkingLevel | — | 26/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/gemini-thinking-level-fix` | 1a064e2 | test(shared): cover the Gemini thinking level | — | 26/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/gemini-thinking-level-fix` | a3b7f7e | chore(config): bound the Gemini thinking level in production | — | 26/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/gemini-thinking-level-fix` | 038c83b | fix(intake): give meal ideas room for the Gemini answer | — | 27/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/gemini-thinking-level-fix` | e723fb9 | chore(csproj): set project version to 1.1.1 | — | 27/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | fc5416c | Merge pull request #12 from upc-pre-202620-1acc0238-13981-nutrisync/feature/gemini-thinking-level-fix | Feature/gemini thinking level fix | 27/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `main` | c880109 | Merge pull request #13 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.1.1 | 27/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-recovery` | e6b4ebd | feat(iam): add the password reset domain model | — | 27/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-recovery` | e5a4015 | feat(iam): add localized password reset messages | — | 27/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-recovery` | 2de2cce | build(deps): add MailKit for the password reset email | — | 27/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-recovery` | 2b3eac7 | chore(config): add SMTP and password reset settings | — | 27/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-recovery` | 8105aa0 | feat(iam): add the password reset command service | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-recovery` | d06b3da | feat(iam): add reset code hashing, SMTP mailing and persistence | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-recovery` | ac57c0d | feat(iam): add the password reset endpoints | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-recovery` | e822002 | feat(app): register the password reset services | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-recovery` | 80f0212 | test(iam): add password reset tests | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-recovery` | 06ed4e2 | chore(migrations): add the password reset codes migration | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-recovery` | fbd4bf5 | docs(readme): document the SMTP settings | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-recovery` | 73e2632 | chore(csproj): set project version to 1.2.0 | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | 16365a7 | Merge pull request #14 from upc-pre-202620-1acc0238-13981-nutrisync/feature/password-recovery | Feature/password recovery | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `main` | b7c002a | Merge pull request #15 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.2.0 | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-reset-verification` | 716a0fb | feat(iam): add the password reset verification domain model | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-reset-verification` | 051831b | feat(iam): persist and look up reset tokens | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-reset-verification` | a51bfab | feat(iam): verify the code and reset the password with a token | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-reset-verification` | faef8b9 | feat(iam): add the verification endpoint and token-based reset | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-reset-verification` | d030d54 | chore(migrations): add the password reset verification migration | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-reset-verification` | d446aaa | chore(csproj): set project version to 1.3.0 | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | 2dd1191 | Merge pull request #16 from upc-pre-202620-1acc0238-13981-nutrisync/feature/password-reset-verification | Feature/password reset verification | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `main` | 2b925d8 | Merge pull request #17 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.3.0 | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/plan-fit-suggestion` | ca00984 | feat(intake): add the plan fit suggestion rules | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/plan-fit-suggestion` | f825557 | feat(intake): add the plan fit query and the local date of a photo analysis | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/plan-fit-suggestion` | a84324e | feat(intake): compute the plan fit from the plan and the diary | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/plan-fit-suggestion` | 0e7b6de | feat(intake): attach the plan fit to the meal photo analysis | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/plan-fit-suggestion` | 2c96ce0 | feat(intake): add the plan fit resources and assemblers | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/plan-fit-suggestion` | aa0d68c | feat(intake): add the plan fit endpoint | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/plan-fit-suggestion` | 7138174 | feat(intake): accept the local date on meal photo analysis | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/plan-fit-suggestion` | 59b0e3d | feat(app): register the plan fit query service | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/plan-fit-suggestion` | 9ab616a | test(intake): add plan fit tests | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/plan-fit-suggestion` | 30cefeb | chore(csproj): set project version to 1.4.0 | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | ec520b3 | Merge pull request #18 from upc-pre-202620-1acc0238-13981-nutrisync/feature/plan-fit-suggestion | Feature/plan fit suggestion | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `main` | 8e9f69e | Merge pull request #19 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.4.0 | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/daily-intake` | cbf9f22 | feat(intake): add the daily intake model and query | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/daily-intake` | 91a2b00 | feat(intake): compute the daily intake from the plan and the diary | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/daily-intake` | f3e6e4c | feat(intake): add the daily intake resource and assembler | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/daily-intake` | d448e76 | feat(intake): add the daily intake endpoint | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/daily-intake` | e7622e1 | feat(app): register the daily intake query service | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/daily-intake` | f2ff207 | test(intake): add daily intake tests | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/daily-intake` | 96407ae | chore(csproj): set project version to 1.5.0 | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | 3642e9d | Merge pull request #20 from upc-pre-202620-1acc0238-13981-nutrisync/feature/daily-intake | Feature/daily intake | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `main` | 6c4243e | Merge pull request #21 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.5.0 | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 46088b4 | refactor(care): remove obsolete clinical commands and command services | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 8e6fd83 | refactor(care): remove deprecated endpoints from clinical controllers | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 3f2adae | refactor(care): remove nutritional diagnoses controller and legacy resources | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 48c17b4 | refactor(care): clean up legacy nutritional care assemblers | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 4c89ec7 | test(care): remove deprecated clinical assessment and diagnosis contract tests | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 8935a62 | refactor(app): remove deprecated nutritional care service registrations | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 975a230 | docs(shared): clean up requirement tags and standardize doc comments in shared module | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | dd676d1 | docs(iam): clean up requirement references in iam context | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | df815b4 | docs(care): clean up requirement tags across care relationship context | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 46e72f5 | docs(catalog): clean up requirement references in food catalog context | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 1fe794a | docs(intake): remove requirement tags and translate doc comments in intake body response | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 8a89115 | docs(monitoring): standardize documentation in monitoring adherence context | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 075f5f8 | docs(care): clean up specification tags in nutritional care context | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 711e65f | docs(readmodels): clean up requirement tags and comments in read models | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 38da0da | chore(csproj): set project version to 1.6.0 | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | f24756e | Merge pull request #22 from upc-pre-202620-1acc0238-13981-nutrisync/refactor/retire-legacy-clinical-endpoints | Refactor/retire legacy clinical endpoints | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `main` | f4d6129 | Merge pull request #23 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.6.0 | 29/10/2026 |
+
+**Landing Page**
+
+<p class="caption"><strong>Tabla 265</strong><br><em>Commits del Sprint 2 del landing page</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | f8a1d24 | feat(assets): add white logo variant | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | 10688fa | feat(assets): add Spanish consultation flow screens | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | 504a417 | feat(assets): add Spanish patient app screens | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | 42ee793 | feat(assets): add Spanish nutritionist app screens | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | 238da22 | feat(assets): add English consultation flow screens | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | 3dcbc5c | feat(assets): add English patient app screens | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | cfe5a0c | feat(assets): add English nutritionist app screens | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | d004977 | refactor(css): rebuild styles on Figma V10 tokens with mobile-first layouts | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | cc491ba | feat(i18n): add V10 strings and language-aware app screenshots | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | a56a0ab | feat(js): add steps carousel, menu focus trap and contact form validation | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | 44ddd68 | feat(index): redesign home page to Figma V10 | — | 01/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | a3adbf5 | feat(about): redesign about us page to V1.1 | — | 01/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | c52163d | feat(contact): redesign contact page with case selector and error summary | — | 01/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | c5bc4bc | feat(terms): redesign terms page with sticky and mobile index | — | 01/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | 3cf147d | docs(readme): document V10 structure, layout and pending review | — | 01/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/redesign-website` | 4f2e987 | docs(README): update readme | — | 01/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `develop` | 9270519 | Merge pull request #9 from upc-pre-202620-1acc0238-13981-nutrisync/feature/redesign-website | Feature/redesign website | 01/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `main` | b711a58 | Merge pull request #10 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Develop | 01/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/testimonials` | 5d8b771 | chore(css): update header behavior | — | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/testimonials` | 683b4e7 | chore(index): add a message effect to testimonials | — | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/testimonials` | 6182803 | chore: update i18n keys | — | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/testimonials` | ade8db0 | chore: add effects for index | — | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `develop` | c26da06 | Merge pull request #11 from upc-pre-202620-1acc0238-13981-nutrisync/feature/testimonials | Feature/testimonials | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `main` | 1c3d830 | Merge pull request #12 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/2.1.0 | 02/11/2026 |
+
+**Mobile Application (Android)**
+
+<p class="caption"><strong>Tabla 266</strong><br><em>Commits del Sprint 2 de la aplicación Android</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/data-export-and-ui-polish` | 0b1ed56 | feat(branding): redraw launcher icon background and foreground | — | 19/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/data-export-and-ui-polish` | 769f38e | feat(branding): replace webp launcher icons with legacy-API icon | — | 19/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/data-export-and-ui-polish` | 0ea9a08 | feat(designsystem): add unit suffix to HealthifyTextField | — | 19/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/data-export-and-ui-polish` | 7bbefa0 | refactor(nutritionalcare): use text field suffix for clinical units | — | 19/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/data-export-and-ui-polish` | 7d672b7 | feat(designsystem): add supporting text to HealthifySwitchRow | — | 19/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/data-export-and-ui-polish` | ea418db | fix(intake): show reminder times inside the switch row | — | 19/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/data-export-and-ui-polish` | ea485c8 | feat(i18n): add AI ideas consent and rate-limit messages | — | 19/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/data-export-and-ui-polish` | f219fd7 | fix(intake): show a distinct meal ideas error per backend code | — | 19/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/data-export-and-ui-polish` | cee6a04 | feat(i18n): add energy goal exceeded messages | — | 20/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/data-export-and-ui-polish` | 37d862a | feat(main): show an encouraging card when the daily energy goal is exceeded | — | 20/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/data-export-and-ui-polish` | 335697d | feat(i18n): add data export messages | — | 20/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/data-export-and-ui-polish` | 4290b6f | feat(main): add data export domain and use cases | — | 20/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/data-export-and-ui-polish` | a852cac | feat(main): add data export service, file writer and repository | — | 20/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/data-export-and-ui-polish` | c18cb63 | feat(main): add data export state and handling in settings view model | — | 20/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/data-export-and-ui-polish` | 42df13b | feat(main): replace the data export placeholder with a real download | — | 20/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | 6dcd4be | Merge pull request #7 from upc-pre-202620-1acc0238-13981-nutrisync/feature/data-export-and-ui-polish | Feature/data export and UI polish | 21/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | 190437d | Merge pull request #8 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.1.0 | 21/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/patient-main-menu-and-consultation-discard` | fb84a08 | feat(i18n): add patient main menu and consultation discard messages | — | 22/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/patient-main-menu-and-consultation-discard` | ca84a43 | feat(designsystem): add menu and delete icons | — | 22/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/patient-main-menu-and-consultation-discard` | f7e83c4 | feat(nutritionalcare): add the discard consultation endpoint, repository and use case | — | 22/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/patient-main-menu-and-consultation-discard` | 7ad9147 | feat(nutritionalcare): handle discarding the consultation in the measurement step | — | 23/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/patient-main-menu-and-consultation-discard` | 54663e8 | feat(nutritionalcare): add a delete action to the measurement step | — | 23/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/patient-main-menu-and-consultation-discard` | 24bdd47 | refactor(main): unify the home notice cards into a shared component | — | 23/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/patient-main-menu-and-consultation-discard` | 4561b2a | feat(designsystem): add an end drawer for side menus | — | 24/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/patient-main-menu-and-consultation-discard` | c1608fa | feat(main): add the patient shell view model with the menu state | — | 24/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/patient-main-menu-and-consultation-discard` | aa8b81b | feat(main): add the patient main menu content | — | 24/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/patient-main-menu-and-consultation-discard` | 3c015dc | feat(designsystem): replace the settings tab with a register meal camera button | — | 25/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/patient-main-menu-and-consultation-discard` | a783c3a | feat(ui): add the main menu button to the diary, progress and record tabs | — | 25/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/patient-main-menu-and-consultation-discard` | af8bdf7 | feat(main): add menu and reminders actions to home and drop the register meal card | — | 25/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/patient-main-menu-and-consultation-discard` | d8ba023 | feat(main): open the main menu from the patient shell and move settings into it | — | 26/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/patient-main-menu-and-consultation-discard` | e15d014 | feat(carerelationship): show AI feature descriptions inside their switch rows | — | 26/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/patient-main-menu-and-consultation-discard` | db2781e | feat(foodcatalog): move the add local food button above the search field | — | 26/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | 963da48 | Merge pull request #9 from upc-pre-202620-1acc0238-13981-nutrisync/feature/patient-main-menu-and-consultation-discard | Feature/patient main menu and consultation discard | 27/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | 068be17 | Merge pull request #10 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.1.0 | 27/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/password-recovery` | 7018d70 | feat(iam): add password reset code and token value objects | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/password-recovery` | dab40c6 | feat(iam): add password reset entity, repository contract and use cases | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/password-recovery` | c305b62 | test(iam): add password reset operations to the fake authentication repository | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/password-recovery` | 7af8cb9 | feat(iam): add password reset endpoints and DTOs | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/password-recovery` | a716ca1 | feat(iam): implement password reset in the authentication repository | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/password-recovery` | 29b26a9 | feat(i18n): add password recovery messages | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/password-recovery` | 7776920 | feat(iam): add forgot password state and view model | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/password-recovery` | 8892107 | feat(iam): add forgot password screen | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/password-recovery` | f128244 | refactor(iam): navigate from sign-in to password recovery instead of a placeholder dialog | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/password-recovery` | 4f9e04e | feat(iam): wire the forgot password route into the navigation graph | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | 81f86c2 | Merge pull request #11 from upc-pre-202620-1acc0238-13981-nutrisync/feature/password-recovery | Feature/password recovery | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | 6c16248 | Merge pull request #12 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.2.0 | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/practitioner-settings-menu` | 0e40787 | feat(i18n): add practitioner main menu texts | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/practitioner-settings-menu` | 6ec928d | feat(main): add practitioner main menu drawer content | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/practitioner-settings-menu` | 25c684a | feat(main): add practitioner shell state and view model | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/practitioner-settings-menu` | c5945f7 | refactor(designsystem): drop the Settings tab from the practitioner navigation bar | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/practitioner-settings-menu` | e102441 | feat(main): add the menu button to patient roster, review inbox and agenda | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/practitioner-settings-menu` | f31b01f | feat(main): open the practitioner menu from the shell | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/practitioner-settings-menu` | bf29441 | refactor(main): make practitioner settings an internal screen state | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/practitioner-settings-menu` | d9c95a0 | refactor(main): show practitioner settings as a full screen with back navigation | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/practitioner-settings-menu` | 240f0e6 | chore(i18n): remove the unused practitioner settings food catalog text | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/practitioner-settings-menu` | f6bc089 | feat(navigation): route practitioner settings from the shell menu | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | 9964316 | Merge pull request #13 from upc-pre-202620-1acc0238-13981-nutrisync/feature/practitioner-settings-menu | Feature/practitioner settings menu | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | d8dabb9 | Merge pull request #14 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.3.0 | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | 2e4e08a | feat(carerelationship): classify roster patients by pending action | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | d7e5bec | feat(carerelationship): group the roster by action with patient search | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | b3dbe8b | feat(intake): read the daily intake from active targets | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | c0083d5 | feat(monitoring): add the logged week built from compliance days | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | 12d8520 | feat(main): load the daily gauge and logged week into the home state | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | 9787205 | feat(main): show the daily energy gauge and the week on home | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | 70a076f | feat(monitoring): add the consultation reminder model and scheduling port | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | 77b0e99 | feat(monitoring): schedule consultation reminders with WorkManager | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | 2d6b433 | feat(main): request notification permission and refresh reminders from the shells | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | fab78e8 | feat(nutritionalcare): add plan version, evaluation and referral detail to the record data | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | ff4f46b | feat(nutritionalcare): add detail sheets for plan versions, evaluations and referrals | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | 7268620 | feat(nutritionalcare): open the detail sheets from the record and plan screens | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | 439a0a5 | feat(navigation): open a plan version straight from a past consultation | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | 01b104a | fix(main): keep the settings content above the navigation bar | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | cea8ac1 | feat(main): swipe between the tabs of the practitioner patient screen | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | ecfe600 | Merge pull request #15 from upc-pre-202620-1acc0238-13981-nutrisync/feature/home-gauge-roster-and-reminders | Feature/home gauge roster and reminders | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | 6c4a9ff | Merge pull request #16 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.4.0 | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-gauge-roster-and-reminders` | 71a7ba1 | fix: update progress bar | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | b79c723 | Merge pull request #17 from upc-pre-202620-1acc0238-13981-nutrisync/feature/home-gauge-roster-and-reminders | fix: update progress bar | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | 9672a7d | Merge pull request #18 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.4.1 | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/plan-fit-suggestion` | 248d44e | feat(intake): add localization strings for AI plan fit suggestions and meal ideas loading | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/plan-fit-suggestion` | 1b8f1b3 | feat(intake): define domain models and repository contract for plan fit suggestions | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/plan-fit-suggestion` | 8c91321 | feat(intake): integrate plan fit suggestion in meal photo domain and use cases | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/plan-fit-suggestion` | 1e2d7e1 | feat(intake): implement DTOs, API service endpoints and mappers for plan fit | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/plan-fit-suggestion` | ef16811 | feat(intake): implement plan fit repository and configure dependency injection | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/plan-fit-suggestion` | 83d965e | feat(intake): update meal form UI components to display AI plan fit suggestions | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/plan-fit-suggestion` | 4ee3766 | feat(intake): add live loading indicator to meal ideas screen | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/plan-fit-suggestion` | e5c70ac | feat(intake): manage plan fit debounce state and integrate suggester in meal form | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/plan-fit-suggestion` | cec3b5f | feat(intake): connect plan fit suggestions to manual meal and photo view models | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/plan-fit-suggestion` | add4308 | test(intake): add test fakes and unit tests for plan fit suggestions and flow | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | 959da33 | Merge pull request #19 from upc-pre-202620-1acc0238-13981-nutrisync/feature/plan-fit-suggestion | Feature/plan fit suggestion | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | dea80a7 | Merge pull request #20 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.5.0 | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-notice-and-password-visibility` | 3939b47 | feat(designsystem): add the crossed-eye visibility-off icon | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-notice-and-password-visibility` | e1337a6 | fix(designsystem): show the crossed eye while the password is visible | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-notice-and-password-visibility` | f2bf2f2 | fix(main): keep the gauge center text inside the arc | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-notice-and-password-visibility` | 71a2b93 | feat(i18n): add expand and collapse texts for home notices | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/home-notice-and-password-visibility` | f182743 | feat(main): let long home notices expand and collapse on tap | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | 626a20a | Merge pull request #21 from upc-pre-202620-1acc0238-13981-nutrisync/feature/home-notice-and-password-visibility | Feature/home notice and password visibility | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | 29b8127 | Merge pull request #22 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.5.1 | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/codebase-english-comments` | b7c3eeb | docs(build): translate gradle build configs, manifests, resources and navigation comments | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/codebase-english-comments` | 9636db7 | docs(core): translate core design system, database, and network architecture comments | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/codebase-english-comments` | 6325b55 | docs(iam): translate authentication, session and onboarding feature comments | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/codebase-english-comments` | dae0042 | docs(carerelationship): translate patient-practitioner care relationship comments | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/codebase-english-comments` | b50aa4b | docs(main): translate main patient shell, home, settings and food catalog comments | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/codebase-english-comments` | 8d9acd9 | docs(intake): translate meal intake domain, use cases, and infrastructure comments | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/codebase-english-comments` | 6f345dc | docs(intake): translate meal intake presentation screens, components and viewmodel comments | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/codebase-english-comments` | 72fae56 | docs(monitoring): translate patient monitoring, check-ins, and reminders comments | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/codebase-english-comments` | 5cc74d6 | docs(nutritionalcare): translate nutritional care plans and practitioner review comments | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/codebase-english-comments` | d978b71 | docs(testing): translate unit tests, fakes, and mock infrastructure comments | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | 276ffef | Merge pull request #23 from upc-pre-202620-1acc0238-13981-nutrisync/feature/codebase-english-comments | Feature/codebase english comments | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | 405a25b | Merge pull request #24 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.6.0 | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/ci-cd-app-distribution` | db6c231 | build(app): sign release builds with an upload keystore | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/ci-cd-app-distribution` | e451f3d | build(app): read versionCode from a Gradle property | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/ci-cd-app-distribution` | 0f15497 | build(deps): add the Firebase App Distribution plugin to the catalog | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/ci-cd-app-distribution` | 28a2bb4 | build(app): configure Firebase App Distribution for release builds | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/ci-cd-app-distribution` | 9049d63 | ci(workflows): run lint, unit tests and the debug build on pull requests | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/ci-cd-app-distribution` | c72a298 | ci(workflows): distribute signed release builds to Firebase testers | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/ci-cd-app-distribution` | ebde25d | docs(readme): describe the CI/CD workflows | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/ci-cd-app-distribution` | 3776011 | docs(readme): list the repository secrets | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/ci-cd-app-distribution` | fe466c9 | docs(readme): explain local release signing | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/ci-cd-app-distribution` | 224af9e | build(app): bump version to 1.7.0 | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | 0e198c4 | Merge pull request #25 from upc-pre-202620-1acc0238-13981-nutrisync/feature/ci-cd-app-distribution | Feature/ci cd app distribution | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | dca5f3b | Merge pull request #26 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.7.0 | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/github-release` | d3b7c3f | chore(ci/cd): add github release | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/github-release` | 72f4cec | chore: update version to 1.7.1 | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | 60c7fb6 | Merge pull request #27 from upc-pre-202620-1acc0238-13981-nutrisync/feature/github-release | Feature/GitHub release | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | c39cd4e | Merge pull request #28 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.7.1 | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/sign-up-terms-acceptance` | 88b9da1 | feat(core): add legal links | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/sign-up-terms-acceptance` | dd9e50e | feat(designsystem): add checkbox component | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/sign-up-terms-acceptance` | 65a5edd | feat(iam): add terms acceptance strings | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/sign-up-terms-acceptance` | 44f2ce5 | feat(iam): add terms acceptance row | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/sign-up-terms-acceptance` | babdef6 | feat(iam): add terms to the sign-up state | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/sign-up-terms-acceptance` | 24cde6c | feat(iam): require accepting the terms on sign-up | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/sign-up-terms-acceptance` | 8d6e47e | feat(iam): show the terms on the sign-up screen | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/sign-up-terms-acceptance` | 5d09c1b | feat(iam): preview the terms error | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/sign-up-terms-acceptance` | ecbd3d3 | test(iam): cover the sign-up terms | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/sign-up-terms-acceptance` | 0e336a5 | build(app): bump version to 1.8.0 | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | e798366 | Merge pull request #30 from upc-pre-202620-1acc0238-13981-nutrisync/feature/sign-up-terms-acceptance | Feature/sign up terms acceptance | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | bcd15f7 | Merge pull request #31 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.8.0 | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/interview-validation-fixes` | e64ce8c | feat(navigation): drop the screen transitions on back | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/interview-validation-fixes` | ea52cae | fix(home): read the energy goal like the record adherence | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/interview-validation-fixes` | 522a401 | test(home): cover the tolerance band of the energy goal | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/interview-validation-fixes` | d83de78 | feat(designsystem): label the log meal button | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/interview-validation-fixes` | c6eb129 | feat(intake): clarify the weight tab and its trend summary | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/interview-validation-fixes` | 28b610f | feat(monitoring): explain pending confirmation in the diary | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/interview-validation-fixes` | d965629 | feat(nutritionalcare): pin the consultation action in the record tab | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/interview-validation-fixes` | 78c8b08 | build(app): bump version to 2.0.0 | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | 17fd10b | Merge pull request #32 from upc-pre-202620-1acc0238-13981-nutrisync/feature/interview-validation-fixes | Feature/interview validation fixes | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | a6ac178 | Merge pull request #33 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/2.0.0 | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/close-referral` | e0f5f54 | feat(monitoring): define domain models, use cases and strings for closing referrals | — | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/close-referral` | 36fb949 | feat(monitoring): implement referral closure api endpoint and repository logic | — | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/close-referral` | 0327cd2 | feat(nutritionalcare): add referral closure flow and confirmation dialog in patient record tab | — | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/close-referral` | 610fea2 | test(monitoring): add unit tests and fakes for referral closure handling | — | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/close-referral` | a057f4b | build(app): bump version to 2.1.0 | — | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | 4179713 | Merge pull request #34 from upc-pre-202620-1acc0238-13981-nutrisync/feature/close-referral | Feature/close referral | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | 4149f4c | Merge pull request #35 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/2.1.0 | 02/11/2026 |
+
+**Mobile Application (Flutter)**
+
+El repositorio se creó el 09/10/2026 y el núcleo, los módulos y la primera versión se integraron el 30/10/2026, en las ramas `feature/core-foundation`, `feature/auth-onboarding`, `feature/patient-care-links`, `feature/patient-record-consultation` y `feature/inbox-agenda-release`.
+
+<p class="caption"><strong>Tabla 267</strong><br><em>Commits del Sprint 2 de la aplicación Flutter</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | 1294373 | Initial commit | — | 09/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/setup` | 933be39 | chore: initial setup | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | cf46116 | Merge pull request #1 from upc-pre-202620-1acc0238-13981-nutrisync/feature/setup | chore: initial setup | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | 6a76a70 | Merge pull request #2 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/0.1.0 | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | 7132b38 | chore(git): ignore release signing files | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | 361bfc2 | chore(deps): pin app and dev dependencies | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | a618414 | feat(assets): add fonts, logos and icon set | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | c8cff30 | feat(common): add domain errors, result and shared helpers | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | 229dc6e | feat(network): add api client and problem details mapping | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | f9a54cc | feat(network): add authenticated client and token refresh | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | 879457b | feat(core): add connectivity observer and service locator | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | f2f8777 | feat(l10n): add localization setup | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | 93d7c3f | feat(theme): add colors, typography, dimens and icons | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | 3058ecc | feat(designsystem): add buttons, fields and selectors | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | 889d9c7 | feat(designsystem): add dialogs, sheets and navigation bars | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | e3d6695 | feat(designsystem): add state widgets and display helpers | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | d3a6966 | feat(app): bootstrap app with placeholder screen | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | 795558e | ci(workflow): add analyze, test and debug build pipeline | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | 47d64ac | docs(readme): add running and checks guide | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/core-foundation` | e8ab734 | chore(release): bump version to 0.2.0 | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | 272510a | Merge pull request #3 from upc-pre-202620-1acc0238-13981-nutrisync/feature/core-foundation | Feature/core foundation | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | b97bd05 | Merge pull request #4 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/0.2.0 | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | 08672f6 | feat(iam): add domain entities and value objects | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | 34db4b1 | feat(iam): add session and account use cases | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | 6611bd4 | feat(iam): add auth dtos and remote services | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | 398fbf8 | feat(iam): add mappers and repositories | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | 2d2ec91 | feat(iam): add local session and token refresher | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | 89625fd | feat(iam): register iam module | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | 5c1948a | feat(iam): add sign-in screen | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | ee0a86b | feat(iam): add sign-up screen | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | 9260a11 | feat(iam): add forgot password flow | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | b50b4a0 | feat(iam): add session expired and shell loading screens | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | abc3cd6 | feat(iam): add in-app language switching | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | 26db14b | feat(onboarding): add splash screen | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | 5b42549 | feat(onboarding): add welcome screen | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | 03c080e | feat(navigation): add session gate and root router | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | 8a8b0e3 | test(iam): cover auth screens layout | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | 3d70c14 | chore(release): bump version to 0.3.0 | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | 5c96f8a | Merge pull request #5 from upc-pre-202620-1acc0238-13981-nutrisync/feature/auth-onboarding | Feature/auth onboarding | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | 85b578b | Merge pull request #6 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/0.3.0 | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | 2abf8d5 | feat(carerelationship): add roster and invitation domain | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | dbfbf44 | feat(carerelationship): add care link use cases | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | 70584df | feat(carerelationship): add dtos and service | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | 96d1392 | feat(carerelationship): add mappers | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | 7a346a5 | feat(carerelationship): add repository and module | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | e834236 | feat(roster): add patient roster screen | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | 7abf3f5 | feat(invitation): add invite patient with qr | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | b77a428 | feat(discharge): add discharge patient flow | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | 3edacac | feat(shell): add shell routes and cubit | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | fe6be2d | feat(shell): add shell screen and menu | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | 99d84e1 | feat(shell): add sign-out confirmation | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | a089112 | feat(settings): add practitioner settings state | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | 2aa0db8 | feat(settings): add settings screen and language sheet | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | 4c1e05a | feat(navigation): wire shell and care link routes | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | e7a17dc | test(carerelationship): cover screens layout | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | dddf1cb | chore(release): bump version to 0.4.0 | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | 876a2fd | Merge pull request #7 from upc-pre-202620-1acc0238-13981-nutrisync/feature/patient-care-links | Feature/patient care links | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | cb43c44 | Merge pull request #8 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/0.4.0 | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | b9491b1 | feat(nutritionalcare): add clinical domain and codes | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | d3e9878 | feat(nutritionalcare): add practitioner care use cases | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | edcbe44 | feat(nutritionalcare): add dtos, mappers and repositories | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | e524241 | feat(baseline): add patient baseline form | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | 514aa79 | feat(patient): add summary tab | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | df75a49 | feat(patient): add plan tab | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | 4d571c3 | feat(monitoring): add monitoring panel data | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | 76b6abd | feat(monitoring): add patient follow-up tab | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | c61b85f | feat(patient): add patient file, history and record | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | a856abf | feat(consultation): add consultation commands and validations | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | 70fade8 | feat(consultation): add consultation dtos | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | 53e5285 | feat(consultation): add measurement step | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | c085541 | feat(consultation): add diagnosis and targets steps | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | 520732d | feat(consultation): add publication step | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | 590dfef | feat(navigation): wire patient file and consultation routes | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-record-consultation` | f2b4393 | chore(release): bump version to 0.5.0 | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | 879977c | Merge pull request #9 from upc-pre-202620-1acc0238-13981-nutrisync/feature/patient-record-consultation | Feature/patient record consultation | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | 45a1575 | Merge pull request #10 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/0.5.0 | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | ed21520 | feat(review): add review inbox domain and repository | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | b8fbf23 | feat(review): add inbox and review item screens | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | 5ec9608 | feat(review): add adjust proposal screen | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | 625708f | feat(agenda): add agenda domain and repository | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | 7e06358 | feat(agenda): add agenda screen | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | 324cb27 | feat(agenda): add scheduling and referral screens | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | 962ed0e | feat(reminders): add local consultation reminders | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | 6868e33 | feat(navigation): wire inbox and agenda into the shell | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | 78cd878 | test(navigation): add app wiring and adaptive layout tests | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | 157c152 | feat(branding): add launcher icon and native splash | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | a9c1ebc | feat(app): set practitioner application id | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | 9246198 | ci(release): add signed build and distribution workflow | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | f112394 | docs(readme): add ci/cd overview | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | d744135 | docs(readme): add repository secrets | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | 6ec16f0 | docs(readme): add local release signing guide | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | 22cf563 | chore(release): bump version to 0.6.0 | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | 98a1280 | Merge pull request #11 from upc-pre-202620-1acc0238-13981-nutrisync/feature/inbox-agenda-release | Feature/inbox agenda release | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | 628a931 | Merge pull request #12 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/0.6.0 | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | d09ed9a | chore: update README | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | 9109273 | chore: update version to 1.0.0 | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | 29170fa | Merge pull request #13 from upc-pre-202620-1acc0238-13981-nutrisync/feature/inbox-agenda-release | Feature/inbox agenda release | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | a107197 | Merge pull request #14 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.0.0 | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 3bfdc78 | feat(foodcatalog): add food search value objects | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | e15c374 | feat(foodcatalog): add reference food entities | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 68c10f6 | feat(foodcatalog): add repository contract and use cases | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 5747c00 | feat(foodcatalog): add reference food dtos and mappers | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 3537498 | feat(foodcatalog): add remote service and repository | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 852ded4 | feat(l10n): add food catalog strings | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | ca11ea0 | feat(l10n): add local food strings | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 851d4e8 | feat(foodcatalog): add catalog screen states | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 59b31c6 | feat(foodcatalog): add catalog cubit | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | dd5acfa | feat(foodcatalog): add local food cubit | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 7469c31 | feat(foodcatalog): register the catalog module | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 41a145b | feat(foodcatalog): add catalog screen | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 7a01cb1 | feat(foodcatalog): add local food screen | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 0aaf562 | feat(navigation): add food catalog routes | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 66f896f | feat(main): open the food catalog from the menu | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 4b69d13 | test(foodcatalog): add fakes and domain tests | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 36146d6 | test(foodcatalog): cover the repository | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 386de6e | test(foodcatalog): cover the cubits | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 56ac804 | test(foodcatalog): cover the screens | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | c59cfca | test(navigation): cover the food catalog flow | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 5cbd506 | build(deps): add url_launcher | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 830fb5d | feat(core): add legal links | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | fbf59a8 | feat(designsystem): add checkbox component | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | ed6f410 | feat(l10n): add terms acceptance strings | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | ba0761c | feat(iam): add terms acceptance row | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | bd7e74d | feat(iam): require accepting the terms on sign-up | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | c2ea72e | feat(iam): show the terms on the sign-up screen | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 077442d | test(iam): cover the sign-up terms | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 11c7c07 | test(iam): cover the terms acceptance row | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | e6d6362 | chore(release): bump version to 1.1.0 | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | 8d2613f | Merge pull request #15 from upc-pre-202620-1acc0238-13981-nutrisync/feature/food-catalog-and-terms | Feature/food catalog and terms | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | b5d64e1 | Merge pull request #16 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.1.0 | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/interview-validation-fixes` | 2bb8a67 | feat(l10n): add the pending confirmation hint | — | 01/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/interview-validation-fixes` | b9d040b | feat(monitoring): explain pending confirmation in the diary | — | 01/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/interview-validation-fixes` | cfa0816 | refactor(nutritionalcare): extract the consultation primary button | — | 01/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/interview-validation-fixes` | c379eec | feat(main): pin the consultation button in the history tab | — | 01/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/interview-validation-fixes` | a725a85 | test(main): expect the consultation button in the history tab | — | 01/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/interview-validation-fixes` | fc49cc0 | chore(release): bump version to 1.2.0 | — | 01/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | c995877 | Merge pull request #17 from upc-pre-202620-1acc0238-13981-nutrisync/feature/interview-validation-fixes | Feature/interview validation fixes | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | 8b7b3a3 | Merge pull request #18 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.2.0 | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/close-referral` | 1601655 | feat(l10n): add localization strings for closing referrals in patient record | — | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/close-referral` | 1b4cd82 | feat(monitoring): implement referral closure use case, remote service and repository | — | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/close-referral` | 24f03d3 | feat(main): add referral closure flow, confirmation dialog and state handling | — | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/close-referral` | 5a4d84e | test(monitoring): add tests and fakes for referral closure in history and agenda | — | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/close-referral` | 8fae952 | chore(release): bump version to 1.3.0 | — | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | 385152d | Merge pull request #19 from upc-pre-202620-1acc0238-13981-nutrisync/feature/close-referral | Feature/close referral | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | 2dd585c | Merge pull request #20 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.3.0 | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `fix/consultation-tests` | e61004d | chore: update last saved time at | — | 03/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `fix/consultation-tests` | a07e8ef | chore: update referral summary for derivation | — | 03/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `fix/consultation-tests` | daa8b44 | chore: bump version to 1.3.1 | — | 03/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | 3503d02 | Merge pull request #21 from upc-pre-202620-1acc0238-13981-nutrisync/fix/consultation-tests | Fix/consultation tests | 03/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | 7095d40 | Merge pull request #22 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.3.1 | 03/11/2026 |
 ## 4.3. Validation Interviews
 
 ### 4.3.1. Diseño de Entrevistas
