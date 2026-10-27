@@ -1,0 +1,56 @@
+// Context Map de Healthify. Regenerar con:
+//   dot -Tpng -Gdpi=220 docs/context-map/context-map.dot -o assets/img/artifacts/context-map.png
+// Flechas: upstream -> downstream. Continua: el downstream depende de ella para operar.
+// Punteada: el downstream solo se conforma con un modelo ajeno o reacciona a una notificación.
+digraph ContextMap {
+  graph [rankdir=TB, nodesep=0.9, ranksep=1.1, pad=0.5, bgcolor="white", fontname="Helvetica", splines=true];
+  node  [shape=box, style="rounded,filled", fontname="Helvetica-Bold", fontsize=17, margin="0.35,0.22", penwidth=2.2, width=3.2];
+  edge  [fontname="Helvetica", fontsize=13, penwidth=1.7, color="#3F3F46", fontcolor="#18181B", arrowsize=0.9];
+
+  OFF  [label="Open Food Facts\n(external system)",       fillcolor="#FEF3C7", color="#B45309"];
+  USDA [label="USDA FoodData Central\n(external system)", fillcolor="#FEF3C7", color="#B45309"];
+  IAM  [label="IAM\nGeneric",                    fillcolor="#E4E4E7", color="#52525B"];
+  FC   [label="Food Catalog\nGeneric",           fillcolor="#E4E4E7", color="#52525B"];
+  CR   [label="Care Relationship\nSupporting",   fillcolor="#DBEAFE", color="#1D4ED8"];
+  NC   [label="Nutritional Care\nSupporting",    fillcolor="#DBEAFE", color="#1D4ED8"];
+  IB   [label="Intake & Body Response\nCore",    fillcolor="#FEE2E2", color="#B91C1C"];
+  MA   [label="Monitoring & Adherence\nCore",    fillcolor="#FEE2E2", color="#B91C1C"];
+
+  { rank=same; OFF; USDA; IAM; }
+  { rank=same; FC; CR; }
+  { rank=same; IB; MA; }
+
+  OFF  -> FC [label=" ACL "];
+  USDA -> FC [label=" ACL "];
+
+  IAM -> CR [label=" Conformist (PL)\n+ OHS ", style=dashed];
+  IAM -> NC [label=" Conformist (PL)\n+ OHS ", style=dashed];
+  IAM -> IB [label=" Conformist (PL)\n+ OHS ", style=dashed];
+  IAM -> MA [label=" Conformist (PL)\n+ OHS ", style=dashed];
+
+  CR -> NC [label=" OHS + events "];
+  CR -> IB [label=" OHS + events "];
+  CR -> MA [label=" OHS + events "];
+
+  NC -> CR [label=" Domain events ", style=dashed];
+  NC -> IB [label=" Published Language "];
+  NC -> MA [label=" Published Language\n+ events "];
+
+  FC -> IB [label=" Customer/Supplier "];
+  IB -> MA [label=" Customer/Supplier "];
+  IB -> NC [label=" Customer/Supplier\n(queries) ", constraint=false];
+  MA -> NC [label=" Customer/Supplier (queries)\n+ Domain events ", constraint=false];
+
+  legend [shape=plaintext, style="", width=0, margin=0, fontname="Helvetica", fontsize=13, label=<
+    <TABLE BORDER="1" COLOR="#A1A1AA" CELLBORDER="0" CELLSPACING="4" CELLPADDING="4">
+      <TR><TD ALIGN="LEFT"><B>Legend</B></TD></TR>
+      <TR><TD ALIGN="LEFT">Arrow: upstream → downstream</TD></TR>
+      <TR><TD ALIGN="LEFT">Solid: the downstream needs it to operate</TD></TR>
+      <TR><TD ALIGN="LEFT">Dashed: conformist or notification only</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#FEE2E2">Core</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#DBEAFE">Supporting</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#E4E4E7">Generic</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#FEF3C7">External system</TD></TR>
+    </TABLE>>];
+  MA -> legend [style=invis];
+}
