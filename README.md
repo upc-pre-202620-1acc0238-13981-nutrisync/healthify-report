@@ -96,6 +96,12 @@ TB1:<br>
 
 ![Report](./assets/img/insights/tb1.png)
 
+AV2:<br>
+
+<p class="caption"><strong>Figura 3</strong><br><em>Captura de GitHub Insights del repositorio del informe al cierre del AV2</em></p>
+
+![Report](./assets/img/insights/av2.png)
+
 <div style="page-break-after: always"></div>
 
 ## CONTENIDO
