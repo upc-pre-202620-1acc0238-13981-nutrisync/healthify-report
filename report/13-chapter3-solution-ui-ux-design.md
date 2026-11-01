@@ -482,7 +482,7 @@ En móvil el contenido se apila en una sola columna. La navegación se oculta tr
 
 #### 3.1.3.2. Landing Page Mock-up
 
-Los mock-ups aplican sobre los wireframes el sistema de diseño descrito en 3.1.1.1: fondo oscuro `#101109` en el héroe y en la sección del nutricionista, crema `#F6F4EE` en las secciones del paciente y de «Cómo funciona», lima `#A3D437` como acento, naranja `#F5A623` para la acción principal, y Anton y Open Sans como tipografías. Las capturas de la aplicación son las pantallas reales de los mock-ups de la app (Inicio, estimación por foto, ficha del paciente), de modo que el visitante ve el producto que va a usar.
+Los mock-ups aplican sobre los wireframes el sistema de diseño descrito en 3.1.1.1: verde oscuro `#24461A` en el encabezado, el héroe, la sección del nutricionista y el pie; crema `#F6F4EE` en la propuesta de valor y en «Entre citas»; blanco en «La consulta, paso a paso» y en la prueba social; verde claro `#E5F5D1` en la sección del paciente; verde `#3B6E23` en la llamada final; naranja `#F5A623` para la acción principal; y Anton y Open Sans como tipografías. Las capturas son pantallas de los mock-ups de la app (Seguimiento, estimación por foto, los cuatro pasos de la consulta, Bandeja, Mis pacientes e Inicio), en español o en inglés según el idioma elegido, de modo que el visitante ve el producto que va a usar.
 
 **Desktop Web Browser**
 
@@ -512,18 +512,26 @@ Los mock-ups aplican sobre los wireframes el sistema de diseño descrito en 3.1.
   <img src="../assets/img/chapter3/landing/mockup/desktop-home-parts/part-6.png" alt="Mock-up de Inicio en escritorio (sección 6)" style="width:520px" />
 </p>
 
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-home-parts/part-7.png" alt="Mock-up de Inicio en escritorio (sección 7)" style="width:520px" />
+</p>
+
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/desktop-home-parts/part-8.png" alt="Mock-up de Inicio en escritorio (sección 8)" style="width:520px" />
+</p>
+
 <p class="caption"><strong>Tabla 189</strong><br><em>Aplicación del sistema de diseño en el mock-up del landing page</em></p>
 
 | Aspecto | Aplicación |
 |---|---|
-| **Branding** | El logotipo a color (corazón y hoja) en el encabezado, con «ify» en lima. El titular del héroe resalta «sí se ve.» en lima, el mismo recurso que usa la app. |
-| **Color y contraste** | Texto blanco sobre fondo casi negro y texto `#1C1C1A` sobre crema, con contraste superior a 4.5:1. El lima se usa para resaltar y para elementos gráficos, y el naranja solo para el botón principal. |
-| **Tipografía** | Anton para títulos y cifras; Open Sans para el cuerpo. La frase «El expediente no es el problema» se muestra en gris y «El vacío entre consultas, sí» en negro, para marcar la idea principal. |
-| **Jerarquía visual** | Alternancia de fondos (oscuro, claro, oscuro, claro) que separa los bloques de audiencia. En «Para el paciente» y «Para el nutricionista» una lista numerada a la derecha activa su detalle y la imagen de la izquierda cambia con el elemento seleccionado. |
+| **Branding** | El logotipo blanco (corazón y hoja) en el encabezado y el pie, sobre verde oscuro. El héroe presenta el lema «Una app para los dos lados de la consulta» con el texto de apoyo en lima claro. |
+| **Color y contraste** | Texto crema sobre verde oscuro y texto `#1C1C1A` sobre crema y blanco, con contraste superior a 4.5:1. El lima se usa para resaltar, y el naranja solo para el botón principal. |
+| **Tipografía** | Anton para títulos y cifras; Open Sans para el cuerpo. La propuesta de valor muestra tres cifras grandes en Anton («6 de 7», «5 de 7», «−0,3 kg») y su explicación en Open Sans. |
+| **Jerarquía visual** | Los fondos alternan (verde oscuro, crema, blanco, crema, verde oscuro, verde claro, blanco y verde) y separan los bloques. En «Entre citas», un ejemplo de plan propuesto por IA («Energía diaria: 1 796 → 1 650 kcal») acompaña las capturas de la Bandeja. |
 | **Heurística H4 (consistencia)** | Los botones, chips, tarjetas y el estilo de los títulos son los del sistema de diseño de la app, así que quien pasa del sitio a la aplicación reconoce los mismos patrones. |
-| **Heurística H1 (estado del sistema)** | El elemento activo de las listas y de los chips se distingue por color y por peso del texto, no solo por color. |
-| **Arquitectura de información** | La navegación, el orden de secciones y los rótulos son los definidos en 3.1.2. En «Para el paciente», las funciones se agrupan en «Registrar», «Ver progreso» y «Tu consulta»; en «Para el nutricionista», en «En consulta» y «Entre consultas». |
-| **Diseño inclusivo** | Enlace «Saltar al contenido principal», texto alternativo en las imágenes, selector de idioma ES / EN, foco visible en los elementos interactivos y pausa del carrusel cuando el usuario prefiere menos movimiento. |
+| **Heurística H1 (estado del sistema)** | El punto activo del carrusel, el paso visible en móvil y el chip de filtro activo se distinguen por forma o por texto, no solo por color. |
+| **Arquitectura de información** | La navegación, el orden de secciones y los rótulos son los definidos en 3.1.2. «Para nutricionistas» lista ocho funciones: Mis pacientes, Invitación por QR, Seguimiento en solo lectura, Plan versionado, Agenda, Derivaciones y alta clínica, Catálogo de alimentos locales y Datos base una sola vez. |
+| **Diseño inclusivo** | Enlace «Saltar al contenido principal», texto alternativo que describe cada captura, selector de idioma ES / EN que también cambia las capturas al inglés, foco visible de 2 px (verde sobre fondos claros, lima sobre verde oscuro) y pausa del carrusel cuando el usuario prefiere menos movimiento. |
 
 Las otras tres páginas conservan el encabezado y el pie de página, y cambian solo el contenido central.
 
@@ -588,9 +596,15 @@ Las otras tres páginas conservan el encabezado y el pie de página, y cambian s
   <img src="../assets/img/chapter3/landing/mockup/mobile-home-parts/part-5.png" alt="Mock-up de Inicio en móvil (sección 5)" style="width:150px" />
   <img src="../assets/img/chapter3/landing/mockup/mobile-home-parts/part-6.png" alt="Mock-up de Inicio en móvil (sección 6)" style="width:150px" />
   <img src="../assets/img/chapter3/landing/mockup/mobile-home-parts/part-7.png" alt="Mock-up de Inicio en móvil (sección 7)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/mockup/mobile-home-parts/part-8.png" alt="Mock-up de Inicio en móvil (sección 8)" style="width:150px" />
 </p>
 
-La versión móvil usa los mismos colores, tipografías y componentes. Los cambios respecto de escritorio responden al tamaño de pantalla: una sola columna, titulares más pequeños (la frase del héroe pasa a tres líneas), el menú de hamburguesa, listas de funcionalidades en acordeón con la imagen dentro del elemento abierto, y botones de ancho completo. El pie de página reorganiza sus columnas (Navegación, Legal, Redes y Contacto) en dos por fila.
+<p align="center">
+  <img src="../assets/img/chapter3/landing/mockup/mobile-home-parts/part-9.png" alt="Mock-up de Inicio en móvil (sección 9)" style="width:150px" />
+  <img src="../assets/img/chapter3/landing/mockup/mobile-menu.png" alt="Mock-up del menú abierto en móvil" style="width:150px" />
+</p>
+
+La versión móvil usa los mismos colores, tipografías y componentes. Los cambios respecto de escritorio responden al tamaño de pantalla: una sola columna, titulares con la escala *Mobile/* de Anton, el menú de pantalla completa, los pasos de la consulta en carrusel y botones de ancho completo. El pie de página apila sus columnas (Producto, Empresa, Legal y Contacto).
 
 ### 3.1.4. Mobile Applications UX/UI Design
 
