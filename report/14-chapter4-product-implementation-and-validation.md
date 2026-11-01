@@ -2391,6 +2391,386 @@ El repositorio se creó el 09/10/2026 y el núcleo, los módulos y la primera ve
 | upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `fix/consultation-tests` | daa8b44 | chore: bump version to 1.3.1 | — | 03/11/2026 |
 | upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | 3503d02 | Merge pull request #21 from upc-pre-202620-1acc0238-13981-nutrisync/fix/consultation-tests | Fix/consultation tests | 03/11/2026 |
 | upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | 7095d40 | Merge pull request #22 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.3.1 | 03/11/2026 |
+
+#### 4.2.2.5. Testing Suite Evidence for Sprint Review
+
+El Sprint 2 tiene tres suites automatizadas: la del backend, la de la app Android y la de la app Flutter. Como en el Sprint 1, los criterios de aceptación están en Gherkin en la sección 2.4.1 y los escenarios se automatizaron como pruebas cuyo nombre describe el comportamiento; no se generaron archivos `.feature`. El landing page se revisó a mano en el navegador, en español e inglés.
+
+**Web Services (backend)**
+
+La suite está en `Healthify.Platform.Tests`, dentro de https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform, con xUnit y NSubstitute. En el sprint se agregaron siete clases de prueba y se eliminaron tres que cubrían los endpoints retirados (`LegacyAssessmentContractTests`, `LooseClinicalEndpointsDeprecationTests` y `StandaloneCodedDiagnosisTests`). Entre `v1.0.0` y `v1.6.0` los métodos `[Fact]` y `[Theory]` pasaron de 886 a 936, y los casos `[InlineData]`, de 375 a 394.
+
+El repositorio del backend no tiene un flujo de CI que corra las pruebas, así que el equipo ejecutó `dotnet test healthify-platform.sln` sobre `main` (v1.6.0). El resultado fue de **1472 pruebas: 1436 superadas, 0 con error y 36 omitidas**. Las 36 omitidas son las pruebas de integración contra MySQL, que solo corren cuando está definida la variable `HEALTHIFY_IT_MYSQL`.
+
+<p class="caption"><strong>Tabla 268</strong><br><em>Clases de prueba agregadas al backend en el Sprint 2</em></p>
+
+| Historia | Clase de prueba (métodos) | Comportamientos verificados |
+|---|---|---|
+| TS01 | `PasswordResetTests` (16) | La respuesta a la solicitud es la misma exista o no la cuenta, una nueva solicitud reemplaza el código anterior, cinco códigos incorrectos inutilizan el código, el token sirve una sola vez y cambiar la contraseña cierra todas las sesiones. |
+| TS05 | `PlanFitTests` (9) | Un alimento que choca con una restricción del plan se sugiere como fuera del plan, una porción se sugiere fuera del plan solo si supera con claridad lo que queda del día, sin la fecha no se juzga la energía y sin plan publicado no hay sugerencia. |
+| TS05 | `DailyIntakeTests` (7) | Solo cuentan las entradas confirmadas, lo restante nunca baja de cero, sin plan publicado no hay con qué comparar y otro paciente no puede leer el día. |
+| TS05 | `MealIdeasCatalogVocabularyTests` (5) | Las ideas de comida y el reconocimiento de fotos usan nombres del catálogo y resuelven las alternativas del modelo. |
+| TS07 | `PatientDataExportTests` (13) | El ZIP trae seis CSV con encabezados en el idioma del paciente, sin diagnóstico, fundamento, base de cálculo ni IMC; los campos se escapan según RFC 4180, un texto con forma de fórmula se neutraliza y solo el propio paciente puede descargarlo. |
+| US14 | `ClinicalDayEvaluationTests` (7) | Una noche en Lima sigue siendo ese día aunque en UTC ya cambió la fecha, las metas publicadas en la noche evalúan las comidas de esa misma noche, y la reparación solo reevalúa los días con registro y no cambia nada si se ejecuta dos veces. |
+| US14 | `DiaryRangeMySqlTests` (MySQL) | El diario de un rango de días se lee con el reloj declarado por el paciente. |
+
+Commits de pruebas del backend en el Sprint 2:
+
+<p class="caption"><strong>Tabla 269</strong><br><em>Commits de pruebas del backend en el Sprint 2</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 42c6057 | test(read-models): add patient data export tests | — | 17/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | e0f967f | test(intake): add diary range tests | — | 17/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 5c2b447 | test(monitoring): add clinical day evaluation tests | — | 19/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | c02dfdb | test(intake): add catalog vocabulary and alternative resolution tests | — | 20/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/gemini-thinking-level-fix` | 1a064e2 | test(shared): cover the Gemini thinking level | — | 26/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-recovery` | 80f0212 | test(iam): add password reset tests | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/plan-fit-suggestion` | 9ab616a | test(intake): add plan fit tests | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/daily-intake` | f2ff207 | test(intake): add daily intake tests | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 4c89ec7 | test(care): remove deprecated clinical assessment and diagnosis contract tests | — | 29/10/2026 |
+
+**Mobile Application (Android)**
+
+La suite está en `app/src/test` de https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app, con JUnit 4, MockK, Turbine y `kotlinx-coroutines-test`. Desde el pull request #25, el flujo `CI` ejecuta `./gradlew lintDebug testDebugUnitTest assembleDebug` en cada pull request a `develop` y `main`, y sus ejecuciones de las versiones 1.8.0 a 2.1.0 terminaron en verde (sección 4.2.2.8). La suite pasó de 567 pruebas en 63 clases (Sprint 1) a 652 pruebas en 71 clases.
+
+<p class="caption"><strong>Tabla 270</strong><br><em>Clases de prueba agregadas a la aplicación Android en el Sprint 2</em></p>
+
+| Historia | Clase de prueba (pruebas) | Comportamientos verificados |
+|---|---|---|
+| US29 | `ForgotPasswordViewModelTest` (16) | Un correo mal escrito no se envía, sin conexión no se llama al backend, el reenvío espera la cuenta regresiva, un código incompleto no llega al backend y volver desde la nueva contraseña descarta el token. |
+| US14 | `DailyIntakeMapperTest` (2), `PatientHomeUiStateTest` (7), `LoggedWeekTest` (3) | El medidor lee la ingesta del día, la banda de tolerancia decide el aviso de meta superada y la semana marca los días con registro. |
+| US18 | `DataExportRepositoryImplTest` (4) | El ZIP se escribe byte a byte en el documento elegido, la copia de otro paciente se rechaza sin escribir nada y el nombre sugerido lleva la fecha. |
+| US19 | `CloseReferralTest` (6) | Cerrar una derivación llama al endpoint de esa derivación, una derivación ya cerrada cuenta como cerrada y los códigos `404` y `409` se traducen a errores de dominio. |
+| US43 | `ConsultationRemindersTest` (5) | Cada consulta se avisa un día y una hora antes, los avisos que ya pasaron se omiten y sin conexión se conservan los avisos programados. |
+| — | `PatientShellViewModelTest` (3) | El menú lateral empieza cerrado y muestra al usuario de la sesión, y entrar al shell reprograma los avisos de consulta. |
+
+Además se ampliaron clases existentes: `SignUpViewModelTest` (aceptación de términos), `ManualMealViewModelTest` y `MealPhotoViewModelTest` (sugerencia de plan) y `PatientHomeViewModelTest` (medidor y semana).
+
+<p class="caption"><strong>Tabla 271</strong><br><em>Commits de pruebas de la aplicación Android en el Sprint 2</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/password-recovery` | c305b62 | test(iam): add password reset operations to the fake authentication repository | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/plan-fit-suggestion` | add4308 | test(intake): add test fakes and unit tests for plan fit suggestions and flow | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/sign-up-terms-acceptance` | ecbd3d3 | test(iam): cover the sign-up terms | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/interview-validation-fixes` | 522a401 | test(home): cover the tolerance band of the energy goal | — | 31/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/close-referral` | 610fea2 | test(monitoring): add unit tests and fakes for referral closure handling | — | 02/11/2026 |
+
+**Mobile Application (Flutter)**
+
+La suite está en `test/` de https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app, con `flutter_test`, `bloc_test` y `mocktail`, en 69 archivos. Cubre objetos de valor y casos de uso, repositorios y mappers, cubits y pantallas (*widget tests*). El flujo `CI` ejecuta `flutter analyze`, `flutter test --coverage` y `flutter build apk --debug` en cada pull request. Las ejecuciones de los pull requests #1 a #14 terminaron en verde. Entre los pull requests #15 y #20 una prueba falló: el resumen de la ejecución del pull request #20 (`Release/1.3.0`) reporta **990 pruebas superadas y 1 fallida**. El flujo de distribución no depende del CI, por lo que las versiones 1.1.0 a 1.3.0 se publicaron igual. La prueba fallaba porque la pantalla del paciente cambió el texto de la derivación y la hora del último guardado; el pull request #21 (`fix/consultation-tests`) actualizó la prueba y sus fakes, y desde ese pull request y el #22 (`Release/1.3.1`) el CI vuelve a terminar en verde. Con `flutter test` sobre la versión 1.3.1 pasan las **991 pruebas**, sin fallas.
+
+<p class="caption"><strong>Tabla 272</strong><br><em>Pruebas por módulo de la aplicación Flutter</em></p>
+
+| Módulo | Casos declarados | Archivos | Historias relacionadas |
+|---|:---:|:---:|---|
+| core | 82 | 14 | Transversal: red, renovación de sesión, textos y componentes |
+| iam | 71 | 8 | US28, US29 |
+| carerelationship | 66 | 5 | US04, US05, US06 |
+| nutritionalcare | 362 | 21 | US17, US20 a US22, US25 a US27 |
+| monitoring | 116 | 9 | US16, US19, US39, US43 |
+| main | 70 | 4 | US19, US20, US30, US43 |
+| foodcatalog | 32 | 5 | US44 |
+| navigation | 61 | 2 | Transversal: rutas y shell |
+| ux | 9 | 1 | Transversal: diseño adaptable y accesibilidad |
+| **Total** | **869** | **69** | |
+
+Los casos declarados son las llamadas a `test`, `testWidgets` y `blocTest` del código; el CI reporta 991 porque algunas pruebas se generan en bucles.
+
+<p class="caption"><strong>Tabla 273</strong><br><em>Comportamientos verificados por módulo de la aplicación Flutter</em></p>
+
+| Módulo | Archivos de prueba | Comportamientos verificados |
+|---|---|---|
+| core | `api_client_test`, `authenticated_client_test`, `token_refresh_coordinator_test`, `problem_details_mapper_test` | Varias renovaciones simultáneas llaman al backend una sola vez, una renovación rechazada borra los tokens y avisa la sesión vencida, y el código de Problem Details se lee aunque venga anidado. |
+| iam | `sign_in_cubit_test`, `sign_up_cubit_test`, `forgot_password_cubit_test`, `terms_acceptance_test` | El enlace abre los términos sin marcar la casilla y el resto de la fila la marca; en la recuperación, un código que no tiene seis dígitos no gasta un intento. |
+| carerelationship | `patient_roster_cubit_test`, `invite_patient_cubit_test`, `discharge_patient_cubit_test` | La cartera conserva la lista al perder la conexión, la invitación dura 24 horas con cuenta regresiva y el alta exige un motivo clínico y una confirmación. |
+| nutritionalcare | `measurement_step_cubit_test`, `diagnosis_step_cubit_test`, `targets_step_cubit_test`, `publication_step_cubit_test`, `review_inbox_cubit_test`, `adjust_proposal_cubit_test` | Las metas se calculan con los parámetros por defecto, sin diagnóstico el paso de metas vuelve al anterior, y una propuesta de ajuste ya decidida o aún en generación no se puede ajustar. |
+| monitoring | `practitioner_agenda_cubit_test`, `schedule_follow_up_cubit_test`, `record_referral_cubit_test`, `consultation_reminder_use_cases_test` | Una fecha que ya pasó se rechaza en el teléfono, la derivación exige especialidad y motivo, y cada consulta se recuerda un día y una hora antes. |
+| main | `patient_history_cubit_test`, `practitioner_patient_screen_test`, `patient_record_sections_test` | La pestaña Historia lee juntos los datos base, la consulta abierta y el expediente, muestra el botón de consulta y permite cerrar una derivación abierta. |
+| foodcatalog | `food_catalog_cubit_test`, `add_local_food_cubit_test`, `food_catalog_screens_test` | La búsqueda espera una pausa al escribir, un formulario vacío marca todos los campos y un nombre duplicado se señala en su campo. |
+
+<p class="caption"><strong>Tabla 274</strong><br><em>Commits de pruebas de la aplicación Flutter en el Sprint 2</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/auth-onboarding` | 8a8b0e3 | test(iam): cover auth screens layout | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-care-links` | e7a17dc | test(carerelationship): cover screens layout | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/inbox-agenda-release` | 78cd878 | test(navigation): add app wiring and adaptive layout tests | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 4b69d13 | test(foodcatalog): add fakes and domain tests | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 36146d6 | test(foodcatalog): cover the repository | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 386de6e | test(foodcatalog): cover the cubits | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 56ac804 | test(foodcatalog): cover the screens | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | c59cfca | test(navigation): cover the food catalog flow | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 077442d | test(iam): cover the sign-up terms | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/food-catalog-and-terms` | 11c7c07 | test(iam): cover the terms acceptance row | — | 30/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/interview-validation-fixes` | a725a85 | test(main): expect the consultation button in the history tab | — | 01/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/close-referral` | 5a4d84e | test(monitoring): add tests and fakes for referral closure in history and agenda | — | 02/11/2026 |
+
+#### 4.2.2.6. Execution Evidence for Sprint Review
+
+En el Sprint 2 se publicó el landing page V10, se desplegaron las versiones 1.1.0 a 1.6.0 del backend, la app Android llegó a la versión 2.1.0 y la app Flutter del nutricionista, a la 1.3.1. Las dos apps se distribuyen firmadas por Firebase App Distribution y como APK en los releases de GitHub. El landing page está en https://landing.healthify.lat y la documentación del backend en https://platform.healthify.lat/swagger.
+
+**Landing Page**
+
+Hero V10 con los botones «Descargar para Android» y «Ver las pantallas», y capturas reales de la app en el carrusel (US36).
+
+<p class="caption"><strong>Figura 187</strong><br><em>Captura del landing page V10: hero</em></p>
+
+![Hero V10](../assets/img/chapter4/sprint2/landing-v10-hero.png)
+
+La consulta paso a paso, con las cuatro pantallas de la consulta guiada.
+
+<p class="caption"><strong>Figura 188</strong><br><em>Captura del landing page V10: la consulta paso a paso</em></p>
+
+![La consulta paso a paso](../assets/img/chapter4/sprint2/landing-v10-steps.png)
+
+Prueba social con un testimonio de nutricionista y uno de paciente, que aparecen como mensajes al llegar a la sección (US32). Los dos textos son un borrador pendiente de confirmar con sus autoras, como indica el README del repositorio.
+
+<p class="caption"><strong>Figura 189</strong><br><em>Captura del landing page V10: testimonios</em></p>
+
+![Testimonios](../assets/img/chapter4/sprint2/landing-v10-testimonials.png)
+
+Cierre para nutricionistas con los tres pasos para empezar y el enlace de descarga a Firebase App Distribution (US36).
+
+<p class="caption"><strong>Figura 190</strong><br><em>Captura del landing page V10: descarga y footer</em></p>
+
+![Descarga y footer](../assets/img/chapter4/sprint2/landing-v10-download.png)
+
+Contacto con el selector de caso y el resumen de errores al enviar el formulario vacío; cada error enlaza a su campo.
+
+<p class="caption"><strong>Figura 191</strong><br><em>Captura del landing page V10: resumen de errores del contacto</em></p>
+
+![Resumen de errores del contacto](../assets/img/chapter4/sprint2/landing-v10-contact-errors.png)
+
+**Mobile Application (Android, paciente)**
+
+Las capturas corresponden a la app 2.1.0 en un emulador Android, con la sesión de un paciente vinculado a su nutricionista y conectada al backend publicado.
+
+<p class="caption"><strong>Figura 192</strong><br><em>Capturas de la aplicación Android del paciente en el Sprint 2</em></p>
+
+<table>
+  <tr>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/app-patient-home.png" alt="Inicio" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/app-patient-menu.png" alt="Menú lateral" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/app-patient-plan-fit.png" alt="Sugerencia de plan" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/app-patient-weight.png" alt="Peso" width="190" /></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Inicio.</strong> Medidor con la energía que queda del día, macronutrientes y la semana con los días registrados (US14).</td>
+    <td valign="top"><strong>Menú lateral.</strong> Mi plan, Mis consultas, Pendientes, Ajustes y Cerrar sesión; la barra inferior deja el centro al botón de registrar.</td>
+    <td valign="top"><strong>Sugerencia de plan.</strong> Al elegir un alimento y su porción, la app preselecciona «Sí» o «No» con la etiqueta «Sugerencia con IA» y el paciente puede cambiarla (US11).</td>
+    <td valign="top"><strong>Peso.</strong> Promedio móvil de los autopesajes que siguieron el protocolo, con la explicación de los que no entran en la línea (ajuste de las entrevistas).</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/app-patient-record.png" alt="Mi expediente" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/app-patient-settings.png" alt="Ajustes" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/app-patient-export-save.png" alt="Guardar el ZIP" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/app-patient-export-done.png" alt="Copia guardada" width="190" /></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Mi expediente.</strong> Nutricionista vinculado, próxima consulta, números clave, plan y derivaciones (US18).</td>
+    <td valign="top"><strong>Ajustes.</strong> Incluye «Descargar una copia de mis datos» con diario, autopesajes, metas y consultas en CSV (US18).</td>
+    <td valign="top"><strong>Guardar el ZIP.</strong> El selector de Android propone el nombre `healthify-mis-datos-<fecha>` (US18).</td>
+    <td valign="top"><strong>Copia guardada.</strong> Confirmación de que el ZIP se guardó y se puede abrir con Excel (US18).</td>
+  </tr>
+</table>
+
+**Mobile Application (Flutter, nutricionista)**
+
+Las capturas corresponden a la app Flutter 1.3.0 en el mismo emulador, con la sesión de una nutricionista que tiene tres pacientes vinculados. La franja de la esquina superior derecha es el aviso `DEBUG` de Flutter, porque se ejecutó la build de depuración.
+
+<p class="caption"><strong>Figura 193</strong><br><em>Capturas de la aplicación Flutter del nutricionista en el Sprint 2</em></p>
+
+<table>
+  <tr>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/flutter-roster.png" alt="Mis pacientes" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/flutter-invite-qr.png" alt="Invitar paciente" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/flutter-patient-summary.png" alt="Resumen del paciente" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/flutter-patient-follow-up.png" alt="Seguimiento" width="190" /></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Mis pacientes.</strong> Cartera agrupada en «Requieren acción» y «Al día», con búsqueda (US05).</td>
+    <td valign="top"><strong>Invitar paciente.</strong> Código QR de un solo uso con vencimiento de 24 horas (US04).</td>
+    <td valign="top"><strong>Resumen.</strong> Versión del plan, consulta en curso, próxima consulta, datos base y cambios desde la última consulta (US20).</td>
+    <td valign="top"><strong>Seguimiento.</strong> Semana registrada, tendencia de peso y resumen generado con IA para revisar antes de la consulta (US16).</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/flutter-patient-history.png" alt="Historia" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/flutter-referral-closed.png" alt="Derivación cerrada" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/flutter-patient-plan.png" alt="Plan" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/flutter-consultation-measurement.png" alt="Consulta de hoy" width="190" /></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Historia.</strong> Peso clínico, IMC, metas, diagnóstico activo, derivaciones y el botón «Continuar consulta» fijo (US20, US19).</td>
+    <td valign="top"><strong>Derivación cerrada.</strong> Detalle de una derivación a Endocrinología registrada y cerrada el 03/11/2026 (US19).</td>
+    <td valign="top"><strong>Plan.</strong> Metas vigentes, indicaciones, restricciones e historial de versiones, con «Ajustar plan» (US26, US27).</td>
+    <td valign="top"><strong>Consulta de hoy.</strong> Paso 1 de 4 con la respuesta previa del paciente, los datos base y las medidas; el ícono de papelera descarta la consulta (US21).</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/flutter-review-inbox.png" alt="Bandeja" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/flutter-agenda.png" alt="Agenda" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/flutter-food-catalog.png" alt="Catálogo" width="190" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint2/flutter-local-food.png" alt="Alimento local" width="190" /></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Bandeja.</strong> Estado vacío cuando no hay señales pendientes de revisar (US17).</td>
+    <td valign="top"><strong>Agenda.</strong> Próximas consultas y botón «Agendar consulta» (US39).</td>
+    <td valign="top"><strong>Catálogo.</strong> Búsqueda en el catálogo de alimentos con «Agregar alimento local» (US44).</td>
+    <td valign="top"><strong>Alimento local.</strong> Formulario de un plato peruano con sus valores por 100 g (US44).</td>
+  </tr>
+</table>
+
+El menú lateral del nutricionista (catálogo de alimentos, ajustes y cierre de sesión) y los ajustes (cuenta, idioma y cierre de sesión) se guardaron también en `assets/img/chapter4/sprint2/flutter-menu.png` y `flutter-settings.png`.
+
+**URL del video de demostración del Sprint 2:** [Video del Sprint 2](PENDIENTE)
+
+#### 4.2.2.7. Services Documentation Evidence for Sprint Review
+
+En el Sprint 2 se documentaron seis operaciones nuevas y se retiraron las ocho que el Sprint 1 había marcado como obsoletas. El documento OpenAPI de la versión 1.6.0 describe **98 operaciones en 92 rutas**, con 159 esquemas. Las convenciones son las del Sprint 1 (sección 4.2.1.7): ruta base `/api/v1`, token Bearer salvo en las operaciones anónimas, errores como `application/problem+json` con un código estable en `extensions.code` y límite de solicitudes con `429`.
+
+<p class="caption"><strong>Tabla 275</strong><br><em>Recursos de documentación de los servicios en el Sprint 2</em></p>
+
+| Recurso | Enlace |
+|---|---|
+| Swagger UI | https://platform.healthify.lat/swagger |
+| Documento OpenAPI | https://platform.healthify.lat/swagger/v1/swagger.json |
+| Repositorio de Web Services | https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform |
+
+<p class="caption"><strong>Tabla 276</strong><br><em>Operaciones agregadas en el Sprint 2</em></p>
+
+| Método | Ruta | Descripción en Swagger | Acceso | Parámetros | Respuestas | Historia |
+|---|---|---|---|---|---|---|
+| `POST` | `/api/v1/authentication/password-reset-requests` | Ask for a password reset code | Anónimo | Cuerpo: `email` | 202 · 429 | TS01 |
+| `POST` | `/api/v1/authentication/password-reset-verifications` | Verify the emailed code | Anónimo | Cuerpo: `email`, `code` | 200 · 400 · 429 · 500 | TS01 |
+| `POST` | `/api/v1/authentication/password-resets` | Set a new password with the reset token | Anónimo | Cuerpo: `resetToken`, `newPassword` | 204 · 400 · 429 · 500 | TS01 |
+| `GET` | `/api/v1/patients/{patientId}/plan-fit` | Suggest whether a food is in the patient's plan | Patient | Ruta: `patientId`; query: `referenceFoodId`, `grams`, `date` | 200 · 400 · 401 · 403 · 404 · 422 | TS05 |
+| `GET` | `/api/v1/patients/{patientId}/daily-intake` | Get what the patient logged today | Patient | Ruta: `patientId`; query: `date` | 200 · 400 · 401 · 403 · 404 | TS05 |
+| `GET` | `/api/v1/patients/{patientId}/data-export` | Download a copy of the patient's own data | Patient (solo el propio) | Ruta: `patientId` | 200 (`application/zip`) · 401 · 403 | TS07 |
+
+Las apps también empezaron a usar `POST /api/v1/referrals/{referralId}/closure` (Close a referral), que existía desde el Sprint 1 y responde `200`, `404` si la derivación no existe y `409` si ya estaba cerrada.
+
+<p class="caption"><strong>Tabla 277</strong><br><em>Operaciones retiradas en el Sprint 2</em></p>
+
+| Método | Ruta | Reemplazo |
+|---|---|---|
+| `POST` | `/api/v1/nutrition-plans/target-proposals` | Paso de metas de la consulta guiada |
+| `POST` | `/api/v1/nutrition-plans/{planId}/prescribed-targets` | Paso de metas de la consulta guiada |
+| `POST` | `/api/v1/nutrition-plans/{planId}/publication` | `POST /api/v1/consultations/{id}/publication` |
+| `POST` | `/api/v1/nutritional-assessments` | Paso de medición de la consulta guiada |
+| `POST` | `/api/v1/nutritional-assessments/{assessmentId}/clinical-measurements` | Paso de medición de la consulta guiada |
+| `POST` | `/api/v1/nutritional-assessments/{assessmentId}/closure` | Paso de medición de la consulta guiada |
+| `POST` | `/api/v1/nutritional-diagnoses` | Paso de diagnóstico de la consulta guiada |
+| `POST` | `/api/v1/diary-entries/off-plan-logs` | Registro con indicación de adherencia (US11) |
+
+**Ejemplos de uso**
+
+Los valores son datos de muestra; los campos y tipos provienen del documento OpenAPI publicado.
+
+*1. Pedir el código de restablecimiento: `POST /api/v1/authentication/password-reset-requests` (anónimo)*
+
+```json
+{ "email": "camila.rojas@ejemplo.com" }
+```
+
+Respuesta `202 Accepted`, sin cuerpo. El servicio envía un código de seis dígitos al correo, en el idioma de la cuenta. La respuesta es la misma si el correo no tiene cuenta, de modo que no sirve para averiguar quién está registrado, y una segunda solicitud dentro del mismo minuto no envía otro correo.
+
+*2. Verificar el código: `POST /api/v1/authentication/password-reset-verifications` (anónimo)*
+
+```json
+{ "email": "camila.rojas@ejemplo.com", "code": "482913" }
+```
+
+Respuesta `200 OK`. El código correcto se canjea por un token que fija la contraseña una sola vez y vence en pocos minutos. Cinco códigos incorrectos inutilizan el código y hay que pedir otro.
+
+```json
+{ "resetToken": "pRt7c2...", "expiresAt": "2026-10-28T15:12:00Z" }
+```
+
+*3. Fijar la nueva contraseña: `POST /api/v1/authentication/password-resets` (anónimo)*
+
+```json
+{ "resetToken": "pRt7c2...", "newPassword": "Nu3vaClave!2026" }
+```
+
+Respuesta `204 No Content`. La contraseña sigue las reglas del registro y debe ser distinta de la actual; si se rechaza, el token no se gasta. Al cambiarla se cierran todas las sesiones abiertas de la cuenta y se levanta el bloqueo, si lo había.
+
+<p class="caption"><strong>Figura 194</strong><br><em>Captura de Swagger: operaciones de autenticación con el restablecimiento de contraseña</em></p>
+
+![Swagger: restablecimiento de contraseña](../assets/img/chapter4/sprint2/swagger-password-reset.png)
+
+*4. Pedir la sugerencia de plan: `GET /api/v1/patients/12/plan-fit?referenceFoodId=845&grams=150&date=2026-11-02` (paciente)*
+
+Respuesta `200 OK`. La sugerencia se calcula sin IA: el alimento se revisa contra las restricciones del plan publicado y, si llega la fecha del paciente, su energía se compara con lo que queda del día. `reason` toma los valores `Fits`, `BreaksRestriction` o `ExceedsRemaining`, y la app convierte cada código en su propio texto. Lo que se registra es siempre la respuesta del paciente.
+
+```json
+{
+  "suggestedAdherence": "InPlan",
+  "violatedRestrictions": [],
+  "reason": "Fits",
+  "energyKcal": 195,
+  "remainingKcal": 1550
+}
+```
+
+<p class="caption"><strong>Figura 195</strong><br><em>Captura de Swagger: operación de sugerencia de plan</em></p>
+
+![Swagger: sugerencia de plan](../assets/img/chapter4/sprint2/swagger-plan-fit.png)
+
+*5. Leer la ingesta del día: `GET /api/v1/patients/12/daily-intake?date=2026-11-02` (paciente)*
+
+Respuesta `200 OK`. Devuelve lo registrado en el día, las metas publicadas y lo que queda de cada una, que nunca baja de cero. Solo cuentan las entradas confirmadas. Es el dato que alimenta el medidor del inicio.
+
+```json
+{
+  "date": "2026-11-02",
+  "energyKcal": 640,
+  "proteinG": 38,
+  "carbG": 72,
+  "fatG": 19,
+  "entryCount": 2,
+  "planVersion": 3,
+  "targetEnergyKcal": 1550,
+  "targetProteinG": 135,
+  "targetCarbG": 143,
+  "targetFatG": 49,
+  "remainingEnergyKcal": 910,
+  "remainingProteinG": 97,
+  "remainingCarbG": 71,
+  "remainingFatG": 30
+}
+```
+
+*6. Descargar mis datos: `GET /api/v1/patients/12/data-export` (paciente)*
+
+Respuesta `200 OK` con un archivo `healthify-mis-datos-2026-11-03.zip`. Trae seis CSV: `perfil.csv`, `diario.csv`, `autopesajes.csv`, `metas.csv`, `consultas.csv` y `vinculos.csv`, en UTF-8 con BOM, separados por comas, escapados según RFC 4180, con fechas ISO 8601 y encabezados en el idioma del paciente. No incluye diagnóstico, fundamento clínico, base de cálculo ni IMC. Si otra cuenta pide la copia de este paciente, el servicio responde `403`.
+
+<p class="caption"><strong>Figura 196</strong><br><em>Captura de Swagger: operación de descarga de datos</em></p>
+
+![Swagger: descarga de datos](../assets/img/chapter4/sprint2/swagger-data-export.png)
+
+Commits relacionados con la documentación de los servicios en el Sprint 2 (endpoints nuevos con su documentación OpenAPI, retiro de los obsoletos y limpieza de los comentarios XML):
+
+<p class="caption"><strong>Tabla 278</strong><br><em>Commits relacionados con la documentación de servicios en el Sprint 2</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/data-export-and-clinical-day` | 957bc0a | feat(read-models): add the patient data export endpoint | — | 16/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-recovery` | ac57c0d | feat(iam): add the password reset endpoints | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-recovery` | fbd4bf5 | docs(readme): document the SMTP settings | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/password-reset-verification` | faef8b9 | feat(iam): add the verification endpoint and token-based reset | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/plan-fit-suggestion` | aa0d68c | feat(intake): add the plan fit endpoint | — | 28/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/daily-intake` | d448e76 | feat(intake): add the daily intake endpoint | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 8e6fd83 | refactor(care): remove deprecated endpoints from clinical controllers | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 3f2adae | refactor(care): remove nutritional diagnoses controller and legacy resources | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 975a230 | docs(shared): clean up requirement tags and standardize doc comments in shared module | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | dd676d1 | docs(iam): clean up requirement references in iam context | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | df815b4 | docs(care): clean up requirement tags across care relationship context | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 46e72f5 | docs(catalog): clean up requirement references in food catalog context | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 1fe794a | docs(intake): remove requirement tags and translate doc comments in intake body response | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 8a89115 | docs(monitoring): standardize documentation in monitoring adherence context | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 075f5f8 | docs(care): clean up specification tags in nutritional care context | — | 29/10/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 711e65f | docs(readmodels): clean up requirement tags and comments in read models | — | 29/10/2026 |
 ## 4.3. Validation Interviews
 
 ### 4.3.1. Diseño de Entrevistas
