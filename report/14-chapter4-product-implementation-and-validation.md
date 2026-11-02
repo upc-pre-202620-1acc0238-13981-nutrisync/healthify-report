@@ -2771,6 +2771,114 @@ Commits relacionados con la documentación de los servicios en el Sprint 2 (endp
 | upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 8a89115 | docs(monitoring): standardize documentation in monitoring adherence context | — | 29/10/2026 |
 | upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 075f5f8 | docs(care): clean up specification tags in nutritional care context | — | 29/10/2026 |
 | upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `refactor/retire-legacy-clinical-endpoints` | 711e65f | docs(readmodels): clean up requirement tags and comments in read models | — | 29/10/2026 |
+
+#### 4.2.2.8. Software Deployment Evidence for Sprint Review
+
+Durante el Sprint 2 se republicó el landing page, se desplegaron siete versiones del backend y se automatizó la distribución de las dos apps. La configuración general de cada producto está en la sección 4.1.4; aquí se resumen los pasos del sprint.
+
+**Landing Page**
+
+*Releases.* El rediseño V10 se integró en `develop` con el pull request #9 (`feature/redesign-website`) y se publicó como `v2.0.0` con el pull request #10. Los testimonios y los ajustes del header entraron con el pull request #11 (`feature/testimonials`) y se publicaron como `v2.1.0` con el pull request #12.
+
+*GitHub Pages.* El flujo `pages-build-deployment` de GitHub publica `main` en cada push, con el mismo dominio `landing.healthify.lat` del Sprint 1. Todas sus ejecuciones terminaron correctamente. Los botones de descarga apuntan a la invitación pública de Firebase App Distribution.
+
+*URL de despliegue:* https://landing.healthify.lat
+
+**Web Services (backend)**
+
+*Releases.* Cada pull request de `develop` a `main` (#11, #13, #15, #17, #19, #21 y #23) disparó el flujo `Release`, que compila la solución, lee `<Version>` de `Healthify.Platform.csproj` y publica `v1.1.0`, `v1.1.1`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0` y `v1.6.0`. Las siete ejecuciones terminaron correctamente.
+
+<p class="caption"><strong>Figura 197</strong><br><em>Captura de GitHub Actions: ejecuciones del flujo Release del backend en el Sprint 2</em></p>
+
+![Ejecuciones del flujo Release](../assets/img/chapter4/sprint2/gh-platform-actions.png)
+
+<p class="caption"><strong>Figura 198</strong><br><em>Captura de GitHub: release v1.6.0 del backend</em></p>
+
+![Releases del backend](../assets/img/chapter4/sprint2/gh-platform-releases.png)
+
+*Máquina virtual.* El despliegue en la máquina virtual de Oracle Cloud siguió el procedimiento del Sprint 1, con estos cambios:
+
+1. Agregar al entorno las variables `Smtp__Host`, `Smtp__Username`, `Smtp__Password` y `Smtp__From` para el correo de recuperación de contraseña. Sin `Smtp__Host` no se envía ningún correo.
+2. Fijar `Ai:Gemini:ThinkingLevel` en la configuración de producción, que acota el razonamiento del modelo (versión 1.1.1).
+3. Actualizar el repositorio a `main` y ejecutar `docker compose up --build -d`. Al iniciar, la API aplica las migraciones nuevas (índice del diario por paciente y fecha, códigos de restablecimiento y verificación) y repara los días que se habían evaluado con la fecha UTC.
+4. Comprobar en `/swagger` que el documento lista las seis operaciones nuevas y ya no lista las ocho retiradas.
+
+*URLs de despliegue:*
+
+- API: https://platform.healthify.lat
+- Documentación: https://platform.healthify.lat/swagger
+
+**Mobile Application (Android, paciente)**
+
+*Integración continua.* Con el pull request #25 se agregó `ci.yml`, que en cada pull request a `develop` y `main` ejecuta `./gradlew lintDebug testDebugUnitTest assembleDebug` y guarda los reportes como artefacto.
+
+*Firma y distribución.* En el mismo pull request se agregó `distribute.yml`. Con cada push a `main`, el flujo:
+
+1. Decodifica el *upload keystore* y las credenciales de Firebase desde los secretos `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`, `FIREBASE_APP_ID` y `FIREBASE_SERVICE_ACCOUNT_JSON`.
+2. Compila el APK firmado con `versionCode` igual al número de ejecución, porque cada build distribuida necesita uno mayor que la anterior.
+3. Lo sube a Firebase App Distribution para el grupo de testers `qa`, con notas de versión que listan los diez últimos commits.
+4. Crea el release en GitHub con el APK adjunto (desde el pull request #27, `feature/github-release`).
+
+El `applicationId` es `pe.edu.upc.healthify` y la versión al cierre del sprint es `2.1.0`. Las ejecuciones de `CI` y `Distribute` de las versiones 1.8.0 a 2.1.0 terminaron en verde, salvo una ejecución cancelada de la rama `feature/sign-up-terms-acceptance`.
+
+<p class="caption"><strong>Figura 199</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Android</em></p>
+
+![Actions de la aplicación Android](../assets/img/chapter4/sprint2/gh-android-actions.png)
+
+<p class="caption"><strong>Figura 200</strong><br><em>Captura de GitHub: release v2.1.0 de la aplicación Android con el APK</em></p>
+
+![Releases de la aplicación Android](../assets/img/chapter4/sprint2/gh-android-releases.png)
+
+**Mobile Application (Flutter, nutricionista)**
+
+*Repositorio y versiones.* Se creó el repositorio público `healthify-flutter-app` con las ramas `main` y `develop`. Cada módulo se integró en `develop` con un pull request y cada release en `main`: `v0.1.0` a `v0.6.0` durante la construcción y `v1.0.0`, `v1.1.0`, `v1.2.0`, `v1.3.0` y `v1.3.1` como versiones distribuidas.
+
+*Integración continua.* `ci.yml` ejecuta en cada pull request `flutter pub get`, la generación de código, `flutter gen-l10n`, `flutter analyze`, `flutter test --coverage` y `flutter build apk --debug`. Entre los pull requests #15 y #20 la ejecución falló por una prueba (990 superadas, 1 fallida); el pull request #21 la corrigió y la versión 1.3.1 se publicó con el CI en verde y las 991 pruebas superadas.
+
+*Firma y distribución.* `distribute.yml` se ejecuta con cada push a `main`: comprueba que la versión de `pubspec.yaml` sea nueva, compila el APK firmado, lo sube a Firebase App Distribution para el grupo `qa` y crea el release en GitHub con el APK. Usa los mismos nombres de secretos que la app Android. La primera ejecución (`Release/0.6.0`) falló; desde `v1.0.0` todas terminaron correctamente. El `applicationId` es `pe.edu.upc.healthify.practitioner`, distinto del de la app Android, de modo que las dos apps se pueden instalar en el mismo teléfono.
+
+<p class="caption"><strong>Figura 201</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Flutter</em></p>
+
+![Actions de la aplicación Flutter](../assets/img/chapter4/sprint2/gh-flutter-actions.png)
+
+<p class="caption"><strong>Figura 202</strong><br><em>Captura de GitHub: release v1.3.1 de la aplicación Flutter con el APK</em></p>
+
+![Releases de la aplicación Flutter](../assets/img/chapter4/sprint2/gh-flutter-releases.png)
+
+*Instalación.* Los testers del grupo `qa` reciben la invitación de Firebase App Distribution en su correo; cualquier persona puede descargar el APK desde el release de GitHub. La app Android se instala en Android 7.0 (API 24) o superior.
+
+#### 4.2.2.9. Team Collaboration Insights during Sprint
+
+Los cinco integrantes tienen commits en los cuatro repositorios. En el backend y en la app Android, cada rama de funcionalidad reunió commits de varios integrantes, uno por capa o por pieza, como en el Sprint 1. En la app Flutter, cada integrante escribió solo su módulo en una rama propia el 30/10/2026, y el catálogo, los términos y los ajustes de las entrevistas se repartieron entre los cinco. La integración a `develop` y `main` la hizo Nevatrix en los cuatro repositorios.
+
+Los gráficos de GitHub cuentan los commits que llegaron a `main` entre el 10/10/2026 y el 03/11/2026, sin merges. En el backend la mayor actividad fue la semana del 26/10, con la recuperación de contraseña, la sugerencia de plan, la ingesta del día y el retiro de los endpoints obsoletos. En la app Android, el trabajo se repartió entre las semanas del 19/10 y del 26/10. En la app Flutter casi todos los commits caen en la semana del 26/10, porque el núcleo, los módulos y la primera versión se integraron el 30/10.
+
+Backend (`healthify-platform`):
+
+<p class="caption"><strong>Figura 203</strong><br><em>Captura de GitHub: contribuyentes del backend en el Sprint 2</em></p>
+
+![Contribuyentes del backend](../assets/img/chapter4/sprint2/gh-platform-contributors.png)
+
+Landing page (`healthify-website`):
+
+<p class="caption"><strong>Figura 204</strong><br><em>Captura de GitHub: contribuyentes del landing page en el Sprint 2</em></p>
+
+![Contribuyentes del landing page](../assets/img/chapter4/sprint2/gh-website-contributors.png)
+
+Aplicación Android (`healthify-android-app`):
+
+<p class="caption"><strong>Figura 205</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Android en el Sprint 2</em></p>
+
+![Contribuyentes de la aplicación Android](../assets/img/chapter4/sprint2/gh-android-contributors.png)
+
+Aplicación Flutter (`healthify-flutter-app`):
+
+<p class="caption"><strong>Figura 206</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Flutter en el Sprint 2</em></p>
+
+![Contribuyentes de la aplicación Flutter](../assets/img/chapter4/sprint2/gh-flutter-contributors.png)
+
+<div style="page-break-after: always"></div>
+
 ## 4.3. Validation Interviews
 
 ### 4.3.1. Diseño de Entrevistas
@@ -2780,3 +2888,4 @@ Commits relacionados con la documentación de los servicios en el Sprint 2 (endp
 ### 4.3.3. Evaluaciones según heurísticas
 
 <div style="page-break-after: always"></div>
+
