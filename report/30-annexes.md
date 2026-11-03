@@ -8,5 +8,7 @@
 | **Healthify Prototype** | [Enlace al prototipo en Figma](https://www.figma.com/proto/Lrm2LWVKUjy5wzWZm6QqW1/Healthify?page-id=108%3A8307&node-id=108-13543&p=f&viewport=255%2C102%2C0.03&t=BDyACvvTS6iin473-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=108%3A8428&show-proto-sidebar=1)|
 | **Healthify Website** | [Enlace a la Landing Page](https://landing.healthify.lat)|
 | **Healthify WebService** | [Enlace al Swagger](https://platform.healthify.lat/swagger)|
+| **Firebase Healthify Android** | [Enlace al Firebase](https://appdistribution.firebase.dev/i/1dec518f210ca662)|
+| **Firebase Healthify Flutter** | [Enlace al Firebase](https://appdistribution.firebase.dev/i/ff7af63bc7988299)|
 | **Video de exposición de AV1** | [Enlace del video AV1](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQDHSvJw_2WEQY3_rCRUYdF6ATTE7RUI60esNMow3wX6ALk?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=4bboKL)|
 | **Video de exposición de TB1** | [Enlace del video TB1](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQB77YRy-N9jQIi09y3AoUgEAW3z54ysCGGfvrYuExi4m4o?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=q2XKSk)|

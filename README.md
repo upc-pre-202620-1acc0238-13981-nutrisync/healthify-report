@@ -10,7 +10,7 @@
 <p align="center">NRC</p>
 <p align="center"><strong>13981</strong></p>
 
-<h2 align="center">Informe del Trabajo 1</h2>
+<h2 align="center">Informe del Avance 2</h2>
 
 <p align="center">Docente</p>
 <p align="center"><strong>Mayta Guillermo, Jorge Luis</strong></p>
@@ -38,7 +38,7 @@
 <br>
 
 <p align="center"><strong>Período 202620</strong></p>
-<p align="center"><strong>Octubre 2026</strong></p>
+<p align="center"><strong>Noviembre 2026</strong></p>
 
 <div style="page-break-after: always"></div>
 
@@ -66,6 +66,13 @@
 | 1.4.0 | 01/10/2026 – 09/10/2026 | Angela Espinoza | Cap. 3: guía de estilo, sistemas de organización, etiquetado, búsqueda y navegación, SEO y metaetiquetas, wireframes y mock-ups del landing page, y wireframes, wireflows, mock-ups, user flows y prototipo de la aplicación móvil (`feature/chapter3-uiux`) |
 | 1.5.0 | 02/10/2026 – 09/10/2026 | Olenka Del Aguila | Cap. 4: configuración del entorno de desarrollo, control de código fuente, guía de estilo y despliegue; Sprint 1 con planning, líderes y colaboradores, backlog, evidencias de desarrollo, pruebas, ejecución, documentación de servicios y despliegue, y capturas de la aplicación y la API (`feature/chapter4-sprint1`) |
 | 2.0.0 | 09/10/2026 | Angel Villarreal | TB1 Report |
+| 2.1.0 | 10/10/2026 | Angel Villarreal | Video de la exposición TB1 en anexos; cambio de ML Kit a Gemini en el capítulo 2 (`feature/tb1-release`) |
+| 2.2.0 | 10/10/2026 – 03/11/2026 | Rose Vergaray | Cap. 2: actualización de user stories y criterios de aceptación (invitación con vigencia, pesaje en ayunas, ajuste del plan entre consultas, expediente y evaluación) |
+| 2.3.0 | 10/10/2026 – 03/11/2026 | Angela Espinoza | Cap. 3: guía de estilo y tipografía del landing page V10, nuevas secciones del home y mock-ups y wireframes del landing en escritorio y móvil |
+| 2.4.0 | 10/10/2026 – 03/11/2026 | Joel Mora | Diagrama de despliegue actualizado con la app Flutter y Firebase App Distribution |
+| 2.5.0 | 10/10/2026 – 03/11/2026 | Olenka Del Aguila | Cap. 4: ajuste del Sprint 1 (45 de 55 historias aceptadas) y Sprint 2 con planning, backlog, evidencias de desarrollo, pruebas, ejecución, documentación de servicios, despliegue y colaboración (`feature/sprint-2`) |
+| 2.6.0 | 03/11/2026 | Angel Villarreal | Repositorio de la app Flutter en el README; enlaces de Firebase App Distribution de las apps Android y Flutter en anexos (`feature/sprint-2`) |
+| 3.0.0 | 09/11/2026 | Angel Villarreal | AV2 Report |
 
 <div style="page-break-after: always"></div>
 
@@ -75,6 +82,7 @@ Repositorio del informe del proyecto en GitHub: [healthify-report](https://githu
 Repositorio de la website: [healthify-website](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-website) <br>
 Repositorio de la webservices: [healthify-platform](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform)<br>
 Repositorio de la app en Android Studio: [healthify-android-app](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app)<br>
+Repositorio de la app en Flutter: [healthify-flutter-app](https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app)<br>
 
 AV1:<br>
 
@@ -87,6 +95,12 @@ TB1:<br>
 <p class="caption"><strong>Figura 2</strong><br><em>Captura de GitHub Insights del repositorio del informe al cierre del TB1</em></p>
 
 ![Report](./assets/img/insights/tb1.png)
+
+AV2:<br>
+
+<p class="caption"><strong>Figura 3</strong><br><em>Captura de GitHub Insights del repositorio del informe al cierre del AV2</em></p>
+
+![Report](./assets/img/insights/av2.png)
 
 <div style="page-break-after: always"></div>
 
@@ -236,6 +250,16 @@ TB1:<br>
     - [4.2.1.7. Services Documentation Evidence for Sprint Review](report/14-chapter4-product-implementation-and-validation.md#4217-services-documentation-evidence-for-sprint-review)
     - [4.2.1.8. Software Deployment Evidence for Sprint Review](report/14-chapter4-product-implementation-and-validation.md#4218-software-deployment-evidence-for-sprint-review)
     - [4.2.1.9. Team Collaboration Insights during Sprint](report/14-chapter4-product-implementation-and-validation.md#4219-team-collaboration-insights-during-sprint)
+  - [4.2.2. Sprint 2](report/14-chapter4-product-implementation-and-validation.md#422-sprint-2)
+    - [4.2.2.1. Sprint Planning 2](report/14-chapter4-product-implementation-and-validation.md#4221-sprint-planning-2)
+    - [4.2.2.2. Aspect Leaders and Collaborators](report/14-chapter4-product-implementation-and-validation.md#4222-aspect-leaders-and-collaborators)
+    - [4.2.2.3. Sprint Backlog 2](report/14-chapter4-product-implementation-and-validation.md#4223-sprint-backlog-2)
+    - [4.2.2.4. Development Evidence for Sprint Review](report/14-chapter4-product-implementation-and-validation.md#4224-development-evidence-for-sprint-review)
+    - [4.2.2.5. Testing Suite Evidence for Sprint Review](report/14-chapter4-product-implementation-and-validation.md#4225-testing-suite-evidence-for-sprint-review)
+    - [4.2.2.6. Execution Evidence for Sprint Review](report/14-chapter4-product-implementation-and-validation.md#4226-execution-evidence-for-sprint-review)
+    - [4.2.2.7. Services Documentation Evidence for Sprint Review](report/14-chapter4-product-implementation-and-validation.md#4227-services-documentation-evidence-for-sprint-review)
+    - [4.2.2.8. Software Deployment Evidence for Sprint Review](report/14-chapter4-product-implementation-and-validation.md#4228-software-deployment-evidence-for-sprint-review)
+    - [4.2.2.9. Team Collaboration Insights during Sprint](report/14-chapter4-product-implementation-and-validation.md#4229-team-collaboration-insights-during-sprint)
 - [4.3. Validation Interviews](report/14-chapter4-product-implementation-and-validation.md#43-validation-interviews)
   - [4.3.1. Diseño de Entrevistas](report/14-chapter4-product-implementation-and-validation.md#431-diseño-de-entrevistas)
   - [4.3.2. Registro de Entrevistas](report/14-chapter4-product-implementation-and-validation.md#432-registro-de-entrevistas)
