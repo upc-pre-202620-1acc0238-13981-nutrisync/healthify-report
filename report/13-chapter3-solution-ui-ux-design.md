@@ -631,16 +631,16 @@ La aplicación Android de Healthify tiene dos roles, paciente y nutricionista, y
 
 | Pantalla | Decisión de diseño |
 |---|---|
-| **Inicio (paciente)** | Lo primero que se ve es la meta del día (kcal y macros). Debajo, un único botón de ancho completo, «Registrar comida», y luego las tarjetas «Cómo voy hoy» y «Próxima consulta». Es una jerarquía de arriba abajo, de lo que el paciente quiere saber a lo que quiere hacer. |
-| **Estimación propuesta** | El plato y el porcentaje de confianza ocupan la parte superior. La pregunta «¿Estaba en tu plan?» tiene dos opciones, «Sí» y «No», y el botón principal «Sí, es correcto» está separado del enlace secundario «Ajustar gramos». |
-| **Tendencia de peso** | Título «Tu tendencia». Arriba, la tarjeta «Tu semana» con la insignia «Resumen con IA»; debajo, el gráfico del promedio de los últimos autopesajes y el botón «Registrar autopesaje» al pie. Muestra una tendencia y no el peso de un día, que es el principio del producto. |
+| **Inicio (paciente)** | Lo primero que se ve es el medidor de energía: las kcal que quedan hoy y, debajo, los macros. Luego «Tu semana» marca los días con registro, y al final están las tarjetas «Cómo voy hoy» y «Próxima consulta». Para registrar una comida, el paciente usa el botón central «Registrar» de la barra inferior, visible desde cualquier pestaña, y el botón ☰ abre el menú lateral. |
+| **Estimación propuesta** | El plato y el porcentaje de confianza ocupan la parte superior. La pregunta «¿Esta comida estaba en tu plan?» tiene dos opciones, «Sí» y «No»; si la IA cree que el plato encaja, deja marcado «Sí» y lo avisa, y el paciente puede cambiarlo. El botón principal «Sí, es correcto» está separado del enlace secundario «Ajustar gramos». |
+| **Tendencia de peso** | Pestaña «Peso», con el título «Tu tendencia». Arriba, la tarjeta «Tu semana» con la insignia «Resumen con IA»; debajo, el gráfico del promedio de los últimos autopesajes y el botón «Registrar mi peso» al pie. Muestra una tendencia y no el peso de un día, que es el principio del producto. |
 | **Bandeja** | Una lista de señales con un indicador de estado, el nombre del paciente, el tipo de señal y la fecha de recepción. Sin acciones en la lista: tocar una fila abre la señal. |
 | **Ficha del paciente** | Cuatro pestañas (Resumen, Seguimiento, Expediente y Plan). El resumen agrupa la identidad y el estado del plan, la próxima consulta, los datos base, dos indicadores y las acciones de gestión; el botón «Iniciar consulta» queda fijo al pie. |
 | **Diagnóstico con IA** | Paso 2 de 4 de la consulta guiada. La sugerencia de la IA va en una tarjeta con la insignia «Sugerencia de IA» y los botones «Usar sugerencia» y «Elegir otro»; el diagnóstico final lo elige el nutricionista. |
 
 **Principios y elementos de diseño.** *Shape*: tarjetas y botones con esquinas redondeadas del mismo radio. *Space*: margen de 16 dp y separación de 8 y 16 dp entre bloques, según la escala del sistema. *Direction*: lectura vertical, con la acción principal siempre al pie, en el área del pulgar. *Size*: el título de pantalla y las métricas tienen el mayor tamaño, y los botones principales miden 56 dp.
 
-**Arquitectura de información.** Cada rol tiene su barra inferior (cinco pestañas el paciente, cuatro el nutricionista), según la sección 3.1.2.5. Los rótulos son los de 3.1.2.2, y las pantallas de detalle muestran la flecha de retroceso y el título en la barra superior.
+**Arquitectura de información.** Cada rol tiene su barra inferior (cuatro pestañas y el botón «Registrar» el paciente, tres pestañas el nutricionista) y un menú lateral, según la sección 3.1.2.5. Los rótulos son los de 3.1.2.2, y las pantallas de detalle muestran la flecha de retroceso y el título en la barra superior.
 
 **Diseño inclusivo.** Los textos respetan el tamaño de fuente del sistema (en sp, con un mínimo de 12 sp) y se revisaron con la fuente al 200 %, con desplazamiento donde el contenido no cabe. El contraste de texto es de al menos 4.5:1. Las áreas táctiles tienen al menos 48 dp. Los estados no se comunican solo con color: los chips y avisos llevan texto («Vigente», «Por confirmar»). Todas las pantallas definen su estado sin conexión, de carga y de error, y los textos de la aplicación están disponibles en español e inglés.
 
@@ -728,7 +728,7 @@ La IA propone un plan y el nutricionista lo acepta con cambios. Nada se asigna a
 
 | **Task Flow** |
 |---|
-| 1. El paciente abre Inicio y toca «Registrar comida». |
+| 1. El paciente toca «Registrar» en la barra inferior. |
 | 2. Toma una foto de la comida con la cámara. |
 | 3. Ve la foto y toca «Usar esta foto». |
 | 4. Espera mientras se estima el plato. |
@@ -736,7 +736,7 @@ La IA propone un plan y el nutricionista lo acepta con cambios. Nada se asigna a
 | 6. Ajusta la porción y toca «Confirmar». |
 | 7. Ve el Diario con el aviso «Comida registrada». |
 
-De Inicio a la confirmación hay seis pasos y solo uno requiere escribir (la porción). La pantalla de espera informa qué ocurre («Viendo tu foto…»), y la estimación muestra su porcentaje de confianza.
+Desde la barra inferior hasta la confirmación hay seis pasos y solo uno requiere escribir (la porción). La pantalla de espera informa qué ocurre («Viendo tu foto…»), y la estimación muestra su porcentaje de confianza.
 
 <p class="caption"><strong>Figura 134</strong><br><em>Wireflow 4: Registrar una comida con foto</em></p>
 
@@ -787,10 +787,10 @@ Los mock-ups aplican el sistema de diseño «Healthify M3» sobre los wireframes
 | Aspecto | Aplicación |
 |---|---|
 | **Sistema de diseño** | Los componentes (botón, tarjeta, chip de estado, campo de texto, barra de navegación, snackbar, diálogo) son los del sistema, con los mismos nombres en el Figma y en el código de la app. Cada pantalla tiene su frame de notas con estados y validaciones. |
-| **Color** | El naranja aparece una vez por pantalla, en la acción principal. El verde marca lo activo y lo vigente (ítem de la barra inferior, chip «Vigente»). El rojo se reserva a errores. Un punto naranja en la bandeja indica señales sin resolver. |
+| **Color** | El naranja aparece una vez por pantalla, en la acción principal (en las pestañas del paciente, el botón «Registrar» de la barra). El verde marca lo activo y lo vigente (ítem de la barra inferior, chip «Vigente»). El rojo se reserva a errores. Un punto naranja en la bandeja indica señales sin resolver. |
 | **Tipografía** | Anton en el título de pantalla y en las métricas («1 260 / 1 850 kcal», «−0,3 kg/sem»), para que el dato se lea de un vistazo. Open Sans en el resto de textos. |
 | **Jerarquía visual** | En Inicio, la meta del día y el botón naranja ocupan el centro de la pantalla. En la ficha del paciente, el botón «Iniciar consulta» queda fijo al pie, sobre el contenido que se desplaza. |
-| **Heurísticas** | H1 (la estimación muestra su confianza y el diario marca «Por confirmar» lo no confirmado), H5 (prevención de errores: el nutricionista confirma antes de salir de una consulta), H9 (los mensajes de error indican qué hacer: «Intentar de nuevo») y H4 (consistencia entre las pantallas de ambos roles). |
+| **Heurísticas** | H1 (la estimación muestra su confianza y el diario marca «Por confirmar» lo no confirmado), H5 (prevención de errores: el nutricionista confirma antes de salir de una consulta), H9 (los mensajes de error explican qué pasó y qué hacer: «Lo que escribiste no se perdió» y «Volver a intentarlo») y H4 (consistencia entre las pantallas de ambos roles). |
 | **IA bajo control del usuario** | Las sugerencias llevan la insignia «IA» y se pueden aceptar, cambiar o ignorar. La estimación de una foto queda «Por confirmar» hasta que el paciente la confirma. |
 | **Diseño inclusivo** | Contraste verificado de texto (≥ 4.5:1) y de elementos no textuales (≥ 3:1), áreas táctiles de 48 dp, estados con texto además de color, tamaño de fuente que sigue la configuración del sistema, español e inglés, y funcionamiento sin conexión para registrar comidas y autopesajes con aviso al usuario. |
 | **Arquitectura de información** | Barra inferior por rol, rótulos breves y títulos de pantalla que coinciden con la etiqueta por la que se llegó a ellas («Bandeja» lleva a «Bandeja», «Diario» a «Tu diario»). |
@@ -823,7 +823,7 @@ Cada User Flow parte del mismo objetivo que su Wireflow y se construye con los m
 | **Unhappy Path 1: falla la publicación** |
 |---|
 | 1. El nutricionista toca «Publicar y cerrar consulta» en el paso 4. |
-| 2. Ve el error «No se pudo publicar» y toca «Intentar de nuevo». |
+| 2. Ve el error «No pudimos publicar el plan» y toca «Volver a intentarlo». |
 | 3. Vuelve al paso 4 para publicar otra vez. |
 
 <p class="caption"><strong>Tabla 205</strong><br><em>Unhappy path 2 (salir de la consulta) del User Flow 1: Atender una consulta</em></p>
@@ -835,7 +835,7 @@ Cada User Flow parte del mismo objetivo que su Wireflow y se construye con los m
 | 3. Ve el perfil del paciente con la consulta en curso y toca «Continuar consulta». |
 | 4. Retoma la consulta en el paso 1. |
 
-La consulta se puede interrumpir sin perder lo ingresado: queda como borrador y se reanuda desde el perfil del paciente.
+La consulta se puede interrumpir sin perder lo ingresado: queda como borrador y se reanuda desde el perfil del paciente. Si la consulta se abrió por error, el paso 1 permite borrarla («¿Borrar esta consulta?»); el plan y las metas vigentes no cambian.
 
 <p class="caption"><strong>Figura 137</strong><br><em>User Flow 1: Atender una consulta</em></p>
 
@@ -901,7 +901,7 @@ Este flujo no tiene ruta alternativa documentada: la pantalla de la señal solo 
 
 | **Happy Path** |
 |---|
-| 1. El paciente abre Inicio y toca «Registrar comida». |
+| 1. El paciente toca «Registrar» en la barra inferior. |
 | 2. Toma una foto de la comida con la cámara. |
 | 3. Ve la foto y toca «Usar esta foto». |
 | 4. Espera mientras se estima el plato. |
@@ -946,7 +946,7 @@ Si la foto no se reconoce, el paciente no pierde el registro: la app le ofrece l
 | **Unhappy Path 1: falla el envío** |
 |---|
 | 1. El paciente toca «Enviar a mi nutricionista». |
-| 2. Ve «No se pudo enviar» y toca «Intentar de nuevo». |
+| 2. Ve «No pudimos enviar tu respuesta» y toca «Volver a intentarlo». |
 | 3. Vuelve al formulario de respuesta para enviarla otra vez. |
 
 <p class="caption"><strong>Figura 141</strong><br><em>User Flow 5: Prepararme para la consulta</em></p>
