@@ -1,0 +1,58 @@
+@startuml Healthify_Deployment_Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
+
+LAYOUT_TOP_DOWN()
+
+title Healthify - Deployment Diagram
+
+Deployment_Node(patientDevice, "Patient's / Practitioner's Android Device", "Android 7.0 (API 24) or later") {
+    Container(androidApp, "Healthify", "Kotlin, Jetpack Compose", "Native app for both roles. Package pe.edu.upc.healthify")
+}
+
+Deployment_Node(practitionerDevice, "Practitioner's Android Device", "Android") {
+    Container(flutterApp, "Healthify Practitioner", "Flutter, Dart", "Practitioner role only. Package pe.edu.upc.healthify.practitioner")
+}
+
+Deployment_Node(firebase, "Firebase App Distribution", "Google Cloud, group qa") {
+    Container(apkStore, "Signed release APKs", "APK", "Uploaded by the Distribute workflow of each app on push to main")
+}
+
+Deployment_Node(github, "GitHub", "upc-pre-202620-1acc0238-13981-nutrisync") {
+    Deployment_Node(pages, "GitHub Pages", "landing.healthify.lat") {
+        Container(landing, "Landing Page", "HTML5, CSS3, JavaScript", "Static site in Spanish and English")
+    }
+    Deployment_Node(actions, "GitHub Actions", "ubuntu-latest runners") {
+        Container(workflows, "CI, Distribute and Release workflows", "YAML", "Lint, tests, signed builds and GitHub releases")
+    }
+}
+
+Deployment_Node(oci, "Oracle Cloud Infrastructure", "platform.healthify.lat") {
+    Deployment_Node(vm, "Compute Instance", "Virtual Machine") {
+        Deployment_Node(docker, "Docker Engine", "Docker Compose") {
+            Deployment_Node(apiContainer, "healthify-api", "mcr.microsoft.com/dotnet/aspnet:10.0, port 8080") {
+                Container(api, "Healthify Platform API", "ASP.NET Core 10", "REST API /api/v1 and Swagger")
+            }
+            Deployment_Node(dbContainer, "healthify-mysql", "mysql:8.4, persistent volume") {
+                ContainerDb(db, "Healthify Database", "MySQL 8.4", "Schema healthify")
+            }
+        }
+    }
+}
+
+System_Ext(gemini, "Google Gemini API", "AI features, off by default")
+System_Ext(foodApis, "Open Food Facts / USDA FoodData Central", "External food catalogs")
+System_Ext(smtp, "SMTP server", "Password reset email")
+
+Rel(androidApp, api, "Calls", "JSON/HTTPS")
+Rel(flutterApp, api, "Calls", "JSON/HTTPS")
+Rel(firebase, patientDevice, "Installs the APK", "HTTPS")
+Rel(firebase, practitionerDevice, "Installs the APK", "HTTPS")
+Rel(landing, firebase, "Download link", "HTTPS")
+Rel(workflows, firebase, "Uploads release APKs", "HTTPS")
+Rel(api, db, "Reads and writes", "SQL/TCP 3306")
+Rel(api, gemini, "Generates text", "JSON/HTTPS")
+Rel(api, foodApis, "Searches foods", "JSON/HTTPS")
+Rel(api, smtp, "Sends codes", "SMTP 587")
+
+SHOW_LEGEND()
+@enduml
