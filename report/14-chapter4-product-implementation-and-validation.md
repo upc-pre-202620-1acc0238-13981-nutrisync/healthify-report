@@ -1603,7 +1603,7 @@ Aplicación móvil (`healthify-android-app`):
 
 #### 4.2.2.1. Sprint Planning 2
 
-El Sprint 2 se desarrolló entre el 10/10/2026 y el 03/11/2026. Abarca cuatro productos: el **landing page**, los **RESTful Web Services**, la **aplicación móvil Android** del paciente y una aplicación nueva para el nutricionista, construida en **Flutter**. El sprint retoma las diez historias que el Product Owner no aceptó en el Sprint 1 (sección 4.2.1.6), implementa en Flutter las historias del rol nutricionista y aplica los ajustes que salieron de las entrevistas de validación (sección 4.3).
+El Sprint 2 se desarrolló entre el 10/10/2026 y el 04/11/2026. Abarca cuatro productos: el **landing page**, los **RESTful Web Services**, la **aplicación móvil Android** del paciente y una aplicación nueva para el nutricionista, construida en **Flutter**. El sprint retoma las diez historias que el Product Owner no aceptó en el Sprint 1 (sección 4.2.1.6), implementa en Flutter las historias del rol nutricionista y aplica los ajustes que salieron de las entrevistas de validación (sección 4.3).
 
 <p class="caption"><strong>Tabla 256</strong><br><em>Datos de la reunión de Sprint Planning 2</em></p>
 <table>
@@ -1705,11 +1705,11 @@ Los aspectos del Sprint 2 siguen la división del Sprint 1: en el landing page, 
 - **Inicio V10:** nueva estructura del inicio, con la consulta paso a paso, las secciones por rol y los botones de descarga.
 - **Nosotros y Contacto:** rediseño de «Nosotros» y de la página de contacto con selector de caso y resumen de errores.
 - **Términos y textos:** página de términos con índice fijo y móvil, textos V10 en español e inglés y capturas según el idioma.
-- **Interacción y capturas:** carrusel de pasos, trampa de foco del menú móvil, validación del formulario y exportación de capturas de la app.
+- **Interacción, capturas y descarga:** carrusel de pasos, trampa de foco del menú móvil, validación del formulario, exportación de capturas de la app y panel para descargar la app del nutricionista o la del paciente.
 
 <p class="caption"><strong>Tabla 258</strong><br><em>Líderes y colaboradores del landing page en el Sprint 2</em></p>
 
-| Team Member (Last Name, First Name) | GitHub Username | Estilos V10 y testimonios | Inicio V10 | Nosotros y Contacto | Términos y textos | Interacción y capturas |
+| Team Member (Last Name, First Name) | GitHub Username | Estilos V10 y testimonios | Inicio V10 | Nosotros y Contacto | Términos y textos | Interacción, capturas y descarga |
 |---|---|:---:|:---:|:---:|:---:|:---:|
 | Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | C | C | C | C | L |
 | Espinoza Cruz, Angela Milagros | Emy127 | C | C | L | C | C |
@@ -1908,12 +1908,16 @@ URL del Board (Trello): [Enlace del Trello](https://trello.com/b/kg0Z81tZ/sprint
 | — | — | T118 | Aplicar los ajustes de las entrevistas de validación | Explicar la confirmación pendiente en el diario y fijar el botón de consulta en la pestaña Historia. | 4 | Mora Rivera, Joel Fernando | Done |
 | US19 | Registro de derivación a otro especialista | T119 | Cerrar una derivación desde la historia | Agregar el caso de uso, el servicio y el repositorio del cierre y el diálogo de confirmación, con sus pruebas. | 6 | Villarreal Bazan, Angel Martin | Done |
 | — | — | T120 | Corregir la prueba que fallaba en CI | Actualizar la prueba de la pantalla del paciente y sus fakes (texto de la derivación y hora del último guardado), que fallaba desde el pull request #15, y publicar la versión 1.3.1. | 2 | Villarreal Bazan, Angel Martin | Done |
+| US36 | Acceso al inicio de uso de Healthify desde el Landing Page | T121 | Agregar los íconos y estilos de los botones de descarga | Agregar los íconos vectoriales de Flutter y Android y los estilos de los botones y del panel de descarga. | 2 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| US36 | Acceso al inicio de uso de Healthify desde el Landing Page | T122 | Implementar el panel de descarga del header | Convertir el botón «Descargar» del header en un panel desplegable accesible (`aria-expanded`, cierre con Escape y al hacer clic fuera) y agregar sus textos en español e inglés. | 3 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| US36 | Acceso al inicio de uso de Healthify desde el Landing Page | T123 | Ofrecer la descarga de las dos apps en el sitio | Mostrar los botones «Nutricionista» (Flutter) y «Paciente» (Android) en el hero y en el menú móvil, y llevar el panel del header y los enlaces del footer a Nosotros, Contacto y Términos. | 4 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| US32 | Visualización de la propuesta de valor de Healthify | T124 | Agregar los videos del equipo y del producto | Enlazar los videos «El equipo de Healthify» y «Así funciona Healthify» en el carrusel del hero con su miniatura de YouTube, apuntar el cierre y el footer a la app del nutricionista y actualizar el README. | 2 | Villarreal Bazan, Angel Martin | Done |
 
-La estimación total es de 508 horas en 120 tareas. Las 120 tareas quedaron en Done. La última se agregó al cierre del sprint: desde el pull request #15 de la app Flutter el flujo CI marcaba una prueba fallida, y el pull request #21 la corrigió antes de publicar la versión 1.3.1 (sección 4.2.2.5).
+La estimación total es de 519 horas en 124 tareas. Las 124 tareas quedaron en Done. Las cinco últimas se agregaron al cierre del sprint. La primera corrige la prueba que fallaba en el CI de la app Flutter desde el pull request #15; el pull request #21 la arregló antes de publicar la versión 1.3.1 (sección 4.2.2.5). Las otras cuatro corresponden al landing page `v2.2.0`: la descarga separada de la app del nutricionista y la del paciente, y los videos del hero.
 
 #### 4.2.2.4. Development Evidence for Sprint Review
 
-En el Sprint 2 el equipo trabajó sobre cuatro repositorios. En el landing page se rehízo el sitio sobre el diseño V10 de Figma y se agregaron los testimonios y los botones de descarga. En el backend se agregaron la exportación de datos, la evaluación del día con el calendario del paciente, la recuperación de contraseña, la sugerencia de plan y la ingesta del día, y se retiraron los ocho endpoints obsoletos. En la app Android se completaron las historias pendientes del paciente, se agregaron los menús laterales y se automatizaron la compilación y la distribución. La app Flutter del nutricionista se creó en este sprint y llegó a la versión 1.3.0.
+En el Sprint 2 el equipo trabajó sobre cuatro repositorios. En el landing page se rehízo el sitio sobre el diseño V10 de Figma y se agregaron los testimonios, los videos del hero y la descarga separada de la app del nutricionista y la del paciente. En el backend se agregaron la exportación de datos, la evaluación del día con el calendario del paciente, la recuperación de contraseña, la sugerencia de plan y la ingesta del día, y se retiraron los ocho endpoints obsoletos. En la app Android se completaron las historias pendientes del paciente, se agregaron los menús laterales y se automatizaron la compilación y la distribución. La app Flutter del nutricionista se creó en este sprint y llegó a la versión 1.3.0.
 
 El trabajo siguió GitFlow como en el Sprint 1: cada bloque se hizo en una rama `feature/*` (o `refactor/*`) y se integró en `develop` con un pull request; los pull requests de `develop` a `main` corresponden a los releases. La columna **Branch** indica la rama en la que se hizo el commit, y las ramas `develop` y `main` solo muestran los merges de pull requests. Cada commit aparece una sola vez.
 
@@ -1922,7 +1926,7 @@ El trabajo siguió GitFlow como en el Sprint 1: cada bloque se hizo en una rama 
 | Producto | Repositorio | Pull requests | Releases |
 |---|---|:---:|---|
 | Web Services | `healthify-platform` | 14 (#10 a #23) | `v1.1.0`, `v1.1.1`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0`, `v1.6.0` |
-| Landing Page | `healthify-website` | 4 (#9 a #12) | `v2.0.0`, `v2.1.0` |
+| Landing Page | `healthify-website` | 6 (#9 a #14) | `v2.0.0`, `v2.1.0`, `v2.2.0` |
 | Mobile Application (Android) | `healthify-android-app` | 29 (#7 a #35; #29 se cerró sin integrar) | `v1.4.0` a `v2.1.0` (11 versiones) |
 | Mobile Application (Flutter) | `healthify-flutter-app` | 22 (#1 a #22) | `v1.0.0`, `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.3.1` |
 
@@ -2071,6 +2075,15 @@ El trabajo siguió GitFlow como en el Sprint 1: cada bloque se hizo en una rama 
 | upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/testimonials` | ade8db0 | chore: add effects for index | — | 02/11/2026 |
 | upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `develop` | c26da06 | Merge pull request #11 from upc-pre-202620-1acc0238-13981-nutrisync/feature/testimonials | Feature/testimonials | 02/11/2026 |
 | upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `main` | 1c3d830 | Merge pull request #12 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/2.1.0 | 02/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/dual-app-download` | f9b3b4b | feat(assets): add platform vector icons and download button styles | — | 03/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/dual-app-download` | ed25348 | feat(js): implement accessible disclosure panel for header download menu | — | 03/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/dual-app-download` | df709a2 | feat(i18n): add spanish and english localization strings for app downloads | — | 03/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/dual-app-download` | 9f97b67 | feat(home): add dual app download options to header, hero and mobile drawer | — | 03/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/dual-app-download` | 84cc6ef | feat(pages): update header download disclosure and footer links across secondary pages | — | 03/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/dual-app-download` | fc14b06 | chore: update about-the-team and about-the-product | — | 04/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `feature/dual-app-download` | 71e19d6 | chore: update README | — | 04/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `develop` | dffbcf6 | Merge pull request #13 from upc-pre-202620-1acc0238-13981-nutrisync/feature/dual-app-download | Feature/dual app download | 04/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-website | `main` | 07e609f | Merge pull request #14 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/2.2.0 | 04/11/2026 |
 
 **Mobile Application (Android)**
 
