@@ -3199,3 +3199,83 @@ La paciente entrevistada comentó que le costó leer los textos pequeños debajo
 Recomendación:
 
 Usar un tamaño mínimo de 14 sp para el texto secundario, asegurar un contraste de al menos 4.5:1 y verificar que la pantalla se adapte al tamaño de fuente configurado en el sistema del teléfono.
+
+**PROBLEMA #7: El Landing Page no informa si Healthify tiene costo**
+
+Severidad: 2
+
+Heurística violada: Information Architecture - Is it findable?
+
+Problema:
+
+Al revisar el Landing Page, la nutricionista indicó que lo primero que preguntaría antes de descargar la aplicación es si tiene costo, y no encontró esa información en ninguna sección.
+
+![Problema 7](../assets/img/chapter4/heuristics/problema7.png)
+
+Recomendación:
+
+Indicar de forma visible, cerca del botón "Descargar para Android" y en el CTA final, que Healthify es gratuito para nutricionistas y pacientes.
+
+**PROBLEMA #8: La invitación QR solo puede mostrarse en pantalla y no compartirse**
+
+Severidad: 2
+
+Heurística violada: Usability - Flexibilidad y eficiencia de uso
+
+Problema:
+
+La pantalla Invitar paciente solo permite mostrar el código QR para que el paciente lo escanee en consulta. La nutricionista señaló que a veces el paciente no tiene el celular disponible y no hay otra forma de hacerle llegar la invitación.
+
+![Problema 8](../assets/img/chapter4/heuristics/problema8.png)
+
+Recomendación:
+
+Agregar una opción "Compartir invitación" que permita enviar el código o un enlace de un solo uso por WhatsApp o correo, manteniendo la vigencia de 24 horas.
+
+**PROBLEMA #9: La aplicación solo se ofrece para Android**
+
+Severidad: 2
+
+Heurística violada: Inclusive Design - Ofrece opciones
+
+Problema:
+
+El Landing Page solo ofrece el botón "Descargar para Android". Los pacientes y nutricionistas que usan iPhone no tienen una forma de acceder al producto ni información sobre cuándo podrán hacerlo, lo que los excluye del seguimiento.
+
+![Problema 9](../assets/img/chapter4/heuristics/problema9.png)
+
+Recomendación:
+
+Mientras no exista una versión para iOS, indicarlo de forma explícita en el Landing Page y ofrecer un formulario para avisar a los interesados cuando esté disponible.
+
+**PROBLEMA #10: La pestaña Seguimiento concentra mucha información en una sola vista**
+
+Severidad: 1
+
+Heurística violada: Usability - Diseño estético y minimalista
+
+Problema:
+
+La pestaña Seguimiento reúne el cumplimiento semanal, la tendencia de peso, el registro de comidas, el resumen con IA, el diario de hoy y la última medición clínica. La nutricionista indicó que en un celular pequeño tendría que desplazarse bastante para revisar todo.
+
+![Problema 10](../assets/img/chapter4/heuristics/problema10.png)
+
+Recomendación:
+
+Mostrar primero los indicadores clave de la semana y agrupar el resto en secciones colapsables, por ejemplo "Diario de hoy" y "Última medición".
+
+**PROBLEMA #11: No se explica al nutricionista por qué no puede ver la foto del plato**
+
+Severidad: 1
+
+Heurística violada: Usability - Ayuda y documentación
+
+Problema:
+
+La nutricionista quiso ver la foto de una comida para validar la estimación de la porción. Por diseño, las fotos se procesan en el teléfono del paciente y no se envían, pero la pestaña Seguimiento no lo explica, por lo que puede parecer una función faltante.
+
+![Problema 11](../assets/img/chapter4/heuristics/problema11.png)
+
+Recomendación:
+
+Agregar una nota breve en las comidas registradas por foto, por ejemplo "Por privacidad, la foto se queda en el teléfono del paciente", con un enlace al alcance del consentimiento.
