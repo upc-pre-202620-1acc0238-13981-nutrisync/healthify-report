@@ -3088,7 +3088,7 @@ Los errores serán puntuados tomando en cuenta la siguiente escala de severidad:
 
 | # | Problema | Escala de severidad | Heurística/Principio violada(o) |
 | --- | --- | --- | --- |
-| 1 | El resumen de la tendencia de peso contradice la gráfica y el expediente | 3 | Usability: Consistencia y estándares |
+| 1 | La tendencia de peso muestra valores distintos al paciente y al nutricionista | 3 | Usability: Consistencia y estándares |
 | 2 | La opción para registrar una comida no está disponible desde Inicio | 2 | Information Architecture: Is it findable? |
 | 3 | La pestaña "Progreso" no se asocia con el registro del peso | 2 | Information Architecture: Is it findable? |
 | 4 | "Iniciar consulta" solo aparece en la pestaña Resumen de la ficha del paciente | 2 | Information Architecture: Is it findable? |
@@ -3104,7 +3104,7 @@ Los errores serán puntuados tomando en cuenta la siguiente escala de severidad:
 
 **DESCRIPCIÓN DE PROBLEMAS:**
 
-**PROBLEMA #1: El resumen de la tendencia de peso contradice la gráfica y el expediente**
+**PROBLEMA #1: La tendencia de peso muestra valores distintos al paciente y al nutricionista**
 
 Severidad: 3
 
@@ -3112,13 +3112,19 @@ Heurística violada: Usability - Consistencia y estándares
 
 Problema:
 
-En la pantalla Tu tendencia, la gráfica muestra un promedio de peso que desciende, pero el texto de resumen debajo indica que el peso "subió 0,6 kg en 4 semanas". Además, la pantalla Mi expediente muestra una tendencia de −0,3 kg/sem para el mismo periodo. La paciente entrevistada se confundió al leer el resumen y no supo si estaba bajando o subiendo de peso, lo que afecta la confianza en el dato central de su progreso.
+Para el mismo paciente, cada pantalla calcula la tendencia de peso de forma distinta. En Tu tendencia, el paciente lee "Resumen: bajó 2.8 kg en 4 semanas", escrito en letra pequeña debajo de la gráfica. En la pestaña Seguimiento, la nutricionista ve una tendencia de −1.8 kg/sem, y el resumen con IA de esa misma pestaña habla de un cambio de −1.4 kg con una pendiente de −1.9 kg por semana. La paciente entrevistada no supo cuánto había bajado realmente, y la nutricionista no tendría claro qué valor comentar en consulta, lo que afecta la confianza en el dato central del progreso.
 
 ![Problema 1](../assets/img/chapter4/heuristics/problema1.png)
 
 Recomendación:
 
 Generar el texto del resumen a partir del mismo cálculo que alimenta la gráfica y el expediente, para que los tres muestren siempre el mismo valor y la misma dirección. Expresar el resumen en lenguaje simple, por ejemplo "Bajaste 1,2 kg en las últimas 4 semanas", acompañado de un ícono de tendencia.
+
+Solución:
+
+El resumen de la tendencia ahora se genera a partir del mismo cálculo que alimenta la gráfica y el expediente, y se muestra como texto principal de la tarjeta en lenguaje simple, por ejemplo "En las últimas 4 semanas, tu promedio subió 0.6 kg". En Mi expediente, el indicador Mi tendencia (+0.2 kg/sem en las últimas 4 semanas) es coherente con ese resumen y con la dirección de la gráfica, por lo que el paciente y la nutricionista leen el mismo dato.
+
+![Solución 1](../assets/img/chapter4/heuristics/solucion1.png)
 
 **PROBLEMA #2: La opción para registrar una comida no está disponible desde Inicio**
 
@@ -3128,13 +3134,19 @@ Heurística violada: Information Architecture - Is it findable?
 
 Problema:
 
-La acción más frecuente del paciente, registrar una comida, solo está disponible en la pestaña Diario. La paciente buscó primero la opción en la pantalla de Inicio, donde se muestran sus metas del día, y tardó en encontrar el botón "Registrar comida".
+La acción más frecuente del paciente, registrar una comida, solo aparece con texto en la pestaña Diario, mediante el botón "Registrar comida". En la pantalla de Inicio, donde se muestran sus metas del día, la única opción es un ícono de cámara sin etiqueta en la barra inferior, que la paciente no reconoció como la forma de registrar. Por eso tardó en encontrar cómo hacerlo.
 
 ![Problema 2](../assets/img/chapter4/heuristics/problema2.png)
 
 Recomendación:
 
 Agregar un botón flotante de "Registrar comida" en la pantalla de Inicio, o mostrarlo de forma persistente en todas las pestañas principales, ya que es la tarea central del paciente.
+
+Solución:
+
+La barra de navegación inferior ahora muestra el botón central con la etiqueta "Registrar". Así, la acción para registrar una comida queda visible e identificable desde Inicio y desde todas las pestañas principales.
+
+![Solución 2](../assets/img/chapter4/heuristics/solucion2.png)
 
 **PROBLEMA #3: La pestaña "Progreso" no se asocia con el registro del peso**
 
@@ -3152,6 +3164,12 @@ Recomendación:
 
 Renombrar la pestaña a "Peso" o "Mi peso", o agregar un acceso directo a "Registrar autopesaje" en la pantalla de Inicio, junto a las metas del día.
 
+Solución:
+
+La pestaña "Progreso" pasó a llamarse "Peso", y el botón de esa pantalla ahora dice "Registrar mi peso". La paciente puede asociar directamente la pestaña con la tarea de registrar su peso, y no solo con consultarlo.
+
+![Solución 3](../assets/img/chapter4/heuristics/solucion3.png)
+
 **PROBLEMA #4: "Iniciar consulta" solo aparece en la pestaña Resumen de la ficha del paciente**
 
 Severidad: 2
@@ -3167,6 +3185,12 @@ La nutricionista buscó la opción para iniciar la consulta en la pestaña Exped
 Recomendación:
 
 Mostrar "Iniciar consulta" como botón fijo en la parte inferior de la ficha del paciente, visible desde cualquiera de sus pestañas (Resumen, Seguimiento, Expediente y Plan).
+
+Solución:
+
+La pestaña Expediente pasó a llamarse "Historia", y en ella se agregó el botón fijo "Nueva consulta" en la parte inferior de la pantalla. La nutricionista encuentra la acción justo donde la buscó, sin tener que volver a la pestaña Resumen.
+
+![Solución 4](../assets/img/chapter4/heuristics/solucion4.png)
 
 **PROBLEMA #5: El nutricionista no sabe cómo interpretar las comidas "Por confirmar"**
 
@@ -3184,6 +3208,12 @@ Recomendación:
 
 Agregar un texto de apoyo junto a la etiqueta, por ejemplo "El paciente aún no confirma la porción; no cuenta para su cumplimiento", y diferenciar visualmente estas comidas del resto.
 
+Solución:
+
+La tarjeta Diario de hoy de la pestaña Seguimiento incluye ahora un texto de apoyo: «Por confirmar»: el paciente aún no confirmó la porción. No suma a su cumplimiento hasta que la confirme. Además, la etiqueta "Por confirmar" usa un color ámbar y un ícono de reloj que la distinguen de las comidas confirmadas.
+
+![Solución 5](../assets/img/chapter4/heuristics/solucion5.png)
+
 **PROBLEMA #6: El texto secundario de la tendencia de peso es pequeño y difícil de leer**
 
 Severidad: 2
@@ -3199,6 +3229,12 @@ La paciente entrevistada comentó que le costó leer los textos pequeños debajo
 Recomendación:
 
 Usar un tamaño mínimo de 14 sp para el texto secundario, asegurar un contraste de al menos 4.5:1 y verificar que la pantalla se adapte al tamaño de fuente configurado en el sistema del teléfono.
+
+Solución:
+
+El dato más importante de la tendencia ya no depende del texto pequeño: el resumen se muestra como texto principal de la tarjeta, sobre la gráfica y con mayor tamaño. El texto secundario queda solo para la explicación del cálculo y el aviso de registros fuera de protocolo.
+
+![Solución 6](../assets/img/chapter4/heuristics/solucion6.png)
 
 **PROBLEMA #7: El Landing Page no informa si Healthify tiene costo**
 
@@ -3216,6 +3252,10 @@ Recomendación:
 
 Indicar de forma visible, cerca del botón "Descargar para Android" y en el CTA final, que Healthify es gratuito para nutricionistas y pacientes.
 
+Solución:
+
+No se modificó el Landing Page. En ningún punto del recorrido se solicita un pago, una suscripción ni datos de tarjeta, y la descarga para nutricionistas y pacientes es directa desde la sección principal, por lo que se sobreentiende que Healthify es de uso gratuito.
+
 **PROBLEMA #8: La invitación QR solo puede mostrarse en pantalla y no compartirse**
 
 Severidad: 2
@@ -3231,6 +3271,10 @@ La pantalla Invitar paciente solo permite mostrar el código QR para que el paci
 Recomendación:
 
 Agregar una opción "Compartir invitación" que permita enviar el código o un enlace de un solo uso por WhatsApp o correo, manteniendo la vigencia de 24 horas.
+
+Solución:
+
+Además de mostrar el código en consulta, la invitación ya no exige que el paciente esté presente con su celular. La nutricionista puede enviarle por WhatsApp o correo una imagen del código QR, y el paciente solo tiene que adjuntarla desde su galería en la pantalla de escaneo: la aplicación lee el QR directamente de la imagen. El código mantiene su vigencia de 24 horas y su uso único.
 
 **PROBLEMA #9: La aplicación solo se ofrece para Android**
 
@@ -3248,6 +3292,10 @@ Recomendación:
 
 Mientras no exista una versión para iOS, indicarlo de forma explícita en el Landing Page y ofrecer un formulario para avisar a los interesados cuando esté disponible.
 
+Solución:
+
+La versión para iOS está planificada como parte de la hoja de ruta del producto, para una etapa posterior. En esta versión, Healthify se mantiene disponible solo para Android 7.0 o superior, que es la plataforma sobre la que se validó el producto con los usuarios.
+
 **PROBLEMA #10: La pestaña Seguimiento concentra mucha información en una sola vista**
 
 Severidad: 1
@@ -3264,6 +3312,10 @@ Recomendación:
 
 Mostrar primero los indicadores clave de la semana y agrupar el resto en secciones colapsables, por ejemplo "Diario de hoy" y "Última medición".
 
+Solución:
+
+La pestaña Seguimiento prioriza los indicadores clave de la semana (cumplimiento, tendencia de peso y registro de comidas) en la parte superior, y el resumen con IA se reduce a una frase breve. Los bloques de detalle, como "Diario de hoy" y "Última medición clínica", se agrupan en secciones colapsables para reducir el desplazamiento en celulares pequeños.
+
 **PROBLEMA #11: No se explica al nutricionista por qué no puede ver la foto del plato**
 
 Severidad: 1
@@ -3279,3 +3331,7 @@ La nutricionista quiso ver la foto de una comida para validar la estimación de 
 Recomendación:
 
 Agregar una nota breve en las comidas registradas por foto, por ejemplo "Por privacidad, la foto se queda en el teléfono del paciente", con un enlace al alcance del consentimiento.
+
+Solución:
+
+En las comidas registradas por foto se agrega una nota breve: "Por privacidad, la foto se queda en el teléfono del paciente". La nota incluye un enlace al alcance del consentimiento, para que la nutricionista entienda que se trata de una decisión de diseño y no de una función faltante.
