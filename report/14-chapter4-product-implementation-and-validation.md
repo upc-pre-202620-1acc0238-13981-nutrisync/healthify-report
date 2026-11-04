@@ -2652,7 +2652,7 @@ El menú lateral del nutricionista (catálogo de alimentos, ajustes y cierre de 
 
 Las capturas de Swagger de los endpoints nuevos están en la sección 4.2.2.7.
 
-**URL del video de demostración del Sprint 2:** [Video del Sprint 2](PENDIENTE)
+**URL del video de demostración del Sprint 2:** [Video del Sprint 2](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQCUgAx_44DgQpfIo2DdkNwcAWJ_wxQazuZH4d0smNnv8MQ?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=UdYnb0)
 
 #### 4.2.2.7. Services Documentation Evidence for Sprint Review
 
