@@ -3032,8 +3032,6 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 ### 4.3.3. Evaluaciones según heurísticas
 
-<div style### 4.3.3. Evaluaciones según heurísticas
-
 **UX Heuristics & Principles Evaluation**
 **Usability · Inclusive Design · Information Architecture**
 
@@ -3102,3 +3100,102 @@ Los errores serán puntuados tomando en cuenta la siguiente escala de severidad:
 | 10 | La pestaña Seguimiento concentra mucha información en una sola vista | 1 | Usability: Diseño estético y minimalista |
 | 11 | No se explica al nutricionista por qué no puede ver la foto del plato | 1 | Usability: Ayuda y documentación |="page-break-after: always"></div>
 
+<div style="page-break-after: always"></div>
+
+**DESCRIPCIÓN DE PROBLEMAS:**
+
+**PROBLEMA #1: El resumen de la tendencia de peso contradice la gráfica y el expediente**
+
+Severidad: 3
+
+Heurística violada: Usability - Consistencia y estándares
+
+Problema:
+
+En la pantalla Tu tendencia, la gráfica muestra un promedio de peso que desciende, pero el texto de resumen debajo indica que el peso "subió 0,6 kg en 4 semanas". Además, la pantalla Mi expediente muestra una tendencia de −0,3 kg/sem para el mismo periodo. La paciente entrevistada se confundió al leer el resumen y no supo si estaba bajando o subiendo de peso, lo que afecta la confianza en el dato central de su progreso.
+
+![Problema 1](../assets/img/chapter4/heuristics/problema1.png)
+
+Recomendación:
+
+Generar el texto del resumen a partir del mismo cálculo que alimenta la gráfica y el expediente, para que los tres muestren siempre el mismo valor y la misma dirección. Expresar el resumen en lenguaje simple, por ejemplo "Bajaste 1,2 kg en las últimas 4 semanas", acompañado de un ícono de tendencia.
+
+**PROBLEMA #2: La opción para registrar una comida no está disponible desde Inicio**
+
+Severidad: 2
+
+Heurística violada: Information Architecture - Is it findable?
+
+Problema:
+
+La acción más frecuente del paciente, registrar una comida, solo está disponible en la pestaña Diario. La paciente buscó primero la opción en la pantalla de Inicio, donde se muestran sus metas del día, y tardó en encontrar el botón "Registrar comida".
+
+![Problema 2](../assets/img/chapter4/heuristics/problema2.png)
+
+Recomendación:
+
+Agregar un botón flotante de "Registrar comida" en la pantalla de Inicio, o mostrarlo de forma persistente en todas las pestañas principales, ya que es la tarea central del paciente.
+
+**PROBLEMA #3: La pestaña "Progreso" no se asocia con el registro del peso**
+
+Severidad: 2
+
+Heurística violada: Information Architecture - Is it findable?
+
+Problema:
+
+Para registrar su peso, la paciente buscó primero en Expediente y necesitó ayuda para llegar a "Registrar autopesaje", dentro de la pestaña Progreso. La etiqueta "Progreso" no comunica que en esa pestaña se registra el peso, solo que se consulta.
+
+![Problema 3](../assets/img/chapter4/heuristics/problema3.png)
+
+Recomendación:
+
+Renombrar la pestaña a "Peso" o "Mi peso", o agregar un acceso directo a "Registrar autopesaje" en la pantalla de Inicio, junto a las metas del día.
+
+**PROBLEMA #4: "Iniciar consulta" solo aparece en la pestaña Resumen de la ficha del paciente**
+
+Severidad: 2
+
+Heurística violada: Information Architecture - Is it findable?
+
+Problema:
+
+La nutricionista buscó la opción para iniciar la consulta en la pestaña Expediente, porque asoció la consulta con el historial clínico. El botón "Iniciar consulta" solo está al final de la pestaña Resumen, por lo que no lo encontró al primer intento. Es la acción que más usará en cada cita.
+
+![Problema 4](../assets/img/chapter4/heuristics/problema4.png)
+
+Recomendación:
+
+Mostrar "Iniciar consulta" como botón fijo en la parte inferior de la ficha del paciente, visible desde cualquiera de sus pestañas (Resumen, Seguimiento, Expediente y Plan).
+
+**PROBLEMA #5: El nutricionista no sabe cómo interpretar las comidas "Por confirmar"**
+
+Severidad: 2
+
+Heurística violada: Usability - Coincidencia entre el sistema y el mundo real
+
+Problema:
+
+En la pestaña Seguimiento, algunas comidas aparecen con la etiqueta "Por confirmar". La nutricionista no supo si debía considerarlas en su evaluación, porque la vista no explica que aún no suman al cumplimiento del paciente.
+
+![Problema 5](../assets/img/chapter4/heuristics/problema5.png)
+
+Recomendación:
+
+Agregar un texto de apoyo junto a la etiqueta, por ejemplo "El paciente aún no confirma la porción; no cuenta para su cumplimiento", y diferenciar visualmente estas comidas del resto.
+
+**PROBLEMA #6: El texto secundario de la tendencia de peso es pequeño y difícil de leer**
+
+Severidad: 2
+
+Heurística violada: Inclusive Design - Proporciona experiencias comparables
+
+Problema:
+
+La paciente entrevistada comentó que le costó leer los textos pequeños debajo de la gráfica de tendencia y tuvo que acercar el teléfono. Ese texto contiene la explicación del cálculo y el aviso sobre los registros fuera de protocolo, por lo que quien tiene dificultades visuales pierde información relevante.
+
+![Problema 6](../assets/img/chapter4/heuristics/problema6.png)
+
+Recomendación:
+
+Usar un tamaño mínimo de 14 sp para el texto secundario, asegurar un contraste de al menos 4.5:1 y verificar que la pantalla se adapte al tamaño de fuente configurado en el sistema del teléfono.
