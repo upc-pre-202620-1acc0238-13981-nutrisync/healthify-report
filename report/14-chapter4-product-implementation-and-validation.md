@@ -2526,33 +2526,45 @@ En el Sprint 2 se publicó el landing page V10, se desplegaron las versiones 1.1
 
 **Landing Page**
 
-Hero V10 con los botones «Descargar para Android» y «Ver las pantallas», y capturas reales de la app en el carrusel (US36).
+Hero V10 con capturas reales de la app y los botones de descarga «Nutricionista» (app Flutter) y «Paciente» (app nativa), cada uno con su invitación de Firebase App Distribution (US36).
 
 <p class="caption"><strong>Figura 187</strong><br><em>Captura del landing page V10: hero</em></p>
 
 ![Hero V10](../assets/img/chapter4/sprint2/landing-v10-hero.png)
 
+En pantallas anchas, el botón «Descargar» del header abre un panel con las dos apps; se cierra con Escape, al elegir una opción o al hacer clic fuera (US36).
+
+<p class="caption"><strong>Figura 188</strong><br><em>Captura del landing page V10: panel de descarga del header</em></p>
+
+![Panel de descarga del header](../assets/img/chapter4/sprint2/landing-v10-download-menu.png)
+
+La segunda y la tercera diapositiva del hero muestran los videos del equipo y del producto, con la miniatura de YouTube como póster (US32).
+
+<p class="caption"><strong>Figura 189</strong><br><em>Captura del landing page V10: video del producto en el hero</em></p>
+
+![Video del producto en el hero](../assets/img/chapter4/sprint2/landing-v10-video.png)
+
 La consulta paso a paso, con las cuatro pantallas de la consulta guiada.
 
-<p class="caption"><strong>Figura 188</strong><br><em>Captura del landing page V10: la consulta paso a paso</em></p>
+<p class="caption"><strong>Figura 190</strong><br><em>Captura del landing page V10: la consulta paso a paso</em></p>
 
 ![La consulta paso a paso](../assets/img/chapter4/sprint2/landing-v10-steps.png)
 
 Prueba social con un testimonio de nutricionista y uno de paciente, que aparecen como mensajes al llegar a la sección (US32). Los dos textos son un borrador pendiente de confirmar con sus autoras, como indica el README del repositorio.
 
-<p class="caption"><strong>Figura 189</strong><br><em>Captura del landing page V10: testimonios</em></p>
+<p class="caption"><strong>Figura 191</strong><br><em>Captura del landing page V10: testimonios</em></p>
 
 ![Testimonios](../assets/img/chapter4/sprint2/landing-v10-testimonials.png)
 
-Cierre para nutricionistas con los tres pasos para empezar y el enlace de descarga a Firebase App Distribution (US36).
+Cierre para nutricionistas con los tres pasos para empezar y el enlace de descarga de la app Flutter en Firebase App Distribution (US36).
 
-<p class="caption"><strong>Figura 190</strong><br><em>Captura del landing page V10: descarga y footer</em></p>
+<p class="caption"><strong>Figura 192</strong><br><em>Captura del landing page V10: descarga y footer</em></p>
 
 ![Descarga y footer](../assets/img/chapter4/sprint2/landing-v10-download.png)
 
 Contacto con el selector de caso y el resumen de errores al enviar el formulario vacío; cada error enlaza a su campo.
 
-<p class="caption"><strong>Figura 191</strong><br><em>Captura del landing page V10: resumen de errores del contacto</em></p>
+<p class="caption"><strong>Figura 193</strong><br><em>Captura del landing page V10: resumen de errores del contacto</em></p>
 
 ![Resumen de errores del contacto](../assets/img/chapter4/sprint2/landing-v10-contact-errors.png)
 
