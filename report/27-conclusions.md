@@ -68,6 +68,42 @@ Healthify trata datos de salud, que la Ley N.º 29733 de Protección de Datos Pe
 
 ## Video App Validation
 
+### Descripción General
+
+En esta sección, el equipo documenta la evaluación de la aplicación a través de la prueba de usuarios. Para llevar a cabo este proceso, se utiliza Firebase App Distribution, permitiendo la distribución y prueba de la aplicación en distintos dispositivos antes de su lanzamiento.
+
+Las pruebas se realizaron con usuarios representativos de los segmentos objetivo (profesionales de la nutrición y pacientes en tratamiento), validando los flujos clave del ecosistema como la vinculación mediante código QR, el registro de ingesta asistido por IA, la consulta clínica guiada y el seguimiento de adherencia.
+
+---
+
+### Distribución de la Aplicación (Firebase App Distribution)
+
+Para facilitar la instalación y evaluación en dispositivos móviles antes del lanzamiento, se habilitaron los siguientes enlaces de distribución:
+
+| Plataforma / Build | Enlace de Distribución |
+| --- | --- |
+| **Healthify App Android** | [Descargar vía Firebase App Distribution](https://appdistribution.firebase.dev/i/1dec518f210ca662) |
+| **HEALTHIFY FLUTTER** | [Descargar vía Firebase App Distribution](https://appdistribution.firebase.dev/i/ff7af63bc7988299) |
+
+---
+
+### Información del Video
+
+| Atributo | Contenido |
+| --- | --- |
+| **Duración** | 12:10 |
+| **Link** | [Link del Video de Validación](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202411669_upc_edu_pe/IQCnNkCaYT30S6gZMsa5J7AmAVF4NkGrnCEyjn200FyN5Hk?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=mqTC43) |
+
+---
+
+### Resumen del Video
+
+El video documenta dos sesiones de prueba de usabilidad con usuarios representativos de los roles clave del ecosistema:
+
+* **Validación con Nutricionista (Tatiana Mozambite):** Se evaluó el flujo profesional desde la Landing Page hasta la gestión clínica. La especialista destacó la practicidad de la vinculación inmediata mediante código QR (con vigencia de 24 horas) y el ahorro significativo de tiempo al llegar a la consulta conociendo el registro de comidas del paciente, reduciendo la dependencia de su memoria. Asimismo, validó positivamente la consulta estructurada en 4 pasos (medición, diagnóstico, metas calculadas y restricciones) y la bandeja de alertas interconsulta, valorando que la IA brinde soporte analítico manteniendo siempre la decisión médica final en el profesional.
+* **Validación con Paciente (Larissa Ramírez):** Se evaluó la interacción del paciente en la aplicación móvil. La usuaria resaltó la rapidez y comodidad del registro fotográfico con reconocimiento automático de porciones e IA, así como la facilidad para ajustar gramajes. Resaltó especialmente el enfoque *"sin culpa"* (*no-guilt*), al no recibir advertencias punitivas en color rojo tras ingerir alimentos fuera del plan, y la visualización del progreso orientada a la tendencia histórica en vez del peso diario.
+
+---
 
 ## Video About the product
 
