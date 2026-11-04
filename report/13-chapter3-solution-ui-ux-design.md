@@ -25,7 +25,7 @@ Como base se adoptó **Material Design 3** y se adaptó a la marca: se conservan
 
 El nombre **Healthify** combina *health* (salud) con el sufijo *-ify* («hacer»), y comunica la idea de volver práctico el cuidado de la salud. El logotipo une un corazón con una hoja: el corazón evoca el cuidado clínico y la hoja la alimentación. Junto al logotipo, el nombre *Healthify* se escribe en Anton. El sistema define tres versiones del logotipo: **sobre negro** (blanca; el landing page la usa en el encabezado y el pie, sobre verde oscuro), **sobre blanco (mono)** y **a color (marca)**.
 
-<p class="caption"><strong>Figura 113</strong><br><em>Versiones del logo de Healthify: sobre negro, sobre blanco mono y a color</em></p>
+<p class="caption"><strong>Figura 114</strong><br><em>Versiones del logo de Healthify: sobre negro, sobre blanco mono y a color</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/style-guidelines/brand.png" alt="Versiones del logo de Healthify: sobre negro, sobre blanco mono y a color" width="640" />
@@ -70,7 +70,7 @@ La paleta se organiza por roles de Material 3 y está pensada para transmitir sa
 - **Landing page**: no agrega colores de marca, sino que combina los de la app por secciones. Usa `green/900` (`#24461A`) en el encabezado, el héroe, la sección del nutricionista y el pie; `green/700` (`#3B6E23`) en la llamada final; `green/100` (`#E5F5D1`) en la sección del paciente; y lima claro `#B8E07A` para el texto de apoyo y el anillo de foco sobre verde oscuro.
 - **Error (`#B3261E`)** con su contenedor `#FCE8E4`: se reserva para errores de validación y fallas.
 
-<p class="caption"><strong>Figura 114</strong><br><em>Paleta de colores por roles del sistema de diseño Healthify M3</em></p>
+<p class="caption"><strong>Figura 115</strong><br><em>Paleta de colores por roles del sistema de diseño Healthify M3</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/style-guidelines/colors.png" alt="Paleta de colores por roles del sistema de diseño Healthify M3" />
@@ -80,7 +80,7 @@ La paleta se organiza por roles de Material 3 y está pensada para transmitir sa
 
 El espaciado sigue una escala de **múltiplos de 4 y 8 dp**: 0, 4, 8, 12, 16, 24, 32, 40, 48 y 64. Los radios de borde son 8 dp (campos y elementos pequeños), 12 dp (tarjetas), 16 dp (módulos destacados) y 24 dp (contenedores grandes); los diálogos y hojas inferiores usan 28 dp, y los botones y chips en forma de píldora usan un radio completo. En la aplicación móvil, el margen lateral de pantalla es de 16 dp (frame de referencia de 360 × 800), los botones y campos miden 56 dp de alto y el área táctil mínima es de 48 dp. En el landing page, el contenedor tiene un ancho máximo de 1200 px con 24 px de margen lateral, el encabezado mide 64 px de alto (88 px desde 1200 px de ancho) y, en escritorio, cada sección de Inicio y Nosotros ocupa al menos una pantalla (900 px de alto en 1440 × 900).
 
-<p class="caption"><strong>Figura 115</strong><br><em>Fundamentos del sistema de diseño Healthify M3: color, tipografía y espaciado</em></p>
+<p class="caption"><strong>Figura 116</strong><br><em>Fundamentos del sistema de diseño Healthify M3: color, tipografía y espaciado</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/style-guidelines/foundations.png" alt="Fundamentos del sistema de diseño Healthify M3: color, tipografía y espaciado" width="620" />
@@ -243,7 +243,7 @@ En «Registrar a mano» el paciente cuenta con un campo «Buscar alimento» con 
 
 Cada resultado se muestra como una tarjeta con el **nombre del alimento** y su **aporte energético por 100 g** («Arroz blanco cocido · 130 kcal / 100 g»). Al elegir un alimento, el paciente indica la porción en gramos y el momento de la comida, hasta 48 horas hacia atrás. El nutricionista accede al mismo catálogo desde el menú lateral («Catálogo de alimentos») y puede **agregar alimentos locales** cuando no encuentra uno.
 
-<p class="caption"><strong>Figura 116</strong><br><em>Pantallas de búsqueda de alimentos: campo de búsqueda vacío y con teclado abierto</em></p>
+<p class="caption"><strong>Figura 117</strong><br><em>Pantallas de búsqueda de alimentos: campo de búsqueda vacío y con teclado abierto</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/information-architecture/search-systems-patient.png" alt="Pantallas de búsqueda de alimentos: campo de búsqueda vacío y con teclado abierto" width="560" />
@@ -283,7 +283,7 @@ La navegación se articula con un **encabezado fijo** sobre verde oscuro, con el
 - **Enlace «Saltar al contenido principal»** para usuarios de teclado y lectores de pantalla.
 - **Llamadas a la acción** consistentes: todos los botones «Descargar para Android» llevan al mismo enlace de descarga, y la frase «¿Te invitó tu nutricionista?» del héroe lleva a la sección del paciente.
 
-<p class="caption"><strong>Figura 117</strong><br><em>Barra de navegación del landing page de Healthify</em></p>
+<p class="caption"><strong>Figura 118</strong><br><em>Barra de navegación del landing page de Healthify</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/information-architecture/landing-home.png" alt="Barra de navegación del landing page de Healthify" width="720" />
@@ -296,7 +296,7 @@ Tras iniciar sesión, la aplicación resuelve el rol de la persona y carga el *s
 - **Paciente: 4 pestañas y el botón «Registrar»** (*Inicio*, *Diario*, *Peso* y *Expediente*, con el botón naranja de cámara al centro). «Registrar» abre la cámara desde cualquier pestaña. El menú lateral reúne *Mi plan*, *Mis consultas*, *Pendientes*, *Ajustes* y *Cerrar sesión*. En Inicio, las tarjetas «Cómo voy hoy», «Próxima consulta» y los avisos como «Algo no cuadra» llevan a su detalle.
 - **Nutricionista: 3 pestañas** (*Pacientes*, *Bandeja* y *Agenda*). El menú lateral reúne *Catálogo de alimentos*, *Ajustes* y *Cerrar sesión*. Desde *Pacientes* se entra a la ficha de cada paciente, que tiene su propia **navegación por pestañas superiores** (*Resumen*, *Seguimiento*, *Expediente* y *Plan*, entre las que también se puede deslizar), y desde allí se inicia la consulta guiada.
 
-<p class="caption"><strong>Figura 118</strong><br><em>Barras de navegación inferior del paciente y del nutricionista</em></p>
+<p class="caption"><strong>Figura 119</strong><br><em>Barras de navegación inferior del paciente y del nutricionista</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/information-architecture/navbar-patient.png" alt="Barra de navegación inferior del paciente" width="240" /> <img src="../assets/img/chapter3/information-architecture/navbar-practitioner.png" alt="Barra de navegación inferior del nutricionista" width="240" />
@@ -311,7 +311,7 @@ Las demás técnicas de navegación son:
 - **Acceso por código QR**: el nutricionista genera una invitación con un QR y el paciente la escanea con la cámara para vincularse.
 - **Pantallas de arranque**: *Splash*, *Bienvenida*, *Registro* (con la aceptación de los términos), *Inicio de sesión* y *Recuperar contraseña* anteceden al *shell*, y una pantalla de **sesión expirada** permite volver a entrar sin perder el contexto.
 
-<p class="caption"><strong>Figura 119</strong><br><em>Navegación de la app: Mis pacientes, menú lateral, Bandeja y ficha del paciente (nutricionista); Inicio y menú lateral (paciente)</em></p>
+<p class="caption"><strong>Figura 120</strong><br><em>Navegación de la app: Mis pacientes, menú lateral, Bandeja y ficha del paciente (nutricionista); Inicio y menú lateral (paciente)</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/information-architecture/navigation-practitioner.png" alt="Pantallas del nutricionista: Mis pacientes, menú lateral abierto, Bandeja y ficha del paciente" width="820" />
@@ -331,7 +331,7 @@ Los wireframes del landing page se elaboraron en Figma, en escala de grises y co
 
 La página de Inicio se organiza en el orden definido en la sección 3.1.2.1: encabezado con navegación, héroe, propuesta de valor, «La consulta, paso a paso», «Entre citas», «Para nutricionistas», «Para pacientes», prueba social, llamada final y pie de página.
 
-<p class="caption"><strong>Figura 120</strong><br><em>Wireframe de Inicio en escritorio</em></p>
+<p class="caption"><strong>Figura 121</strong><br><em>Wireframe de Inicio en escritorio</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/landing/wireframe/desktop-home-parts/part-1.png" alt="Wireframe de Inicio en escritorio (sección 1)" style="width:520px" />
@@ -398,7 +398,7 @@ La página de Inicio se organiza en el orden definido en la sección 3.1.2.1: en
 
 Las demás páginas siguen la misma estructura de encabezado y pie. **Nosotros** presenta la historia, la misión y visión, los valores, el equipo y las preguntas frecuentes. **Contacto** abre con tres casos para elegir (Soy nutricionista, Soy paciente, Alianzas), seguidos del formulario y de otras formas de contacto. **Términos y condiciones** presenta nueve cláusulas con un índice lateral fijo.
 
-<p class="caption"><strong>Figura 121</strong><br><em>Wireframe de Nosotros en escritorio</em></p>
+<p class="caption"><strong>Figura 122</strong><br><em>Wireframe de Nosotros en escritorio</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/landing/wireframe/desktop-about-parts/part-1.png" alt="Wireframe de Nosotros en escritorio (sección 1)" style="width:520px" />
@@ -424,7 +424,7 @@ Las demás páginas siguen la misma estructura de encabezado y pie. **Nosotros**
   <img src="../assets/img/chapter3/landing/wireframe/desktop-about-parts/part-6.png" alt="Wireframe de Nosotros en escritorio (sección 6)" style="width:520px" />
 </p>
 
-<p class="caption"><strong>Figura 122</strong><br><em>Wireframe de Contacto en escritorio</em></p>
+<p class="caption"><strong>Figura 123</strong><br><em>Wireframe de Contacto en escritorio</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/landing/wireframe/desktop-contact-parts/part-1.png" alt="Wireframe de Contacto en escritorio (sección 1)" style="width:520px" />
@@ -434,7 +434,7 @@ Las demás páginas siguen la misma estructura de encabezado y pie. **Nosotros**
   <img src="../assets/img/chapter3/landing/wireframe/desktop-contact-parts/part-2.png" alt="Wireframe de Contacto en escritorio (sección 2)" style="width:520px" />
 </p>
 
-<p class="caption"><strong>Figura 123</strong><br><em>Wireframe de Términos y condiciones en escritorio</em></p>
+<p class="caption"><strong>Figura 124</strong><br><em>Wireframe de Términos y condiciones en escritorio</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/landing/wireframe/desktop-terms-parts/part-1.png" alt="Wireframe de Términos y condiciones en escritorio (sección 1)" style="width:520px" />
@@ -448,7 +448,7 @@ Las demás páginas siguen la misma estructura de encabezado y pie. **Nosotros**
 
 En móvil el contenido se apila en una sola columna. La navegación se oculta tras un botón de menú y se abre como una pantalla completa con los cinco enlaces en Anton, el selector de idioma y el botón «Descargar para Android». «La consulta, paso a paso» pasa de cuatro columnas a un carrusel horizontal con un indicador de pasos, de modo que cada paso conserva su captura sin alargar la página.
 
-<p class="caption"><strong>Figura 124</strong><br><em>Wireframe de Inicio en móvil</em></p>
+<p class="caption"><strong>Figura 125</strong><br><em>Wireframe de Inicio en móvil</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/landing/wireframe/mobile-home-parts/part-1.png" alt="Wireframe de Inicio en móvil (sección 1)" style="width:150px" />
@@ -486,7 +486,7 @@ Los mock-ups aplican sobre los wireframes el sistema de diseño descrito en 3.1.
 
 **Desktop Web Browser**
 
-<p class="caption"><strong>Figura 125</strong><br><em>Mock-up de Inicio en escritorio</em></p>
+<p class="caption"><strong>Figura 126</strong><br><em>Mock-up de Inicio en escritorio</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/landing/mockup/desktop-home-parts/part-1.png" alt="Mock-up de Inicio en escritorio (sección 1)" style="width:520px" />
@@ -535,7 +535,7 @@ Los mock-ups aplican sobre los wireframes el sistema de diseño descrito en 3.1.
 
 Las otras tres páginas conservan el encabezado y el pie de página, y cambian solo el contenido central.
 
-<p class="caption"><strong>Figura 126</strong><br><em>Mock-up de Nosotros en escritorio</em></p>
+<p class="caption"><strong>Figura 127</strong><br><em>Mock-up de Nosotros en escritorio</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/landing/mockup/desktop-about-parts/part-1.png" alt="Mock-up de Nosotros en escritorio (sección 1)" style="width:520px" />
@@ -561,7 +561,7 @@ Las otras tres páginas conservan el encabezado y el pie de página, y cambian s
   <img src="../assets/img/chapter3/landing/mockup/desktop-about-parts/part-6.png" alt="Mock-up de Nosotros en escritorio (sección 6)" style="width:520px" />
 </p>
 
-<p class="caption"><strong>Figura 127</strong><br><em>Mock-up de Contacto en escritorio</em></p>
+<p class="caption"><strong>Figura 128</strong><br><em>Mock-up de Contacto en escritorio</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/landing/mockup/desktop-contact-parts/part-1.png" alt="Mock-up de Contacto en escritorio (sección 1)" style="width:520px" />
@@ -571,7 +571,7 @@ Las otras tres páginas conservan el encabezado y el pie de página, y cambian s
   <img src="../assets/img/chapter3/landing/mockup/desktop-contact-parts/part-2.png" alt="Mock-up de Contacto en escritorio (sección 2)" style="width:520px" />
 </p>
 
-<p class="caption"><strong>Figura 128</strong><br><em>Mock-up de Términos y condiciones en escritorio</em></p>
+<p class="caption"><strong>Figura 129</strong><br><em>Mock-up de Términos y condiciones en escritorio</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/landing/mockup/desktop-terms-parts/part-1.png" alt="Mock-up de Términos y condiciones en escritorio (sección 1)" style="width:520px" />
@@ -583,7 +583,7 @@ Las otras tres páginas conservan el encabezado y el pie de página, y cambian s
 
 **Mobile Web Browser**
 
-<p class="caption"><strong>Figura 129</strong><br><em>Mock-up de Inicio en móvil</em></p>
+<p class="caption"><strong>Figura 130</strong><br><em>Mock-up de Inicio en móvil</em></p>
 
 <p align="center">
   <img src="../assets/img/chapter3/landing/mockup/mobile-home-parts/part-1.png" alt="Mock-up de Inicio en móvil (sección 1)" style="width:150px" />
@@ -612,7 +612,7 @@ La versión móvil usa los mismos colores, tipografías y componentes. Los cambi
 
 La aplicación Android de Healthify tiene dos roles, paciente y nutricionista, y se diseñó en 360 × 800 dp. En total el diseño tiene más de cien pantallas con sus estados (carga, vacío, sin conexión y error). Se presentan seis wireframes representativos: tres del paciente (Inicio, estimación por foto y tendencia de peso) y tres del nutricionista (Bandeja, ficha del paciente y diagnóstico con IA). Los wireframes se elaboraron en Figma, con textos reales y componentes del sistema de diseño en escala de grises.
 
-<p class="caption"><strong>Figura 130</strong><br><em>Wireframes de las pantallas representativas de la aplicación móvil</em></p>
+<p class="caption"><strong>Figura 131</strong><br><em>Wireframes de las pantallas representativas de la aplicación móvil</em></p>
 
 <table align="center">
   <tr>
@@ -669,7 +669,7 @@ Se elaboró un wireflow por cada objetivo del usuario. Los objetivos 1 a 3 corre
 
 El flujo recorre las cuatro etapas de la consulta con una barra de progreso («Paso 1 de 4», «Paso 2 de 4»). El botón principal al pie cambia de etiqueta según el paso y siempre indica a dónde lleva. Al final, el aviso temporal confirma la publicación sin interrumpir al nutricionista.
 
-<p class="caption"><strong>Figura 131</strong><br><em>Wireflow 1: Atender una consulta</em></p>
+<p class="caption"><strong>Figura 132</strong><br><em>Wireflow 1: Atender una consulta</em></p>
 
 <img src="../assets/img/chapter3/wireflows/01_Attend_Consultation_Wireflow.png" alt="Wireflow 1: Atender una consulta" width="100%" />
 
@@ -691,7 +691,7 @@ El flujo recorre las cuatro etapas de la consulta con una barra de progreso («P
 
 El perfil de un paciente sin datos base muestra una llamada a registrarlos antes de iniciar la consulta. Una vez guardados, el paso 1 los toma como punto de partida y solo pide lo que cambió.
 
-<p class="caption"><strong>Figura 132</strong><br><em>Wireflow 2: Evaluar a un paciente nuevo</em></p>
+<p class="caption"><strong>Figura 133</strong><br><em>Wireflow 2: Evaluar a un paciente nuevo</em></p>
 
 <img src="../assets/img/chapter3/wireflows/02_Evaluate_New_Patient_Wireflow.png" alt="Wireflow 2: Evaluar a un paciente nuevo" width="75%" />
 
@@ -713,7 +713,7 @@ El perfil de un paciente sin datos base muestra una llamada a registrarlos antes
 
 La IA propone un plan y el nutricionista lo acepta con cambios. Nada se asigna al paciente sin esa decisión.
 
-<p class="caption"><strong>Figura 133</strong><br><em>Wireflow 3: Atender una señal de la bandeja</em></p>
+<p class="caption"><strong>Figura 134</strong><br><em>Wireflow 3: Atender una señal de la bandeja</em></p>
 
 <img src="../assets/img/chapter3/wireflows/03_Handle_Inbox_Signal_Wireflow.png" alt="Wireflow 3: Atender una señal de la bandeja" width="75%" />
 
@@ -738,7 +738,7 @@ La IA propone un plan y el nutricionista lo acepta con cambios. Nada se asigna a
 
 Desde la barra inferior hasta la confirmación hay seis pasos y solo uno requiere escribir (la porción). La pantalla de espera informa qué ocurre («Viendo tu foto…»), y la estimación muestra su porcentaje de confianza.
 
-<p class="caption"><strong>Figura 134</strong><br><em>Wireflow 4: Registrar una comida con foto</em></p>
+<p class="caption"><strong>Figura 135</strong><br><em>Wireflow 4: Registrar una comida con foto</em></p>
 
 <img src="../assets/img/chapter3/wireflows/04_Log_Meal_With_Photo_Wireflow.png" alt="Wireflow 4: Registrar una comida con foto" width="100%" />
 
@@ -759,7 +759,7 @@ Desde la barra inferior hasta la confirmación hay seis pasos y solo uno requier
 | 4. Le cuenta a su nutricionista cómo le fue y toca «Enviar a mi nutricionista». |
 | 5. Ve «Mis consultas» con la respuesta enviada. |
 
-<p class="caption"><strong>Figura 135</strong><br><em>Wireflow 5: Prepararme para la consulta</em></p>
+<p class="caption"><strong>Figura 136</strong><br><em>Wireflow 5: Prepararme para la consulta</em></p>
 
 <img src="../assets/img/chapter3/wireflows/05_Prepare_For_Consultation_Wireflow.png" alt="Wireflow 5: Prepararme para la consulta" width="85%" />
 
@@ -767,7 +767,7 @@ Desde la barra inferior hasta la confirmación hay seis pasos y solo uno requier
 
 Los mock-ups aplican el sistema de diseño «Healthify M3» sobre los wireframes de 3.1.4.1: fondo crema `#F6F4EE`, tarjetas blancas, verde `#3B6E23` para la navegación activa y los enlaces, naranja `#F5A623` para la acción principal, Anton en títulos y métricas, y Open Sans en el resto. Se presentan las mismas seis pantallas.
 
-<p class="caption"><strong>Figura 136</strong><br><em>Mock-ups de las pantallas representativas de la aplicación móvil</em></p>
+<p class="caption"><strong>Figura 137</strong><br><em>Mock-ups de las pantallas representativas de la aplicación móvil</em></p>
 
 <table align="center">
   <tr>
@@ -837,7 +837,7 @@ Cada User Flow parte del mismo objetivo que su Wireflow y se construye con los m
 
 La consulta se puede interrumpir sin perder lo ingresado: queda como borrador y se reanuda desde el perfil del paciente. Si la consulta se abrió por error, el paso 1 permite borrarla («¿Borrar esta consulta?»); el plan y las metas vigentes no cambian.
 
-<p class="caption"><strong>Figura 137</strong><br><em>User Flow 1: Atender una consulta</em></p>
+<p class="caption"><strong>Figura 138</strong><br><em>User Flow 1: Atender una consulta</em></p>
 
 <img src="../assets/img/chapter3/userflows/01_Attend_Consultation_Userflow.png" alt="User Flow 1: Atender una consulta" width="100%" />
 
@@ -864,7 +864,7 @@ La consulta se puede interrumpir sin perder lo ingresado: queda como borrador y 
 | 1. El nutricionista ingresa los datos base y toca «Guardar y salir». |
 | 2. Vuelve al perfil del paciente sin iniciar la consulta. |
 
-<p class="caption"><strong>Figura 138</strong><br><em>User Flow 2: Evaluar a un paciente nuevo</em></p>
+<p class="caption"><strong>Figura 139</strong><br><em>User Flow 2: Evaluar a un paciente nuevo</em></p>
 
 <img src="../assets/img/chapter3/userflows/02_Evaluate_New_Patient_Userflow.png" alt="User Flow 2: Evaluar a un paciente nuevo" width="75%" />
 
@@ -886,7 +886,7 @@ La consulta se puede interrumpir sin perder lo ingresado: queda como borrador y 
 
 Este flujo no tiene ruta alternativa documentada: la pantalla de la señal solo ofrece «Ajustar», «Resolver» y el retroceso.
 
-<p class="caption"><strong>Figura 139</strong><br><em>User Flow 3: Atender una señal de la bandeja</em></p>
+<p class="caption"><strong>Figura 140</strong><br><em>User Flow 3: Atender una señal de la bandeja</em></p>
 
 <img src="../assets/img/chapter3/userflows/03_Handle_Inbox_Signal_Userflow.png" alt="User Flow 3: Atender una señal de la bandeja" width="75%" />
 
@@ -920,7 +920,7 @@ Este flujo no tiene ruta alternativa documentada: la pantalla de la señal solo 
 
 Si la foto no se reconoce, el paciente no pierde el registro: la app le ofrece la búsqueda de alimentos de 3.1.2.4 con el mismo destino final.
 
-<p class="caption"><strong>Figura 140</strong><br><em>User Flow 4: Registrar una comida con foto</em></p>
+<p class="caption"><strong>Figura 141</strong><br><em>User Flow 4: Registrar una comida con foto</em></p>
 
 <img src="../assets/img/chapter3/userflows/04_Log_Meal_With_Photo_Userflow.png" alt="User Flow 4: Registrar una comida con foto" width="100%" />
 
@@ -949,13 +949,13 @@ Si la foto no se reconoce, el paciente no pierde el registro: la app le ofrece l
 | 2. Ve «No pudimos enviar tu respuesta» y toca «Volver a intentarlo». |
 | 3. Vuelve al formulario de respuesta para enviarla otra vez. |
 
-<p class="caption"><strong>Figura 141</strong><br><em>User Flow 5: Prepararme para la consulta</em></p>
+<p class="caption"><strong>Figura 142</strong><br><em>User Flow 5: Prepararme para la consulta</em></p>
 
 <img src="../assets/img/chapter3/userflows/05_Prepare_For_Consultation_Userflow.png" alt="User Flow 5: Prepararme para la consulta" width="100%" />
 
 #### 3.1.4.5. Mobile Applications Prototyping
 
-<p class="caption"><strong>Figura 142</strong><br><em>Prototipo del landing page en móvil (Mobile Web Browser)</em></p>
+<p class="caption"><strong>Figura 143</strong><br><em>Prototipo del landing page en móvil (Mobile Web Browser)</em></p>
 
 |<center> Mobile Web Browser|
 |---|
