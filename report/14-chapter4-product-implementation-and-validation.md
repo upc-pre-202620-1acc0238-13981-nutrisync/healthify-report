@@ -2963,6 +2963,38 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 | UF-N4 | "La app te avisa cuando un paciente se aleja de su plan. Encuentra el aviso de Fernando Trevejo. Imagina que lo revisaste y decidiste no cambiar el plan: ciérralo." | "¿Te sería útil recibir estos avisos entre consultas?" |
 | Cierre | — | "¿Pudiste leer bien los textos y los números? ¿Algún botón te pareció pequeño o difícil de tocar?", "Del 1 al 5, ¿qué tan fácil te pareció usar la app? ¿Qué es lo primero que cambiarías?" y "¿Qué es lo que más te gustó de la app?" |
 
+#### Segmento 2: Paciente en tratamiento nutricional activo
+
+**Elementos incluidos en la sesión**
+
+| Elemento | Secciones o pantallas |
+| --- | --- |
+| Landing Page | Hero, Para pacientes, CTA de descarga |
+| Aplicación móvil | Inicio, Cámara, Estimación propuesta, Ajustar gramos, Diario, Autopesaje, Tendencia de peso |
+
+**User flows a validar**
+
+| # | User flow | Recorrido en el prototipo | User Stories |
+| --- | --- | --- | --- |
+| UF-P1 | Consultar las metas del día | Pantalla de Inicio: "Lo que te queda para hoy" y "Cómo voy hoy" | US14, US23 |
+| UF-P2 | Registrar una comida por foto y ajustar la porción | Diario -> Registrar comida, luego foto, estimación propuesta y Ajustar gramos | US08, US09 |
+| UF-P3 | Declarar una comida fuera del plan | En la estimación propuesta, responder "No" a "¿Esta comida estaba en tu plan?" | US11 |
+| UF-P4 | Revisar el diario del día | Pestaña Diario: comidas registradas y estado "Por confirmar" | US09, US14 |
+| UF-P5 | Registrar el peso y ver la tendencia | Progreso -> Registrar autopesaje, luego la gráfica Tu tendencia | US12, US13 |
+
+**Guion de la sesión**
+
+| Momento | Indicación del entrevistador | Pregunta |
+| --- | --- | --- |
+| Landing Page | "Esta es la página web de Healthify. Mírala unos segundos y baja con calma. Ahora busca la parte pensada para los pacientes." | "¿Qué crees que podrías hacer tú con esta app? ¿Te queda claro cómo descargarías la app y que necesitas el código de tu nutricionista para entrar?" |
+| UF-P1 | "Estás dentro de la app como paciente, ya vinculado con tu nutricionista. Mira esta pantalla." | "¿Cuánto te queda por comer hoy? ¿Sabes si vas bien con tu plan?" |
+| UF-P2 y UF-P3 | "Acabas de almorzar un lomo saltado. Regístralo con una foto. Comiste unos 300 gramos, así que corrige la cantidad. Este almuerzo no estaba en tu plan: indícalo y confirma." | "¿Confiarías en la cantidad que propuso la app? Cuando marcaste que no estaba en tu plan, ¿te sentiste juzgado? ¿Lo harías así todos los días?" |
+| UF-P4 | "Busca dónde ves todo lo que comiste hoy." | "¿Qué crees que significa que una comida diga «Por confirmar»?" |
+| UF-P5 | "Hoy te pesaste en ayunas y marcaste 68,4 kilos. Registra tu peso." | "¿Qué te dice esta gráfica sobre tu progreso?" |
+| Cierre | — | "¿Pudiste leer bien los textos y los números? ¿Algún botón te pareció pequeño o difícil de tocar?", "Del 1 al 5, ¿qué tan fácil te pareció registrar tus comidas? ¿Usarías esta app en lugar de mandarle fotos por WhatsApp a tu nutricionista?" y "¿Qué es lo que más te gustó de la app?" |
+
+<div style="page-break-after: always"></div>
+
 ### 4.3.2. Registro de Entrevistas
 
 ### 4.3.3. Evaluaciones según heurísticas
