@@ -2572,7 +2572,7 @@ Contacto con el selector de caso y el resumen de errores al enviar el formulario
 
 Las capturas corresponden a la app 2.1.0 en un emulador Android, con la sesión de un paciente vinculado a su nutricionista y conectada al backend publicado.
 
-<p class="caption"><strong>Figura 192</strong><br><em>Capturas de la aplicación Android del paciente en el Sprint 2</em></p>
+<p class="caption"><strong>Figura 194</strong><br><em>Capturas de la aplicación Android del paciente en el Sprint 2</em></p>
 
 <table>
   <tr>
@@ -2605,7 +2605,7 @@ Las capturas corresponden a la app 2.1.0 en un emulador Android, con la sesión 
 
 Las capturas corresponden a la app Flutter 1.3.0 en el mismo emulador, con la sesión de una nutricionista que tiene tres pacientes vinculados. La franja de la esquina superior derecha es el aviso `DEBUG` de Flutter, porque se ejecutó la build de depuración.
 
-<p class="caption"><strong>Figura 193</strong><br><em>Capturas de la aplicación Flutter del nutricionista en el Sprint 2</em></p>
+<p class="caption"><strong>Figura 195</strong><br><em>Capturas de la aplicación Flutter del nutricionista en el Sprint 2</em></p>
 
 <table>
   <tr>
@@ -2647,6 +2647,10 @@ Las capturas corresponden a la app Flutter 1.3.0 en el mismo emulador, con la se
 </table>
 
 El menú lateral del nutricionista (catálogo de alimentos, ajustes y cierre de sesión) y los ajustes (cuenta, idioma y cierre de sesión) se guardaron también en `assets/img/chapter4/sprint2/flutter-menu.png` y `flutter-settings.png`.
+
+**Web Services**
+
+Las capturas de Swagger de los endpoints nuevos están en la sección 4.2.2.7.
 
 **URL del video de demostración del Sprint 2:** [Video del Sprint 2](PENDIENTE)
 
@@ -2720,7 +2724,7 @@ Respuesta `200 OK`. El código correcto se canjea por un token que fija la contr
 
 Respuesta `204 No Content`. La contraseña sigue las reglas del registro y debe ser distinta de la actual; si se rechaza, el token no se gasta. Al cambiarla se cierran todas las sesiones abiertas de la cuenta y se levanta el bloqueo, si lo había.
 
-<p class="caption"><strong>Figura 194</strong><br><em>Captura de Swagger: operaciones de autenticación con el restablecimiento de contraseña</em></p>
+<p class="caption"><strong>Figura 196</strong><br><em>Captura de Swagger: operaciones de autenticación con el restablecimiento de contraseña</em></p>
 
 ![Swagger: restablecimiento de contraseña](../assets/img/chapter4/sprint2/swagger-password-reset.png)
 
@@ -2738,7 +2742,7 @@ Respuesta `200 OK`. La sugerencia se calcula sin IA: el alimento se revisa contr
 }
 ```
 
-<p class="caption"><strong>Figura 195</strong><br><em>Captura de Swagger: operación de sugerencia de plan</em></p>
+<p class="caption"><strong>Figura 197</strong><br><em>Captura de Swagger: operación de sugerencia de plan</em></p>
 
 ![Swagger: sugerencia de plan](../assets/img/chapter4/sprint2/swagger-plan-fit.png)
 
@@ -2770,7 +2774,7 @@ Respuesta `200 OK`. Devuelve lo registrado en el día, las metas publicadas y lo
 
 Respuesta `200 OK` con un archivo `healthify-mis-datos-2026-11-03.zip`. Trae seis CSV: `perfil.csv`, `diario.csv`, `autopesajes.csv`, `metas.csv`, `consultas.csv` y `vinculos.csv`, en UTF-8 con BOM, separados por comas, escapados según RFC 4180, con fechas ISO 8601 y encabezados en el idioma del paciente. No incluye diagnóstico, fundamento clínico, base de cálculo ni IMC. Si otra cuenta pide la copia de este paciente, el servicio responde `403`.
 
-<p class="caption"><strong>Figura 196</strong><br><em>Captura de Swagger: operación de descarga de datos</em></p>
+<p class="caption"><strong>Figura 198</strong><br><em>Captura de Swagger: operación de descarga de datos</em></p>
 
 ![Swagger: descarga de datos](../assets/img/chapter4/sprint2/swagger-data-export.png)
 
@@ -2803,9 +2807,9 @@ Durante el Sprint 2 se republicó el landing page, se desplegaron siete versione
 
 **Landing Page**
 
-*Releases.* El rediseño V10 se integró en `develop` con el pull request #9 (`feature/redesign-website`) y se publicó como `v2.0.0` con el pull request #10. Los testimonios y los ajustes del header entraron con el pull request #11 (`feature/testimonials`) y se publicaron como `v2.1.0` con el pull request #12.
+*Releases.* El rediseño V10 se integró en `develop` con el pull request #9 (`feature/redesign-website`) y se publicó como `v2.0.0` con el pull request #10. Los testimonios y los ajustes del header entraron con el pull request #11 (`feature/testimonials`) y se publicaron como `v2.1.0` con el pull request #12. Al cierre del sprint, el pull request #13 (`feature/dual-app-download`) separó la descarga por rol y enlazó los videos del hero, y el pull request #14 lo publicó como `v2.2.0`.
 
-*GitHub Pages.* El flujo `pages-build-deployment` de GitHub publica `main` en cada push, con el mismo dominio `landing.healthify.lat` del Sprint 1. Todas sus ejecuciones terminaron correctamente. Los botones de descarga apuntan a la invitación pública de Firebase App Distribution.
+*GitHub Pages.* El flujo `pages-build-deployment` de GitHub publica `main` en cada push, con el mismo dominio `landing.healthify.lat` del Sprint 1. Todas sus ejecuciones terminaron correctamente. Los botones de descarga apuntan a la invitación pública de Firebase App Distribution de cada app.
 
 *URL de despliegue:* https://landing.healthify.lat
 
@@ -2813,11 +2817,11 @@ Durante el Sprint 2 se republicó el landing page, se desplegaron siete versione
 
 *Releases.* Cada pull request de `develop` a `main` (#11, #13, #15, #17, #19, #21 y #23) disparó el flujo `Release`, que compila la solución, lee `<Version>` de `Healthify.Platform.csproj` y publica `v1.1.0`, `v1.1.1`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0` y `v1.6.0`. Las siete ejecuciones terminaron correctamente.
 
-<p class="caption"><strong>Figura 197</strong><br><em>Captura de GitHub Actions: ejecuciones del flujo Release del backend en el Sprint 2</em></p>
+<p class="caption"><strong>Figura 199</strong><br><em>Captura de GitHub Actions: ejecuciones del flujo Release del backend en el Sprint 2</em></p>
 
 ![Ejecuciones del flujo Release](../assets/img/chapter4/sprint2/gh-platform-actions.png)
 
-<p class="caption"><strong>Figura 198</strong><br><em>Captura de GitHub: release v1.6.0 del backend</em></p>
+<p class="caption"><strong>Figura 200</strong><br><em>Captura de GitHub: release v1.6.0 del backend</em></p>
 
 ![Releases del backend](../assets/img/chapter4/sprint2/gh-platform-releases.png)
 
@@ -2846,11 +2850,11 @@ Durante el Sprint 2 se republicó el landing page, se desplegaron siete versione
 
 El `applicationId` es `pe.edu.upc.healthify` y la versión al cierre del sprint es `2.1.0`. Las ejecuciones de `CI` y `Distribute` de las versiones 1.8.0 a 2.1.0 terminaron en verde, salvo una ejecución cancelada de la rama `feature/sign-up-terms-acceptance`.
 
-<p class="caption"><strong>Figura 199</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Android</em></p>
+<p class="caption"><strong>Figura 201</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Android</em></p>
 
 ![Actions de la aplicación Android](../assets/img/chapter4/sprint2/gh-android-actions.png)
 
-<p class="caption"><strong>Figura 200</strong><br><em>Captura de GitHub: release v2.1.0 de la aplicación Android con el APK</em></p>
+<p class="caption"><strong>Figura 202</strong><br><em>Captura de GitHub: release v2.1.0 de la aplicación Android con el APK</em></p>
 
 ![Releases de la aplicación Android](../assets/img/chapter4/sprint2/gh-android-releases.png)
 
@@ -2862,11 +2866,11 @@ El `applicationId` es `pe.edu.upc.healthify` y la versión al cierre del sprint 
 
 *Firma y distribución.* `distribute.yml` se ejecuta con cada push a `main`: comprueba que la versión de `pubspec.yaml` sea nueva, compila el APK firmado, lo sube a Firebase App Distribution para el grupo `qa` y crea el release en GitHub con el APK. Usa los mismos nombres de secretos que la app Android. La primera ejecución (`Release/0.6.0`) falló; desde `v1.0.0` todas terminaron correctamente. El `applicationId` es `pe.edu.upc.healthify.practitioner`, distinto del de la app Android, de modo que las dos apps se pueden instalar en el mismo teléfono.
 
-<p class="caption"><strong>Figura 201</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Flutter</em></p>
+<p class="caption"><strong>Figura 203</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Flutter</em></p>
 
 ![Actions de la aplicación Flutter](../assets/img/chapter4/sprint2/gh-flutter-actions.png)
 
-<p class="caption"><strong>Figura 202</strong><br><em>Captura de GitHub: release v1.3.1 de la aplicación Flutter con el APK</em></p>
+<p class="caption"><strong>Figura 204</strong><br><em>Captura de GitHub: release v1.3.1 de la aplicación Flutter con el APK</em></p>
 
 ![Releases de la aplicación Flutter](../assets/img/chapter4/sprint2/gh-flutter-releases.png)
 
@@ -2876,29 +2880,40 @@ El `applicationId` es `pe.edu.upc.healthify` y la versión al cierre del sprint 
 
 Los cinco integrantes tienen commits en los cuatro repositorios. En el backend y en la app Android, cada rama de funcionalidad reunió commits de varios integrantes, uno por capa o por pieza, como en el Sprint 1. En la app Flutter, cada integrante escribió solo su módulo en una rama propia el 30/10/2026, y el catálogo, los términos y los ajustes de las entrevistas se repartieron entre los cinco. La integración a `develop` y `main` la hizo Nevatrix en los cuatro repositorios.
 
-Los gráficos de GitHub cuentan los commits que llegaron a `main` entre el 10/10/2026 y el 03/11/2026, sin merges. En el backend la mayor actividad fue la semana del 26/10, con la recuperación de contraseña, la sugerencia de plan, la ingesta del día y el retiro de los endpoints obsoletos. En la app Android, el trabajo se repartió entre las semanas del 19/10 y del 26/10. En la app Flutter casi todos los commits caen en la semana del 26/10, porque el núcleo, los módulos y la primera versión se integraron el 30/10.
+<p class="caption"><strong>Tabla 279</strong><br><em>Commits por integrante en el Sprint 2 (sin merges)</em></p>
+
+| Integrante | GitHub Username | Landing Page | Backend | Android | Flutter | Total |
+|---|---|:---:|:---:|:---:|:---:|:---:|
+| Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | 8 | 15 | 25 | 23 | 71 |
+| Espinoza Cruz, Angela Milagros | Emy127 | 3 | 15 | 24 | 24 | 66 |
+| Mora Rivera, Joel Fernando | xJoelFMRx | 3 | 15 | 25 | 23 | 66 |
+| Vergaray Calderon, Rose Almendra | rosealmendra | 3 | 16 | 23 | 23 | 65 |
+| Villarreal Bazan, Angel Martin | Nevatrix | 10 | 17 | 29 | 34 | 90 |
+| **Total** | | **27** | **78** | **126** | **127** | **358** |
+
+Los gráficos de GitHub cuentan los commits que llegaron a `main` entre el 10/10/2026 y el 04/11/2026, sin merges. En el backend la mayor actividad fue la semana del 26/10, con la recuperación de contraseña, la sugerencia de plan, la ingesta del día y el retiro de los endpoints obsoletos. En la app Android, el trabajo se repartió entre las semanas del 19/10 y del 26/10. En la app Flutter casi todos los commits caen en la semana del 26/10, porque el núcleo, los módulos y la primera versión se integraron el 30/10.
 
 Backend (`healthify-platform`):
 
-<p class="caption"><strong>Figura 203</strong><br><em>Captura de GitHub: contribuyentes del backend en el Sprint 2</em></p>
+<p class="caption"><strong>Figura 205</strong><br><em>Captura de GitHub: contribuyentes del backend en el Sprint 2</em></p>
 
 ![Contribuyentes del backend](../assets/img/chapter4/sprint2/gh-platform-contributors.png)
 
 Landing page (`healthify-website`):
 
-<p class="caption"><strong>Figura 204</strong><br><em>Captura de GitHub: contribuyentes del landing page en el Sprint 2</em></p>
+<p class="caption"><strong>Figura 206</strong><br><em>Captura de GitHub: contribuyentes del landing page en el Sprint 2</em></p>
 
 ![Contribuyentes del landing page](../assets/img/chapter4/sprint2/gh-website-contributors.png)
 
 Aplicación Android (`healthify-android-app`):
 
-<p class="caption"><strong>Figura 205</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Android en el Sprint 2</em></p>
+<p class="caption"><strong>Figura 207</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Android en el Sprint 2</em></p>
 
 ![Contribuyentes de la aplicación Android](../assets/img/chapter4/sprint2/gh-android-contributors.png)
 
 Aplicación Flutter (`healthify-flutter-app`):
 
-<p class="caption"><strong>Figura 206</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Flutter en el Sprint 2</em></p>
+<p class="caption"><strong>Figura 208</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Flutter en el Sprint 2</em></p>
 
 ![Contribuyentes de la aplicación Flutter](../assets/img/chapter4/sprint2/gh-flutter-contributors.png)
 
