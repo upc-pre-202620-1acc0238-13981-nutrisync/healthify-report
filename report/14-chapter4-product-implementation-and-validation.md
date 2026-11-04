@@ -2921,7 +2921,47 @@ Aplicación Flutter (`healthify-flutter-app`):
 
 ## 4.3. Validation Interviews
 
+En esta sección se registran las entrevistas de validación realizadas con usuarios de los dos segmentos objetivo de Healthify: nutricionistas y pacientes en tratamiento nutricional activo para bajar de peso. En cada sesión, el entrevistado revisó el Landing Page y luego completó un conjunto de tareas en el prototipo de la aplicación móvil, que fue el foco principal de la validación. A partir de lo observado se realizó una evaluación según heurísticas de usabilidad, arquitectura de información y diseño inclusivo.
+
 ### 4.3.1. Diseño de Entrevistas
+
+Cada entrevista se realizó de forma individual y se grabó en video con el consentimiento del entrevistado. La sesión duró entre 6 y 7 minutos y siguió esta secuencia:
+
+1. **Apertura:** presentación de Healthify y datos del entrevistado (nombre, edad y distrito).
+2. **Landing Page:** revisión libre de la página y preguntas sobre la propuesta de valor y cómo empezar a usar la aplicación.
+3. **Aplicación móvil:** tareas sobre el prototipo navegable de Figma, con una pregunta al terminar cada una.
+4. **Cierre:** preguntas sobre legibilidad, facilidad de uso y lo que más le gustó al entrevistado.
+
+Para no influir en el resultado, el entrevistador planteó cada tarea como una meta (por ejemplo, "registra tu almuerzo con una foto") y no indicó dónde tocar. Solo si el entrevistado no encontraba la opción en unos 15 segundos se le indicaba el botón, y esa dificultad quedaba anotada como insumo para la evaluación heurística (4.3.3). También se pidió al entrevistado que pensara en voz alta mientras navegaba.
+
+#### Segmento 1: Nutricionista
+
+**Elementos incluidos en la sesión**
+
+| Elemento | Secciones o pantallas |
+| --- | --- |
+| Landing Page | Hero, Propuesta de valor, La consulta paso a paso, Entre consultas, Para nutricionistas, CTA final |
+| Aplicación móvil | Mis pacientes, Invitar paciente, ficha del paciente (pestañas Resumen y Seguimiento), Consulta en 4 pasos (Medición, Diagnóstico, Metas, Indicaciones y publicación), Bandeja, Revisar señal |
+
+**User flows a validar**
+
+| # | User flow | Recorrido en el prototipo | User Stories |
+| --- | --- | --- | --- |
+| UF-N1 | Invitar a un paciente nuevo | Desde Mis pacientes, botón Invitar paciente, que muestra el código QR | US04 |
+| UF-N2 | Revisar el seguimiento entre consultas | Ficha de Fernando Trevejo, pestaña Seguimiento | US05, US16 |
+| UF-N3 | Realizar la consulta y publicar el plan | Ficha de Fernando Trevejo -> Iniciar consulta, luego los 4 pasos: Medición, Diagnóstico, Metas e Indicaciones y publicación | US21, US22, US25, US26 |
+| UF-N4 | Revisar y resolver una señal | Bandeja -> aviso de Fernando Trevejo -> Resolver | US17 |
+
+**Guion de la sesión**
+
+| Momento | Indicación del entrevistador | Pregunta |
+| --- | --- | --- |
+| Landing Page | "Esta es la página web de Healthify. Mírala unos segundos y baja con calma hasta el final." | "Con tus palabras, ¿qué hace esta app y para quién crees que es? ¿Te quedó claro cómo empezarías a usarla?" |
+| UF-N1 | "Imagina que tienes un paciente nuevo en consulta y quieres que se vincule contigo en la app. ¿Cómo lo harías?" | "¿Te parece práctico generar el código en la misma consulta?" |
+| UF-N2 | "Quieres saber cómo le fue a Fernando Trevejo desde la última consulta: qué comió y cómo va su peso. Búscalo." | "¿Esto te ahorraría preguntarle día por día en la consulta? ¿Qué información te falta?" |
+| UF-N3 | "Fernando llegó a su control. Empieza la consulta desde su ficha y avanza los 4 pasos hasta publicar el plan." | "¿Este orden se parece a cómo haces tu consulta? ¿Aceptarías las metas calculadas o preferirías poner las tuyas?" |
+| UF-N4 | "La app te avisa cuando un paciente se aleja de su plan. Encuentra el aviso de Fernando Trevejo. Imagina que lo revisaste y decidiste no cambiar el plan: ciérralo." | "¿Te sería útil recibir estos avisos entre consultas?" |
+| Cierre | — | "¿Pudiste leer bien los textos y los números? ¿Algún botón te pareció pequeño o difícil de tocar?", "Del 1 al 5, ¿qué tan fácil te pareció usar la app? ¿Qué es lo primero que cambiarías?" y "¿Qué es lo que más te gustó de la app?" |
 
 ### 4.3.2. Registro de Entrevistas
 
