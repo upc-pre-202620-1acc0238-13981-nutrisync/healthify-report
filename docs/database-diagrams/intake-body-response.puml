@@ -46,13 +46,20 @@ TABLE(diary_entries, "diary_entries") {
   confirmed_at : DATETIME
   sync_state : VARCHAR(20) NOT NULL
   client_entry_id : CHAR(36)
-  FK(meal_group_id) : CHAR(36)
+  meal_group_id : CHAR(36)
   FK(meal_photo_analysis_id) : CHAR(36)
   origin : VARCHAR(30)
   plan_adherence : VARCHAR(15) NOT NULL
   FK(proposed_ai_generation_id) : BIGINT
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  UNIQUE ix_diary_entries_client_entry_id (client_entry_id)
+  INDEX ix_diary_entries_local_timestamp (local_timestamp)
+  INDEX ix_diary_entries_meal_group_id (meal_group_id)
+  UNIQUE ix_diary_entries_meal_photo_analysis_id (meal_photo_analysis_id)
+  INDEX ix_diary_entries_patient_id (patient_id)
+  INDEX ix_diary_entries_patient_id_local_timestamp (patient_id, local_timestamp)
 }
 
 TABLE(self_weigh_ins, "self_weigh_ins") {
@@ -63,11 +70,14 @@ TABLE(self_weigh_ins, "self_weigh_ins") {
   local_timestamp : DATETIME(6) NOT NULL
   local_utc_offset_minutes : INT NOT NULL
   protocol_fasted_state : TINYINT(1) NOT NULL
-  protocol_same_time_of_day : TINYINT(1) NOT NULL
-  protocol_same_scale : TINYINT(1) NOT NULL
+  protocol_same_time_of_day : TINYINT(1)
+  protocol_same_scale : TINYINT(1)
   client_entry_id : CHAR(36)
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  INDEX ix_self_weigh_ins_patient_id (patient_id)
+  UNIQUE ix_self_weigh_ins_patient_id_client_entry_id (patient_id, client_entry_id)
 }
 
 TABLE(weight_trends, "weight_trends") {
@@ -92,6 +102,9 @@ TABLE(meal_photo_analyses, "meal_photo_analyses") {
   FK(reference_food_id) : INT NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  INDEX ix_meal_photo_analyses_expires_at (expires_at)
+  INDEX ix_meal_photo_analyses_patient_id (patient_id)
 }
 
 EXT(reference_foods, "reference_foods  (Food Catalog)") {
@@ -107,7 +120,7 @@ EXT(users, "users  (IAM)") {
 }
 
 EXT(ai_generations, "ai_generations  (Shared)") {
-  PK(id) : INT
+  PK(id) : BIGINT
 }
 
 users ||..o| active_targets_caches : "patient_id"
@@ -115,14 +128,13 @@ users ||..o{ diary_entries : "patient_id"
 users ||..o{ self_weigh_ins : "patient_id"
 users ||..o| weight_trends : "patient_id"
 
-weight_trends ||..o{ self_weigh_ins : "smoothed from readings"
+weight_trends ||..o{ self_weigh_ins : "patient_id (smoothed from readings)"
 
-active_targets_caches ||..o{ diary_entries : "targets the day"
-
-reference_foods ||..o{ diary_entries : "proposed / confirmed food"
+reference_foods ||..o{ diary_entries : "proposed / confirmed reference_food_id"
+reference_foods ||..o{ meal_photo_analyses : "reference_food_id"
 
 users ||..o{ meal_photo_analyses : "patient_id"
-meal_photo_analyses ||..o{ diary_entries : "meal_photo_analysis_id"
+meal_photo_analyses ||..o| diary_entries : "meal_photo_analysis_id (unique)"
 ai_generations ||..o{ diary_entries : "proposed_ai_generation_id"
 ai_generations ||..o{ meal_photo_analyses : "ai_generation_id"
 

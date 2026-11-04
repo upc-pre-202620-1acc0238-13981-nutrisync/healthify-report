@@ -26,6 +26,9 @@ TABLE(evaluation_windows, "evaluation_windows") {
   anthropometry_series : JSON NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  INDEX ix_evaluation_windows_patient_id (patient_id)
+  INDEX ix_evaluation_windows_state (state)
 }
 
 TABLE(deviations, "deviations") {
@@ -43,6 +46,9 @@ TABLE(deviations, "deviations") {
   deviating_days_considered : INT NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  INDEX ix_deviations_patient_id (patient_id)
+  INDEX ix_deviations_window_id (window_id)
 }
 
 TABLE(consistency_indices, "consistency_indices") {
@@ -58,6 +64,8 @@ TABLE(consistency_indices, "consistency_indices") {
   prompt_issued_at : DATETIME
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  INDEX ix_consistency_indices_state (state)
 }
 
 TABLE(referrals, "referrals") {
@@ -72,6 +80,8 @@ TABLE(referrals, "referrals") {
   status : VARCHAR(10) NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  INDEX ix_referrals_patient_id (patient_id)
 }
 
 TABLE(scheduled_follow_ups, "scheduled_follow_ups") {
@@ -90,6 +100,9 @@ TABLE(scheduled_follow_ups, "scheduled_follow_ups") {
   preparation : JSON NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  INDEX ix_scheduled_follow_ups_patient_id (patient_id)
+  INDEX ix_scheduled_follow_ups_practitioner_id (practitioner_id)
 }
 
 TABLE(pre_visit_check_ins, "pre_visit_check_ins") {
@@ -105,6 +118,9 @@ TABLE(pre_visit_check_ins, "pre_visit_check_ins") {
   submitted_at : DATETIME NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  UNIQUE ux_pre_visit_check_ins_follow_up_id (follow_up_id)
+  INDEX ix_pre_visit_check_ins_patient_id (patient_id)
 }
 
 TABLE(weekly_summaries, "weekly_summaries") {
@@ -122,6 +138,9 @@ TABLE(weekly_summaries, "weekly_summaries") {
   went_well : JSON NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  INDEX ix_weekly_summaries_generated_at (generated_at)
+  UNIQUE ux_weekly_summaries_patient_id_week_start (patient_id, week_start)
 }
 
 EXT(care_links, "care_links  (Care Relationship)") {
@@ -142,16 +161,12 @@ EXT(consultations, "consultations  (Nutritional Care)") {
 }
 
 EXT(ai_generations, "ai_generations  (Shared)") {
-  PK(id) : INT
+  PK(id) : BIGINT
 }
 
 evaluation_windows ||..o{ deviations : "window_id"
-evaluation_windows ||..o| consistency_indices : "supplies intake series"
 
-evaluation_windows ||..o{ referrals : "same care relationship"
-scheduled_follow_ups }o..o{ referrals : "discussed at visit"
-
-care_links ||..o| evaluation_windows : "care_link_id"
+care_links ||..o{ evaluation_windows : "care_link_id"
 users ||..o{ evaluation_windows : "patient_id"
 users ||..o{ deviations : "patient_id"
 users ||..o| consistency_indices : "patient_id"
@@ -161,7 +176,7 @@ users ||..o{ scheduled_follow_ups : "patient_id / practitioner_id"
 scheduled_follow_ups ||..o| pre_visit_check_ins : "follow_up_id (one per visit)"
 users ||..o{ pre_visit_check_ins : "patient_id / practitioner_id"
 users ||..o{ weekly_summaries : "patient_id"
-ai_generations ||..o| weekly_summaries : "ai_generation_id"
-consultations ||..o| scheduled_follow_ups : "completed_by_consultation_id"
+ai_generations ||..o{ weekly_summaries : "ai_generation_id"
+consultations ||..o{ scheduled_follow_ups : "completed_by_consultation_id"
 
 @enduml
