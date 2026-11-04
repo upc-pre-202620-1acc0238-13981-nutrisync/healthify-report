@@ -22,9 +22,13 @@ TABLE(reference_foods, "reference_foods") {
   FK(ai_generation_id) : BIGINT
   is_verified : TINYINT(1) NOT NULL
   source : VARCHAR(20) NOT NULL
-  verified_by : INT
+  FK(verified_by) : INT
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  INDEX ix_reference_foods_local_name (local_name)
+  INDEX ix_reference_foods_source (source)
+  UNIQUE ix_reference_foods_source_hash (source_hash)
 }
 
 EXT(diary_entries, "diary_entries  (Intake and Body Response)") {
@@ -40,13 +44,20 @@ EXT(users, "users  (IAM)") {
   role : VARCHAR(20)
 }
 
+EXT(meal_photo_analyses, "meal_photo_analyses  (Intake and Body Response)") {
+  PK(id) : CHAR(36)
+  --
+  FK(reference_food_id) : INT
+}
+
 EXT(ai_generations, "ai_generations  (Shared)") {
-  PK(id) : INT
+  PK(id) : BIGINT
 }
 
 reference_foods ||..o{ diary_entries : "resolved via ACL"
+reference_foods ||..o{ meal_photo_analyses : "resolved via ACL"
 
-users ||..o{ reference_foods : "creates local override"
+users ||..o{ reference_foods : "verified_by"
 
 ai_generations ||..o{ reference_foods : "ai_generation_id"
 

@@ -19,6 +19,9 @@ TABLE(invitations, "invitations") {
   expired_at : DATETIME
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  INDEX ix_invitations_issued_by (issued_by)
+  UNIQUE ix_invitations_token (token)
 }
 
 TABLE(care_links, "care_links") {
@@ -42,6 +45,9 @@ TABLE(care_links, "care_links") {
   revocation_reason : VARCHAR(30)
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  INDEX ix_care_links_patient_id (patient_id)
+  INDEX ix_care_links_practitioner_id (practitioner_id)
 }
 
 TABLE(ai_preferences, "ai_preferences") {
@@ -60,8 +66,6 @@ EXT(users, "users  (IAM)") {
   --
   role : VARCHAR(20)
 }
-
-invitations ||..o| care_links : "redemption establishes"
 
 users ||..o{ invitations : "issued_by"
 users ||..o{ care_links : "patient_id / practitioner_id"

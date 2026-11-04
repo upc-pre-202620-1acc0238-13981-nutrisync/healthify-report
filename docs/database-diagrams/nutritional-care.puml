@@ -14,9 +14,9 @@ TABLE(nutritional_assessments, "nutritional_assessments") {
   --
   FK(patient_id) : INT NOT NULL
   FK(practitioner_id) : INT NOT NULL
-  habits : VARCHAR(4000) NOT NULL
-  medical_history : VARCHAR(4000) NOT NULL
-  physical_activity : VARCHAR(2000) NOT NULL
+  habits : VARCHAR(4000)
+  medical_history : VARCHAR(4000)
+  physical_activity : VARCHAR(2000)
   biochemistry : VARCHAR(4000)
   age_years : INT NOT NULL
   biological_sex : VARCHAR(10) NOT NULL
@@ -33,6 +33,9 @@ TABLE(nutritional_assessments, "nutritional_assessments") {
   water_liters_per_day : DECIMAL(4,2)
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  INDEX ix_nutritional_assessments_consultation_id (consultation_id)
+  INDEX ix_nutritional_assessments_patient_id (patient_id)
 }
 
 TABLE(clinical_measurements, "clinical_measurements") {
@@ -48,6 +51,8 @@ TABLE(clinical_measurements, "clinical_measurements") {
   bmi : DECIMAL(5,1) NOT NULL
   bmi_category : VARCHAR(20) NOT NULL
   protocol_checks : JSON
+  --
+  INDEX ix_clinical_measurements_assessment_id (assessment_id)
 }
 
 TABLE(nutritional_diagnoses, "nutritional_diagnoses") {
@@ -57,7 +62,7 @@ TABLE(nutritional_diagnoses, "nutritional_diagnoses") {
   FK(practitioner_id) : INT NOT NULL
   FK(assessment_id) : INT NOT NULL
   statement : VARCHAR(1000) NOT NULL
-  rationale : VARCHAR(2000) NOT NULL
+  rationale : VARCHAR(2000)
   issued_at : DATETIME NOT NULL
   superseded_at : DATETIME
   FK(ai_generation_id) : BIGINT
@@ -68,6 +73,9 @@ TABLE(nutritional_diagnoses, "nutritional_diagnoses") {
   source : VARCHAR(30)
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  INDEX ix_nutritional_diagnoses_patient_id (patient_id)
+  INDEX ix_nutritional_diagnoses_pending_consultation_id (pending_consultation_id)
 }
 
 TABLE(nutrition_plans, "nutrition_plans") {
@@ -110,6 +118,8 @@ TABLE(nutrition_plans, "nutrition_plans") {
   patient_message : VARCHAR(500)
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  INDEX ix_nutrition_plans_patient_id (patient_id)
 }
 
 TABLE(review_items, "review_items") {
@@ -130,6 +140,10 @@ TABLE(review_items, "review_items") {
   resolution_note_data : JSON
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  INDEX ix_review_items_patient_id (patient_id)
+  INDEX ix_review_items_practitioner_id (practitioner_id)
+  INDEX ix_review_items_recheck_due_at (recheck_due_at)
 }
 
 TABLE(consultations, "consultations") {
@@ -141,7 +155,7 @@ TABLE(consultations, "consultations") {
   current_step : VARCHAR(20) NOT NULL
   FK(diagnosis_id) : INT
   idempotency_key : VARCHAR(64)
-  FK(in_progress_patient_id) : INT
+  in_progress_patient_id : INT
   is_first_consultation : TINYINT(1) NOT NULL
   last_saved_at : DATETIME NOT NULL
   FK(patient_id) : INT NOT NULL
@@ -154,6 +168,9 @@ TABLE(consultations, "consultations") {
   state : VARCHAR(20) NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  UNIQUE ix_consultations_in_progress_patient_id (in_progress_patient_id)
+  INDEX ix_consultations_patient_id_state (patient_id, state)
 }
 
 TABLE(patient_baselines, "patient_baselines") {
@@ -165,9 +182,11 @@ TABLE(patient_baselines, "patient_baselines") {
   conditions : JSON NOT NULL
   height_cm : DECIMAL(5,1) NOT NULL
   FK(patient_id) : INT NOT NULL
-  recorded_by : INT NOT NULL
+  FK(recorded_by) : INT NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  UNIQUE ix_patient_baselines_patient_id (patient_id)
 }
 
 TABLE(review_item_plan_proposals, "review_item_plan_proposals") {
@@ -192,6 +211,8 @@ TABLE(review_item_plan_proposals, "review_item_plan_proposals") {
   title : VARCHAR(120) NOT NULL
   created_at : DATETIME
   updated_at : DATETIME
+  --
+  UNIQUE ix_review_item_plan_proposals_review_item_id (review_item_id)
 }
 
 EXT(users, "users  (IAM)") {
@@ -200,26 +221,35 @@ EXT(users, "users  (IAM)") {
   role : VARCHAR(20)
 }
 
-EXT(ai_generations, "ai_generations  (Shared)") {
+EXT(scheduled_follow_ups, "scheduled_follow_ups  (Monitoring and Adherence)") {
   PK(id) : INT
 }
 
-nutritional_assessments ||--o{ clinical_measurements : "Anthropometry"
+EXT(ai_generations, "ai_generations  (Shared)") {
+  PK(id) : BIGINT
+}
+
+nutritional_assessments ||--o{ clinical_measurements : "assessment_id (cascade)"
 nutritional_assessments ||..o| nutritional_assessments : "supersedes_assessment_id"
 nutritional_assessments ||..o{ nutritional_diagnoses : "assessment_id"
 nutritional_diagnoses ||..o{ nutrition_plans : "diagnosis_id"
-nutrition_plans ||..o| nutrition_plans : "superseded by next"
 
 users ||..o{ nutritional_assessments : "patient_id / practitioner_id"
 users ||..o{ nutritional_diagnoses : "patient_id / practitioner_id"
 users ||..o{ nutrition_plans : "patient_id / practitioner_id"
 users ||..o{ review_items : "patient_id / practitioner_id"
 
-users ||..o| patient_baselines : "patient_id"
+users ||..o| patient_baselines : "patient_id (unique)"
+users ||..o{ patient_baselines : "recorded_by"
 users ||..o{ consultations : "patient_id / practitioner_id"
-consultations ||..o| nutritional_assessments : "consultation_id"
+consultations ||..o{ nutritional_assessments : "consultation_id"
+consultations ||..o{ nutritional_assessments : "assessment_id (produced)"
+consultations ||..o{ nutritional_diagnoses : "diagnosis_id (produced)"
+consultations ||..o{ nutrition_plans : "plan_id (published)"
+scheduled_follow_ups ||..o{ consultations : "scheduled_follow_up_id"
 consultations ||..o{ nutritional_diagnoses : "pending_consultation_id"
-review_items ||..o| review_item_plan_proposals : "review_item_id"
+review_items ||--o| review_item_plan_proposals : "review_item_id (unique, cascade)"
+ai_generations ||..o{ review_item_plan_proposals : "ai_generation_id"
 ai_generations ||..o{ nutritional_diagnoses : "ai_generation_id"
 
 @enduml
