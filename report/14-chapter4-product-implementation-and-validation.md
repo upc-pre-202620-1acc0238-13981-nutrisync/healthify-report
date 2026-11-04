@@ -2880,19 +2880,6 @@ El `applicationId` es `pe.edu.upc.healthify` y la versión al cierre del sprint 
 
 Los cinco integrantes tienen commits en los cuatro repositorios. En el backend y en la app Android, cada rama de funcionalidad reunió commits de varios integrantes, uno por capa o por pieza, como en el Sprint 1. En la app Flutter, cada integrante escribió solo su módulo en una rama propia el 30/10/2026, y el catálogo, los términos y los ajustes de las entrevistas se repartieron entre los cinco. La integración a `develop` y `main` la hizo Nevatrix en los cuatro repositorios.
 
-<p class="caption"><strong>Tabla 279</strong><br><em>Commits por integrante en el Sprint 2 (sin merges)</em></p>
-
-| Integrante | GitHub Username | Landing Page | Backend | Android | Flutter | Total |
-|---|---|:---:|:---:|:---:|:---:|:---:|
-| Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | 8 | 15 | 25 | 23 | 71 |
-| Espinoza Cruz, Angela Milagros | Emy127 | 3 | 15 | 24 | 24 | 66 |
-| Mora Rivera, Joel Fernando | xJoelFMRx | 3 | 15 | 25 | 23 | 66 |
-| Vergaray Calderon, Rose Almendra | rosealmendra | 3 | 16 | 23 | 23 | 65 |
-| Villarreal Bazan, Angel Martin | Nevatrix | 10 | 17 | 29 | 34 | 90 |
-| **Total** | | **27** | **78** | **126** | **127** | **358** |
-
-Los gráficos de GitHub cuentan los commits que llegaron a `main` entre el 10/10/2026 y el 04/11/2026, sin merges. En el backend la mayor actividad fue la semana del 26/10, con la recuperación de contraseña, la sugerencia de plan, la ingesta del día y el retiro de los endpoints obsoletos. En la app Android, el trabajo se repartió entre las semanas del 19/10 y del 26/10. En la app Flutter casi todos los commits caen en la semana del 26/10, porque el núcleo, los módulos y la primera versión se integraron el 30/10.
-
 Backend (`healthify-platform`):
 
 <p class="caption"><strong>Figura 205</strong><br><em>Captura de GitHub: contribuyentes del backend en el Sprint 2</em></p>
