@@ -3032,5 +3032,73 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 ### 4.3.3. Evaluaciones según heurísticas
 
-<div style="page-break-after: always"></div>
+<div style### 4.3.3. Evaluaciones según heurísticas
+
+**UX Heuristics & Principles Evaluation**
+**Usability · Inclusive Design · Information Architecture**
+
+| | |
+| --- | --- |
+| **CARRERA** | Ingeniería de Software |
+| **CURSO** | 1ACC0238 Aplicaciones para Dispositivos Móviles |
+| **NRC** | 13981 |
+| **PROFESORES** | Mayta Guillermo, Jorge Luis |
+| **AUDITOR** | NutriSync |
+| **CLIENTE(S)** | Tatiana Mozombite, Larisa Ramírez |
+
+**SITE o APP A EVALUAR:**
+
+Healthify: Landing Page y aplicación móvil (perfiles nutricionista y paciente).
+
+**TAREAS A EVALUAR:**
+
+El alcance de esta evaluación incluye la revisión de la usabilidad de las siguientes tareas:
+
+1. Revisión de la propuesta de valor y de los pasos para empezar en el Landing Page.
+2. Generación de una invitación QR para un paciente nuevo.
+3. Revisión del seguimiento de un paciente entre consultas.
+4. Realización de la consulta en 4 pasos y publicación del plan.
+5. Revisión y resolución de una señal en la Bandeja.
+6. Consulta de las metas del día en la pantalla de Inicio del paciente.
+7. Registro de una comida por foto, con ajuste de porción y declaración de comida fuera del plan.
+8. Revisión del diario del día.
+9. Registro del autopesaje y revisión de la tendencia de peso.
+
+No están incluidas en esta versión de la evaluación las siguientes tareas:
+
+1. Creación de cuenta, inicio de sesión y recuperación de contraseña.
+2. Escaneo de la invitación QR y consentimiento del paciente.
+3. Registro manual de comida mediante el catálogo de alimentos.
+4. Agendamiento de consultas, registro de derivaciones y alta clínica.
+5. Gestión del catálogo de alimentos local.
+6. Funciones con IA del paciente (resumen de la semana e ideas de comidas).
+7. Retiro del consentimiento, recordatorios y ajustes de idioma.
+8. Registro y sincronización sin conexión.
+
+**ESCALA DE SEVERIDAD:**
+
+Los errores serán puntuados tomando en cuenta la siguiente escala de severidad:
+
+| Nivel | Descripción |
+| --- | --- |
+| 1 | Problema superficial: puede ser fácilmente superado por el usuario y ocurre con muy poca frecuencia. No necesita ser arreglado a no ser que exista disponibilidad de tiempo. |
+| 2 | Problema menor: puede ocurrir un poco más frecuentemente o es un poco más difícil de superar para el usuario. Se le debería asignar una prioridad baja resolverlo de cara al siguiente *release*. |
+| 3 | Problema mayor: ocurre frecuentemente o los usuarios no son capaces de resolverlo. Es importante que sea corregido y se le debe asignar una prioridad alta. |
+| 4 | Problema muy grave: un error de gran impacto que impide al usuario continuar con el uso de la herramienta. Es imperativo que sea corregido antes del lanzamiento. |
+
+**TABLA RESUMEN:**
+
+| # | Problema | Escala de severidad | Heurística/Principio violada(o) |
+| --- | --- | --- | --- |
+| 1 | El resumen de la tendencia de peso contradice la gráfica y el expediente | 3 | Usability: Consistencia y estándares |
+| 2 | La opción para registrar una comida no está disponible desde Inicio | 2 | Information Architecture: Is it findable? |
+| 3 | La pestaña "Progreso" no se asocia con el registro del peso | 2 | Information Architecture: Is it findable? |
+| 4 | "Iniciar consulta" solo aparece en la pestaña Resumen de la ficha del paciente | 2 | Information Architecture: Is it findable? |
+| 5 | El nutricionista no sabe cómo interpretar las comidas "Por confirmar" | 2 | Usability: Coincidencia entre el sistema y el mundo real |
+| 6 | El texto secundario de la tendencia de peso es pequeño y difícil de leer | 2 | Inclusive Design: Proporciona experiencias comparables |
+| 7 | El Landing Page no informa si Healthify tiene costo | 2 | Information Architecture: Is it findable? |
+| 8 | La invitación QR solo puede mostrarse en pantalla y no compartirse | 2 | Usability: Flexibilidad y eficiencia de uso |
+| 9 | La aplicación solo se ofrece para Android | 2 | Inclusive Design: Ofrece opciones |
+| 10 | La pestaña Seguimiento concentra mucha información en una sola vista | 1 | Usability: Diseño estético y minimalista |
+| 11 | No se explica al nutricionista por qué no puede ver la foto del plato | 1 | Usability: Ayuda y documentación |="page-break-after: always"></div>
 
