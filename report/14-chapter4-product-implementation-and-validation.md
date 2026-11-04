@@ -72,7 +72,7 @@ La solución de Healthify tiene cuatro productos digitales: el **landing page** 
 |---|---|---|---|
 | GitHub Pages | SaaS | Publicación del landing page desde la rama `main`, con el dominio propio `landing.healthify.lat`. | [pages.github.com](https://pages.github.com) |
 | GitHub Actions | SaaS | Flujo `Release` del backend, y flujos `CI` y `Distribute` de cada aplicación móvil: análisis estático, pruebas, compilación firmada y creación de la versión en GitHub. | [github.com/features/actions](https://github.com/features/actions) |
-| Firebase App Distribution | SaaS | Entrega de los APK firmados de ambas aplicaciones al grupo de prueba `qa`. Los botones de descarga del landing page enlazan a la invitación de Firebase. | [firebase.google.com/products/app-distribution](https://firebase.google.com/products/app-distribution) |
+| Firebase App Distribution | SaaS | Entrega de los APK firmados de ambas aplicaciones al grupo de prueba `qa`. Los botones de descarga del landing page enlazan a la invitación de Firebase de cada aplicación: «Nutricionista» a la Flutter y «Paciente» a la nativa. | [firebase.google.com/products/app-distribution](https://firebase.google.com/products/app-distribution) |
 | GitHub Releases | SaaS | Cada versión de las aplicaciones adjunta su APK (`healthify-vX.Y.Z.apk`); el backend publica sus notas de versión. | [docs.github.com/repositories/releasing-projects-on-github](https://docs.github.com/en/repositories/releasing-projects-on-github) |
 | Docker y Docker Compose | Motor de contenedores | Empaquetado del backend (`Dockerfile`) y orquestación del API con MySQL (`docker-compose.yml`). | [docs.docker.com](https://docs.docker.com) |
 | Oracle Cloud Infrastructure | SaaS / IaaS | Máquina virtual que aloja los contenedores del backend, publicado en `platform.healthify.lat`. | [oracle.com/cloud](https://www.oracle.com/cloud/) |
@@ -121,7 +121,7 @@ El equipo aplica GitFlow, según el modelo de Vincent Driessen en «A successful
 
 Hasta ahora no se han necesitado ramas `release` ni `hotfix`: el número de versión se sube con un commit en `develop` y la versión se publica al integrar `develop` en `main`.
 
-Ejemplos reales de los repositorios: `feature/platform-foundation`, `feature/password-recovery`, `feature/plan-fit-suggestion`, `fix/monitoring-clinical-day` y `refactor/retire-legacy-clinical-endpoints` en el backend; `feature/redesign-website`, `feature/testimonials` y `fix/restore-sources` en el landing page; `feature/ci-cd-app-distribution`, `feature/home-gauge-roster-and-reminders` y `feature/interview-validation-fixes` en la aplicación nativa; `feature/core-foundation`, `feature/auth-onboarding` y `feature/patient-record-consultation` en la aplicación Flutter; y `feature/chapter2-bounded-context` en el informe.
+Ejemplos reales de los repositorios: `feature/platform-foundation`, `feature/password-recovery`, `feature/plan-fit-suggestion`, `fix/monitoring-clinical-day` y `refactor/retire-legacy-clinical-endpoints` en el backend; `feature/redesign-website`, `feature/testimonials`, `feature/dual-app-download` y `fix/restore-sources` en el landing page; `feature/ci-cd-app-distribution`, `feature/home-gauge-roster-and-reminders` y `feature/interview-validation-fixes` en la aplicación nativa; `feature/core-foundation`, `feature/auth-onboarding` y `feature/patient-record-consultation` en la aplicación Flutter; y `feature/chapter2-bounded-context` en el informe.
 
 Flujo de trabajo de una funcionalidad:
 
@@ -143,9 +143,9 @@ Las versiones usan Semantic Versioning 2.0.0 con el formato `vMAJOR.MINOR.PATCH`
 | Producto | Tags publicados | Dónde se define la versión |
 |---|---|---|
 | Backend | `v0.1.0`, `v0.5.0`, `v1.0.0`, `v1.1.0`, `v1.1.1` y de `v1.2.0` a `v1.6.0` | Elemento `<Version>` de `Healthify.Platform.csproj`. El flujo `Release` lee ese valor y crea el tag `v<versión>` con las notas de la versión. |
-| Landing Page | `v1.0.0`, `v1.0.1`, `v2.0.0` y `v2.1.0` | Tag en `main`. La versión `v2.0.0` corresponde al rediseño del sitio. |
-| Aplicación nativa | De `v1.0.0` a `v2.0.0` (13 versiones, entre ellas `v1.4.1`, `v1.5.1` y `v1.7.1`) | `versionName` de `app/build.gradle.kts`. El `versionCode` lo asigna el flujo `Distribute` con el número de ejecución. |
-| Aplicación Flutter | `v1.0.0`, `v1.1.0` y `v1.2.0` | Campo `version` de `pubspec.yaml` (`1.2.0+9`). El número de compilación lo asigna el flujo `Distribute` con el número de ejecución. |
+| Landing Page | `v1.0.0`, `v1.0.1`, `v2.0.0`, `v2.1.0` y `v2.2.0` | Tag en `main`. La versión `v2.0.0` corresponde al rediseño del sitio. |
+| Aplicación nativa | De `v1.0.0` a `v2.1.0` (14 versiones, entre ellas `v1.4.1`, `v1.5.1` y `v1.7.1`) | `versionName` de `app/build.gradle.kts`. El `versionCode` lo asigna el flujo `Distribute` con el número de ejecución. |
+| Aplicación Flutter | `v1.0.0`, `v1.1.0`, `v1.2.0`, `v1.3.0` y `v1.3.1` | Campo `version` de `pubspec.yaml` (`1.3.1+11`). El número de compilación lo asigna el flujo `Distribute` con el número de ejecución. |
 | Informe | `1.0.0` (AV1) y `2.0.0` (TB1) | Registro de versiones del `README.md`. |
 
 **Conventional Commits**
@@ -249,10 +249,10 @@ Cada producto digital tiene su propio proceso de publicación a partir de su rep
 
 **Landing Page**
 
-El landing page es un sitio estático (HTML, CSS y JavaScript) que se publica con **GitHub Pages** desde la rama `main` del repositorio `healthify-website`, con el dominio propio `landing.healthify.lat` definido en un archivo `CNAME`. Sus botones de descarga llevan a la invitación de Firebase App Distribution de la aplicación móvil.
+El landing page es un sitio estático (HTML, CSS y JavaScript) que se publica con **GitHub Pages** desde la rama `main` del repositorio `healthify-website`, con el dominio propio `landing.healthify.lat` definido en un archivo `CNAME`. Sus botones de descarga ofrecen dos opciones, «Nutricionista» y «Paciente», y cada una lleva a la invitación de Firebase App Distribution de su aplicación: la Flutter y la nativa.
 
 1. El cambio se integra en `develop` mediante un pull request.
-2. Se integra `develop` en `main` con otro pull request y se crea el tag de la versión (la última es `v2.1.0`).
+2. Se integra `develop` en `main` con otro pull request y se crea el tag de la versión (la última es `v2.2.0`).
 3. GitHub Pages publica el contenido de `main` en el dominio configurado.
 4. Para revisarlo en local: `npx serve -l 4173 .`
 
@@ -298,7 +298,7 @@ Cada repositorio tiene dos flujos de GitHub Actions con la misma forma:
 | APK de depuración | `./gradlew :app:assembleDebug` | `flutter build apk --debug` |
 | APK firmado y distribución | `./gradlew assembleRelease appDistributionUploadRelease` | `flutter build apk --release` y `firebase appdistribution:distribute` |
 
-La aplicación nativa (`pe.edu.upc.healthify`, versión 2.0.0) se instala en Android 7.0 (API 24) o superior. Guarda los datos de sesión cifrados en el dispositivo y funciona sin conexión para registrar comidas y autopesajes, que se sincronizan al recuperar la red. La aplicación Flutter (`pe.edu.upc.healthify.practitioner`, versión 1.2.0) usa otro identificador de paquete, así que convive en el mismo dispositivo con la nativa; guarda la sesión con `flutter_secure_storage`.
+La aplicación nativa (`pe.edu.upc.healthify`, versión 2.1.0) se instala en Android 7.0 (API 24) o superior. Guarda los datos de sesión cifrados en el dispositivo y funciona sin conexión para registrar comidas y autopesajes, que se sincronizan al recuperar la red. La aplicación Flutter (`pe.edu.upc.healthify.practitioner`, versión 1.3.1) usa otro identificador de paquete, así que convive en el mismo dispositivo con la nativa; guarda la sesión con `flutter_secure_storage`.
 
 **Deployment Diagram (C4 Model)**
 
