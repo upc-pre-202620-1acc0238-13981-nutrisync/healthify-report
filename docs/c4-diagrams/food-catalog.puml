@@ -6,77 +6,76 @@ LAYOUT_WITH_LEGEND()
 
 title Component Diagram - Bounded Context "Food Catalog" (Container: Healthify Platform API)
 
-Person(patient, "Patient", "Searches a food while logging a meal")
+Person(patient, "Patient", "Searches a food while logging a meal and reads the local catalog")
 Person(practitioner, "Practitioner", "Creates a local override when the reference record does not match the food actually eaten")
 
 Container(mobile, "Mobile Application", "Flutter / MAUI", "Search box of the diary; renders the local catalog of the patient")
 
 Container_Boundary(api, "Healthify Platform API") {
 
-    Component(referenceFoodsController, "ReferenceFoodsController", "ASP.NET Core REST Controller", "api/v1/reference-foods. Search and read")
-    Component(localCatalogController, "LocalFoodCatalogController", "ASP.NET Core REST Controller", "api/v1/patients. Local catalog and overrides")
+    Component(referenceFoodsController, "ReferenceFoodsController", "ASP.NET Core REST Controller", "api/v1/reference-foods. Search, read, local overrides and catalog imports")
+    Component(localCatalogController, "LocalFoodCatalogController", "ASP.NET Core REST Controller", "api/v1/patients/{id}/local-food-catalog. Local catalog of a patient")
     Component(fcAssemblers, "Food Catalog Transform Assemblers", "C# static assemblers", "Maps resources, commands and responses")
 
-    Component(foodCmdService, "ReferenceFoodCommandService", "C# Application Service (CQRS command side)", "Searches, caches, overrides and imports")
-    Component(foodQryService, "ReferenceFoodQueryService", "C# Application Service (CQRS query side)", "Local-first search of the catalog")
-    Component(onTranslated, "OnReferenceFoodTranslatedHandler", "Cortex.Mediator IEventHandler of ReferenceFoodTranslated", "Policy 6.2: the only writer on import")
-    Component(fcFacade, "FoodCatalogContextFacade", "C# ACL - Open Host Service", "Publishes food resolution and search")
+    Component(foodCmdService, "ReferenceFoodCommandService", "C# Application Service (CQRS command side)", "Searches with the providers, caches, creates overrides and AI-estimated foods, resolves names and imports snapshots")
+    Component(foodQryService, "ReferenceFoodQueryService", "C# Application Service (CQRS query side)", "Local-first search, lookup by id or name, local catalog and verified foods")
+    Component(onTranslated, "OnReferenceFoodTranslatedHandler", "Cortex.Mediator IEventHandler of ReferenceFoodTranslated", "Policy 6.2: the only writer on import; caches the food locally")
+    Component(fcFacade, "FoodCatalogContextFacade", "C# ACL - Open Host Service (IFoodCatalogContextFacade)", "Publishes food resolution, lookup and search")
+
+    Component(importHostedService, "CatalogImportHostedService", "ASP.NET Core BackgroundService", "Imports catalog snapshots periodically")
+    Component(fcSeeder, "ReferenceFoodSeeder", "C# EF Core seeder", "Seeds the baseline catalog at startup")
 
     Component(foodAggregate, "ReferenceFood", "C# Aggregate Root", "A food with nutrients and provenance")
     Component(fcValueObjects, "Value Objects and Errors", "C# records and enums", "LocalName, NutrientsPer100g, SourceHash, errors")
+    Component(foodMatcher, "FoodNameMatcher and NutrientCoherence", "C# Domain Services", "Match names and check nutrients for coherence")
     Component(providerPort, "IExternalFoodCatalogProvider", "C# Domain Service interface (port)", "External catalog port of the domain")
+    Component(usdaProvider, "UsdaFoodDataProvider", "C# ACL adapter, HttpClient", "Translates USDA records into the port")
+    Component(offProvider, "OpenFoodFactsProvider", "C# ACL adapter, HttpClient", "Translates Open Food Facts records into the port")
 
-    Component(usdaProvider, "UsdaFoodDataProvider", "C# ACL adapter, HttpClient, 10 s timeout", "Translates USDA records into the port")
-    Component(offProvider, "OpenFoodFactsProvider", "C# ACL adapter, HttpClient, 10 s timeout", "Translates Open Food Facts records")
     Component(fcRepo, "ReferenceFoodRepository", "C# Repository over EF Core 10", "Persists the reference foods")
     Component(fcEfcConfig, "ReferenceFood EntityTypeConfiguration", "EF Core 10 Fluent API", "Maps table, search index and hash")
-    Component(fcSeeder, "ReferenceFoodSeeder", "C# EF Core seeder", "Seeds the baseline catalog at startup")
-    Component(importHostedService, "CatalogImportHostedService", "ASP.NET Core BackgroundService", "Imports catalog snapshots periodically")
-
-    Component(foodMatcher, "FoodNameMatcher / NutrientCoherence", "C# Domain Services", "Matches names and checks AI nutrients against the catalog")
 }
 
 ContainerDb(db, "Healthify Database", "MySQL 8.4", "Owns the reference_foods table and its audit table")
 
 System_Ext(usda, "USDA FoodData Central", "Public nutritional database of the U.S. Department of Agriculture. Requires an API key")
 System_Ext(off, "Open Food Facts", "Open collaborative database of packaged food products")
+Container_Ext(intakeCtx, "Intake and Body Response", "Sibling bounded context", "Resolves the food of a diary entry, a photo analysis or a meal idea through the Open Host Service")
 
-Container_Ext(intakeCtx, "Intake and Body Response", "Sibling bounded context", "Resolves the food of a diary entry against the local catalog through the Open Host Service")
-
-Rel(patient, mobile, "Searches a food", "Touch")
+Rel(patient, mobile, "Searches a food and reads the local catalog", "Touch")
 Rel(practitioner, mobile, "Creates a local override", "Touch")
-Rel(mobile, referenceFoodsController, "Searches and reads reference foods", "JSON/HTTPS, Bearer JWT")
-Rel(mobile, localCatalogController, "Reads the local catalog and creates overrides", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, referenceFoodsController, "Searches, reads, creates overrides and requests imports", "JSON/HTTPS, Bearer JWT")
+Rel(mobile, localCatalogController, "Reads the local catalog", "JSON/HTTPS, Bearer JWT")
 
 Rel(referenceFoodsController, fcAssemblers, "Maps resources and commands through", "in-process")
-Rel(localCatalogController, fcAssemblers, "Maps resources and commands through", "in-process")
-Rel(referenceFoodsController, foodCmdService, "Sends SearchFoodCommand and CacheFoodLocallyCommand", "in-process")
-Rel(referenceFoodsController, foodQryService, "Sends catalog queries", "in-process")
-Rel(localCatalogController, foodCmdService, "Sends CreateLocalOverrideCommand", "in-process")
-Rel(localCatalogController, foodQryService, "Reads the local catalog", "in-process")
+Rel(localCatalogController, fcAssemblers, "Maps aggregates to resources through", "in-process")
+Rel(referenceFoodsController, foodCmdService, "Sends search, override and import commands", "in-process")
+Rel(referenceFoodsController, foodQryService, "Sends reference food queries", "in-process")
+Rel(localCatalogController, foodQryService, "Sends GetLocalFoodCatalogQuery", "in-process")
 
-Rel(foodCmdService, foodAggregate, "Creates, caches and overrides", "in-process")
+Rel(foodCmdService, foodAggregate, "Caches, overrides and creates", "in-process")
 Rel(foodAggregate, fcValueObjects, "Is built from", "in-process")
-Rel(foodCmdService, providerPort, "Requests an external snapshot through", "in-process")
-Rel(providerPort, usdaProvider, "Is implemented by", "DI")
-Rel(providerPort, offProvider, "Is implemented by", "DI")
-Rel(usdaProvider, usda, "Fetches food records from", "JSON/HTTPS, API key, 10 s timeout")
-Rel(offProvider, off, "Fetches product records from", "JSON/HTTPS, 10 s timeout")
+Rel(foodCmdService, foodMatcher, "Matches names and checks coherence with", "in-process")
+Rel(foodQryService, foodMatcher, "Matches names with", "in-process")
+Rel(foodCmdService, providerPort, "Fetches external snapshots through", "in-process")
+Rel(usdaProvider, providerPort, "Implements", "in-process")
+Rel(offProvider, providerPort, "Implements", "in-process")
+Rel(usdaProvider, usda, "Fetches the foods from", "JSON/HTTPS, API key")
+Rel(offProvider, off, "Fetches the foods from", "JSON/HTTPS")
 
-Rel(importHostedService, foodCmdService, "Issues ImportCatalogSnapshotCommand", "in-process, scoped")
-Rel(foodCmdService, onTranslated, "Publishes ReferenceFoodTranslated to", "Cortex.Mediator, own DI scope")
-Rel(onTranslated, foodCmdService, "Sends CacheFoodLocallyCommand: the only write path of an import", "in-process")
+Rel(foodCmdService, onTranslated, "Publishes ReferenceFoodTranslated to", "Cortex.Mediator, in-process")
+Rel(onTranslated, foodCmdService, "Sends CacheFoodLocallyCommand", "in-process, own DI scope")
+Rel(importHostedService, foodCmdService, "Sends ImportCatalogSnapshotCommand", "in-process, periodic")
+Rel(fcSeeder, foodCmdService, "Seeds the baseline catalog through", "in-process, at startup")
+Rel(fcSeeder, fcRepo, "Checks the existing foods through", "in-process, at startup")
 
 Rel(foodCmdService, fcRepo, "Reads and writes through", "in-process")
 Rel(foodQryService, fcRepo, "Reads through", "in-process")
-Rel(fcFacade, fcRepo, "Resolves food questions through", "in-process")
-Rel(fcSeeder, fcRepo, "Seeds the baseline catalog through", "startup, in-process")
 Rel(fcRepo, fcEfcConfig, "Is mapped by", "EF Core model")
 Rel(fcRepo, db, "Reads from and writes to", "EF Core 10 / MySQL, TCP 3306")
 
-Rel(intakeCtx, fcFacade, "Resolves the food of a diary entry", "in-process ACL call")
-
-Rel(foodCmdService, foodMatcher, "Matches and validates foods through", "in-process")
-Rel(intakeCtx, fcFacade, "Resolves foods by name and creates AI-estimated foods", "in-process ACL call")
+Rel(fcFacade, foodQryService, "Resolves lookups through", "in-process")
+Rel(fcFacade, foodCmdService, "Resolves, searches and creates foods through", "in-process")
+Rel(intakeCtx, fcFacade, "Resolves foods, nutrients and names", "in-process ACL call")
 
 @enduml

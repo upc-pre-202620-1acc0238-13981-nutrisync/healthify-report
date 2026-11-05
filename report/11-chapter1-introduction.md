@@ -168,7 +168,7 @@ Creemos que la adopción y el uso continuo de Healthify por parte de pacientes y
 
 #### 1.2.2.4. Lean UX Canvas
 
-<p class="caption"><strong>Figura 3</strong><br><em>Lean UX Canvas de Healthify</em></p>
+<p class="caption"><strong>Figura 4</strong><br><em>Lean UX Canvas de Healthify</em></p>
 
 ![Lean UX Canvas](../assets/img/chapter1/LeanUXCanvas.png)
 

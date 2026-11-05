@@ -4,7 +4,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 
 ## Metodologías de descubrimiento y diseño centrado en el usuario
 
-<p class="caption"><strong>Tabla 256</strong><br><em>Glosario: Metodologías de descubrimiento y diseño centrado en el usuario</em></p>
+<p class="caption"><strong>Tabla 296</strong><br><em>Glosario: Metodologías de descubrimiento y diseño centrado en el usuario</em></p>
 
 | Término | Definición |
 |---|---|
@@ -25,7 +25,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 
 ## Gestión ágil y especificación de requisitos
 
-<p class="caption"><strong>Tabla 257</strong><br><em>Glosario: Gestión ágil y especificación de requisitos</em></p>
+<p class="caption"><strong>Tabla 297</strong><br><em>Glosario: Gestión ágil y especificación de requisitos</em></p>
 
 | Término | Definición |
 |---|---|
@@ -43,7 +43,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 
 ## Domain-Driven Design estratégico
 
-<p class="caption"><strong>Tabla 258</strong><br><em>Glosario: Domain-Driven Design estratégico</em></p>
+<p class="caption"><strong>Tabla 298</strong><br><em>Glosario: Domain-Driven Design estratégico</em></p>
 
 | Término | Definición |
 |---|---|
@@ -76,7 +76,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 
 ## Domain-Driven Design táctico y patrones de diseño
 
-<p class="caption"><strong>Tabla 259</strong><br><em>Glosario: Domain-Driven Design táctico y patrones de diseño</em></p>
+<p class="caption"><strong>Tabla 299</strong><br><em>Glosario: Domain-Driven Design táctico y patrones de diseño</em></p>
 
 | Término | Definición |
 |---|---|
@@ -106,7 +106,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 
 ## Arquitectura de software y diagramas
 
-<p class="caption"><strong>Tabla 260</strong><br><em>Glosario: Arquitectura de software y diagramas</em></p>
+<p class="caption"><strong>Tabla 300</strong><br><em>Glosario: Arquitectura de software y diagramas</em></p>
 
 | Término | Definición |
 |---|---|
@@ -132,7 +132,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 
 ## Tecnologías, backend y seguridad
 
-<p class="caption"><strong>Tabla 261</strong><br><em>Glosario: Tecnologías, backend y seguridad</em></p>
+<p class="caption"><strong>Tabla 301</strong><br><em>Glosario: Tecnologías, backend y seguridad</em></p>
 
 | Término | Definición |
 |---|---|
@@ -164,7 +164,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 
 ## Diseño de producto e interfaces (UI/UX)
 
-<p class="caption"><strong>Tabla 262</strong><br><em>Glosario: Diseño de producto e interfaces (UI/UX)</em></p>
+<p class="caption"><strong>Tabla 302</strong><br><em>Glosario: Diseño de producto e interfaces (UI/UX)</em></p>
 
 | Término | Definición |
 |---|---|
@@ -189,7 +189,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 
 ## Términos del dominio de Healthify
 
-<p class="caption"><strong>Tabla 263</strong><br><em>Glosario: Términos del dominio de Healthify</em></p>
+<p class="caption"><strong>Tabla 303</strong><br><em>Glosario: Términos del dominio de Healthify</em></p>
 
 | Término | Definición |
 |---|---|
@@ -217,7 +217,7 @@ En esta sección se definen los términos clave utilizados a lo largo del docume
 
 ## Abreviaturas y acrónimos
 
-<p class="caption"><strong>Tabla 264</strong><br><em>Glosario: Abreviaturas y acrónimos</em></p>
+<p class="caption"><strong>Tabla 304</strong><br><em>Glosario: Abreviaturas y acrónimos</em></p>
 
 | Sigla | Significado | Descripción breve |
 |---|---|---|

@@ -10,8 +10,6 @@ Brandolini, A. (2021). *Introducing EventStorming: An act of deliberate collecti
 
 Brown, S. (s.f.). *The C4 model for visualising software architecture*. https://c4model.com
 
-DDD Crew. (s.f.). *Bounded context canvas* [Repositorio de GitHub]. https://github.com/ddd-crew/bounded-context-canvas
-
 Evans, E. (2004). *Domain-driven design: Tackling complexity in the heart of software*. Addison-Wesley.
 
 Fowler, M. (2003). *Patterns of enterprise application architecture*. Addison-Wesley.

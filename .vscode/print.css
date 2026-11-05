@@ -13,3 +13,11 @@ body:has(.landscape) { page: horizontal; }
 body:has(.landscape) table { width: 100%; font-size: 12px; line-height: 1.4; }
 body:has(.landscape) td:first-child { width: 14%; }
 body:has(.landscape) td:nth-child(2) { width: 52%; }
+
+.tabla-ancha table { width: 100%; table-layout: fixed; }
+.tabla-ancha th:nth-child(1), .tabla-ancha td:nth-child(1) { width: 24%; }
+.tabla-ancha th:nth-child(2), .tabla-ancha td:nth-child(2) { width: 30%; }
+.tabla-ancha th:nth-child(3), .tabla-ancha td:nth-child(3) { width: 16%; }
+.tabla-ancha th:nth-child(4), .tabla-ancha td:nth-child(4) { width: 30%; }
+.tabla-ancha code { overflow-wrap: anywhere; word-break: break-word; white-space: normal; }
+.tabla-ancha tr { break-inside: avoid; page-break-inside: avoid; }
