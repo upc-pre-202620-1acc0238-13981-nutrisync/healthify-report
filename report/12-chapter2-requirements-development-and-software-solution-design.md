@@ -2635,7 +2635,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 
 ### 2.4.2. Impact Mapping
 
-### Impact Mapping - Paciente
+#### Impact Mapping - Paciente
 
 <p class="caption"><strong>Figura 17</strong><br><em>Impact Mapping del paciente</em></p>
 
@@ -2644,7 +2644,9 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 El Impact Mapping del paciente se orienta a promover un registro continuo de información durante el tratamiento nutricional. Para alcanzar este objetivo, se consideran como impactos principales el registro frecuente de la alimentación, el seguimiento de la evolución corporal, la consulta del seguimiento del plan nutricional y la continuidad de los registros sin conexión. Estos comportamientos se apoyan en los Deliverables y User Stories definidos previamente.
 <br>
 
-### Impact Mapping - Nutricionista
+<div style="page-break-after: always"></div>
+
+#### Impact Mapping - Nutricionista
 
 <p class="caption"><strong>Figura 18</strong><br><em>Impact Mapping del nutricionista</em></p>
 
@@ -3561,12 +3563,16 @@ Las clases de entrada viven en `IntakeResources.cs`: `LogMealByPhotoResource`, `
 
 <p class="caption"><strong>Tabla 103</strong><br><em>Endpoints adicionales de Intake &amp; Body Response</em></p>
 
+<div class="tabla-ancha">
+
 | Endpoint | Controller | Respuesta | Descripción |
 |---|---|---|---|
 | `POST /api/v1/patients/{patientId:int}/meal-photo-analyses` | `PatientMealPhotoAnalysesController.AnalyzeMealPhoto(int, IFormFile?, DateOnly?)` | 201 · 400 · 401 · 403 · 413 · 422 · 429 · 500 · 503 | Recibe la foto como `multipart/form-data` (JPEG o WebP, hasta 2 MB por defecto) y devuelve la propuesta con hasta tres alternativas y su `PlanFit`. Usa la política de rate limiting `ai-photo`. |
 | `POST /api/v1/patients/{patientId:int}/meal-ideas` | `PatientMealIdeasController.GenerateMealIdeas(int, GenerateMealIdeasResource?)` | 200 · 400 · 401 · 403 · 404 · 422 · 429 · 500 · 502 · 503 | Propone ideas de comida que caben en lo que resta del día. Usa la misma política `ai-photo`. |
 | `POST /api/v1/self-weigh-ins` | `SelfWeighInsController.RecordSelfWeighIn(RecordSelfWeighInResource)` | 201 · 400 · 401 · 403 | Registra un autopesaje. |
 | `POST /api/v1/self-weigh-ins/synchronization` | `SelfWeighInsController.SyncSelfWeighIns(SyncSelfWeighInsResource)` | 200 `SelfWeighInSyncOutcomeResource` · 401 · 403 | Sincroniza los autopesajes registrados sin conexión. |
+
+</div>
 
 `RecalculateWeightTrendCommand` no tiene endpoint: lo dispara la política que escucha `SelfWeighInRecorded`.
 

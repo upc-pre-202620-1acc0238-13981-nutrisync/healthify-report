@@ -3013,7 +3013,6 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 
 <div style="page-break-after: always"></div>
-<div style="page-break-after: always"></div>
 
 <p class="caption"><strong>Tabla 287</strong><br><em>Registro de la entrevista de validación al segmento paciente en tratamiento nutricional activo</em></p>
 
