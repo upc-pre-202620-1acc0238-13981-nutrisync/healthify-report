@@ -304,7 +304,7 @@ La aplicación nativa (`pe.edu.upc.healthify`, versión 2.1.0) se instala en And
 
 El diagrama de despliegue muestra los nodos donde se ejecuta cada artefacto. GitHub Pages sirve el landing page y GitHub Actions compila las aplicaciones y sube sus APK a Firebase App Distribution, desde donde se instalan en los dispositivos Android: la aplicación nativa en el del paciente o del nutricionista, y la aplicación Flutter en el del nutricionista. La máquina virtual de Oracle Cloud ejecuta Docker Engine con los contenedores del API (ASP.NET Core 10) y de la base de datos (MySQL 8.4). Las dos aplicaciones consumen el API por JSON sobre HTTPS; el API se conecta a la base de datos por la red interna de Docker y llama a Gemini, a Open Food Facts, a USDA FoodData Central y al servidor SMTP. El fuente del diagrama está en `docs/c4-diagrams/deployment.puml`.
 
-<p class="caption"><strong>Figura 143</strong><br><em>Diagrama de despliegue de Healthify</em></p>
+<p class="caption"><strong>Figura 144</strong><br><em>Diagrama de despliegue de Healthify</em></p>
 
 ![Deployment Diagram](../assets/img/artifacts/healthify-DeploymentDiagram-tb2.png)
 
@@ -493,7 +493,7 @@ Las marcas **C** de la app siguen sus dependencias. Todas las pantallas usan el 
 
 El objetivo del Sprint 1 es publicar el landing page, completar el backend con las pruebas y la documentación de sus endpoints, y construir la aplicación móvil que lo consume. Los user stories del landing page pertenecen al épico EP10, los technical stories al épico EP_TS y los user stories de la aplicación a los épicos EP01 a EP09 y EP11. Las tareas sin historia asociada corresponden a trabajo que sostiene a varias historias: estructura de los repositorios, núcleo compartido, sistema de diseño, contenedores y publicación. El board del sprint y la tabla de work-items se presentan a continuación.
 
-<p class="caption"><strong>Figura 144</strong><br><em>Tablero de Trello del Sprint 1</em></p>
+<p class="caption"><strong>Figura 145</strong><br><em>Tablero de Trello del Sprint 1</em></p>
 
 ![Board Sprint 1](../assets/img/chapter4/sprint1/trello.png)
 
@@ -645,15 +645,15 @@ El trabajo siguió GitFlow: cada bloque de trabajo se hizo en una rama `feature/
 | Landing Page | `healthify-website` | 8 (#1 a #8) | `v1.0.0`, `v1.0.1` |
 | Mobile Application | `healthify-android-app` | 6 (#1 a #6) | `v1.0.0` |
 
-<p class="caption"><strong>Figura 145</strong><br><em>Captura de GitHub: pull requests del backend</em></p>
+<p class="caption"><strong>Figura 146</strong><br><em>Captura de GitHub: pull requests del backend</em></p>
 
 ![Pull requests del backend](../assets/img/chapter4/sprint1/gh-platform-pulls.png)
 
-<p class="caption"><strong>Figura 146</strong><br><em>Captura de GitHub: pull requests del landing page</em></p>
+<p class="caption"><strong>Figura 147</strong><br><em>Captura de GitHub: pull requests del landing page</em></p>
 
 ![Pull requests del landing page](../assets/img/chapter4/sprint1/gh-website-pulls.png)
 
-<p class="caption"><strong>Figura 147</strong><br><em>Captura de GitHub: pull requests de la aplicación móvil</em></p>
+<p class="caption"><strong>Figura 148</strong><br><em>Captura de GitHub: pull requests de la aplicación móvil</em></p>
 
 ![Pull requests de la aplicación móvil](../assets/img/chapter4/sprint1/gh-android-pulls.png)
 
@@ -998,89 +998,89 @@ En la revisión del sprint, el Product Owner aceptó 45 de las 55 historias. Las
 
 Hero con carrusel de cuatro diapositivas (nutricionistas, pacientes, video del producto y video del equipo) y botones de acceso según el rol (US32, US36).
 
-<p class="caption"><strong>Figura 148</strong><br><em>Captura del landing page: sección Hero</em></p>
+<p class="caption"><strong>Figura 149</strong><br><em>Captura del landing page: sección Hero</em></p>
 
 ![Hero](../assets/img/chapter4/sprint1/landing-hero.png)
 
 Sección del problema (US32).
 
-<p class="caption"><strong>Figura 149</strong><br><em>Captura del landing page: sección Problema</em></p>
+<p class="caption"><strong>Figura 150</strong><br><em>Captura del landing page: sección Problema</em></p>
 
 ![Problema](../assets/img/chapter4/sprint1/landing-problem.png)
 
 Funciones para el paciente, con la lista de diez funciones y la pantalla de cada una (US33).
 
-<p class="caption"><strong>Figura 150</strong><br><em>Captura del landing page: sección Para el paciente</em></p>
+<p class="caption"><strong>Figura 151</strong><br><em>Captura del landing page: sección Para el paciente</em></p>
 
 ![Para el paciente](../assets/img/chapter4/sprint1/landing-patient.png)
 
 Funciones para el nutricionista, con once funciones agrupadas por momento (US33).
 
-<p class="caption"><strong>Figura 151</strong><br><em>Captura del landing page: sección Para el nutricionista</em></p>
+<p class="caption"><strong>Figura 152</strong><br><em>Captura del landing page: sección Para el nutricionista</em></p>
 
 ![Para el nutricionista](../assets/img/chapter4/sprint1/landing-nutritionist.png)
 
 Cómo funciona: consulta guiada en cuatro pasos y ciclo entre consultas (US36).
 
-<p class="caption"><strong>Figura 152</strong><br><em>Captura del landing page: sección Cómo funciona</em></p>
+<p class="caption"><strong>Figura 153</strong><br><em>Captura del landing page: sección Cómo funciona</em></p>
 
 ![Cómo funciona](../assets/img/chapter4/sprint1/landing-how-it-works.png)
 
 Preguntas frecuentes con acordeón y filtros por tema (US45).
 
-<p class="caption"><strong>Figura 153</strong><br><em>Captura del landing page: preguntas frecuentes</em></p>
+<p class="caption"><strong>Figura 154</strong><br><em>Captura del landing page: preguntas frecuentes</em></p>
 
 ![Preguntas frecuentes](../assets/img/chapter4/sprint1/landing-faq.png)
 
 Página «Nosotros»: hero, misión y visión, y equipo (US34).
 
-<p class="caption"><strong>Figura 154</strong><br><em>Captura del landing page: página Nosotros</em></p>
+<p class="caption"><strong>Figura 155</strong><br><em>Captura del landing page: página Nosotros</em></p>
 
 ![Nosotros](../assets/img/chapter4/sprint1/landing-about-hero.png)
 
-<p class="caption"><strong>Figura 155</strong><br><em>Captura del landing page: misión y visión</em></p>
+<p class="caption"><strong>Figura 156</strong><br><em>Captura del landing page: misión y visión</em></p>
 
 ![Misión y visión](../assets/img/chapter4/sprint1/landing-about-purpose.png)
 
-<p class="caption"><strong>Figura 156</strong><br><em>Captura del landing page: equipo</em></p>
+<p class="caption"><strong>Figura 157</strong><br><em>Captura del landing page: equipo</em></p>
 
 ![Equipo](../assets/img/chapter4/sprint1/landing-about-team.png)
 
 Página de contacto y formulario con los mensajes de validación por campo (US37).
 
-<p class="caption"><strong>Figura 157</strong><br><em>Captura del landing page: página Contacto</em></p>
+<p class="caption"><strong>Figura 158</strong><br><em>Captura del landing page: página Contacto</em></p>
 
 ![Contacto](../assets/img/chapter4/sprint1/landing-contact.png)
 
-<p class="caption"><strong>Figura 158</strong><br><em>Captura del landing page: validación del formulario de contacto</em></p>
+<p class="caption"><strong>Figura 159</strong><br><em>Captura del landing page: validación del formulario de contacto</em></p>
 
 ![Validación del formulario](../assets/img/chapter4/sprint1/landing-contact-validation.png)
 
 Confirmación al enviar el formulario con datos válidos (US37).
 
-<p class="caption"><strong>Figura 159</strong><br><em>Captura del landing page: confirmación del formulario</em></p>
+<p class="caption"><strong>Figura 160</strong><br><em>Captura del landing page: confirmación del formulario</em></p>
 
 ![Confirmación del formulario](../assets/img/chapter4/sprint1/landing-contact-success.png)
 
 Términos y condiciones, con tabla de contenido y una cláusula por pantalla, en inglés (US35, US38).
 
-<p class="caption"><strong>Figura 160</strong><br><em>Captura del landing page: términos y condiciones</em></p>
+<p class="caption"><strong>Figura 161</strong><br><em>Captura del landing page: términos y condiciones</em></p>
 
 ![Términos y condiciones](../assets/img/chapter4/sprint1/landing-terms-body.png)
 
 Footer con navegación, enlaces legales, redes, contacto y selector de idioma.
 
-<p class="caption"><strong>Figura 161</strong><br><em>Captura del landing page: footer</em></p>
+<p class="caption"><strong>Figura 162</strong><br><em>Captura del landing page: footer</em></p>
 
 ![Footer](../assets/img/chapter4/sprint1/landing-footer.png)
 
 Cambio de idioma a inglés (US35).
 
-<p class="caption"><strong>Figura 162</strong><br><em>Captura del landing page en inglés: hero</em></p>
+<p class="caption"><strong>Figura 163</strong><br><em>Captura del landing page en inglés: hero</em></p>
 
 ![Hero en inglés](../assets/img/chapter4/sprint1/landing-hero-en.png)
 
-<p class="caption"><strong>Figura 163</strong><br><em>Captura del landing page en inglés: sección del nutricionista</em></p>
+<p class="caption"><strong>Figura 164</strong><br><em>Captura del landing page en inglés: sección del nutricionista</em></p>
 
 ![Nutricionista en inglés](../assets/img/chapter4/sprint1/landing-nutritionist-en.png)
 
@@ -1088,7 +1088,7 @@ Cambio de idioma a inglés (US35).
 
 Las capturas corresponden a la aplicación ejecutada en un emulador Android con una sesión de paciente vinculada a su nutricionista, conectada al backend publicado. La app está disponible en español e inglés, con selector de idioma en los ajustes; las capturas están en inglés. Las pantallas del nutricionista (consulta guiada, agenda, bandeja de revisión) están cubiertas por las pruebas de ViewModel de la sección 4.2.1.5.
 
-<p class="caption"><strong>Figura 164</strong><br><em>Capturas de la aplicación móvil en ejecución en un emulador Android</em></p>
+<p class="caption"><strong>Figura 165</strong><br><em>Capturas de la aplicación móvil en ejecución en un emulador Android</em></p>
 
 <table>
   <tr>
@@ -1133,25 +1133,25 @@ Las capturas corresponden a la aplicación ejecutada en un emulador Android con 
 
 La documentación de Swagger del backend publicado agrupa las operaciones por recurso. La primera captura muestra la cabecera del documento, el botón **Authorize** para el esquema Bearer y los primeros recursos.
 
-<p class="caption"><strong>Figura 165</strong><br><em>Captura de Swagger: vista general de los servicios</em></p>
+<p class="caption"><strong>Figura 166</strong><br><em>Captura de Swagger: vista general de los servicios</em></p>
 
 ![Swagger: vista general](../assets/img/chapter4/sprint1/swagger-overview.png)
 
 Consulta guiada del nutricionista, de la medición a la publicación del plan en cuatro pasos (TS03, TS04).
 
-<p class="caption"><strong>Figura 166</strong><br><em>Captura de Swagger: servicios de consultas</em></p>
+<p class="caption"><strong>Figura 167</strong><br><em>Captura de Swagger: servicios de consultas</em></p>
 
 ![Swagger: consultas](../assets/img/chapter4/sprint1/swagger-consultations.png)
 
 Ingesta y respuesta corporal del paciente: diario, estimaciones, sincronización, autopesaje, tendencia, ideas de comida y análisis de foto (TS05, TS06, TS08).
 
-<p class="caption"><strong>Figura 167</strong><br><em>Captura de Swagger: servicios de ingesta</em></p>
+<p class="caption"><strong>Figura 168</strong><br><em>Captura de Swagger: servicios de ingesta</em></p>
 
 ![Swagger: ingesta](../assets/img/chapter4/sprint1/swagger-intake.png)
 
 Monitoreo y adherencia: seguimientos, resumen, índice de consistencia, derivaciones y agenda (TS07, TS10).
 
-<p class="caption"><strong>Figura 168</strong><br><em>Captura de Swagger: servicios de monitoreo</em></p>
+<p class="caption"><strong>Figura 169</strong><br><em>Captura de Swagger: servicios de monitoreo</em></p>
 
 ![Swagger: monitoreo](../assets/img/chapter4/sprint1/swagger-monitoring.png)
 
@@ -1392,7 +1392,7 @@ Respuesta `200 OK`. `token` es el token de acceso; `refreshToken` se usa en `POS
 }
 ```
 
-<p class="caption"><strong>Figura 169</strong><br><em>Captura de Swagger: operación de inicio de sesión</em></p>
+<p class="caption"><strong>Figura 170</strong><br><em>Captura de Swagger: operación de inicio de sesión</em></p>
 
 ![Swagger: iniciar sesión](../assets/img/chapter4/sprint1/swagger-sign-in.png)
 
@@ -1472,13 +1472,13 @@ Solicitudes ejecutadas desde Swagger contra el servicio publicado:
 
 La búsqueda de alimentos es anónima y consulta primero el catálogo propio y, si hay pocos resultados, las bases externas. La respuesta `200` devuelve para cada alimento su identificador, nombre, energía y macronutrientes por 100 g. Las cabeceras de la respuesta muestran que el dominio se sirve a través de Cloudflare.
 
-<p class="caption"><strong>Figura 170</strong><br><em>Captura de Swagger: búsqueda en el catálogo de alimentos</em></p>
+<p class="caption"><strong>Figura 171</strong><br><em>Captura de Swagger: búsqueda en el catálogo de alimentos</em></p>
 
 ![Swagger: búsqueda en el catálogo](../assets/img/chapter4/sprint1/swagger-reference-foods.png)
 
 Una operación protegida sin token responde `401` con un Problem Details cuyo código es `AuthenticationRequired`.
 
-<p class="caption"><strong>Figura 171</strong><br><em>Captura de Swagger: solicitud sin autenticación</em></p>
+<p class="caption"><strong>Figura 172</strong><br><em>Captura de Swagger: solicitud sin autenticación</em></p>
 
 ![Swagger: solicitud sin autenticación](../assets/img/chapter4/sprint1/swagger-unauthorized.png)
 
@@ -1512,13 +1512,13 @@ Durante el Sprint 1 se desplegaron el landing page y el backend, y se generó la
 
 *Repositorio y ramas.* Se creó el repositorio público `healthify-website` en la organización del curso, con las ramas `main` (publicación) y `develop` (integración). Las cinco ramas de funcionalidad se integraron en `develop` mediante los pull requests #1 a #5, y la corrección de fuentes mediante el pull request #7.
 
-<p class="caption"><strong>Figura 172</strong><br><em>Captura de GitHub: repositorio del landing page</em></p>
+<p class="caption"><strong>Figura 173</strong><br><em>Captura de GitHub: repositorio del landing page</em></p>
 
 ![Repositorio del landing page](../assets/img/chapter4/sprint1/gh-website-repo.png)
 
 *Releases.* Se integró `develop` en `main` con el pull request #6 (`Release/1.0.0`) y se publicó la versión `v1.0.0`. Antes de la versión siguiente se restauraron, en la rama `fix/restore-sources` (pull request #7), la estructura de `index.html`, el arranque y las funciones de `main.js`, el objeto de traducciones y el orden de las reglas de la hoja de estilos. La versión `v1.0.1` se publicó con el pull request #8.
 
-<p class="caption"><strong>Figura 173</strong><br><em>Captura de GitHub: tags del landing page</em></p>
+<p class="caption"><strong>Figura 174</strong><br><em>Captura de GitHub: tags del landing page</em></p>
 
 ![Tags del landing page](../assets/img/chapter4/sprint1/gh-website-tags.png)
 
@@ -1530,17 +1530,17 @@ Durante el Sprint 1 se desplegaron el landing page y el backend, y se generó la
 
 *Repositorio, ramas y versiones.* Se creó el repositorio público `healthify-platform`. Cada bounded context se desarrolló en una rama `feature/*` y se integró en `develop` mediante los pull requests #1, #3, #4, #5, #6 y #8. Los pull requests #2, #7 y #9 integraron `develop` en `main` y corresponden a las versiones `v0.1.0`, `v0.5.0` y `v1.0.0`.
 
-<p class="caption"><strong>Figura 174</strong><br><em>Captura de GitHub: repositorio del backend</em></p>
+<p class="caption"><strong>Figura 175</strong><br><em>Captura de GitHub: repositorio del backend</em></p>
 
 ![Repositorio del backend](../assets/img/chapter4/sprint1/gh-platform-repo.png)
 
 *Release automático.* El flujo `Release` (`.github/workflows/release.yml`) se ejecuta con cada push a `main`: restaura y compila la solución en *Release*, lee `<Version>` de `Healthify.Platform.csproj` y crea el release `v<versión>` con notas generadas a partir de los pull requests. La primera ejecución (versión 0.1.0) falló en la compilación porque `Program.cs` de la base ya registraba el contexto IAM, que se integró en el pull request siguiente; las ejecuciones de las versiones 0.5.0 y 1.0.0 terminaron correctamente.
 
-<p class="caption"><strong>Figura 175</strong><br><em>Captura de GitHub Actions: ejecuciones del flujo Release</em></p>
+<p class="caption"><strong>Figura 176</strong><br><em>Captura de GitHub Actions: ejecuciones del flujo Release</em></p>
 
 ![Ejecuciones del flujo Release](../assets/img/chapter4/sprint1/gh-platform-actions.png)
 
-<p class="caption"><strong>Figura 176</strong><br><em>Captura de GitHub: releases del backend</em></p>
+<p class="caption"><strong>Figura 177</strong><br><em>Captura de GitHub: releases del backend</em></p>
 
 ![Releases del backend](../assets/img/chapter4/sprint1/gh-platform-releases.png)
 
@@ -1563,11 +1563,11 @@ Durante el Sprint 1 se desplegaron el landing page y el backend, y se generó la
 
 *Repositorio, ramas y versión.* Se creó el repositorio público `healthify-android-app`. Cada módulo se desarrolló en una rama `feature/*` y se integró en `develop` con los pull requests #1 a #5. El pull request #6 integró `develop` en `main` y corresponde a la versión `v1.0.0` (`versionName` 1.0, `versionCode` 1).
 
-<p class="caption"><strong>Figura 177</strong><br><em>Captura de GitHub: repositorio de la aplicación móvil</em></p>
+<p class="caption"><strong>Figura 178</strong><br><em>Captura de GitHub: repositorio de la aplicación móvil</em></p>
 
 ![Repositorio de la aplicación móvil](../assets/img/chapter4/sprint1/gh-android-repo.png)
 
-<p class="caption"><strong>Figura 178</strong><br><em>Captura de GitHub: release de la aplicación móvil</em></p>
+<p class="caption"><strong>Figura 179</strong><br><em>Captura de GitHub: release de la aplicación móvil</em></p>
 
 ![Release de la aplicación móvil](../assets/img/chapter4/sprint1/gh-android-releases.png)
 
@@ -1581,19 +1581,19 @@ Los cinco integrantes participaron en la implementación de los tres productos d
 
 Backend (`healthify-platform`):
 
-<p class="caption"><strong>Figura 179</strong><br><em>Captura de GitHub: contribuyentes del backend</em></p>
+<p class="caption"><strong>Figura 180</strong><br><em>Captura de GitHub: contribuyentes del backend</em></p>
 
 ![Contribuyentes del backend](../assets/img/chapter4/sprint1/gh-platform-contributors.png)
 
 Landing page (`healthify-website`):
 
-<p class="caption"><strong>Figura 180</strong><br><em>Captura de GitHub: contribuyentes del landing page</em></p>
+<p class="caption"><strong>Figura 181</strong><br><em>Captura de GitHub: contribuyentes del landing page</em></p>
 
 ![Contribuyentes del landing page](../assets/img/chapter4/sprint1/gh-website-contributors.png)
 
 Aplicación móvil (`healthify-android-app`):
 
-<p class="caption"><strong>Figura 181</strong><br><em>Captura de GitHub: contribuyentes de la aplicación móvil</em></p>
+<p class="caption"><strong>Figura 182</strong><br><em>Captura de GitHub: contribuyentes de la aplicación móvil</em></p>
 
 ![Contribuyentes de la aplicación móvil](../assets/img/chapter4/sprint1/gh-android-contributors.png)
 
@@ -1778,7 +1778,7 @@ En la app Flutter, cada módulo de los cinco primeros aspectos lo escribió su l
 
 El objetivo del Sprint 2 es entregar la app Flutter del nutricionista, cerrar las historias pendientes del Sprint 1 y distribuir las apps firmadas. Las tareas sin historia asociada sostienen a varias historias: el rediseño V10 del landing page, el núcleo de la app Flutter, los menús laterales, el CI/CD, la traducción de comentarios, el retiro de los endpoints obsoletos y los ajustes que pidieron las entrevistas de validación.
 
-<p class="caption"><strong>Figura 182</strong><br><em>Tablero de Trello del Sprint 2</em></p>
+<p class="caption"><strong>Figura 183</strong><br><em>Tablero de Trello del Sprint 2</em></p>
 
 ![Board Sprint 2](../assets/img/chapter4/sprint2/trello.png)
 
@@ -1930,19 +1930,19 @@ El trabajo siguió GitFlow como en el Sprint 1: cada bloque se hizo en una rama 
 | Mobile Application (Android) | `healthify-android-app` | 29 (#7 a #35; #29 se cerró sin integrar) | `v1.4.0` a `v2.1.0` (11 versiones) |
 | Mobile Application (Flutter) | `healthify-flutter-app` | 22 (#1 a #22) | `v1.0.0`, `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.3.1` |
 
-<p class="caption"><strong>Figura 183</strong><br><em>Captura de GitHub: pull requests del backend</em></p>
+<p class="caption"><strong>Figura 184</strong><br><em>Captura de GitHub: pull requests del backend</em></p>
 
 ![Pull requests del backend](../assets/img/chapter4/sprint2/gh-platform-pulls.png)
 
-<p class="caption"><strong>Figura 184</strong><br><em>Captura de GitHub: pull requests del landing page</em></p>
+<p class="caption"><strong>Figura 185</strong><br><em>Captura de GitHub: pull requests del landing page</em></p>
 
 ![Pull requests del landing page](../assets/img/chapter4/sprint2/gh-website-pulls.png)
 
-<p class="caption"><strong>Figura 185</strong><br><em>Captura de GitHub: pull requests de la aplicación Android</em></p>
+<p class="caption"><strong>Figura 186</strong><br><em>Captura de GitHub: pull requests de la aplicación Android</em></p>
 
 ![Pull requests de la aplicación Android](../assets/img/chapter4/sprint2/gh-android-pulls.png)
 
-<p class="caption"><strong>Figura 186</strong><br><em>Captura de GitHub: pull requests de la aplicación Flutter</em></p>
+<p class="caption"><strong>Figura 187</strong><br><em>Captura de GitHub: pull requests de la aplicación Flutter</em></p>
 
 ![Pull requests de la aplicación Flutter](../assets/img/chapter4/sprint2/gh-flutter-pulls.png)
 
@@ -2528,43 +2528,43 @@ En el Sprint 2 se publicó el landing page V10, se desplegaron las versiones 1.1
 
 Hero V10 con capturas reales de la app y los botones de descarga «Nutricionista» (app Flutter) y «Paciente» (app nativa), cada uno con su invitación de Firebase App Distribution (US36).
 
-<p class="caption"><strong>Figura 187</strong><br><em>Captura del landing page V10: hero</em></p>
+<p class="caption"><strong>Figura 188</strong><br><em>Captura del landing page V10: hero</em></p>
 
 ![Hero V10](../assets/img/chapter4/sprint2/landing-v10-hero.png)
 
 En pantallas anchas, el botón «Descargar» del header abre un panel con las dos apps; se cierra con Escape, al elegir una opción o al hacer clic fuera (US36).
 
-<p class="caption"><strong>Figura 188</strong><br><em>Captura del landing page V10: panel de descarga del header</em></p>
+<p class="caption"><strong>Figura 189</strong><br><em>Captura del landing page V10: panel de descarga del header</em></p>
 
 ![Panel de descarga del header](../assets/img/chapter4/sprint2/landing-v10-download-menu.png)
 
 La segunda y la tercera diapositiva del hero muestran los videos del equipo y del producto, con la miniatura de YouTube como póster (US32).
 
-<p class="caption"><strong>Figura 189</strong><br><em>Captura del landing page V10: video del producto en el hero</em></p>
+<p class="caption"><strong>Figura 190</strong><br><em>Captura del landing page V10: video del producto en el hero</em></p>
 
 ![Video del producto en el hero](../assets/img/chapter4/sprint2/landing-v10-video.png)
 
 La consulta paso a paso, con las cuatro pantallas de la consulta guiada.
 
-<p class="caption"><strong>Figura 190</strong><br><em>Captura del landing page V10: la consulta paso a paso</em></p>
+<p class="caption"><strong>Figura 191</strong><br><em>Captura del landing page V10: la consulta paso a paso</em></p>
 
 ![La consulta paso a paso](../assets/img/chapter4/sprint2/landing-v10-steps.png)
 
 Prueba social con un testimonio de nutricionista y uno de paciente, que aparecen como mensajes al llegar a la sección (US32). Los dos textos son un borrador pendiente de confirmar con sus autoras, como indica el README del repositorio.
 
-<p class="caption"><strong>Figura 191</strong><br><em>Captura del landing page V10: testimonios</em></p>
+<p class="caption"><strong>Figura 192</strong><br><em>Captura del landing page V10: testimonios</em></p>
 
 ![Testimonios](../assets/img/chapter4/sprint2/landing-v10-testimonials.png)
 
 Cierre para nutricionistas con los tres pasos para empezar y el enlace de descarga de la app Flutter en Firebase App Distribution (US36).
 
-<p class="caption"><strong>Figura 192</strong><br><em>Captura del landing page V10: descarga y footer</em></p>
+<p class="caption"><strong>Figura 193</strong><br><em>Captura del landing page V10: descarga y footer</em></p>
 
 ![Descarga y footer](../assets/img/chapter4/sprint2/landing-v10-download.png)
 
 Contacto con el selector de caso y el resumen de errores al enviar el formulario vacío; cada error enlaza a su campo.
 
-<p class="caption"><strong>Figura 193</strong><br><em>Captura del landing page V10: resumen de errores del contacto</em></p>
+<p class="caption"><strong>Figura 194</strong><br><em>Captura del landing page V10: resumen de errores del contacto</em></p>
 
 ![Resumen de errores del contacto](../assets/img/chapter4/sprint2/landing-v10-contact-errors.png)
 
@@ -2572,7 +2572,7 @@ Contacto con el selector de caso y el resumen de errores al enviar el formulario
 
 Las capturas corresponden a la app 2.1.0 en un emulador Android, con la sesión de un paciente vinculado a su nutricionista y conectada al backend publicado.
 
-<p class="caption"><strong>Figura 194</strong><br><em>Capturas de la aplicación Android del paciente en el Sprint 2</em></p>
+<p class="caption"><strong>Figura 195</strong><br><em>Capturas de la aplicación Android del paciente en el Sprint 2</em></p>
 
 <table>
   <tr>
@@ -2605,7 +2605,7 @@ Las capturas corresponden a la app 2.1.0 en un emulador Android, con la sesión 
 
 Las capturas corresponden a la app Flutter 1.3.0 en el mismo emulador, con la sesión de una nutricionista que tiene tres pacientes vinculados. La franja de la esquina superior derecha es el aviso `DEBUG` de Flutter, porque se ejecutó la build de depuración.
 
-<p class="caption"><strong>Figura 195</strong><br><em>Capturas de la aplicación Flutter del nutricionista en el Sprint 2</em></p>
+<p class="caption"><strong>Figura 196</strong><br><em>Capturas de la aplicación Flutter del nutricionista en el Sprint 2</em></p>
 
 <table>
   <tr>
@@ -2724,7 +2724,7 @@ Respuesta `200 OK`. El código correcto se canjea por un token que fija la contr
 
 Respuesta `204 No Content`. La contraseña sigue las reglas del registro y debe ser distinta de la actual; si se rechaza, el token no se gasta. Al cambiarla se cierran todas las sesiones abiertas de la cuenta y se levanta el bloqueo, si lo había.
 
-<p class="caption"><strong>Figura 196</strong><br><em>Captura de Swagger: operaciones de autenticación con el restablecimiento de contraseña</em></p>
+<p class="caption"><strong>Figura 197</strong><br><em>Captura de Swagger: operaciones de autenticación con el restablecimiento de contraseña</em></p>
 
 ![Swagger: restablecimiento de contraseña](../assets/img/chapter4/sprint2/swagger-password-reset.png)
 
@@ -2742,7 +2742,7 @@ Respuesta `200 OK`. La sugerencia se calcula sin IA: el alimento se revisa contr
 }
 ```
 
-<p class="caption"><strong>Figura 197</strong><br><em>Captura de Swagger: operación de sugerencia de plan</em></p>
+<p class="caption"><strong>Figura 198</strong><br><em>Captura de Swagger: operación de sugerencia de plan</em></p>
 
 ![Swagger: sugerencia de plan](../assets/img/chapter4/sprint2/swagger-plan-fit.png)
 
@@ -2774,7 +2774,7 @@ Respuesta `200 OK`. Devuelve lo registrado en el día, las metas publicadas y lo
 
 Respuesta `200 OK` con un archivo `healthify-mis-datos-2026-11-03.zip`. Trae seis CSV: `perfil.csv`, `diario.csv`, `autopesajes.csv`, `metas.csv`, `consultas.csv` y `vinculos.csv`, en UTF-8 con BOM, separados por comas, escapados según RFC 4180, con fechas ISO 8601 y encabezados en el idioma del paciente. No incluye diagnóstico, fundamento clínico, base de cálculo ni IMC. Si otra cuenta pide la copia de este paciente, el servicio responde `403`.
 
-<p class="caption"><strong>Figura 198</strong><br><em>Captura de Swagger: operación de descarga de datos</em></p>
+<p class="caption"><strong>Figura 199</strong><br><em>Captura de Swagger: operación de descarga de datos</em></p>
 
 ![Swagger: descarga de datos](../assets/img/chapter4/sprint2/swagger-data-export.png)
 
@@ -2817,11 +2817,11 @@ Durante el Sprint 2 se republicó el landing page, se desplegaron siete versione
 
 *Releases.* Cada pull request de `develop` a `main` (#11, #13, #15, #17, #19, #21 y #23) disparó el flujo `Release`, que compila la solución, lee `<Version>` de `Healthify.Platform.csproj` y publica `v1.1.0`, `v1.1.1`, `v1.2.0`, `v1.3.0`, `v1.4.0`, `v1.5.0` y `v1.6.0`. Las siete ejecuciones terminaron correctamente.
 
-<p class="caption"><strong>Figura 199</strong><br><em>Captura de GitHub Actions: ejecuciones del flujo Release del backend en el Sprint 2</em></p>
+<p class="caption"><strong>Figura 200</strong><br><em>Captura de GitHub Actions: ejecuciones del flujo Release del backend en el Sprint 2</em></p>
 
 ![Ejecuciones del flujo Release](../assets/img/chapter4/sprint2/gh-platform-actions.png)
 
-<p class="caption"><strong>Figura 200</strong><br><em>Captura de GitHub: release v1.6.0 del backend</em></p>
+<p class="caption"><strong>Figura 201</strong><br><em>Captura de GitHub: release v1.6.0 del backend</em></p>
 
 ![Releases del backend](../assets/img/chapter4/sprint2/gh-platform-releases.png)
 
@@ -2850,11 +2850,11 @@ Durante el Sprint 2 se republicó el landing page, se desplegaron siete versione
 
 El `applicationId` es `pe.edu.upc.healthify` y la versión al cierre del sprint es `2.1.0`. Las ejecuciones de `CI` y `Distribute` de las versiones 1.8.0 a 2.1.0 terminaron en verde, salvo una ejecución cancelada de la rama `feature/sign-up-terms-acceptance`.
 
-<p class="caption"><strong>Figura 201</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Android</em></p>
+<p class="caption"><strong>Figura 202</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Android</em></p>
 
 ![Actions de la aplicación Android](../assets/img/chapter4/sprint2/gh-android-actions.png)
 
-<p class="caption"><strong>Figura 202</strong><br><em>Captura de GitHub: release v2.1.0 de la aplicación Android con el APK</em></p>
+<p class="caption"><strong>Figura 203</strong><br><em>Captura de GitHub: release v2.1.0 de la aplicación Android con el APK</em></p>
 
 ![Releases de la aplicación Android](../assets/img/chapter4/sprint2/gh-android-releases.png)
 
@@ -2866,11 +2866,11 @@ El `applicationId` es `pe.edu.upc.healthify` y la versión al cierre del sprint 
 
 *Firma y distribución.* `distribute.yml` se ejecuta con cada push a `main`: comprueba que la versión de `pubspec.yaml` sea nueva, compila el APK firmado, lo sube a Firebase App Distribution para el grupo `qa` y crea el release en GitHub con el APK. Usa los mismos nombres de secretos que la app Android. La primera ejecución (`Release/0.6.0`) falló; desde `v1.0.0` todas terminaron correctamente. El `applicationId` es `pe.edu.upc.healthify.practitioner`, distinto del de la app Android, de modo que las dos apps se pueden instalar en el mismo teléfono.
 
-<p class="caption"><strong>Figura 203</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Flutter</em></p>
+<p class="caption"><strong>Figura 204</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Flutter</em></p>
 
 ![Actions de la aplicación Flutter](../assets/img/chapter4/sprint2/gh-flutter-actions.png)
 
-<p class="caption"><strong>Figura 204</strong><br><em>Captura de GitHub: release v1.3.1 de la aplicación Flutter con el APK</em></p>
+<p class="caption"><strong>Figura 205</strong><br><em>Captura de GitHub: release v1.3.1 de la aplicación Flutter con el APK</em></p>
 
 ![Releases de la aplicación Flutter](../assets/img/chapter4/sprint2/gh-flutter-releases.png)
 
@@ -2895,25 +2895,25 @@ Los gráficos de GitHub cuentan los commits que llegaron a `main` entre el 10/10
 
 Backend (`healthify-platform`):
 
-<p class="caption"><strong>Figura 205</strong><br><em>Captura de GitHub: contribuyentes del backend en el Sprint 2</em></p>
+<p class="caption"><strong>Figura 206</strong><br><em>Captura de GitHub: contribuyentes del backend en el Sprint 2</em></p>
 
 ![Contribuyentes del backend](../assets/img/chapter4/sprint2/gh-platform-contributors.png)
 
 Landing page (`healthify-website`):
 
-<p class="caption"><strong>Figura 206</strong><br><em>Captura de GitHub: contribuyentes del landing page en el Sprint 2</em></p>
+<p class="caption"><strong>Figura 207</strong><br><em>Captura de GitHub: contribuyentes del landing page en el Sprint 2</em></p>
 
 ![Contribuyentes del landing page](../assets/img/chapter4/sprint2/gh-website-contributors.png)
 
 Aplicación Android (`healthify-android-app`):
 
-<p class="caption"><strong>Figura 207</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Android en el Sprint 2</em></p>
+<p class="caption"><strong>Figura 208</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Android en el Sprint 2</em></p>
 
 ![Contribuyentes de la aplicación Android](../assets/img/chapter4/sprint2/gh-android-contributors.png)
 
 Aplicación Flutter (`healthify-flutter-app`):
 
-<p class="caption"><strong>Figura 208</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Flutter en el Sprint 2</em></p>
+<p class="caption"><strong>Figura 209</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Flutter en el Sprint 2</em></p>
 
 ![Contribuyentes de la aplicación Flutter](../assets/img/chapter4/sprint2/gh-flutter-contributors.png)
 
@@ -2938,12 +2938,16 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **Elementos incluidos en la sesión**
 
+<p class="caption"><strong>Tabla 280</strong><br><em>Elementos incluidos en la sesión de validación con el segmento nutricionista</em></p>
+
 | Elemento | Secciones o pantallas |
 | --- | --- |
 | Landing Page | Hero, Propuesta de valor, La consulta paso a paso, Entre consultas, Para nutricionistas, CTA final |
 | Aplicación móvil | Mis pacientes, Invitar paciente, ficha del paciente (pestañas Resumen y Seguimiento), Consulta en 4 pasos (Medición, Diagnóstico, Metas, Indicaciones y publicación), Bandeja, Revisar señal |
 
 **User flows a validar**
+
+<p class="caption"><strong>Tabla 281</strong><br><em>User flows a validar con el segmento nutricionista</em></p>
 
 | # | User flow | Recorrido en el prototipo | User Stories |
 | --- | --- | --- | --- |
@@ -2953,6 +2957,8 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 | UF-N4 | Revisar y resolver una señal | Bandeja -> aviso de Fernando Trevejo -> Resolver | US17 |
 
 **Guion de la sesión**
+
+<p class="caption"><strong>Tabla 282</strong><br><em>Guion de la sesión de validación con el segmento nutricionista</em></p>
 
 | Momento | Indicación del entrevistador | Pregunta |
 | --- | --- | --- |
@@ -2967,12 +2973,16 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **Elementos incluidos en la sesión**
 
+<p class="caption"><strong>Tabla 283</strong><br><em>Elementos incluidos en la sesión de validación con el segmento paciente en tratamiento nutricional activo</em></p>
+
 | Elemento | Secciones o pantallas |
 | --- | --- |
 | Landing Page | Hero, Para pacientes, CTA de descarga |
 | Aplicación móvil | Inicio, Cámara, Estimación propuesta, Ajustar gramos, Diario, Autopesaje, Tendencia de peso |
 
 **User flows a validar**
+
+<p class="caption"><strong>Tabla 284</strong><br><em>User flows a validar con el segmento paciente en tratamiento nutricional activo</em></p>
 
 | # | User flow | Recorrido en el prototipo | User Stories |
 | --- | --- | --- | --- |
@@ -2983,6 +2993,8 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 | UF-P5 | Registrar el peso y ver la tendencia | Progreso -> Registrar autopesaje, luego la gráfica Tu tendencia | US12, US13 |
 
 **Guion de la sesión**
+
+<p class="caption"><strong>Tabla 285</strong><br><em>Guion de la sesión de validación con el segmento paciente en tratamiento nutricional activo</em></p>
 
 | Momento | Indicación del entrevistador | Pregunta |
 | --- | --- | --- |
@@ -2996,6 +3008,8 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 <div style="page-break-after: always"></div>
 
 ### 4.3.2. Registro de Entrevistas
+
+<p class="caption"><strong>Tabla 286</strong><br><em>Registro de la entrevista de validación al segmento nutricionista</em></p>
 
 | Segmento: Nutricionista | Entrevista |
 | --- | --- |
@@ -3013,6 +3027,8 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 <div style="page-break-after: always"></div>
 <div style="page-break-after: always"></div>
+
+<p class="caption"><strong>Tabla 287</strong><br><em>Registro de la entrevista de validación al segmento paciente en tratamiento nutricional activo</em></p>
 
 | Segmento: Paciente en tratamiento nutricional activo | Entrevista |
 | --- | --- |
@@ -3034,6 +3050,8 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **UX Heuristics & Principles Evaluation**
 **Usability · Inclusive Design · Information Architecture**
+
+<p class="caption"><strong>Tabla 288</strong><br><em>Datos generales de la evaluación heurística</em></p>
 
 | | |
 | --- | --- |
@@ -3077,6 +3095,8 @@ No están incluidas en esta versión de la evaluación las siguientes tareas:
 
 Los errores serán puntuados tomando en cuenta la siguiente escala de severidad:
 
+<p class="caption"><strong>Tabla 289</strong><br><em>Escala de severidad de la evaluación heurística</em></p>
+
 | Nivel | Descripción |
 | --- | --- |
 | 1 | Problema superficial: puede ser fácilmente superado por el usuario y ocurre con muy poca frecuencia. No necesita ser arreglado a no ser que exista disponibilidad de tiempo. |
@@ -3085,6 +3105,8 @@ Los errores serán puntuados tomando en cuenta la siguiente escala de severidad:
 | 4 | Problema muy grave: un error de gran impacto que impide al usuario continuar con el uso de la herramienta. Es imperativo que sea corregido antes del lanzamiento. |
 
 **TABLA RESUMEN:**
+
+<p class="caption"><strong>Tabla 290</strong><br><em>Resumen de los problemas identificados en la evaluación heurística</em></p>
 
 | # | Problema | Escala de severidad | Heurística/Principio violada(o) |
 | --- | --- | --- | --- |
@@ -3114,6 +3136,8 @@ Problema:
 
 Para el mismo paciente, cada pantalla calcula la tendencia de peso de forma distinta. En Tu tendencia, el paciente lee "Resumen: bajó 2.8 kg en 4 semanas", escrito en letra pequeña debajo de la gráfica. En la pestaña Seguimiento, la nutricionista ve una tendencia de −1.8 kg/sem, y el resumen con IA de esa misma pestaña habla de un cambio de −1.4 kg con una pendiente de −1.9 kg por semana. La paciente entrevistada no supo cuánto había bajado realmente, y la nutricionista no tendría claro qué valor comentar en consulta, lo que afecta la confianza en el dato central del progreso.
 
+<p class="caption"><strong>Figura 210</strong><br><em>Problema #1: valores distintos de tendencia de peso en las vistas del paciente y del nutricionista</em></p>
+
 ![Problema 1](../assets/img/chapter4/heuristics/problema1.png)
 
 Recomendación:
@@ -3123,6 +3147,8 @@ Generar el texto del resumen a partir del mismo cálculo que alimenta la gráfic
 Solución:
 
 El resumen de la tendencia ahora se genera a partir del mismo cálculo que alimenta la gráfica y el expediente, y se muestra como texto principal de la tarjeta en lenguaje simple, por ejemplo "En las últimas 4 semanas, tu promedio subió 0.6 kg". En Mi expediente, el indicador Mi tendencia (+0.2 kg/sem en las últimas 4 semanas) es coherente con ese resumen y con la dirección de la gráfica, por lo que el paciente y la nutricionista leen el mismo dato.
+
+<p class="caption"><strong>Figura 211</strong><br><em>Solución al problema #1: resumen de la tendencia coherente con la gráfica y el expediente</em></p>
 
 ![Solución 1](../assets/img/chapter4/heuristics/solucion1.png)
 
@@ -3136,6 +3162,8 @@ Problema:
 
 La acción más frecuente del paciente, registrar una comida, solo aparece con texto en la pestaña Diario, mediante el botón "Registrar comida". En la pantalla de Inicio, donde se muestran sus metas del día, la única opción es un ícono de cámara sin etiqueta en la barra inferior, que la paciente no reconoció como la forma de registrar. Por eso tardó en encontrar cómo hacerlo.
 
+<p class="caption"><strong>Figura 212</strong><br><em>Problema #2: ícono de registro sin etiqueta en Inicio y botón con texto solo en Diario</em></p>
+
 ![Problema 2](../assets/img/chapter4/heuristics/problema2.png)
 
 Recomendación:
@@ -3145,6 +3173,8 @@ Agregar un botón flotante de "Registrar comida" en la pantalla de Inicio, o mos
 Solución:
 
 La barra de navegación inferior ahora muestra el botón central con la etiqueta "Registrar". Así, la acción para registrar una comida queda visible e identificable desde Inicio y desde todas las pestañas principales.
+
+<p class="caption"><strong>Figura 213</strong><br><em>Solución al problema #2: botón «Registrar» con etiqueta en la barra inferior</em></p>
 
 ![Solución 2](../assets/img/chapter4/heuristics/solucion2.png)
 
@@ -3158,6 +3188,8 @@ Problema:
 
 Para registrar su peso, la paciente buscó primero en Expediente y necesitó ayuda para llegar a "Registrar autopesaje", dentro de la pestaña Progreso. La etiqueta "Progreso" no comunica que en esa pestaña se registra el peso, solo que se consulta.
 
+<p class="caption"><strong>Figura 214</strong><br><em>Problema #3: pestaña «Progreso» para registrar el autopesaje</em></p>
+
 ![Problema 3](../assets/img/chapter4/heuristics/problema3.png)
 
 Recomendación:
@@ -3167,6 +3199,8 @@ Renombrar la pestaña a "Peso" o "Mi peso", o agregar un acceso directo a "Regis
 Solución:
 
 La pestaña "Progreso" pasó a llamarse "Peso", y el botón de esa pantalla ahora dice "Registrar mi peso". La paciente puede asociar directamente la pestaña con la tarea de registrar su peso, y no solo con consultarlo.
+
+<p class="caption"><strong>Figura 215</strong><br><em>Solución al problema #3: pestaña «Peso» y botón «Registrar mi peso»</em></p>
 
 ![Solución 3](../assets/img/chapter4/heuristics/solucion3.png)
 
@@ -3180,6 +3214,8 @@ Problema:
 
 La nutricionista buscó la opción para iniciar la consulta en la pestaña Expediente, porque asoció la consulta con el historial clínico. El botón "Iniciar consulta" solo está al final de la pestaña Resumen, por lo que no lo encontró al primer intento. Es la acción que más usará en cada cita.
 
+<p class="caption"><strong>Figura 216</strong><br><em>Problema #4: pestaña Expediente sin acceso para iniciar la consulta</em></p>
+
 ![Problema 4](../assets/img/chapter4/heuristics/problema4.png)
 
 Recomendación:
@@ -3189,6 +3225,8 @@ Mostrar "Iniciar consulta" como botón fijo en la parte inferior de la ficha del
 Solución:
 
 La pestaña Expediente pasó a llamarse "Historia", y en ella se agregó el botón fijo "Nueva consulta" en la parte inferior de la pantalla. La nutricionista encuentra la acción justo donde la buscó, sin tener que volver a la pestaña Resumen.
+
+<p class="caption"><strong>Figura 217</strong><br><em>Solución al problema #4: pestaña Historia con el botón fijo «Nueva consulta»</em></p>
 
 ![Solución 4](../assets/img/chapter4/heuristics/solucion4.png)
 
@@ -3202,6 +3240,8 @@ Problema:
 
 En la pestaña Seguimiento, algunas comidas aparecen con la etiqueta "Por confirmar". La nutricionista no supo si debía considerarlas en su evaluación, porque la vista no explica que aún no suman al cumplimiento del paciente.
 
+<p class="caption"><strong>Figura 218</strong><br><em>Problema #5: estados de las comidas sin explicación en la pestaña Seguimiento</em></p>
+
 ![Problema 5](../assets/img/chapter4/heuristics/problema5.png)
 
 Recomendación:
@@ -3211,6 +3251,8 @@ Agregar un texto de apoyo junto a la etiqueta, por ejemplo "El paciente aún no 
 Solución:
 
 La tarjeta Diario de hoy de la pestaña Seguimiento incluye ahora un texto de apoyo: «Por confirmar»: el paciente aún no confirmó la porción. No suma a su cumplimiento hasta que la confirme. Además, la etiqueta "Por confirmar" usa un color ámbar y un ícono de reloj que la distinguen de las comidas confirmadas.
+
+<p class="caption"><strong>Figura 219</strong><br><em>Solución al problema #5: explicación del estado «Por confirmar» en el Diario de hoy</em></p>
 
 ![Solución 5](../assets/img/chapter4/heuristics/solucion5.png)
 
@@ -3224,6 +3266,8 @@ Problema:
 
 La paciente entrevistada comentó que le costó leer los textos pequeños debajo de la gráfica de tendencia y tuvo que acercar el teléfono. Ese texto contiene la explicación del cálculo y el aviso sobre los registros fuera de protocolo, por lo que quien tiene dificultades visuales pierde información relevante.
 
+<p class="caption"><strong>Figura 220</strong><br><em>Problema #6: texto secundario pequeño bajo la gráfica de tendencia</em></p>
+
 ![Problema 6](../assets/img/chapter4/heuristics/problema6.png)
 
 Recomendación:
@@ -3233,6 +3277,8 @@ Usar un tamaño mínimo de 14 sp para el texto secundario, asegurar un contraste
 Solución:
 
 El dato más importante de la tendencia ya no depende del texto pequeño: el resumen se muestra como texto principal de la tarjeta, sobre la gráfica y con mayor tamaño. El texto secundario queda solo para la explicación del cálculo y el aviso de registros fuera de protocolo.
+
+<p class="caption"><strong>Figura 221</strong><br><em>Solución al problema #6: resumen de la tendencia como texto principal</em></p>
 
 ![Solución 6](../assets/img/chapter4/heuristics/solucion6.png)
 
@@ -3245,6 +3291,8 @@ Heurística violada: Information Architecture - Is it findable?
 Problema:
 
 Al revisar el Landing Page, la nutricionista indicó que lo primero que preguntaría antes de descargar la aplicación es si tiene costo, y no encontró esa información en ninguna sección.
+
+<p class="caption"><strong>Figura 222</strong><br><em>Problema #7: sección principal del Landing Page sin información de costo</em></p>
 
 ![Problema 7](../assets/img/chapter4/heuristics/problema7.png)
 
@@ -3266,6 +3314,8 @@ Problema:
 
 La pantalla Invitar paciente solo permite mostrar el código QR para que el paciente lo escanee en consulta. La nutricionista señaló que a veces el paciente no tiene el celular disponible y no hay otra forma de hacerle llegar la invitación.
 
+<p class="caption"><strong>Figura 223</strong><br><em>Problema #8: invitación QR disponible solo para mostrarse en pantalla</em></p>
+
 ![Problema 8](../assets/img/chapter4/heuristics/problema8.png)
 
 Recomendación:
@@ -3285,6 +3335,8 @@ Heurística violada: Inclusive Design - Ofrece opciones
 Problema:
 
 El Landing Page solo ofrece el botón "Descargar para Android". Los pacientes y nutricionistas que usan iPhone no tienen una forma de acceder al producto ni información sobre cuándo podrán hacerlo, lo que los excluye del seguimiento.
+
+<p class="caption"><strong>Figura 224</strong><br><em>Problema #9: descarga ofrecida solo para Android en el Landing Page</em></p>
 
 ![Problema 9](../assets/img/chapter4/heuristics/problema9.png)
 
@@ -3306,6 +3358,8 @@ Problema:
 
 La pestaña Seguimiento reúne el cumplimiento semanal, la tendencia de peso, el registro de comidas, el resumen con IA, el diario de hoy y la última medición clínica. La nutricionista indicó que en un celular pequeño tendría que desplazarse bastante para revisar todo.
 
+<p class="caption"><strong>Figura 225</strong><br><em>Problema #10: cantidad de bloques de información en la pestaña Seguimiento</em></p>
+
 ![Problema 10](../assets/img/chapter4/heuristics/problema10.png)
 
 Recomendación:
@@ -3325,6 +3379,8 @@ Heurística violada: Usability - Ayuda y documentación
 Problema:
 
 La nutricionista quiso ver la foto de una comida para validar la estimación de la porción. Por diseño, las fotos se procesan en el teléfono del paciente y no se envían, pero la pestaña Seguimiento no lo explica, por lo que puede parecer una función faltante.
+
+<p class="caption"><strong>Figura 226</strong><br><em>Problema #11: comida registrada por foto sin explicación sobre la imagen</em></p>
 
 ![Problema 11](../assets/img/chapter4/heuristics/problema11.png)
 
