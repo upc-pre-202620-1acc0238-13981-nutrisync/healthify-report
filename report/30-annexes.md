@@ -2,7 +2,7 @@
 
 **Anexo A.** Links importantes
 
-<p class="caption"><strong>Tabla 305</strong><br><em>Enlaces importantes del proyecto</em></p>
+<p class="caption"><strong>Tabla 304</strong><br><em>Enlaces importantes del proyecto</em></p>
 
 | Links Importantes| |
 | :--- | :--- |
@@ -15,4 +15,4 @@
 | **Credenciales** | **Nutricionista** <br>rose@gmail.com <br>Rose=123456<br><br>**Paciente**<br>fernando@gmail.com<br>Fernando=123456|
 | **Video de exposición de AV1** | [Enlace del video AV1](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQDHSvJw_2WEQY3_rCRUYdF6ATTE7RUI60esNMow3wX6ALk?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=4bboKL)|
 | **Video de exposición de TB1** | [Enlace del video TB1](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQB77YRy-N9jQIi09y3AoUgEAW3z54ysCGGfvrYuExi4m4o?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=q2XKSk)|
-| **Video de exposición de AV2** | [Enlace del video AV2]()|
+| **Video de exposición de AV2** | [Enlace del video AV2](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQAojHuiD0ntSrJB2vGyA20MAefDdd4tMqbh_wueU1XTl08?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=A6Rf5D)|
