@@ -2925,7 +2925,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **Elementos incluidos en la sesión**
 
-<p class="caption"><strong>Tabla 280</strong><br><em>Elementos incluidos en la sesión de validación con el segmento nutricionista</em></p>
+<p class="caption"><strong>Tabla 279</strong><br><em>Elementos incluidos en la sesión de validación con el segmento nutricionista</em></p>
 
 | Elemento | Secciones o pantallas |
 | --- | --- |
@@ -2934,7 +2934,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **User flows a validar**
 
-<p class="caption"><strong>Tabla 281</strong><br><em>User flows a validar con el segmento nutricionista</em></p>
+<p class="caption"><strong>Tabla 280</strong><br><em>User flows a validar con el segmento nutricionista</em></p>
 
 | # | User flow | Recorrido en el prototipo | User Stories |
 | --- | --- | --- | --- |
@@ -2945,7 +2945,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **Guion de la sesión**
 
-<p class="caption"><strong>Tabla 282</strong><br><em>Guion de la sesión de validación con el segmento nutricionista</em></p>
+<p class="caption"><strong>Tabla 281</strong><br><em>Guion de la sesión de validación con el segmento nutricionista</em></p>
 
 | Momento | Indicación del entrevistador | Pregunta |
 | --- | --- | --- |
@@ -2960,7 +2960,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **Elementos incluidos en la sesión**
 
-<p class="caption"><strong>Tabla 283</strong><br><em>Elementos incluidos en la sesión de validación con el segmento paciente en tratamiento nutricional activo</em></p>
+<p class="caption"><strong>Tabla 282</strong><br><em>Elementos incluidos en la sesión de validación con el segmento paciente en tratamiento nutricional activo</em></p>
 
 | Elemento | Secciones o pantallas |
 | --- | --- |
@@ -2969,7 +2969,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **User flows a validar**
 
-<p class="caption"><strong>Tabla 284</strong><br><em>User flows a validar con el segmento paciente en tratamiento nutricional activo</em></p>
+<p class="caption"><strong>Tabla 283</strong><br><em>User flows a validar con el segmento paciente en tratamiento nutricional activo</em></p>
 
 | # | User flow | Recorrido en el prototipo | User Stories |
 | --- | --- | --- | --- |
@@ -2981,7 +2981,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **Guion de la sesión**
 
-<p class="caption"><strong>Tabla 285</strong><br><em>Guion de la sesión de validación con el segmento paciente en tratamiento nutricional activo</em></p>
+<p class="caption"><strong>Tabla 284</strong><br><em>Guion de la sesión de validación con el segmento paciente en tratamiento nutricional activo</em></p>
 
 | Momento | Indicación del entrevistador | Pregunta |
 | --- | --- | --- |
@@ -2996,7 +2996,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 ### 4.3.2. Registro de Entrevistas
 
-<p class="caption"><strong>Tabla 286</strong><br><em>Registro de la entrevista de validación al segmento nutricionista</em></p>
+<p class="caption"><strong>Tabla 285</strong><br><em>Registro de la entrevista de validación al segmento nutricionista</em></p>
 
 | Segmento: Nutricionista | Entrevista |
 | --- | --- |
@@ -3014,7 +3014,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 <div style="page-break-after: always"></div>
 
-<p class="caption"><strong>Tabla 287</strong><br><em>Registro de la entrevista de validación al segmento paciente en tratamiento nutricional activo</em></p>
+<p class="caption"><strong>Tabla 286</strong><br><em>Registro de la entrevista de validación al segmento paciente en tratamiento nutricional activo</em></p>
 
 | Segmento: Paciente en tratamiento nutricional activo | Entrevista |
 | --- | --- |
@@ -3037,7 +3037,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 **UX Heuristics & Principles Evaluation**
 **Usability · Inclusive Design · Information Architecture**
 
-<p class="caption"><strong>Tabla 288</strong><br><em>Datos generales de la evaluación heurística</em></p>
+<p class="caption"><strong>Tabla 287</strong><br><em>Datos generales de la evaluación heurística</em></p>
 
 | | |
 | --- | --- |
@@ -3081,7 +3081,7 @@ No están incluidas en esta versión de la evaluación las siguientes tareas:
 
 Los errores serán puntuados tomando en cuenta la siguiente escala de severidad:
 
-<p class="caption"><strong>Tabla 289</strong><br><em>Escala de severidad de la evaluación heurística</em></p>
+<p class="caption"><strong>Tabla 288</strong><br><em>Escala de severidad de la evaluación heurística</em></p>
 
 | Nivel | Descripción |
 | --- | --- |
@@ -3092,7 +3092,7 @@ Los errores serán puntuados tomando en cuenta la siguiente escala de severidad:
 
 **TABLA RESUMEN:**
 
-<p class="caption"><strong>Tabla 290</strong><br><em>Resumen de los problemas identificados en la evaluación heurística</em></p>
+<p class="caption"><strong>Tabla 289</strong><br><em>Resumen de los problemas identificados en la evaluación heurística</em></p>
 
 | # | Problema | Escala de severidad | Heurística/Principio violada(o) |
 | --- | --- | --- | --- |
@@ -3106,7 +3106,7 @@ Los errores serán puntuados tomando en cuenta la siguiente escala de severidad:
 | 8 | La invitación QR solo puede mostrarse en pantalla y no compartirse | 2 | Usability: Flexibilidad y eficiencia de uso |
 | 9 | La aplicación solo se ofrece para Android | 2 | Inclusive Design: Ofrece opciones |
 | 10 | La pestaña Seguimiento concentra mucha información en una sola vista | 1 | Usability: Diseño estético y minimalista |
-| 11 | No se explica al nutricionista por qué no puede ver la foto del plato | 1 | Usability: Ayuda y documentación |="page-break-after: always"></div>
+| 11 | No se explica al nutricionista por qué no puede ver la foto del plato | 1 | Usability: Ayuda y documentación |
 
 <div style="page-break-after: always"></div>
 
