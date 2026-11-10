@@ -2,7 +2,7 @@
 
 **Anexo A.** Links importantes
 
-<p class="caption"><strong>Tabla 305</strong><br><em>Enlaces importantes del proyecto</em></p>
+<p class="caption"><strong>Tabla 304</strong><br><em>Enlaces importantes del proyecto</em></p>
 
 | Links Importantes| |
 | :--- | :--- |

@@ -80,7 +80,7 @@ Las pruebas se realizaron con usuarios representativos de los segmentos objetivo
 
 Para facilitar la instalación y evaluación en dispositivos móviles antes del lanzamiento, se habilitaron los siguientes enlaces de distribución:
 
-<p class="caption"><strong>Tabla 291</strong><br><em>Enlaces de distribución de la aplicación en Firebase App Distribution</em></p>
+<p class="caption"><strong>Tabla 290</strong><br><em>Enlaces de distribución de la aplicación en Firebase App Distribution</em></p>
 
 | Plataforma / Build | Enlace de Distribución |
 | --- | --- |
@@ -91,7 +91,7 @@ Para facilitar la instalación y evaluación en dispositivos móviles antes del 
 
 ### Información del Video
 
-<p class="caption"><strong>Tabla 292</strong><br><em>Información del video de validación de la aplicación</em></p>
+<p class="caption"><strong>Tabla 291</strong><br><em>Información del video de validación de la aplicación</em></p>
 
 | Atributo | Contenido |
 | --- | --- |
@@ -121,7 +121,7 @@ El tono de la comunicación es directo, empático y centrado en la evidencia cl�
 
 ### Información del Video
 
-<p class="caption"><strong>Tabla 293</strong><br><em>Información del video About the Product</em></p>
+<p class="caption"><strong>Tabla 292</strong><br><em>Información del video About the Product</em></p>
 
 | Atributo | Contenido |
 | --- | --- |
@@ -172,7 +172,7 @@ Esta sección presenta el Video About-the-Team de Healthify, desarrollado por la
 
 ### Información del Video
 
-<p class="caption"><strong>Tabla 294</strong><br><em>Información del video About the Team</em></p>
+<p class="caption"><strong>Tabla 293</strong><br><em>Información del video About the Team</em></p>
 
 | Atributo | Contenido |
 | --- | --- |
@@ -184,7 +184,7 @@ Esta sección presenta el Video About-the-Team de Healthify, desarrollado por la
 
 ### Pauta de Secuencias de Contenido
 
-<p class="caption"><strong>Tabla 295</strong><br><em>Pauta de secuencias de contenido del video About the Team</em></p>
+<p class="caption"><strong>Tabla 294</strong><br><em>Pauta de secuencias de contenido del video About the Team</em></p>
 
 | Sección | Inicio (hh:mm:ss) |
 | --- | --- |
