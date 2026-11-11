@@ -2925,7 +2925,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **Elementos incluidos en la sesión**
 
-<p class="caption"><strong>Tabla 279</strong><br><em>Elementos incluidos en la sesión de validación con el segmento nutricionista</em></p>
+<p class="caption"><strong>Tabla 298</strong><br><em>Elementos incluidos en la sesión de validación con el segmento nutricionista</em></p>
 
 | Elemento | Secciones o pantallas |
 | --- | --- |
@@ -2934,7 +2934,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **User flows a validar**
 
-<p class="caption"><strong>Tabla 280</strong><br><em>User flows a validar con el segmento nutricionista</em></p>
+<p class="caption"><strong>Tabla 299</strong><br><em>User flows a validar con el segmento nutricionista</em></p>
 
 | # | User flow | Recorrido en el prototipo | User Stories |
 | --- | --- | --- | --- |
@@ -2945,7 +2945,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **Guion de la sesión**
 
-<p class="caption"><strong>Tabla 281</strong><br><em>Guion de la sesión de validación con el segmento nutricionista</em></p>
+<p class="caption"><strong>Tabla 300</strong><br><em>Guion de la sesión de validación con el segmento nutricionista</em></p>
 
 | Momento | Indicación del entrevistador | Pregunta |
 | --- | --- | --- |
@@ -2960,7 +2960,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **Elementos incluidos en la sesión**
 
-<p class="caption"><strong>Tabla 282</strong><br><em>Elementos incluidos en la sesión de validación con el segmento paciente en tratamiento nutricional activo</em></p>
+<p class="caption"><strong>Tabla 301</strong><br><em>Elementos incluidos en la sesión de validación con el segmento paciente en tratamiento nutricional activo</em></p>
 
 | Elemento | Secciones o pantallas |
 | --- | --- |
@@ -2969,7 +2969,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **User flows a validar**
 
-<p class="caption"><strong>Tabla 283</strong><br><em>User flows a validar con el segmento paciente en tratamiento nutricional activo</em></p>
+<p class="caption"><strong>Tabla 302</strong><br><em>User flows a validar con el segmento paciente en tratamiento nutricional activo</em></p>
 
 | # | User flow | Recorrido en el prototipo | User Stories |
 | --- | --- | --- | --- |
@@ -2981,7 +2981,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **Guion de la sesión**
 
-<p class="caption"><strong>Tabla 284</strong><br><em>Guion de la sesión de validación con el segmento paciente en tratamiento nutricional activo</em></p>
+<p class="caption"><strong>Tabla 303</strong><br><em>Guion de la sesión de validación con el segmento paciente en tratamiento nutricional activo</em></p>
 
 | Momento | Indicación del entrevistador | Pregunta |
 | --- | --- | --- |
@@ -2996,7 +2996,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 ### 4.3.2. Registro de Entrevistas
 
-<p class="caption"><strong>Tabla 285</strong><br><em>Registro de la entrevista de validación al segmento nutricionista</em></p>
+<p class="caption"><strong>Tabla 304</strong><br><em>Registro de la entrevista de validación al segmento nutricionista</em></p>
 
 | Segmento: Nutricionista | Entrevista |
 | --- | --- |
@@ -3014,7 +3014,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 <div style="page-break-after: always"></div>
 
-<p class="caption"><strong>Tabla 286</strong><br><em>Registro de la entrevista de validación al segmento paciente en tratamiento nutricional activo</em></p>
+<p class="caption"><strong>Tabla 305</strong><br><em>Registro de la entrevista de validación al segmento paciente en tratamiento nutricional activo</em></p>
 
 | Segmento: Paciente en tratamiento nutricional activo | Entrevista |
 | --- | --- |
@@ -3037,7 +3037,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 **UX Heuristics & Principles Evaluation**
 **Usability · Inclusive Design · Information Architecture**
 
-<p class="caption"><strong>Tabla 287</strong><br><em>Datos generales de la evaluación heurística</em></p>
+<p class="caption"><strong>Tabla 306</strong><br><em>Datos generales de la evaluación heurística</em></p>
 
 | | |
 | --- | --- |
@@ -3081,7 +3081,7 @@ No están incluidas en esta versión de la evaluación las siguientes tareas:
 
 Los errores serán puntuados tomando en cuenta la siguiente escala de severidad:
 
-<p class="caption"><strong>Tabla 288</strong><br><em>Escala de severidad de la evaluación heurística</em></p>
+<p class="caption"><strong>Tabla 307</strong><br><em>Escala de severidad de la evaluación heurística</em></p>
 
 | Nivel | Descripción |
 | --- | --- |
@@ -3092,7 +3092,7 @@ Los errores serán puntuados tomando en cuenta la siguiente escala de severidad:
 
 **TABLA RESUMEN:**
 
-<p class="caption"><strong>Tabla 289</strong><br><em>Resumen de los problemas identificados en la evaluación heurística</em></p>
+<p class="caption"><strong>Tabla 308</strong><br><em>Resumen de los problemas identificados en la evaluación heurística</em></p>
 
 | # | Problema | Escala de severidad | Heurística/Principio violada(o) |
 | --- | --- | --- | --- |
@@ -3122,7 +3122,7 @@ Problema:
 
 Para el mismo paciente, cada pantalla calcula la tendencia de peso de forma distinta. En Tu tendencia, el paciente lee "Resumen: bajó 2.8 kg en 4 semanas", escrito en letra pequeña debajo de la gráfica. En la pestaña Seguimiento, la nutricionista ve una tendencia de −1.8 kg/sem, y el resumen con IA de esa misma pestaña habla de un cambio de −1.4 kg con una pendiente de −1.9 kg por semana. La paciente entrevistada no supo cuánto había bajado realmente, y la nutricionista no tendría claro qué valor comentar en consulta, lo que afecta la confianza en el dato central del progreso.
 
-<p class="caption"><strong>Figura 210</strong><br><em>Problema #1: valores distintos de tendencia de peso en las vistas del paciente y del nutricionista</em></p>
+<p class="caption"><strong>Figura 225</strong><br><em>Problema #1: valores distintos de tendencia de peso en las vistas del paciente y del nutricionista</em></p>
 
 ![Problema 1](../assets/img/chapter4/heuristics/problema1.png)
 
@@ -3134,7 +3134,7 @@ Solución:
 
 El resumen de la tendencia ahora se genera a partir del mismo cálculo que alimenta la gráfica y el expediente, y se muestra como texto principal de la tarjeta en lenguaje simple, por ejemplo "En las últimas 4 semanas, tu promedio subió 0.6 kg". En Mi expediente, el indicador Mi tendencia (+0.2 kg/sem en las últimas 4 semanas) es coherente con ese resumen y con la dirección de la gráfica, por lo que el paciente y la nutricionista leen el mismo dato.
 
-<p class="caption"><strong>Figura 211</strong><br><em>Solución al problema #1: resumen de la tendencia coherente con la gráfica y el expediente</em></p>
+<p class="caption"><strong>Figura 226</strong><br><em>Solución al problema #1: resumen de la tendencia coherente con la gráfica y el expediente</em></p>
 
 ![Solución 1](../assets/img/chapter4/heuristics/solucion1.png)
 
@@ -3148,7 +3148,7 @@ Problema:
 
 La acción más frecuente del paciente, registrar una comida, solo aparece con texto en la pestaña Diario, mediante el botón "Registrar comida". En la pantalla de Inicio, donde se muestran sus metas del día, la única opción es un ícono de cámara sin etiqueta en la barra inferior, que la paciente no reconoció como la forma de registrar. Por eso tardó en encontrar cómo hacerlo.
 
-<p class="caption"><strong>Figura 212</strong><br><em>Problema #2: ícono de registro sin etiqueta en Inicio y botón con texto solo en Diario</em></p>
+<p class="caption"><strong>Figura 227</strong><br><em>Problema #2: ícono de registro sin etiqueta en Inicio y botón con texto solo en Diario</em></p>
 
 ![Problema 2](../assets/img/chapter4/heuristics/problema2.png)
 
@@ -3160,7 +3160,7 @@ Solución:
 
 La barra de navegación inferior ahora muestra el botón central con la etiqueta "Registrar". Así, la acción para registrar una comida queda visible e identificable desde Inicio y desde todas las pestañas principales.
 
-<p class="caption"><strong>Figura 213</strong><br><em>Solución al problema #2: botón «Registrar» con etiqueta en la barra inferior</em></p>
+<p class="caption"><strong>Figura 228</strong><br><em>Solución al problema #2: botón «Registrar» con etiqueta en la barra inferior</em></p>
 
 ![Solución 2](../assets/img/chapter4/heuristics/solucion2.png)
 
@@ -3174,7 +3174,7 @@ Problema:
 
 Para registrar su peso, la paciente buscó primero en Expediente y necesitó ayuda para llegar a "Registrar autopesaje", dentro de la pestaña Progreso. La etiqueta "Progreso" no comunica que en esa pestaña se registra el peso, solo que se consulta.
 
-<p class="caption"><strong>Figura 214</strong><br><em>Problema #3: pestaña «Progreso» para registrar el autopesaje</em></p>
+<p class="caption"><strong>Figura 229</strong><br><em>Problema #3: pestaña «Progreso» para registrar el autopesaje</em></p>
 
 ![Problema 3](../assets/img/chapter4/heuristics/problema3.png)
 
@@ -3186,7 +3186,7 @@ Solución:
 
 La pestaña "Progreso" pasó a llamarse "Peso", y el botón de esa pantalla ahora dice "Registrar mi peso". La paciente puede asociar directamente la pestaña con la tarea de registrar su peso, y no solo con consultarlo.
 
-<p class="caption"><strong>Figura 215</strong><br><em>Solución al problema #3: pestaña «Peso» y botón «Registrar mi peso»</em></p>
+<p class="caption"><strong>Figura 230</strong><br><em>Solución al problema #3: pestaña «Peso» y botón «Registrar mi peso»</em></p>
 
 ![Solución 3](../assets/img/chapter4/heuristics/solucion3.png)
 
@@ -3200,7 +3200,7 @@ Problema:
 
 La nutricionista buscó la opción para iniciar la consulta en la pestaña Expediente, porque asoció la consulta con el historial clínico. El botón "Iniciar consulta" solo está al final de la pestaña Resumen, por lo que no lo encontró al primer intento. Es la acción que más usará en cada cita.
 
-<p class="caption"><strong>Figura 216</strong><br><em>Problema #4: pestaña Expediente sin acceso para iniciar la consulta</em></p>
+<p class="caption"><strong>Figura 231</strong><br><em>Problema #4: pestaña Expediente sin acceso para iniciar la consulta</em></p>
 
 ![Problema 4](../assets/img/chapter4/heuristics/problema4.png)
 
@@ -3212,7 +3212,7 @@ Solución:
 
 La pestaña Expediente pasó a llamarse "Historia", y en ella se agregó el botón fijo "Nueva consulta" en la parte inferior de la pantalla. La nutricionista encuentra la acción justo donde la buscó, sin tener que volver a la pestaña Resumen.
 
-<p class="caption"><strong>Figura 217</strong><br><em>Solución al problema #4: pestaña Historia con el botón fijo «Nueva consulta»</em></p>
+<p class="caption"><strong>Figura 232</strong><br><em>Solución al problema #4: pestaña Historia con el botón fijo «Nueva consulta»</em></p>
 
 ![Solución 4](../assets/img/chapter4/heuristics/solucion4.png)
 
@@ -3226,7 +3226,7 @@ Problema:
 
 En la pestaña Seguimiento, algunas comidas aparecen con la etiqueta "Por confirmar". La nutricionista no supo si debía considerarlas en su evaluación, porque la vista no explica que aún no suman al cumplimiento del paciente.
 
-<p class="caption"><strong>Figura 218</strong><br><em>Problema #5: estados de las comidas sin explicación en la pestaña Seguimiento</em></p>
+<p class="caption"><strong>Figura 233</strong><br><em>Problema #5: estados de las comidas sin explicación en la pestaña Seguimiento</em></p>
 
 ![Problema 5](../assets/img/chapter4/heuristics/problema5.png)
 
@@ -3238,7 +3238,7 @@ Solución:
 
 La tarjeta Diario de hoy de la pestaña Seguimiento incluye ahora un texto de apoyo: «Por confirmar»: el paciente aún no confirmó la porción. No suma a su cumplimiento hasta que la confirme. Además, la etiqueta "Por confirmar" usa un color ámbar y un ícono de reloj que la distinguen de las comidas confirmadas.
 
-<p class="caption"><strong>Figura 219</strong><br><em>Solución al problema #5: explicación del estado «Por confirmar» en el Diario de hoy</em></p>
+<p class="caption"><strong>Figura 234</strong><br><em>Solución al problema #5: explicación del estado «Por confirmar» en el Diario de hoy</em></p>
 
 ![Solución 5](../assets/img/chapter4/heuristics/solucion5.png)
 
@@ -3252,7 +3252,7 @@ Problema:
 
 La paciente entrevistada comentó que le costó leer los textos pequeños debajo de la gráfica de tendencia y tuvo que acercar el teléfono. Ese texto contiene la explicación del cálculo y el aviso sobre los registros fuera de protocolo, por lo que quien tiene dificultades visuales pierde información relevante.
 
-<p class="caption"><strong>Figura 220</strong><br><em>Problema #6: texto secundario pequeño bajo la gráfica de tendencia</em></p>
+<p class="caption"><strong>Figura 235</strong><br><em>Problema #6: texto secundario pequeño bajo la gráfica de tendencia</em></p>
 
 ![Problema 6](../assets/img/chapter4/heuristics/problema6.png)
 
@@ -3264,7 +3264,7 @@ Solución:
 
 El dato más importante de la tendencia ya no depende del texto pequeño: el resumen se muestra como texto principal de la tarjeta, sobre la gráfica y con mayor tamaño. El texto secundario queda solo para la explicación del cálculo y el aviso de registros fuera de protocolo.
 
-<p class="caption"><strong>Figura 221</strong><br><em>Solución al problema #6: resumen de la tendencia como texto principal</em></p>
+<p class="caption"><strong>Figura 236</strong><br><em>Solución al problema #6: resumen de la tendencia como texto principal</em></p>
 
 ![Solución 6](../assets/img/chapter4/heuristics/solucion6.png)
 
@@ -3278,7 +3278,7 @@ Problema:
 
 Al revisar el Landing Page, la nutricionista indicó que lo primero que preguntaría antes de descargar la aplicación es si tiene costo, y no encontró esa información en ninguna sección.
 
-<p class="caption"><strong>Figura 222</strong><br><em>Problema #7: sección principal del Landing Page sin información de costo</em></p>
+<p class="caption"><strong>Figura 237</strong><br><em>Problema #7: sección principal del Landing Page sin información de costo</em></p>
 
 ![Problema 7](../assets/img/chapter4/heuristics/problema7.png)
 
@@ -3300,7 +3300,7 @@ Problema:
 
 La pantalla Invitar paciente solo permite mostrar el código QR para que el paciente lo escanee en consulta. La nutricionista señaló que a veces el paciente no tiene el celular disponible y no hay otra forma de hacerle llegar la invitación.
 
-<p class="caption"><strong>Figura 223</strong><br><em>Problema #8: invitación QR disponible solo para mostrarse en pantalla</em></p>
+<p class="caption"><strong>Figura 238</strong><br><em>Problema #8: invitación QR disponible solo para mostrarse en pantalla</em></p>
 
 ![Problema 8](../assets/img/chapter4/heuristics/problema8.png)
 
@@ -3310,7 +3310,11 @@ Agregar una opción "Compartir invitación" que permita enviar el código o un e
 
 Solución:
 
-Además de mostrar el código en consulta, la invitación ya no exige que el paciente esté presente con su celular. La nutricionista puede enviarle por WhatsApp o correo una imagen del código QR, y el paciente solo tiene que adjuntarla desde su galería en la pantalla de escaneo: la aplicación lee el QR directamente de la imagen. El código mantiene su vigencia de 24 horas y su uso único.
+En el Sprint 3 (sección 4.2.3), debajo del código QR, la pantalla Invitar paciente pasó a mostrar un código para escribir a mano, con los botones Copiar y Compartir. Si el paciente no puede escanear en consulta, la nutricionista le envía ese código por WhatsApp o correo, y el paciente lo escribe en la hoja "Escribe tu código" de la pantalla de escaneo para vincularse. El código sigue venciendo en 24 horas y es de un solo uso.
+
+<p class="caption"><strong>Figura 239</strong><br><em>Solución al problema #8: código de invitación para compartir y escribir a mano</em></p>
+
+![Solución 8](../assets/img/chapter4/heuristics/solucion8.png)
 
 **PROBLEMA #9: La aplicación solo se ofrece para Android**
 
@@ -3322,7 +3326,7 @@ Problema:
 
 El Landing Page solo ofrece el botón "Descargar para Android". Los pacientes y nutricionistas que usan iPhone no tienen una forma de acceder al producto ni información sobre cuándo podrán hacerlo, lo que los excluye del seguimiento.
 
-<p class="caption"><strong>Figura 224</strong><br><em>Problema #9: descarga ofrecida solo para Android en el Landing Page</em></p>
+<p class="caption"><strong>Figura 240</strong><br><em>Problema #9: descarga ofrecida solo para Android en el Landing Page</em></p>
 
 ![Problema 9](../assets/img/chapter4/heuristics/problema9.png)
 
@@ -3344,7 +3348,7 @@ Problema:
 
 La pestaña Seguimiento reúne el cumplimiento semanal, la tendencia de peso, el registro de comidas, el resumen con IA, el diario de hoy y la última medición clínica. La nutricionista indicó que en un celular pequeño tendría que desplazarse bastante para revisar todo.
 
-<p class="caption"><strong>Figura 225</strong><br><em>Problema #10: cantidad de bloques de información en la pestaña Seguimiento</em></p>
+<p class="caption"><strong>Figura 241</strong><br><em>Problema #10: cantidad de bloques de información en la pestaña Seguimiento</em></p>
 
 ![Problema 10](../assets/img/chapter4/heuristics/problema10.png)
 
@@ -3354,7 +3358,11 @@ Mostrar primero los indicadores clave de la semana y agrupar el resto en seccion
 
 Solución:
 
-La pestaña Seguimiento prioriza los indicadores clave de la semana (cumplimiento, tendencia de peso y registro de comidas) en la parte superior, y el resumen con IA se reduce a una frase breve. Los bloques de detalle, como "Diario de hoy" y "Última medición clínica", se agrupan en secciones colapsables para reducir el desplazamiento en celulares pequeños.
+Desde el Sprint 3 (sección 4.2.3), la pestaña Seguimiento muestra arriba los indicadores clave de la semana: el cumplimiento por día y tres tarjetas con la tendencia de peso, los días con registro y la última medición clínica. El resumen con IA y el Diario de hoy pasaron a ser secciones colapsables, y la nutricionista las abre solo cuando necesita el detalle. Así se desplaza menos en un celular pequeño.
+
+<p class="caption"><strong>Figura 242</strong><br><em>Solución al problema #10: indicadores clave arriba y secciones colapsables en Seguimiento</em></p>
+
+![Solución 10](../assets/img/chapter4/heuristics/solucion10.png)
 
 **PROBLEMA #11: No se explica al nutricionista por qué no puede ver la foto del plato**
 
@@ -3366,7 +3374,7 @@ Problema:
 
 La nutricionista quiso ver la foto de una comida para validar la estimación de la porción. Por diseño, las fotos se procesan en el teléfono del paciente y no se envían, pero la pestaña Seguimiento no lo explica, por lo que puede parecer una función faltante.
 
-<p class="caption"><strong>Figura 226</strong><br><em>Problema #11: comida registrada por foto sin explicación sobre la imagen</em></p>
+<p class="caption"><strong>Figura 243</strong><br><em>Problema #11: comida registrada por foto sin explicación sobre la imagen</em></p>
 
 ![Problema 11](../assets/img/chapter4/heuristics/problema11.png)
 
