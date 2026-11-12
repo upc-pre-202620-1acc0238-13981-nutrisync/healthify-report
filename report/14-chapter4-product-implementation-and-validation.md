@@ -59,6 +59,7 @@ La solución de Healthify tiene cuatro productos digitales: el **landing page** 
 |---|---|---|---|
 | xUnit y NSubstitute | Librerías de .NET | Pruebas unitarias y de integración del backend (`dotnet test healthify-platform.sln`). Las pruebas de integración con MySQL se activan con la variable `HEALTHIFY_IT_MYSQL`. | [xunit.net](https://xunit.net) |
 | JUnit 4, MockK, Turbine, `kotlinx-coroutines-test` y MockWebServer | Librerías de Kotlin | Pruebas de JVM de los use cases, ViewModels, mappers y clientes HTTP de la aplicación nativa (`./gradlew :app:testDebugUnitTest`). | [junit.org](https://junit.org/junit4/) |
+| Compose UI Test (`androidx.compose.ui:ui-test-junit4`) | Librería de Android | Pruebas de interfaz de la aplicación nativa en `app/src/androidTest`, agregadas en el Sprint 3. Necesitan un emulador o un teléfono (`./gradlew :app:connectedDebugAndroidTest`), por lo que el flujo `CI` no las ejecuta. | [developer.android.com/develop/ui/compose/testing](https://developer.android.com/develop/ui/compose/testing) |
 | `flutter_test`, `bloc_test` y `mocktail` | Librerías de Dart | Pruebas de widgets, cubits, use cases y mappers de la aplicación Flutter (`flutter test --coverage`). | [docs.flutter.dev/testing](https://docs.flutter.dev/testing/overview) |
 | Swagger UI (Swashbuckle) | Incluido en el backend | Exploración y prueba manual de los endpoints REST en `/swagger`. | [swagger.io](https://swagger.io) |
 | Android Lint | Incluido en Android Gradle Plugin | Análisis estático de la aplicación nativa (`./gradlew :app:lintDebug`). | [developer.android.com/studio/write/lint](https://developer.android.com/studio/write/lint) |
@@ -119,9 +120,9 @@ El equipo aplica GitFlow, según el modelo de Vincent Driessen en «A successful
 | Release | `develop` | `main` y `develop` | `release/vX.Y.Z` | Preparación de una versión: ajuste del número de versión y revisión final. |
 | Hotfix | `main` | `main` y `develop` | `hotfix/<descripcion-corta>` | Corrección urgente de un error de la versión publicada. |
 
-Hasta ahora no se han necesitado ramas `release` ni `hotfix`: el número de versión se sube con un commit en `develop` y la versión se publica al integrar `develop` en `main`.
+En el proyecto no se necesitaron ramas `release` ni `hotfix`: el número de versión se sube con un commit en `develop` y la versión se publica al integrar `develop` en `main`.
 
-Ejemplos reales de los repositorios: `feature/platform-foundation`, `feature/password-recovery`, `feature/plan-fit-suggestion`, `fix/monitoring-clinical-day` y `refactor/retire-legacy-clinical-endpoints` en el backend; `feature/redesign-website`, `feature/testimonials`, `feature/dual-app-download` y `fix/restore-sources` en el landing page; `feature/ci-cd-app-distribution`, `feature/home-gauge-roster-and-reminders` y `feature/interview-validation-fixes` en la aplicación nativa; `feature/core-foundation`, `feature/auth-onboarding` y `feature/patient-record-consultation` en la aplicación Flutter; y `feature/chapter2-bounded-context` en el informe.
+Ejemplos reales de los repositorios: `feature/platform-foundation`, `feature/password-recovery`, `feature/plan-fit-suggestion`, `fix/monitoring-clinical-day`, `refactor/retire-legacy-clinical-endpoints` y `feature/follow-up-reminder-core` en el backend; `feature/redesign-website`, `feature/testimonials`, `feature/dual-app-download` y `fix/restore-sources` en el landing page; `feature/ci-cd-app-distribution`, `feature/home-gauge-roster-and-reminders`, `feature/interview-validation-fixes` y `feature/manual-invitation-code` en la aplicación nativa; `feature/core-foundation`, `feature/auth-onboarding`, `feature/patient-record-consultation` y `feature/invite-code-share` en la aplicación Flutter; y `feature/chapter2-bounded-context` en el informe.
 
 Flujo de trabajo de una funcionalidad:
 
@@ -142,11 +143,11 @@ Las versiones usan Semantic Versioning 2.0.0 con el formato `vMAJOR.MINOR.PATCH`
 
 | Producto | Tags publicados | Dónde se define la versión |
 |---|---|---|
-| Backend | `v0.1.0`, `v0.5.0`, `v1.0.0`, `v1.1.0`, `v1.1.1` y de `v1.2.0` a `v1.6.0` | Elemento `<Version>` de `Healthify.Platform.csproj`. El flujo `Release` lee ese valor y crea el tag `v<versión>` con las notas de la versión. |
+| Backend | `v0.1.0`, `v0.5.0`, `v1.0.0`, `v1.1.0`, `v1.1.1`, de `v1.2.0` a `v1.6.0`, `v2.0.0` y `v2.0.1` | Elemento `<Version>` de `Healthify.Platform.csproj`. El flujo `Release` lee ese valor y crea el tag `v<versión>` con las notas de la versión. |
 | Landing Page | `v1.0.0`, `v1.0.1`, `v2.0.0`, `v2.1.0` y `v2.2.0` | Tag en `main`. La versión `v2.0.0` corresponde al rediseño del sitio. |
-| Aplicación nativa | De `v1.0.0` a `v2.1.0` (14 versiones, entre ellas `v1.4.1`, `v1.5.1` y `v1.7.1`) | `versionName` de `app/build.gradle.kts`. El `versionCode` lo asigna el flujo `Distribute` con el número de ejecución. |
-| Aplicación Flutter | `v1.0.0`, `v1.1.0`, `v1.2.0`, `v1.3.0` y `v1.3.1` | Campo `version` de `pubspec.yaml` (`1.3.1+11`). El número de compilación lo asigna el flujo `Distribute` con el número de ejecución. |
-| Informe | `1.0.0` (AV1) y `2.0.0` (TB1) | Registro de versiones del `README.md`. |
+| Aplicación nativa | De `v1.0.0` a `v2.2.0` (15 versiones, entre ellas `v1.4.1`, `v1.5.1` y `v1.7.1`) | `versionName` de `app/build.gradle.kts`. El `versionCode` lo asigna el flujo `Distribute` con el número de ejecución. |
+| Aplicación Flutter | `v1.0.0`, `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.3.1` y `v1.4.0` | Campo `version` de `pubspec.yaml` (`1.4.0+12`). El número de compilación lo asigna el flujo `Distribute` con el número de ejecución. |
+| Informe | `1.0.0` (AV1), `2.0.0` (TB1), `3.0.0` (AV2) y `4.0.0` (TB2) | Registro de versiones del `README.md`. |
 
 **Conventional Commits**
 
@@ -167,12 +168,12 @@ Los mensajes de commit siguen Conventional Commits 1.0.0, en inglés, en modo im
 | `docs` | Documentación | `docs(readme): add running instructions` |
 | `test` | Pruebas | `test(home): cover the tolerance band of the energy goal` |
 | `refactor` | Cambio interno sin cambio de comportamiento | `refactor(nutritionalcare): extract the consultation primary button` |
-| `chore` | Mantenimiento y configuración | `chore(csproj): set project version to 1.6.0` |
+| `chore` | Mantenimiento y configuración | `chore(csproj): bump project version to 2.0.1` |
 | `build` | Sistema de compilación y dependencias | `build(app): bump version to 2.0.0` |
 | `ci` | Integración y entrega continuas | `ci(release): add release workflow` |
 | `style` | Formato sin cambio de lógica | Sin uso hasta ahora |
 
-El alcance (`scope`) indica el módulo afectado: un bounded context (`iam`, `care-relationship`, `nutritional-care`, `food-catalog`, `intake`, `monitoring` en el backend; `carerelationship`, `nutritionalcare`, `foodcatalog` en las aplicaciones móviles), una capa compartida (`designsystem`, `l10n`, `navigation`), una página (`index`, `css`, `i18n`) o un archivo de configuración (`csproj`, `app`, `release`, `readme`).
+El alcance (`scope`) indica el módulo afectado: un bounded context (`iam`, `care-relationship`, `nutritional-care`, `food-catalog`, `intake`, `monitoring` en el backend; `carerelationship`, `nutritionalcare`, `foodcatalog` en las aplicaciones móviles), una capa compartida (`shared`, `persistence` y `startup` en el backend; `designsystem`, `l10n`, `navigation` y `main` en las aplicaciones móviles), una página (`index`, `css`, `i18n`) o un archivo de configuración (`csproj`, `app`, `release`, `readme`).
 
 ### 4.1.3. Source Code Style Guide & Conventions
 
@@ -270,14 +271,16 @@ El backend se empaqueta en una imagen de Docker de dos etapas (`Dockerfile`): la
    | `JWT_SECRET` | Clave de firma de los tokens, de al menos 32 caracteres (obligatoria; sin ella el API no inicia). |
    | `DATABASE_PASSWORD`, `DATABASE_SCHEMA`, `DATABASE_USER`, `DATABASE_HOST` | Credenciales y esquema de MySQL. |
    | `USDA_API_KEY` | Clave de USDA FoodData Central; vacía desactiva ese proveedor. |
-   | `SMTP_HOST`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM` | Servidor de correo para el código de recuperación de contraseña; sin `SMTP_HOST` no se envía ningún correo. |
+   | `SMTP_HOST`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM` | Servidor de correo para el código de recuperación de contraseña y los recordatorios de consulta; sin `SMTP_HOST` no se envía ningún correo. |
+   | `REMINDERS_ENABLED`, `REMINDERS_LEAD_HOURS`, `REMINDERS_NOTIFY_PRACTITIONER` | Recordatorios de consulta por correo: activación (`true` por defecto), horas de aviso antes de la consulta (`24,1` por defecto) y copia al nutricionista (`false` por defecto). |
+   | `REMINDERS_PRACTICE_ADDRESS`, `REMINDERS_VIDEO_CALL_URL` | Dirección del consultorio y enlace de videollamada que muestra el correo de recordatorio; el enlace solo se muestra si usa `https`. |
    | `ASPNETCORE_ENVIRONMENT` | Entorno de ejecución. `Production` carga `appsettings.Production.json` (zona horaria clínica `America/Lima`, bloqueo de cuenta y vigencia de los códigos de recuperación). |
    | `Ai__Enabled`, `Ai__Gemini__ApiKey` | Activan las funciones con IA. En `appsettings.Production.json` la IA está apagada (`Ai:Enabled=false`) y configurada con el modelo `gemini-3.5-flash`. |
 
 3. Se ejecuta `docker compose up --build -d`.
 4. El API queda disponible en `https://platform.healthify.lat` y su documentación en `/swagger`.
 
-Además, el flujo de GitHub Actions `Release` (`.github/workflows/release.yml`) se ejecuta con cada push a `main`: restaura y compila la solución en *Release*, lee `<Version>` de `Healthify.Platform.csproj` (hoy `1.6.0`) y crea el release `v<versión>` con las notas generadas automáticamente.
+Además, el flujo de GitHub Actions `Release` (`.github/workflows/release.yml`) se ejecuta con cada push a `main`: restaura y compila la solución en *Release*, lee `<Version>` de `Healthify.Platform.csproj` (hoy `2.0.1`) y crea el release `v<versión>` con las notas generadas automáticamente.
 
 **Mobile Applications (Android nativa y Flutter)**
 
@@ -295,10 +298,11 @@ Cada repositorio tiene dos flujos de GitHub Actions con la misma forma:
 | Generación de código | — (KSP corre dentro de la compilación) | `dart run build_runner build -d` y `flutter gen-l10n` |
 | Análisis estático | `./gradlew :app:lintDebug` | `flutter analyze` |
 | Pruebas | `./gradlew :app:testDebugUnitTest` | `flutter test --coverage` |
+| Pruebas de interfaz | `./gradlew :app:connectedDebugAndroidTest` (emulador o teléfono) | Incluidas en `flutter test` |
 | APK de depuración | `./gradlew :app:assembleDebug` | `flutter build apk --debug` |
 | APK firmado y distribución | `./gradlew assembleRelease appDistributionUploadRelease` | `flutter build apk --release` y `firebase appdistribution:distribute` |
 
-La aplicación nativa (`pe.edu.upc.healthify`, versión 2.1.0) se instala en Android 7.0 (API 24) o superior. Guarda los datos de sesión cifrados en el dispositivo y funciona sin conexión para registrar comidas y autopesajes, que se sincronizan al recuperar la red. La aplicación Flutter (`pe.edu.upc.healthify.practitioner`, versión 1.3.1) usa otro identificador de paquete, así que convive en el mismo dispositivo con la nativa; guarda la sesión con `flutter_secure_storage`.
+La aplicación nativa (`pe.edu.upc.healthify`, versión 2.2.0) se instala en Android 7.0 (API 24) o superior. Guarda los datos de sesión cifrados en el dispositivo y funciona sin conexión para registrar comidas y autopesajes, que se sincronizan al recuperar la red. La aplicación Flutter (`pe.edu.upc.healthify.practitioner`, versión 1.4.0) usa otro identificador de paquete, así que convive en el mismo dispositivo con la nativa; guarda la sesión con `flutter_secure_storage`.
 
 **Deployment Diagram (C4 Model)**
 
