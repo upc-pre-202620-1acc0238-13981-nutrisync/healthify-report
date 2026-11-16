@@ -2910,6 +2910,176 @@ Aplicación Flutter (`healthify-flutter-app`):
 
 <div style="page-break-after: always"></div>
 
+### 4.2.3. Sprint 3
+
+#### 4.2.3.1. Sprint Planning 3
+
+El Sprint 3 se desarrolló entre el 05/11/2026 y el 28/11/2026. Abarca tres productos: los **RESTful Web Services**, la **aplicación móvil Android** y la **aplicación Flutter** del nutricionista. El landing page no tuvo cambios. El sprint atiende dos problemas de la evaluación heurística (sección 4.3.3): la invitación QR que solo se podía mostrar en pantalla (problema #8) y la pestaña Seguimiento con demasiados bloques para un celular pequeño (problema #10). También agrega el recordatorio de cada consulta por correo.
+
+<p class="caption"><strong>Tabla 279</strong><br><em>Datos de la reunión de Sprint Planning 3</em></p>
+<table>
+  <tr>
+    <th colspan="2">Sprint #</th>
+    <th colspan="2">Sprint 3</th>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint Planning Background</th>
+  </tr>
+  <tr>
+    <td colspan="2">Date</td>
+    <td colspan="2">2026-11-05</td>
+  </tr>
+  <tr>
+    <td colspan="2">Time</td>
+    <td colspan="2">10:00 AM (GMT-5)</td>
+  </tr>
+  <tr>
+    <td colspan="2">Location</td>
+    <td colspan="2">Reunión virtual</td>
+  </tr>
+  <tr>
+    <td colspan="2">Prepared By</td>
+    <td colspan="2">Villarreal Bazan, Angel Martin</td>
+  </tr>
+  <tr>
+    <td colspan="2">Attendees (to planning meeting)</td>
+    <td colspan="2">Del Aguila Del Aguila, Olenka Priscilla / Espinoza Cruz, Angela Milagros / Mora Rivera, Joel Fernando / Vergaray Calderon, Rose Almendra / Villarreal Bazan, Angel Martin</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 2 Review Summary</td>
+    <td colspan="2">Se publicaron el landing page V10, las versiones 1.1.0 a 1.6.0 del backend, la app Android 2.1.0 y la app Flutter 1.3.1, las dos últimas firmadas y distribuidas por Firebase App Distribution. El Product Owner aceptó las 26 historias del sprint (106 Story Points), entre ellas las diez que habían quedado pendientes del Sprint 1. La evaluación heurística de las entrevistas de validación registró once problemas; los problemas #8 y #10 quedaron para este sprint.</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 2 Retrospective Summary</td>
+    <td colspan="2">Funcionó distribuir las dos apps desde GitHub Actions y construir la app Flutter módulo por módulo sobre el mismo backend. Como mejora, el equipo acordó exigir el CI en verde antes de fusionar, porque una prueba de Flutter falló entre los pull requests #15 y #20 sin bloquear la distribución, y revisar los escenarios de cada historia antes de darla por terminada.</td>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint Goal &amp; User Stories</th>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 3 Goal</td>
+    <td colspan="2">Nuestro enfoque está en que el paciente pueda vincularse aunque no escanee el QR, en que la pestaña Seguimiento muestre lo esencial sin desplazarse y en que cada consulta se recuerde por correo. Creemos que esto permite invitar al paciente fuera de la consulta, que el nutricionista revise la semana del paciente de un vistazo y que menos pacientes olviden su cita. Esto se confirmará cuando una nutricionista comparta el código de invitación por WhatsApp y el paciente se vincule escribiéndolo en la app, cuando la nutricionista vea el cumplimiento de la semana, la tendencia de peso, los días con registro y la última medición sin desplazarse, y cuando el paciente reciba un correo un día y una hora antes de su consulta.</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 3 Velocity</td>
+    <td colspan="2">30 Story Points</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sum of Story Points</td>
+    <td colspan="2">30 Story Points (seis historias aceptadas en sprints anteriores que suman un escenario nuevo)</td>
+  </tr>
+</table>
+
+La velocidad baja de 106 a 30 Story Points porque el sprint retoma seis historias que el Product Owner ya había aceptado. Cada una suma un escenario de aceptación nuevo en la sección 2.4.1. Historias incluidas en el Sprint 3:
+
+<p class="caption"><strong>Tabla 280</strong><br><em>Historias de usuario incluidas en el Sprint 3</em></p>
+
+| Épico | Story ID | Título | Origen | Story Points |
+|---|---|---|---|:---:|
+| EP01 | US01 | Vinculación mediante invitación QR | Evaluación heurística, problema #8 | 5 |
+| EP01 | US04 | Generación de invitación QR para un nuevo paciente | Evaluación heurística, problema #8 | 5 |
+| EP04 | US16 | Consulta del monitoreo del paciente | Evaluación heurística, problema #10 | 5 |
+| EP05 | US20 | Acceso al expediente unificado del paciente | Pestañas del expediente en pantallas pequeñas | 5 |
+| EP04 | US39 | Agenda de consultas | Recordatorio de consulta por correo | 5 |
+| EP_TS | TS10 | Servicios de agenda y respuesta previa a la consulta | Recordatorio de consulta por correo | 5 |
+| | | **Total** | | **30** |
+
+#### 4.2.3.2. Aspect Leaders and Collaborators
+
+Los aspectos del Sprint 3 siguen la división de los sprints anteriores: en el backend y en las apps, cada aspecto es un bloque de funcionalidad con su propia rama. La columna de un aspecto marca con **L** al líder, que responde por su diseño, sus commits y su pull request, y con **C** a quienes colaboran en él revisando el pull request o escribiendo parte de sus commits.
+
+**Backend (RESTful Web Services)**
+
+- **Núcleo de recordatorios:** configuración, abstracción del envío de correo, registro de recordatorios enviados, planificador de ventanas y migración (TS10).
+- **Entrega de recordatorios:** servicio de comandos, envío por SMTP, plantilla del correo, trabajo en segundo plano, pruebas y versiones 2.0.0 y 2.0.1 (US39, TS10).
+
+<p class="caption"><strong>Tabla 281</strong><br><em>Líderes y colaboradores del backend en el Sprint 3</em></p>
+
+| Team Member (Last Name, First Name) | GitHub Username | Núcleo de recordatorios | Entrega de recordatorios |
+|---|---|:---:|:---:|
+| Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | C | C |
+| Espinoza Cruz, Angela Milagros | Emy127 | C | C |
+| Mora Rivera, Joel Fernando | xJoelFMRx | L | C |
+| Vergaray Calderon, Rose Almendra | rosealmendra | C | C |
+| Villarreal Bazan, Angel Martin | Nevatrix | C | L |
+
+**Mobile Application (Android)**
+
+- **Código de invitación escrito a mano:** campo de código del sistema de diseño, validación del código, hoja «Escribe tu código» en la pantalla de escaneo y código con Copiar y Compartir en la invitación (US01, US04).
+- **Seguimiento compacto:** pestañas del paciente espaciadas según su etiqueta, panel compacto de Seguimiento, pruebas de UI y versión 2.2.0 (US16, US20).
+
+<p class="caption"><strong>Tabla 282</strong><br><em>Líderes y colaboradores de la aplicación Android en el Sprint 3</em></p>
+
+| Team Member (Last Name, First Name) | GitHub Username | Código de invitación escrito a mano | Seguimiento compacto |
+|---|---|:---:|:---:|
+| Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | L | C |
+| Espinoza Cruz, Angela Milagros | Emy127 | C | C |
+| Mora Rivera, Joel Fernando | xJoelFMRx | C | C |
+| Vergaray Calderon, Rose Almendra | rosealmendra | C | C |
+| Villarreal Bazan, Angel Martin | Nevatrix | C | L |
+
+**Mobile Application (Flutter, nutricionista)**
+
+- **Expediente compacto:** pestañas del paciente ajustadas a sus etiquetas, textos del panel y rediseño de la pestaña Seguimiento (US16, US20).
+- **Código de invitación compartible:** token agrupado en bloques de cuatro, botones Copiar y Compartir y versión 1.4.0 (US04).
+
+<p class="caption"><strong>Tabla 283</strong><br><em>Líderes y colaboradores de la aplicación Flutter en el Sprint 3</em></p>
+
+| Team Member (Last Name, First Name) | GitHub Username | Expediente compacto | Código de invitación compartible |
+|---|---|:---:|:---:|
+| Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | C | C |
+| Espinoza Cruz, Angela Milagros | Emy127 | C | L |
+| Mora Rivera, Joel Fernando | xJoelFMRx | C | C |
+| Vergaray Calderon, Rose Almendra | rosealmendra | L | C |
+| Villarreal Bazan, Angel Martin | Nevatrix | C | C |
+
+Cada aspecto lo escribió su líder en una sola rama. En el backend, Mora Rivera escribió el núcleo y Villarreal Bazan la entrega; en la app Android, Del Aguila Del Aguila escribió el código a mano y Villarreal Bazan el Seguimiento compacto. Nevatrix integró las ramas a `develop` y `main` en los tres repositorios.
+
+#### 4.2.3.3. Sprint Backlog 3
+
+El objetivo del Sprint 3 es que el paciente pueda vincularse sin escanear el QR, que la pestaña Seguimiento quepa en un celular pequeño y que cada consulta se recuerde por correo. Las tareas sin historia asociada publican las versiones de cada producto.
+
+<p class="caption"><strong>Figura 210</strong><br><em>Tablero de Trello del Sprint 3</em></p>
+
+![Board Sprint 3](../assets/img/chapter4/sprint3/trello.png)
+
+URL del Board (Trello): [Enlace del Trello](https://trello.com/b/42wgo6Jo/sprint-backlog-3-healthify)
+
+<p class="caption"><strong>Tabla 284</strong><br><em>Sprint Backlog 3: tareas por historia de usuario</em></p>
+
+| US ID | US Title | Task ID | Task Title | Description | Est. (h) | Assigned To | Status |
+|---|---|---|---|---|:---:|---|---|
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T01 | Agregar la configuración de los recordatorios | Agregar la sección `Reminders:FollowUp` a `appsettings.json` y documentar en el README las horas de aviso, el intervalo del trabajo y el tamaño del lote. | 2 | Mora Rivera, Joel Fernando | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T02 | Definir la abstracción del envío de correo | Crear `IMailSender` en el núcleo compartido para que Monitoring & Adherence envíe correos sin depender de SMTP. | 2 | Mora Rivera, Joel Fernando | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T03 | Modelar el registro de recordatorios enviados | Crear el agregado `FollowUpReminderLog` y el objeto de valor `ReminderRecipient` para no enviar dos veces el mismo aviso. | 4 | Mora Rivera, Joel Fernando | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T04 | Definir el planificador y el contrato del notificador | Crear `FollowUpReminderPlanner`, que decide qué ventana de aviso está abierta para cada consulta, y el contrato `IFollowUpReminderNotifier`. | 5 | Mora Rivera, Joel Fernando | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T05 | Agregar la migración de los recordatorios | Crear la migración `Monitoring_AddFollowUpReminderLogs` con la tabla de recordatorios enviados. | 2 | Mora Rivera, Joel Fernando | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T06 | Leer la configuración de los recordatorios | Leer las horas de aviso (por defecto 24 y 1), el aviso al nutricionista, el intervalo y el lote, descartando valores vacíos, nulos o negativos. | 3 | Villarreal Bazan, Angel Martin | Done |
+| US39 | Agenda de consultas | T07 | Implementar el servicio de comandos de los recordatorios | Recorrer las consultas agendadas, enviar el aviso de la ventana abierta y registrarlo solo si el correo salió. | 6 | Villarreal Bazan, Angel Martin | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T08 | Implementar el envío por SMTP | Crear `SmtpMailSender` con MailKit sobre las variables `Smtp__*` ya usadas por la recuperación de contraseña. | 3 | Villarreal Bazan, Angel Martin | Done |
+| US39 | Agenda de consultas | T09 | Redactar la plantilla del correo | Crear el correo con la marca Healthify, en el idioma de la cuenta y la hora de la consulta, con la dirección o el enlace de videollamada y la preparación indicada. | 5 | Villarreal Bazan, Angel Martin | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T10 | Persistir el registro de recordatorios | Agregar la configuración de EF Core y el repositorio de `FollowUpReminderLog`. | 3 | Villarreal Bazan, Angel Martin | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T11 | Agregar el trabajo en segundo plano | Crear `FollowUpReminderHostedService`, que ejecuta un ciclo al iniciar y luego cada diez minutos, y el reloj con la zona horaria del consultorio. | 4 | Villarreal Bazan, Angel Martin | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T12 | Registrar los servicios de los recordatorios | Registrar el remitente, el notificador, el repositorio, el servicio de comandos y el trabajo en `Program.cs`. | 1 | Villarreal Bazan, Angel Martin | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T13 | Escribir las pruebas del planificador y la configuración | Escribir `FollowUpReminderPlannerTests` y `FollowUpReminderSettingsTests`. | 4 | Villarreal Bazan, Angel Martin | Done |
+| US39 | Agenda de consultas | T14 | Escribir las pruebas del servicio, el envío y la plantilla | Escribir `FollowUpReminderCommandServiceTests`, `FollowUpReminderDeliveryTests` y `FollowUpReminderEmailTemplateTests`. | 5 | Villarreal Bazan, Angel Martin | Done |
+| — | — | T15 | Publicar las versiones 2.0.0 y 2.0.1 del backend | Fijar las versiones en `Healthify.Platform.csproj` y retirar del README la sección de recordatorios que quedó desactualizada. | 1 | Villarreal Bazan, Angel Martin | Done |
+| US01 | Vinculación mediante invitación QR | T16 | Agregar el tipo de campo para códigos | Agregar a `HealthifyTextField` un tipo de campo sin autocorrección ni mayúscula automática, para escribir códigos. | 2 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| US01 | Vinculación mediante invitación QR | T17 | Validar el código escrito a mano | Crear `InvitationCodeInput`, que ignora los espacios, conserva mayúsculas y minúsculas y exige entre 22 y 64 caracteres válidos. | 4 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| US01 | Vinculación mediante invitación QR | T18 | Permitir al paciente escribir el código | Agregar a la pantalla de escaneo la hoja «Escribe tu código», que pausa la cámara y canjea el código con el mismo caso de uso del QR. | 6 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| US04 | Generación de invitación QR para un nuevo paciente | T19 | Mostrar el código con Copiar y Compartir | Mostrar debajo del QR el código en bloques de cuatro, con los botones Copiar y Compartir. | 4 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| US20 | Acceso al expediente unificado del paciente | T20 | Espaciar las pestañas del paciente | Repartir el espacio entre Resumen, Seguimiento, Historia y Plan según el ancho de cada etiqueta. | 2 | Villarreal Bazan, Angel Martin | Done |
+| US16 | Consulta del monitoreo del paciente | T21 | Rediseñar Seguimiento como panel compacto | Mostrar arriba la semana y tres indicadores (peso, registro y medición) y volver colapsables el resumen con IA y el Diario de hoy. | 8 | Villarreal Bazan, Angel Martin | Done |
+| US16 | Consulta del monitoreo del paciente | T22 | Escribir las pruebas de UI del panel compacto | Escribir `PatientFollowUpTabTest` y `PatientTabRowTest` con Compose UI Test. | 4 | Villarreal Bazan, Angel Martin | Done |
+| — | — | T23 | Publicar la versión 2.2.0 de la app Android | Fijar `versionName` 2.2.0 en Gradle. | 1 | Villarreal Bazan, Angel Martin | Done |
+| US20 | Acceso al expediente unificado del paciente | T24 | Ajustar las pestañas del paciente a sus etiquetas | Dimensionar las pestañas del expediente según su etiqueta, con desplazamiento horizontal cuando el texto es muy grande. | 3 | Vergaray Calderon, Rose Almendra | Done |
+| US16 | Consulta del monitoreo del paciente | T25 | Agregar los textos del panel compacto | Agregar en español e inglés los textos de los indicadores, la leyenda y las secciones colapsables. | 2 | Vergaray Calderon, Rose Almendra | Done |
+| US16 | Consulta del monitoreo del paciente | T26 | Rediseñar Seguimiento como panel compacto | Reescribir `patient_follow_up_tab.dart` con la semana, los tres indicadores y las secciones colapsables, con sus pruebas. | 8 | Vergaray Calderon, Rose Almendra | Done |
+| US04 | Generación de invitación QR para un nuevo paciente | T27 | Agrupar el token de invitación | Agregar a `InvitationToken` la forma en bloques de cuatro, que se vuelve a escribir como el mismo token. | 2 | Espinoza Cruz, Angela Milagros | Done |
+| US04 | Generación de invitación QR para un nuevo paciente | T28 | Copiar y compartir el código de invitación | Agregar `share_plus` y los botones Copiar y Compartir, que envían el token real y se desactivan cuando la invitación vence. | 5 | Espinoza Cruz, Angela Milagros | Done |
+| — | — | T29 | Publicar la versión 1.4.0 de la app Flutter | Fijar la versión 1.4.0 en `pubspec.yaml`. | 1 | Espinoza Cruz, Angela Milagros | Done |
+
+La estimación total es de 102 horas en 29 tareas, y las 29 quedaron en Done. Villarreal Bazan tuvo 50 horas; Del Aguila Del Aguila, 16; Mora Rivera, 15; Vergaray Calderon, 13, y Espinoza Cruz, 8.
 ## 4.3. Validation Interviews
 
 En esta sección se registran las entrevistas de validación realizadas con usuarios de los dos segmentos objetivo de Healthify: nutricionistas y pacientes en tratamiento nutricional activo para bajar de peso. En cada sesión, el entrevistado revisó el Landing Page y luego completó un conjunto de tareas en el prototipo de la aplicación móvil, que fue el foco principal de la validación. A partir de lo observado se realizó una evaluación según heurísticas de usabilidad, arquitectura de información y diseño inclusivo.
