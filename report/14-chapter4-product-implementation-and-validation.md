@@ -3080,6 +3080,96 @@ URL del Board (Trello): [Enlace del Trello](https://trello.com/b/42wgo6Jo/sprint
 | — | — | T29 | Publicar la versión 1.4.0 de la app Flutter | Fijar la versión 1.4.0 en `pubspec.yaml`. | 1 | Espinoza Cruz, Angela Milagros | Done |
 
 La estimación total es de 102 horas en 29 tareas, y las 29 quedaron en Done. Villarreal Bazan tuvo 50 horas; Del Aguila Del Aguila, 16; Mora Rivera, 15; Vergaray Calderon, 13, y Espinoza Cruz, 8.
+
+#### 4.2.3.4. Development Evidence for Sprint Review
+
+En el Sprint 3 el equipo trabajó sobre tres repositorios. En el backend se agregó el recordatorio de consulta por correo, que llegó en las versiones 2.0.0 y 2.0.1. En la app Android, el paciente puede escribir a mano el código de invitación y la pestaña Seguimiento se rediseñó como un panel compacto (versión 2.2.0). En la app Flutter, la nutricionista puede copiar y compartir el código de invitación, y Seguimiento tiene el mismo panel compacto (versión 1.4.0). El landing page no tuvo cambios.
+
+El trabajo siguió GitFlow como en los sprints anteriores. La columna **Branch** indica la rama en la que se hizo el commit, y las ramas `develop` y `main` solo muestran los merges de pull requests. Cada commit aparece una sola vez.
+
+<p class="caption"><strong>Tabla 285</strong><br><em>Pull requests y releases por producto en el Sprint 3</em></p>
+
+| Producto | Repositorio | Pull requests | Releases |
+|---|---|:---:|---|
+| Web Services | `healthify-platform` | 5 (#24 a #28) | `v2.0.0`, `v2.0.1` |
+| Mobile Application (Android) | `healthify-android-app` | 3 (#36 a #38) | `v2.2.0` |
+| Mobile Application (Flutter) | `healthify-flutter-app` | 3 (#23 a #25) | `v1.4.0` |
+
+<p class="caption"><strong>Figura 211</strong><br><em>Captura de GitHub: pull requests del backend en el Sprint 3</em></p>
+
+![Pull requests del backend](../assets/img/chapter4/sprint3/gh-platform-pulls.png)
+
+<p class="caption"><strong>Figura 212</strong><br><em>Captura de GitHub: pull requests de la aplicación Android en el Sprint 3</em></p>
+
+![Pull requests de la aplicación Android](../assets/img/chapter4/sprint3/gh-android-pulls.png)
+
+<p class="caption"><strong>Figura 213</strong><br><em>Captura de GitHub: pull requests de la aplicación Flutter en el Sprint 3</em></p>
+
+![Pull requests de la aplicación Flutter](../assets/img/chapter4/sprint3/gh-flutter-pulls.png)
+
+**Web Services (backend)**
+
+<p class="caption"><strong>Tabla 286</strong><br><em>Commits del Sprint 3 del backend</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | 3050903 | chore(config): add follow-up reminder settings | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | b72d4b0 | docs(readme): document appointment reminder settings | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | c13b337 | feat(shared): add mail sender abstraction | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | cbb31f7 | feat(monitoring): add follow-up reminder log aggregate | — | 14/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | cc48d0a | feat(monitoring): add reminder planner and notifier contract | — | 14/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | d047d2a | feat(persistence): add follow-up reminder logs migration | — | 14/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 543457e | feat(monitoring): add follow-up reminder settings | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | f1c1e70 | feat(monitoring): add follow-up reminder command service | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 582539d | feat(shared): add SMTP mail sender | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 3d118c6 | feat(monitoring): add reminder email template and SMTP notifier | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | f8c9c2e | feat(persistence): add reminder log EF configuration and repository | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | b48575e | feat(monitoring): add reminder hosted service and local clock | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 1da7b9e | feat(startup): register reminder services and hosted worker | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 3926b27 | test(monitoring): add reminder planner and settings tests | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | c1fe164 | test(monitoring): add reminder service, delivery and template tests | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | df468ba | chore(csproj): bump project version to 2.0.0 | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | 832bd7c | Merge pull request #24 from upc-pre-202620-1acc0238-13981-nutrisync/feature/follow-up-reminder-core | Feature/follow up reminder core | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | 84d1b71 | Merge pull request #25 from upc-pre-202620-1acc0238-13981-nutrisync/feature/follow-up-reminder-delivery | Feature/follow up reminder delivery | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `main` | 09b8529 | Merge pull request #26 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/2.0.0 | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 8822502 | docs(readme): remove outdated appointment reminders section | — | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 290e8a0 | chore(csproj): bump project version to 2.0.1 | — | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | 66a3828 | Merge pull request #27 from upc-pre-202620-1acc0238-13981-nutrisync/feature/follow-up-reminder-delivery | Feature/follow up reminder delivery | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `main` | eb34372 | Merge pull request #28 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/2.0.1 | 16/11/2026 |
+
+**Mobile Application (Android)**
+
+<p class="caption"><strong>Tabla 287</strong><br><em>Commits del Sprint 3 de la aplicación Android</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/manual-invitation-code` | 97e30d5 | feat(designsystem): add code field type for hand-typed codes | — | 09/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/manual-invitation-code` | 5a57378 | feat(carerelationship): validate hand-typed invitation codes | — | 09/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/manual-invitation-code` | e1d4eb5 | feat(carerelationship): let patients type the invitation code by hand | — | 10/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/manual-invitation-code` | 853f8b8 | feat(carerelationship): show invitation code with copy and share | — | 11/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/compact-follow-up-dashboard` | 19b9f73 | fix(main): space patient tabs evenly by label width | — | 12/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/compact-follow-up-dashboard` | 49286a8 | feat(monitoring): redesign follow-up tab as a compact dashboard | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/compact-follow-up-dashboard` | cc9241f | test(monitoring): add UI tests for the compact follow-up tab | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/compact-follow-up-dashboard` | bc8abff | build(app): bump version to 2.2.0 | — | 14/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | c65fa26 | Merge pull request #36 from upc-pre-202620-1acc0238-13981-nutrisync/feature/manual-invitation-code | Feature/manual invitation code | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | b77bcf7 | Merge pull request #37 from upc-pre-202620-1acc0238-13981-nutrisync/feature/compact-follow-up-dashboard | Feature/compact follow up dashboard | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | b7c1971 | Merge pull request #38 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/2.2.0 | 16/11/2026 |
+
+**Mobile Application (Flutter)**
+
+<p class="caption"><strong>Tabla 288</strong><br><em>Commits del Sprint 3 de la aplicación Flutter</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-file-dashboard` | 5ab2587 | feat(main): size patient tabs to their labels | — | 05/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-file-dashboard` | a4b5463 | feat(l10n): add compact follow-up dashboard strings | — | 08/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-file-dashboard` | b62cebb | feat(monitoring): redesign follow-up tab as compact dashboard | — | 09/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/invite-code-share` | dc39c2a | feat(carerelationship): add grouped display form to invitation token | — | 11/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/invite-code-share` | aee30aa | feat(carerelationship): let practitioners copy and share invite code | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/invite-code-share` | 9803191 | chore(release): bump version to 1.4.0 | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | f9988fb | Merge pull request #23 from upc-pre-202620-1acc0238-13981-nutrisync/feature/patient-file-dashboard | Feature/patient file dashboard | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | 56a7be0 | Merge pull request #24 from upc-pre-202620-1acc0238-13981-nutrisync/feature/invite-code-share | Feature/invite code share | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | b323fcf | Merge pull request #25 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.4.0 | 16/11/2026 |
 ## 4.3. Validation Interviews
 
 En esta sección se registran las entrevistas de validación realizadas con usuarios de los dos segmentos objetivo de Healthify: nutricionistas y pacientes en tratamiento nutricional activo para bajar de peso. En cada sesión, el entrevistado revisó el Landing Page y luego completó un conjunto de tareas en el prototipo de la aplicación móvil, que fue el foco principal de la validación. A partir de lo observado se realizó una evaluación según heurísticas de usabilidad, arquitectura de información y diseño inclusivo.
