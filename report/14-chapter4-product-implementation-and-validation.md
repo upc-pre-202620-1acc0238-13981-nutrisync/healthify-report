@@ -3170,6 +3170,126 @@ El trabajo siguió GitFlow como en los sprints anteriores. La columna **Branch**
 | upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | f9988fb | Merge pull request #23 from upc-pre-202620-1acc0238-13981-nutrisync/feature/patient-file-dashboard | Feature/patient file dashboard | 16/11/2026 |
 | upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | 56a7be0 | Merge pull request #24 from upc-pre-202620-1acc0238-13981-nutrisync/feature/invite-code-share | Feature/invite code share | 16/11/2026 |
 | upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | b323fcf | Merge pull request #25 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.4.0 | 16/11/2026 |
+
+#### 4.2.3.5. Testing Suite Evidence for Sprint Review
+
+El Sprint 3 amplía las tres suites automatizadas. Como en los sprints anteriores, los criterios de aceptación están en Gherkin en la sección 2.4.1 y los escenarios se automatizaron como pruebas cuyo nombre describe el comportamiento.
+
+**Web Services (backend)**
+
+La suite está en `Healthify.Platform.Tests`, con xUnit y NSubstitute. El sprint agregó cinco clases de prueba con 67 métodos `[Fact]` y `[Theory]`, y una clase de apoyo (`InMemoryFollowUpReminders`) que guarda en memoria la agenda y los recordatorios enviados.
+
+El backend sigue sin un flujo de CI que corra las pruebas, así que el equipo ejecutó `dotnet test healthify-platform.sln` sobre `main` (v2.0.1). El resultado fue de **1553 pruebas: 1517 superadas, 0 con error y 36 omitidas**, frente a las 1472 del cierre del Sprint 2. Las 36 omitidas son las pruebas de integración contra MySQL, que solo corren cuando está definida la variable `HEALTHIFY_IT_MYSQL`.
+
+<p class="caption"><strong>Tabla 289</strong><br><em>Clases de prueba agregadas al backend en el Sprint 3</em></p>
+
+| Historia | Clase de prueba (métodos) | Comportamientos verificados |
+|---|---|---|
+| TS10 | `FollowUpReminderPlannerTests` (19) | La ventana de un día abre exactamente 24 horas antes y la de una hora, una hora antes; si las dos están abiertas solo se envía la más cercana; una consulta cancelada o ya iniciada no se recuerda, y una reprogramada se recuerda de nuevo para su nueva hora. |
+| TS10 | `FollowUpReminderSettingsTests` (6) | Sin configuración se avisa 24 y 1 horas antes solo al paciente; las horas se ordenan y se quitan las repetidas, y los valores vacíos, nulos o negativos se ignoran. |
+| US39 | `FollowUpReminderCommandServiceTests` (19) | El mismo aviso no se envía dos veces, un envío fallido no se registra y se reintenta en el siguiente ciclo, un destinatario que falla no detiene a los demás y sin configuración de correo el ciclo no lee la agenda. |
+| US39 | `FollowUpReminderDeliveryTests` (9) | Sin servidor ni remitente no se envía nada y no se lanza ningún error; el trabajo ejecuta un ciclo al iniciar, un ciclo con error no lo detiene y, desactivado, nunca abre un ámbito. |
+| US39 | `FollowUpReminderEmailTemplateTests` (14) | La hora se escribe en la zona horaria del consultorio, el correo en inglés usa reloj de 12 horas, el enlace de videollamada solo aparece si es `https`, la preparación solo va al paciente y los nombres se codifican como HTML. |
+
+<p class="caption"><strong>Tabla 290</strong><br><em>Commits de pruebas del backend en el Sprint 3</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 3926b27 | test(monitoring): add reminder planner and settings tests | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | c1fe164 | test(monitoring): add reminder service, delivery and template tests | — | 15/11/2026 |
+
+**Mobile Application (Android)**
+
+Las pruebas unitarias están en `app/src/test`, con JUnit 4, MockK, Turbine y `kotlinx-coroutines-test`, y el flujo `CI` las ejecuta en cada pull request con `./gradlew lintDebug testDebugUnitTest assembleDebug`. La suite pasó de 652 pruebas en 71 clases a 687 pruebas en 73 clases. Las ejecuciones de `CI` sobre `develop` y la del release 2.2.0 terminaron en verde (sección 4.2.3.8). El sprint también agregó las primeras pruebas de interfaz, con Compose UI Test en `app/src/androidTest`: 34 pruebas en tres clases. Estas necesitan un emulador o un teléfono (`./gradlew connectedDebugAndroidTest`), por lo que el flujo `CI` no las ejecuta.
+
+<p class="caption"><strong>Tabla 291</strong><br><em>Clases de prueba agregadas a la aplicación Android en el Sprint 3</em></p>
+
+| Historia | Clase de prueba (pruebas) | Tipo | Comportamientos verificados |
+|---|---|---|---|
+| US01 | `InvitationCodeInputTest` (11) | Unitaria | Los espacios, tabulaciones y saltos de línea se ignoran, las mayúsculas y minúsculas se conservan, la forma en bloques de cuatro se vuelve a escribir como el mismo token y un código válido nunca se imprime. |
+| US01 | `ScanInvitationManualEntryViewModelTest` (24) | Unitaria | Abrir la hoja pausa la cámara y cerrarla la reanuda y olvida lo escrito, un código que no puede ser un token nunca llega al backend y un código válido se canjea con el mismo caso de uso del QR. |
+| US01, US04 | `ManualInvitationCodeUiTest` (20) | Interfaz | El paciente abre la hoja, escribe el código y ve cuántos caracteres le faltan; la nutricionista ve el código en bloques con Copiar y Compartir. |
+| US16 | `PatientFollowUpTabTest` (10) | Interfaz | Los indicadores muestran sus valores, el resumen con IA y el Diario de hoy se pliegan y se abren, y un día sin comidas lo indica. |
+| US20 | `PatientTabRowTest` (4) | Interfaz | Las cuatro pestañas caben en una pantalla de 360 dp y el espacio entre etiquetas es parejo. |
+
+<p class="caption"><strong>Tabla 292</strong><br><em>Commits de pruebas de la aplicación Android en el Sprint 3</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/manual-invitation-code` | 5a57378 | feat(carerelationship): validate hand-typed invitation codes | — | 09/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/manual-invitation-code` | e1d4eb5 | feat(carerelationship): let patients type the invitation code by hand | — | 10/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/compact-follow-up-dashboard` | 19b9f73 | fix(main): space patient tabs evenly by label width | — | 12/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/compact-follow-up-dashboard` | cc9241f | test(monitoring): add UI tests for the compact follow-up tab | — | 13/11/2026 |
+
+Los tres primeros commits traen la funcionalidad junto con sus pruebas.
+
+**Mobile Application (Flutter)**
+
+La suite está en `test/`, con `flutter_test`, `bloc_test` y `mocktail`. El sprint agregó cuatro archivos de prueba con 33 casos declarados, y la suite pasó de 69 archivos y 869 casos a 73 archivos y 902 casos. Con `flutter test` sobre la versión 1.4.0 pasan las **1032 pruebas**, sin fallas (991 al cierre del Sprint 2). El CI reporta más pruebas que casos declarados porque algunas se generan en bucles.
+
+<p class="caption"><strong>Tabla 293</strong><br><em>Archivos de prueba agregados a la aplicación Flutter en el Sprint 3</em></p>
+
+| Historia | Archivo de prueba (casos) | Comportamientos verificados |
+|---|---|---|
+| US04 | `invitation_token_test` (7) | El token se escribe en bloques de cuatro sin bloque corto al final, los bloques se vuelven a escribir como el mismo token y `toString` nunca imprime el secreto. |
+| US04 | `invite_patient_code_test` (9) | Copiar y Compartir envían el token real y no el texto agrupado, una invitación vencida no se puede copiar ni compartir y la pantalla cabe en 360 × 640 sin desbordarse. |
+| US16 | `patient_follow_up_tab_test` (12) | Los indicadores caben en un teléfono pequeño, el resumen con IA y el diario se pliegan y se abren, el encabezado anuncia «Mostrar» u «Ocultar» al lector de pantalla y una medición faltante se muestra con un guion. |
+| US20 | `patient_tab_bar_test` (5) | Las cuatro pestañas caben en 360 de ancho, el espacio entre etiquetas es parejo y, con texto muy grande, las etiquetas se desplazan sin desbordarse. |
+
+<p class="caption"><strong>Tabla 294</strong><br><em>Commits de pruebas de la aplicación Flutter en el Sprint 3</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-file-dashboard` | 5ab2587 | feat(main): size patient tabs to their labels | — | 05/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-file-dashboard` | b62cebb | feat(monitoring): redesign follow-up tab as compact dashboard | — | 09/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/invite-code-share` | dc39c2a | feat(carerelationship): add grouped display form to invitation token | — | 11/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/invite-code-share` | aee30aa | feat(carerelationship): let practitioners copy and share invite code | — | 13/11/2026 |
+
+En la app Flutter cada commit trae la funcionalidad junto con sus pruebas.
+
+#### 4.2.3.6. Execution Evidence for Sprint Review
+
+En el Sprint 3 se desplegaron las versiones 2.0.0 y 2.0.1 del backend, la app Android llegó a la versión 2.2.0 y la app Flutter, a la 1.4.0. Las dos apps siguen distribuyéndose firmadas por Firebase App Distribution y como APK en los releases de GitHub.
+
+**Mobile Application (Flutter, nutricionista)**
+
+Las capturas corresponden a la app Flutter 1.4.0 en un teléfono Android, con la sesión de una nutricionista y conectada al backend publicado.
+
+<p class="caption"><strong>Figura 214</strong><br><em>Capturas de la aplicación Flutter del nutricionista en el Sprint 3</em></p>
+
+<table>
+  <tr>
+    <td align="center"><img src="../assets/img/chapter4/sprint3/flutter-invite-code.jpg" alt="Invitar paciente" width="220" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint3/flutter-follow-up-dashboard.jpg" alt="Seguimiento compacto" width="220" /></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Invitar paciente.</strong> Debajo del QR aparece el código para escribir a mano, en bloques de cuatro, con los botones Copiar y Compartir. El código vence en 24 horas y es de un solo uso (US04).</td>
+    <td valign="top"><strong>Seguimiento.</strong> Arriba, el cumplimiento de la semana por día y tres tarjetas: tendencia de peso (−2,8 kg por semana en 4 semanas), días con registro (1 de 7) y última medición (65,0 kg el 12 de noviembre). El Diario de hoy es una sección colapsable (US16, US20).</td>
+  </tr>
+</table>
+
+**Mobile Application (Android, paciente)**
+
+La captura corresponde a la app Android 2.2.0 en un teléfono, con la sesión de un paciente que va a vincularse con su nutricionista.
+
+<p class="caption"><strong>Figura 215</strong><br><em>Captura de la aplicación Android del paciente en el Sprint 3</em></p>
+
+<table>
+  <tr>
+    <td align="center"><img src="../assets/img/chapter4/sprint3/android-manual-code.jpg" alt="Escribe tu código" width="220" /></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Escribe tu código.</strong> Desde la pantalla de escaneo, el paciente abre la hoja, escribe el código que le compartió su nutricionista y pulsa «Vincular». El contador indica cuántos caracteres faltan para el mínimo de 22 (US01).</td>
+  </tr>
+</table>
+
+La app Android de la nutricionista muestra el mismo código con Copiar y Compartir, y la misma pestaña Seguimiento compacta que la app Flutter.
+
+**Web Services**
+
+El recordatorio por correo no tiene pantalla en las apps. Su configuración se describe en la sección 4.2.3.7.
+
+**URL del video de demostración del Sprint 3:** [Video del Sprint 3](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQC35upqUSOKSIlYP3-duMY_ARJmIMDxPVb7NzTBnvgxL7Q?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=ODRscU)
 ## 4.3. Validation Interviews
 
 En esta sección se registran las entrevistas de validación realizadas con usuarios de los dos segmentos objetivo de Healthify: nutricionistas y pacientes en tratamiento nutricional activo para bajar de peso. En cada sesión, el entrevistado revisó el Landing Page y luego completó un conjunto de tareas en el prototipo de la aplicación móvil, que fue el foco principal de la validación. A partir de lo observado se realizó una evaluación según heurísticas de usabilidad, arquitectura de información y diseño inclusivo.
