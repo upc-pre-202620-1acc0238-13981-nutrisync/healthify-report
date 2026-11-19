@@ -3290,6 +3290,120 @@ La app Android de la nutricionista muestra el mismo código con Copiar y Compart
 El recordatorio por correo no tiene pantalla en las apps. Su configuración se describe en la sección 4.2.3.7.
 
 **URL del video de demostración del Sprint 3:** [Video del Sprint 3](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQC35upqUSOKSIlYP3-duMY_ARJmIMDxPVb7NzTBnvgxL7Q?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=ODRscU)
+
+#### 4.2.3.7. Services Documentation Evidence for Sprint Review
+
+El Sprint 3 no agrega ni retira operaciones. El documento OpenAPI publicado con la versión 2.0.1 sigue describiendo **98 operaciones en 92 rutas**, con 159 esquemas, y las convenciones son las de la sección 4.2.1.7. El recordatorio por correo corre dentro del backend como un trabajo en segundo plano: lee las consultas agendadas que ya crea `POST /api/v1/scheduled-follow-ups` y no necesita que la app llame a ningún endpoint.
+
+<p class="caption"><strong>Tabla 295</strong><br><em>Recursos de documentación de los servicios en el Sprint 3</em></p>
+
+| Recurso | Enlace |
+|---|---|
+| Swagger UI | https://platform.healthify.lat/swagger |
+| Documento OpenAPI | https://platform.healthify.lat/swagger/v1/swagger.json |
+| Configuración de los recordatorios (README) | https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform#readme |
+
+La configuración se documentó en el README del repositorio, junto con las variables de entorno de los sprints anteriores:
+
+<p class="caption"><strong>Tabla 296</strong><br><em>Variables de configuración del recordatorio de consulta</em></p>
+
+| Variable | Valor por defecto | Uso |
+|---|---|---|
+| `Smtp__Host`, `Smtp__Username`, `Smtp__Password`, `Smtp__From` | Sin valor | Servidor de correo, compartido con la recuperación de contraseña. Sin `Smtp__Host` no se envía ningún correo. |
+| `Reminders__FollowUp__Enabled` | `true` | Activa o desactiva los recordatorios. |
+| `Reminders__FollowUp__LeadHours` | `24,1` | Horas antes de la consulta en que se avisa, separadas por comas. Si hay varias ventanas abiertas, solo se envía la más cercana. |
+| `Reminders__FollowUp__NotifyPractitioner` | `false` | Envía también el aviso al nutricionista, en su propio idioma. |
+| `Reminders__FollowUp__IntervalMinutes`, `Reminders__FollowUp__BatchSize` | `10`, `200` | Cada cuántos minutos revisa la agenda el trabajo y cuántas consultas procesa por ciclo. |
+| `Reminders__FollowUp__PracticeAddress`, `Reminders__FollowUp__VideoCallUrl` | Sin valor | Dirección del consultorio para las consultas presenciales y enlace de videollamada para las remotas. El enlace solo se muestra si usa `https`. |
+
+**Ejemplo de uso**
+
+La nutricionista agenda una consulta presencial para el 20/11/2026 a las 10:00 con `POST /api/v1/scheduled-follow-ups`. El 19/11 a las 10:00 el trabajo encuentra abierta la ventana de 24 horas y envía al paciente un correo cuyo asunto empieza con «Recordatorio: tu consulta es mañana» y sigue con la fecha y la hora; el cuerpo trae la dirección del consultorio y la preparación indicada. El 20/11 a las 9:00 envía el aviso de una hora. Cada envío queda en la tabla de recordatorios, así que el siguiente ciclo no lo repite. Si la nutricionista reprograma la consulta, el paciente recibe un aviso nuevo para la nueva hora, con «Reprogramada» al inicio del asunto; si la cancela, no recibe más avisos.
+
+Commits relacionados con la documentación de los servicios en el Sprint 3:
+
+<p class="caption"><strong>Tabla 297</strong><br><em>Commits relacionados con la documentación de servicios en el Sprint 3</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | 3050903 | chore(config): add follow-up reminder settings | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | b72d4b0 | docs(readme): document appointment reminder settings | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 8822502 | docs(readme): remove outdated appointment reminders section | — | 16/11/2026 |
+
+#### 4.2.3.8. Software Deployment Evidence for Sprint Review
+
+Durante el Sprint 3 se desplegaron dos versiones del backend y se distribuyó una versión de cada app. La configuración general de cada producto está en la sección 4.1.4.
+
+**Web Services (backend)**
+
+*Releases.* Los pull requests #26 y #28, de `develop` a `main`, dispararon el flujo `Release`, que publicó `v2.0.0` y `v2.0.1`.
+
+<p class="caption"><strong>Figura 216</strong><br><em>Captura de GitHub Actions: ejecuciones del flujo Release del backend en el Sprint 3</em></p>
+
+![Ejecuciones del flujo Release](../assets/img/chapter4/sprint3/gh-platform-actions.png)
+
+<p class="caption"><strong>Figura 217</strong><br><em>Captura de GitHub: release v2.0.1 del backend</em></p>
+
+![Releases del backend](../assets/img/chapter4/sprint3/gh-platform-releases.png)
+
+*Máquina virtual.* El despliegue en la máquina virtual de Oracle Cloud siguió el procedimiento de los sprints anteriores, con estos cambios:
+
+1. Agregar al entorno las variables `REMINDERS_*` que se quieran cambiar (Tabla 229); `docker-compose.yml` las pasa a la API como `Reminders__FollowUp__*`. Las variables `SMTP_*` del Sprint 2 ya estaban definidas.
+2. Actualizar el repositorio a `main` y ejecutar `docker compose up --build -d`. Al iniciar, la API aplica la migración `Monitoring_AddFollowUpReminderLogs` y arranca el trabajo de recordatorios.
+
+*URLs de despliegue:*
+
+- API: https://platform.healthify.lat
+- Documentación: https://platform.healthify.lat/swagger
+
+**Mobile Application (Android)**
+
+*Integración continua y distribución.* Los flujos `CI` y `Distribute` son los del Sprint 2. Las ejecuciones de `CI` sobre `develop`, tras integrar los pull requests #36 y #37, y la del pull request #38 (`Release/2.2.0`) terminaron en verde. Con el push a `main`, `Distribute` subió la versión 2.2.0 a Firebase App Distribution y creó el release de GitHub con el APK.
+
+<p class="caption"><strong>Figura 218</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Android en el Sprint 3</em></p>
+
+![Actions de la aplicación Android](../assets/img/chapter4/sprint3/gh-android-actions.png)
+
+<p class="caption"><strong>Figura 219</strong><br><em>Captura de GitHub: release v2.2.0 de la aplicación Android con el APK</em></p>
+
+![Releases de la aplicación Android](../assets/img/chapter4/sprint3/gh-android-releases.png)
+
+**Mobile Application (Flutter, nutricionista)**
+
+*Integración continua y distribución.* Las ejecuciones de `CI` de los pull requests #23, #24 y #25 terminaron en verde, igual que las ejecuciones sobre `develop`. El pull request #25 (`Release/1.4.0`) llevó la versión 1.4.0 a `main`. `Distribute` comprobó que la versión de `pubspec.yaml` fuera nueva, compiló el APK firmado, lo subió a Firebase App Distribution y creó el release de GitHub. La versión agrega el paquete `share_plus`, que abre la hoja para compartir de Android.
+
+<p class="caption"><strong>Figura 220</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Flutter en el Sprint 3</em></p>
+
+![Actions de la aplicación Flutter](../assets/img/chapter4/sprint3/gh-flutter-actions.png)
+
+<p class="caption"><strong>Figura 221</strong><br><em>Captura de GitHub: release v1.4.0 de la aplicación Flutter con el APK</em></p>
+
+![Releases de la aplicación Flutter](../assets/img/chapter4/sprint3/gh-flutter-releases.png)
+
+#### 4.2.3.9. Team Collaboration Insights during Sprint
+
+En el Sprint 3 cada rama la escribió un solo integrante. Mora Rivera escribió el núcleo de los recordatorios en el backend; Del Aguila Del Aguila, el código escrito a mano en la app Android; Vergaray Calderon, el Seguimiento compacto en Flutter, y Espinoza Cruz, el código compartible en Flutter. Villarreal Bazan escribió la entrega de los recordatorios y el Seguimiento compacto de la app Android, y concentró 50 de las 102 horas estimadas. La integración a `develop` y `main` la hizo Nevatrix en los tres repositorios. El landing page no tuvo commits en este sprint.
+
+Backend (`healthify-platform`):
+
+<p class="caption"><strong>Figura 222</strong><br><em>Captura de GitHub: contribuyentes del backend en el Sprint 3</em></p>
+
+![Contribuyentes del backend](../assets/img/chapter4/sprint3/gh-platform-contributors.png)
+
+Aplicación Android (`healthify-android-app`):
+
+<p class="caption"><strong>Figura 223</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Android en el Sprint 3</em></p>
+
+![Contribuyentes de la aplicación Android](../assets/img/chapter4/sprint3/gh-android-contributors.png)
+
+Aplicación Flutter (`healthify-flutter-app`):
+
+<p class="caption"><strong>Figura 224</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Flutter en el Sprint 3</em></p>
+
+![Contribuyentes de la aplicación Flutter](../assets/img/chapter4/sprint3/gh-flutter-contributors.png)
+
+<div style="page-break-after: always"></div>
+
 ## 4.3. Validation Interviews
 
 En esta sección se registran las entrevistas de validación realizadas con usuarios de los dos segmentos objetivo de Healthify: nutricionistas y pacientes en tratamiento nutricional activo para bajar de peso. En cada sesión, el entrevistado revisó el Landing Page y luego completó un conjunto de tareas en el prototipo de la aplicación móvil, que fue el foco principal de la validación. A partir de lo observado se realizó una evaluación según heurísticas de usabilidad, arquitectura de información y diseño inclusivo.
