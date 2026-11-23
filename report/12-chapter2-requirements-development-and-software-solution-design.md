@@ -3698,7 +3698,7 @@ El único servicio externo de este contexto es el modelo de lenguaje Gemini, al 
 
 Component:
 
-<p class="caption"><strong>Figura 78</strong><br><em>Diagrama de componentes del bounded context Intake &amp; Body Response</em></p>
+<p class="caption"><strong>Figura 79</strong><br><em>Diagrama de componentes del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/intake-body-response.puml)
 
@@ -3710,25 +3710,25 @@ Component:
 
 Domain:
 
-<p class="caption"><strong>Figura 79</strong><br><em>Diagrama de clases de la capa Domain del bounded context Intake &amp; Body Response</em></p>
+<p class="caption"><strong>Figura 80</strong><br><em>Diagrama de clases de la capa Domain del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/domain.puml)
 
 Infrastructure:
 
-<p class="caption"><strong>Figura 80</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Intake &amp; Body Response</em></p>
+<p class="caption"><strong>Figura 81</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/infrastructure.puml)
 
 Application:
 
-<p class="caption"><strong>Figura 81</strong><br><em>Diagrama de clases de la capa Application del bounded context Intake &amp; Body Response</em></p>
+<p class="caption"><strong>Figura 82</strong><br><em>Diagrama de clases de la capa Application del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/application.puml)
 
 Interfaces:
 
-<p class="caption"><strong>Figura 82</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Intake &amp; Body Response</em></p>
+<p class="caption"><strong>Figura 83</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/interfaces.puml)
 
@@ -3738,7 +3738,7 @@ Interfaces:
 
 Database:
 
-<p class="caption"><strong>Figura 83</strong><br><em>Diagrama de base de datos del bounded context Intake &amp; Body Response</em></p>
+<p class="caption"><strong>Figura 84</strong><br><em>Diagrama de base de datos del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/intake-body-response.puml)
 
@@ -3756,7 +3756,7 @@ El diagrama muestra las cinco tablas del contexto y, en gris, las tres tablas aj
 
 #### 2.6.2.1. Domain Layer
 
-El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.MonitoringAdherence`, es el único que compara lo prescrito con lo registrado e interpreta la diferencia. Su Domain Layer tiene siete aggregate roots (`EvaluationWindow`, `Deviation`, `ConsistencyIndex`, `Referral`, `ScheduledFollowUp`, `PreVisitCheckIn` y `WeeklySummary`), 30 commands, 19 queries, 23 domain events y el enum `MonitoringError`. La lógica de interpretación vive dentro de los agregados; los domain services se limitan al calendario clínico y a las reglas que revisan los textos generados con IA. Tres invariantes gobiernan la capa: ninguna desviación se evalúa sobre menos de siete días, el paciente recibe el aviso antes de que una alerta escale al profesional, y una señal escalada nunca modifica un plan.
+El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.MonitoringAdherence`, es el único que compara lo prescrito con lo registrado e interpreta la diferencia. Su Domain Layer tiene ocho aggregate roots (`EvaluationWindow`, `Deviation`, `ConsistencyIndex`, `Referral`, `ScheduledFollowUp`, `PreVisitCheckIn`, `WeeklySummary` y `FollowUpReminderLog`), 30 commands, 19 queries, 23 domain events y el enum `MonitoringError`. La lógica de interpretación vive dentro de los agregados; los domain services se limitan al calendario clínico y a las reglas que revisan los textos generados con IA. Tres invariantes gobiernan la capa: ninguna desviación se evalúa sobre menos de siete días, el paciente recibe el aviso antes de que una alerta escale al profesional, y una señal escalada nunca modifica un plan.
 
 **Aggregates (Aggregate Roots)**
 
@@ -3860,6 +3860,8 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 
 `WeeklySummary` es el resumen semanal de un paciente generado con IA: `WeekStart`, `WeekEnd`, `ComplianceFacts`, `Headline`, `WentWell`, `WatchOut`, `AiGenerationId`, `Language` y `GeneratedAt`. Exige al menos `MinimumLoggedDays = 3` días registrados y limita el titular a 200 caracteres, cada punto a 240, los aciertos a 3 y las alertas a 2. `WeekStartOf(DateOnly)` e `IsWeekStart(DateOnly)` fijan la semana en lunes.
 
+`FollowUpReminderLog` registra cada recordatorio de consulta que salió por correo, agregado en el Sprint 3: `Id`, `FollowUpId`, `Recipient` (validado por `ReminderRecipient`), `LeadMinutes` (con cuántos minutos de anticipación se avisó), `VisitMoment` (la hora de la consulta a la que se refería el aviso) y `SentAt`. El constructor rechaza una consulta o una anticipación que no sean positivas. No tiene métodos de transición: cada fila es un envío que ya ocurrió, y su existencia impide repetir el mismo aviso. Como guarda `VisitMoment`, una consulta reprogramada vuelve a recibir aviso para su nueva hora. No guarda el correo del destinatario.
+
 **Value Objects**
 
 <p class="caption"><strong>Tabla 114</strong><br><em>Value objects y clases auxiliares de la capa Domain de Monitoring &amp; Adherence</em></p>
@@ -3879,6 +3881,7 @@ El bounded context Monitoring & Adherence, implementado en `Healthify.Platform.M
 | `PlanFeeling`, `CheckInDifficulty`, `PatientQuestion`, `QuestionOrigin` | Contenido de la respuesta previa. | `Good`, `Fair`, `Hard`; `Dinners`, `Weekends`, `EatingOut`, `Schedules`, `Cravings`; pregunta con largo mínimo y máximo; origen `Patient` o `AiSuggested`. |
 | `MonitoringPeriodFacts`, `PeriodDayFact`, `MealSlot`, `MealSlotDays` | Hechos calculados de un período, que son lo único que recibe la IA. | `Compute(...)`, `AllowedNumbers()` y `DayCounts()`; franjas `Breakfast`, `Lunch`, `Dinner` y `Other`. |
 | `DeclaredOffsetCalendar` | Calendario con el offset que declaró el dispositivo del paciente. | `LocalDateOf(DateTimeOffset)`. |
+| `ReminderRecipient` | Destinatario de un recordatorio de consulta. | Solo admite `Patient` o `Practitioner`; cualquier otro valor lanza una excepción. |
 | `WindowId`, `DeviationId`, `ReferralId`, `FollowUpId`, `PreVisitCheckInId`, `WeeklySummaryId` | Identidades tipadas. | `Value : int > 0` e `internal static FromRaw(int)`. |
 
 **Commands**
@@ -3899,11 +3902,13 @@ El enum `MonitoringError` tiene 38 valores. Los de la evaluación describen cond
 
 **Repositories (abstracciones)**
 
-Las siete interfaces viven en `MonitoringRepositories.cs` y derivan de `IBaseRepository<T>`: `IEvaluationWindowRepository`, `IDeviationRepository`, `IConsistencyIndexRepository`, `IReferralRepository`, `IScheduledFollowUpRepository`, `IPreVisitCheckInRepository` e `IWeeklySummaryRepository`. Entre sus operaciones está `FindLatestByWindowAndDirectionAsync`, sin la cual una misma tendencia crearía una fila nueva con cada comida.
+Las siete interfaces viven en `MonitoringRepositories.cs` y derivan de `IBaseRepository<T>`: `IEvaluationWindowRepository`, `IDeviationRepository`, `IConsistencyIndexRepository`, `IReferralRepository`, `IScheduledFollowUpRepository`, `IPreVisitCheckInRepository` e `IWeeklySummaryRepository`. Entre sus operaciones está `FindLatestByWindowAndDirectionAsync`, sin la cual una misma tendencia crearía una fila nueva con cada comida. Los recordatorios tienen su propia interfaz, `IFollowUpReminderRepository`, con `ListScheduledBetweenAsync` (consultas agendadas en un rango de tiempo), `ListLogsAsync` (avisos ya enviados de esas consultas) y `AddLogAsync`.
 
 **Domain Services**
 
 `IFollowUpCalendar` (`LocalDayOf`, `LocalDateOf`) convierte un instante en el día clínico. `IAiLanguageLexicon` entrega los términos que un texto generado no puede contener. `GeneratedTextRules` comprueba esos términos (`TermsIn`) y rechaza cualquier número que no esté en los hechos del período (`NumbersNotInFacts`).
+
+Para los recordatorios, `FollowUpReminderPlanner` es una clase estática cuyo método `Plan(...)` recibe las consultas (`ReminderCandidate`), los avisos ya enviados (`SentReminder`) y las horas de anticipación, y devuelve los avisos pendientes (`PlannedReminder`). Si dos ventanas están abiertas, solo devuelve la más cercana. No avisa de una consulta cancelada, ya iniciada o agendada dentro de la última hora, ni de una ventana que se abrió antes de que se agendara la consulta. `IFollowUpReminderNotifier` es el contrato del envío (`IsConfigured` y `SendAsync(FollowUpReminderMessage)`), y `IFollowUpLocalClock` convierte un instante a la hora del consultorio.
 
 **Relaciones entre clases:** `EvaluationWindow` compone `WindowId` y `WindowState` y agrega 0..* `TargetsSnapshot`, 0..* `DailyCompliance` y 0..* `AnthropometryPoint`, tres series independientes serializadas como JSON. `Deviation` referencia la ventana por `WindowRef : WindowId`, sin navegación, y compone `DeviationMagnitude` y `DeviationDirection`. `ConsistencyIndex` compone `ConsistencyState` y usa la serie diaria y la de peso solo como parámetros de `Recompute`. `Referral` compone `Specialty` y `ReferralReason`. `ScheduledFollowUp` compone `FollowUpState`, `ConsultationModality` y 0..* `PreparationInstruction`. `PreVisitCheckIn` referencia la consulta por `FollowUpId` y compone `PlanFeeling`, 0..* `CheckInDifficulty` y 0..* `PatientQuestion`. `WeeklySummary` guarda un `MonitoringPeriodFacts` en `ComplianceFacts`.
 
@@ -3982,7 +3987,7 @@ Los mensajes localizados se declaran en `MonitoringAdherence/Resources/Monitorin
 
 #### 2.6.2.3. Application Layer
 
-La Application Layer orquesta los subflujos 5.1 a 5.11 y es la que más event handlers tiene en la plataforma: 19 políticas disparadas por eventos, 15 de ellas por eventos de otros bounded contexts, más cinco procesos temporales en Infrastructure. Las interfaces viven en `Application/CommandServices/IMonitoringCommandServices.cs` y `Application/QueryServices/IMonitoringQueryServices.cs`.
+La Application Layer orquesta los subflujos 5.1 a 5.11 y es la que más event handlers tiene en la plataforma: 19 políticas disparadas por eventos, 15 de ellas por eventos de otros bounded contexts, más seis procesos temporales en Infrastructure. Las interfaces viven en `Application/CommandServices/IMonitoringCommandServices.cs` y `Application/QueryServices/IMonitoringQueryServices.cs`.
 
 **Command Services**
 
@@ -4021,6 +4026,8 @@ El método privado `EvaluateSingleDay(...)` resuelve la ventana abierta, toma lo
 La guarda del aviso se comprueba aquí para devolver un error con nombre propio, y otra vez dentro del agregado para que ningún otro llamador pueda saltársela.
 
 `ReferralCommandService` y `ScheduledFollowUpCommandService` dependen del ACL de Care Relationship y exigen un vínculo activo. El primero registra y cierra derivaciones (*Specialty And Reason Required*) y publica `ReferralRecorded` y `ReferralClosed`. El segundo programa, reprograma, cancela y completa consultas bajo *One Active Scheduled Visit Per Patient*, marca las perdidas desde la política temporal y cancela las futuras cuando termina el tratamiento; publica `FollowUpScheduled`, `FollowUpRescheduled`, `FollowUpCancelled` y `FollowUpMissed`. `PreVisitCheckInCommandService` guarda o edita la respuesta previa y publica `PreVisitCheckInSubmitted`.
+
+`FollowUpReminderCommandService` atiende `SendDueFollowUpRemindersCommand(Now)`, que emite el proceso temporal de recordatorios, y depende de `IFollowUpReminderRepository`, `IIamContextFacade`, `IFollowUpReminderNotifier`, `IFollowUpLocalClock`, `IUnitOfWork`, `IConfiguration` e `ILogger<...>`. Lee la configuración con `FollowUpReminderSettings` (sección `Reminders:FollowUp`: horas de aviso, 24 y 1 por defecto; aviso al nutricionista; intervalo y tamaño del lote), lista las consultas próximas, pide al planificador los avisos pendientes y obtiene por el ACL de IAM el nombre, el correo y el idioma de cada destinatario. Guarda el `FollowUpReminderLog` justo después de cada envío exitoso, así que un correo que falla se reintenta en el ciclo siguiente y un destinatario que falla no detiene a los demás. Si el correo no está configurado, el ciclo termina sin leer la agenda. Devuelve un `FollowUpReminderCycleResult` con las consultas evaluadas, los avisos enviados y los fallidos.
 
 Los servicios de IA viven en `MonitoringAiCommandServices.cs`. `WeeklySummaryCommandService` genera y purga los resúmenes semanales; `SuggestedQuestionsCommandService` propone preguntas para la próxima consulta y las guarda en `IMonitoringAiCache`; `MonitoringSummaryCommandService` redacta el resumen del período para el nutricionista (7 días por defecto, 28 como máximo); `MonitoringAiContentCommandService` purga ese contenido. Los tres que generan texto siguen el mismo orden: verificar el consentimiento con `IAiConsentPolicy`, reunir los hechos con `MonitoringFactsReader`, pedir el texto a `IAiGenerationPipeline`, validarlo y guardarlo. Si la IA no está disponible, el resumen del nutricionista devuelve solo los hechos.
 
@@ -4068,11 +4075,11 @@ Los handlers de entradas del diario usan la clase interna `MonitoringDayEvaluati
 
 #### 2.6.2.4. Infrastructure Layer
 
-La Infrastructure Layer contiene la persistencia sobre MySQL 8.4, cinco `BackgroundService`, el calendario clínico y la caché y el léxico de IA. Tiene tantos procesos temporales porque varias de sus políticas no las dispara un usuario ni un evento, sino el paso del tiempo.
+La Infrastructure Layer contiene la persistencia sobre MySQL 8.4, seis `BackgroundService`, el calendario clínico, el envío de los recordatorios por correo y la caché y el léxico de IA. Tiene tantos procesos temporales porque varias de sus políticas no las dispara un usuario ni un evento, sino el paso del tiempo.
 
 **Configuraciones de EF Core**
 
-Las siete viven en `MonitoringEntityTypeConfigurations.cs`.
+Siete viven en `MonitoringEntityTypeConfigurations.cs`; la octava, la de los recordatorios, tiene su propio archivo.
 
 <p class="caption"><strong>Tabla 121</strong><br><em>Configuraciones de EF Core de Monitoring &amp; Adherence</em></p>
 
@@ -4085,10 +4092,11 @@ Las siete viven en `MonitoringEntityTypeConfigurations.cs`.
 | `ScheduledFollowUpEntityTypeConfiguration` | `scheduled_follow_ups` | PK con `FollowUpId.FromRaw`; índices sobre `patient_id` y `practitioner_id`; `state` y `modality` con converter; `preparation` como `json`; columnas de cancelación y de cierre por consulta. |
 | `PreVisitCheckInEntityTypeConfiguration` | `pre_visit_check_ins` | `difficulties` y `questions` como `json`; índice único `ux_pre_visit_check_ins_follow_up_id`, que garantiza una respuesta por consulta, e índice sobre `patient_id`. |
 | `WeeklySummaryEntityTypeConfiguration` | `weekly_summaries` | `compliance_facts`, `went_well` y `watch_out` como `json`; `headline` como `varchar(200)`; índice único `ux_weekly_summaries_patient_id_week_start` e índice sobre `generated_at`, que usa la purga. |
+| `FollowUpReminderLogEntityTypeConfiguration` | `follow_up_reminder_logs` | `recipient` como `varchar(15)`; índice único `ux_follow_up_reminder_logs_reminder` sobre `follow_up_id`, `recipient`, `lead_minutes` y `visit_moment`, que impide guardar dos veces el mismo aviso. |
 
 **Repositorios (implementaciones)**
 
-Las siete clases de `MonitoringRepositories.cs` heredan de `BaseRepository<T>` y buscan por identidad tipada. Entre sus métodos están `FindOpenByPatientIdAsync` y `ListOpenAsync(int)` para las ventanas, `FindLatestByWindowAndDirectionAsync` para las desviaciones, `ListEscalatableAsync(DateTimeOffset, int)` para el índice, `FindScheduledByPatientIdAsync`, `FindOpenForDayAsync` y `ListScheduledByPatientIdsAsync` para la agenda, `FindByFollowUpIdAsync` para la respuesta previa y `FindByPatientIdAndWeekStartAsync` y `ListGeneratedBeforeAsync` para los resúmenes. Los estados y direcciones se comparan con instancias estáticas de value object, porque EF Core no traduce a SQL el acceso a un miembro de un tipo convertido. Ninguna clase usa el `Remove` heredado sobre datos evaluados; solo `weekly_summaries` se purga por antigüedad.
+Las siete clases de `MonitoringRepositories.cs` heredan de `BaseRepository<T>` y buscan por identidad tipada. Entre sus métodos están `FindOpenByPatientIdAsync` y `ListOpenAsync(int)` para las ventanas, `FindLatestByWindowAndDirectionAsync` para las desviaciones, `ListEscalatableAsync(DateTimeOffset, int)` para el índice, `FindScheduledByPatientIdAsync`, `FindOpenForDayAsync` y `ListScheduledByPatientIdsAsync` para la agenda, `FindByFollowUpIdAsync` para la respuesta previa y `FindByPatientIdAndWeekStartAsync` y `ListGeneratedBeforeAsync` para los resúmenes. Los estados y direcciones se comparan con instancias estáticas de value object, porque EF Core no traduce a SQL el acceso a un miembro de un tipo convertido. Ninguna clase usa el `Remove` heredado sobre datos evaluados; solo `weekly_summaries` se purga por antigüedad. `FollowUpReminderRepository` implementa `IFollowUpReminderRepository` aparte: lista las consultas en estado `Scheduled` dentro del rango pedido y lee o agrega filas de `follow_up_reminder_logs`.
 
 **Scheduling**
 
@@ -4103,12 +4111,14 @@ Los hosted services envuelven el cuerpo del ciclo en `try/catch`, resuelven sus 
 | `MissedFollowUpHostedService` | *When Scheduled Date Passed Without Visit* (5.10) | `Scheduling:MissedFollowUpIntervalHours`, 12 h por defecto | Lista las consultas vencidas y emite un `FlagMissedFollowUpCommand` por cada una. |
 | `WeeklySummaryHostedService` | *When The Week Ends* | `Ai:Features:WeeklySummary:Cron`, por defecto `0 6 * * 1` (lunes a las 06:00) en la zona horaria clínica, interpretado por `CronSchedule` | Emite un `GenerateWeeklySummaryCommand` por cada ventana abierta y luego `PurgeExpiredWeeklySummariesCommand` con la retención `Ai:RetentionDays` (180 días por defecto). |
 | `ClinicalDayRepairHostedService` | Reparación del día clínico | Una vez al arrancar; `Scheduling:ClinicalDayRepairLookbackDays`, 14 días por defecto (0 lo apaga) | Emite `ReEvaluateLoggedDaysCommand` sobre los días recientes de cada ventana abierta, para corregir días que antes se evaluaron con la fecha UTC del snapshot. |
+| `FollowUpReminderHostedService` | Recordatorio de consulta por correo | Un ciclo al arrancar y luego cada `Reminders:FollowUp:IntervalMinutes`, 10 min por defecto; `Reminders:FollowUp:Enabled` lo apaga | Emite `SendDueFollowUpRemindersCommand` con la hora actual. Un ciclo con error no detiene el proceso. |
 
 **Servicios externos e infraestructura de IA**
 
-El único servicio externo es el modelo Gemini, al que se llega por el módulo de IA de `Shared`, para el resumen semanal, las preguntas sugeridas y el resumen del período. El cumplimiento, la desviación y la consistencia son aritmética local sobre datos propios o leídos por los ACL de Intake & Body Response y Care Relationship.
+Los servicios externos son el modelo Gemini, al que se llega por el módulo de IA de `Shared`, para el resumen semanal, las preguntas sugeridas y el resumen del período, y el servidor SMTP, que recibe los recordatorios de consulta. El cumplimiento, la desviación y la consistencia son aritmética local sobre datos propios o leídos por los ACL de Intake & Body Response y Care Relationship.
 
-- **Calendario clínico:** `ClinicalTimeZoneFollowUpCalendar` implementa `IFollowUpCalendar` en la zona horaria clínica.
+- **Calendario clínico:** `ClinicalTimeZoneFollowUpCalendar` implementa `IFollowUpCalendar` en la zona horaria clínica y también `IFollowUpLocalClock`, que da la hora local de la consulta en el recordatorio.
+- **Correo:** `SmtpFollowUpReminderNotifier` implementa `IFollowUpReminderNotifier`. Arma el asunto y el HTML con `FollowUpReminderEmailTemplate` (en el idioma del destinatario, con la hora del consultorio, la dirección o el enlace de videollamada y la preparación indicada) y lo envía con `IMailSender`, de `Shared`.
 - **IA:** `InMemoryMonitoringAiCache` implementa `IMonitoringAiCache` y `EmbeddedAiLanguageLexicon` implementa `IAiLanguageLexicon` con los términos de diagnóstico o de reproche que un texto generado no puede contener.
 
 #### 2.6.2.5. Bounded Context Software Architecture Component Level Diagrams
@@ -4117,7 +4127,7 @@ El único servicio externo es el modelo Gemini, al que se llega por el módulo d
 
 Component:
 
-<p class="caption"><strong>Figura 84</strong><br><em>Diagrama de componentes del bounded context Monitoring &amp; Adherence</em></p>
+<p class="caption"><strong>Figura 85</strong><br><em>Diagrama de componentes del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/monitoring-adherence.puml)
 
@@ -4129,25 +4139,25 @@ Component:
 
 Domain:
 
-<p class="caption"><strong>Figura 85</strong><br><em>Diagrama de clases de la capa Domain del bounded context Monitoring &amp; Adherence</em></p>
+<p class="caption"><strong>Figura 86</strong><br><em>Diagrama de clases de la capa Domain del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/domain.puml)
 
 Infrastructure:
 
-<p class="caption"><strong>Figura 86</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Monitoring &amp; Adherence</em></p>
+<p class="caption"><strong>Figura 87</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/infrastructure.puml)
 
 Application:
 
-<p class="caption"><strong>Figura 87</strong><br><em>Diagrama de clases de la capa Application del bounded context Monitoring &amp; Adherence</em></p>
+<p class="caption"><strong>Figura 88</strong><br><em>Diagrama de clases de la capa Application del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/application.puml)
 
 Interfaces:
 
-<p class="caption"><strong>Figura 88</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Monitoring &amp; Adherence</em></p>
+<p class="caption"><strong>Figura 89</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/interfaces.puml)
 
@@ -4157,11 +4167,11 @@ Interfaces:
 
 Database:
 
-<p class="caption"><strong>Figura 89</strong><br><em>Diagrama de base de datos del bounded context Monitoring &amp; Adherence</em></p>
+<p class="caption"><strong>Figura 90</strong><br><em>Diagrama de base de datos del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/monitoring-adherence.puml)
 
-El diagrama muestra las siete tablas del contexto y, en gris, cuatro tablas ajenas: `users` (IAM), `care_links` (Care Relationship), `consultations` (Nutritional Care) y `ai_generations` (Shared). Ninguna relación de este contexto es una clave foránea declarada en la base de datos: la migración no crea restricciones aquí, de modo que `patient_id`, `practitioner_id`, `issued_by`, `care_link_id`, `completed_by_consultation_id` y `ai_generation_id` son referencias lógicas por identificador y las líneas del diagrama van punteadas. Incluso `deviations.window_id`, que apunta a una tabla del mismo contexto, es una referencia sin restricción. Ninguna tabla tiene borrado lógico; la única que se purga es `weekly_summaries`, por antigüedad de `generated_at`.
+El diagrama muestra las siete tablas del contexto y, en gris, cuatro tablas ajenas: `users` (IAM), `care_links` (Care Relationship), `consultations` (Nutritional Care) y `ai_generations` (Shared). Ninguna relación de este contexto es una clave foránea declarada en la base de datos: la migración no crea restricciones aquí, de modo que `patient_id`, `practitioner_id`, `issued_by`, `care_link_id`, `completed_by_consultation_id` y `ai_generation_id` son referencias lógicas por identificador y las líneas del diagrama van punteadas. Incluso `deviations.window_id`, que apunta a una tabla del mismo contexto, es una referencia sin restricción. Ninguna tabla tiene borrado lógico; la única que se purga es `weekly_summaries`, por antigüedad de `generated_at`. El diagrama no incluye `follow_up_reminder_logs`, la octava tabla, que agregó la migración `Monitoring_AddFollowUpReminderLogs` en el Sprint 3. Esa tabla guarda un aviso enviado por fila (`follow_up_id`, `recipient`, `lead_minutes`, `visit_moment` y `sent_at`), con `follow_up_id` como referencia lógica a `scheduled_follow_ups` y el índice único `ux_follow_up_reminder_logs_reminder`, que impide guardar dos veces el mismo aviso.
 
 `evaluation_windows` es la tabla central. `window_days` guarda el largo con el que abrió cada ventana, para que un cambio de configuración no reinterprete una ventana en curso, y `from_date` y `to_date` son `DATETIME(6)` guardados a medianoche. Las tres series que conviven dentro de la ventana (`targets_snapshots`, `daily_compliance_series` y `anthropometry_series`) son columnas JSON `NOT NULL` y no tablas hijas. Esa elección sigue la regla de que ningún snapshot ni día evaluado se borra ni se reescribe: cada serie se anexa al documento y se lee entera con la ventana. El costo es que no se pueden consultar días sueltos con SQL. El estado se filtra con `ix_evaluation_windows_state`, que usa la política temporal, y el paciente con `ix_evaluation_windows_patient_id`. No existe un índice único sobre `care_link_id` ni sobre `patient_id`; que haya una sola ventana abierta por paciente lo comprueba el servicio con `FindOpenByPatientIdAsync`, no el esquema.
 
