@@ -77,7 +77,7 @@ MacroFactor es una aplicación de seguimiento nutricional dirigida al consumidor
 </tr>
 <tr>
 <td>Canales de distribución<br><em>(Web y/o Móvil)</em></td>
-<td>Aplicación móvil multiplataforma desarrollada en Flutter como canal principal para ambos roles, dado que las funcionalidades diferenciales dependen de la cámara y del funcionamiento sin conexión.</td>
+<td>Dos aplicaciones Android como canal principal: una nativa en Kotlin con Jetpack Compose para el paciente y el nutricionista, y una en Flutter solo para el nutricionista, ambas distribuidas por Firebase App Distribution. Las funcionalidades diferenciales dependen de la cámara y del funcionamiento sin conexión del teléfono.</td>
 <td>Plataforma en línea accesible desde navegador, complementada con una aplicación móvil de seguimiento para el paciente.</td>
 <td>Plataforma web para el profesional y aplicación móvil para el paciente, disponible en las principales tiendas de aplicaciones.</td>
 <td>Aplicación móvil disponible en las tiendas de iOS y Android como canal exclusivo de distribución.</td>
@@ -339,13 +339,13 @@ Esta sección presenta las fichas de User Persona elaboradas en UXPressia, una p
 
 #### Segmento 1: Nutricionista
 
-<p class="caption"><strong>Figura 5</strong><br><em>User persona de Willyan</em></p>
+<p class="caption"><strong>Figura 6</strong><br><em>User persona de Willyan</em></p>
 
 ![Willyan User Persona](../assets/img/chapter2/willyan-user-persona.png)
 
 #### Segmento 2: Paciente en tratamiento nutricional activo
 
-<p class="caption"><strong>Figura 6</strong><br><em>User persona de Evelyn</em></p>
+<p class="caption"><strong>Figura 7</strong><br><em>User persona de Evelyn</em></p>
 
 ![Evelyn User Persona](../assets/img/chapter2/evelyn-user-persona.png)
 
@@ -488,13 +488,13 @@ Esta sección presenta los User Journey Maps elaborados en UXPressia, uno por ca
 
 #### Segmento 1: Nutricionista
 
-<p class="caption"><strong>Figura 7</strong><br><em>User journey mapping de Willyan</em></p>
+<p class="caption"><strong>Figura 8</strong><br><em>User journey mapping de Willyan</em></p>
 
 ![Willyan User Journey Mapping](../assets/img/chapter2/willyan-user-journey-mapping.png)
 
 #### Segmento 2: Paciente en tratamiento nutricional activo
 
-<p class="caption"><strong>Figura 8</strong><br><em>User journey mapping de Evelyn</em></p>
+<p class="caption"><strong>Figura 9</strong><br><em>User journey mapping de Evelyn</em></p>
 
 ![Evelyn User Journey Mapping](../assets/img/chapter2/evelyn-user-journey-mapping.png)
 
@@ -504,13 +504,13 @@ Esta sección presenta los Empathy Maps elaborados en UXPressia para cada uno de
 
 #### Segmento 1: Nutricionista
 
-<p class="caption"><strong>Figura 9</strong><br><em>Mapa de empatía de Willyan</em></p>
+<p class="caption"><strong>Figura 10</strong><br><em>Mapa de empatía de Willyan</em></p>
 
 ![Willyan Empathy Map](../assets/img/chapter2/willyan-empathy-map.png)
 
 #### Segmento 2: Paciente en tratamiento nutricional activo
 
-<p class="caption"><strong>Figura 10</strong><br><em>Mapa de empatía de Evelyn</em></p>
+<p class="caption"><strong>Figura 11</strong><br><em>Mapa de empatía de Evelyn</em></p>
 
 ![Evelyn Empathy Map](../assets/img/chapter2/evelyn-empathy-map.png)
 
@@ -531,7 +531,7 @@ El proceso se desarrolló en cuatro momentos. En el primero, el equipo realizó 
 | Morado | Policy | Reacción automática del tipo cuando X entonces Y |
 | Verde claro | Read Model | Vista que alguien consulta para decidir |
 
-<p class="caption"><strong>Figura 11</strong><br><em>Tablero completo del Big Picture EventStorming</em></p>
+<p class="caption"><strong>Figura 12</strong><br><em>Tablero completo del Big Picture EventStorming</em></p>
 
 ![Big Picture EventStorming - Tablero completo](../assets/img/artifacts/event-storming/big-picture-eventstorming-completo.png)
 
@@ -539,31 +539,31 @@ El tablero resultante quedó organizado en cinco fases narrativas, que se descri
 
 **Fase 1 — Vinculación, dentro de la consulta.** El profesional crea su cuenta y emite una invitación; el paciente la redime escaneando el código QR durante la consulta presencial y otorga su consentimiento. Los hechos relevantes son `Invitation Issued`, `Invitation Redeemed`, `Care Link Established` y `Consent Granted`. Aquí aparece la primera política del tablero: cuando se establece el vínculo, se abre automáticamente una ventana de evaluación para ese paciente.
 
-<p class="caption"><strong>Figura 12</strong><br><em>Fase 1 del Big Picture EventStorming: vinculación y consentimiento</em></p>
+<p class="caption"><strong>Figura 13</strong><br><em>Fase 1 del Big Picture EventStorming: vinculación y consentimiento</em></p>
 
 ![Fase 1 - Vinculación y consentimiento](../assets/img/artifacts/event-storming/big-picture-fase1-vinculacion.png)
 
 **Fase 2 — El acto clínico, dentro de la consulta.** Ocurre con un solo actor presente, el profesional, y reproduce las tres primeras fases que los nutricionistas entrevistados describieron como su proceso de trabajo: evaluación, diagnóstico e intervención. La cadena de hechos va de `Nutritional Assessment Recorded` y `Clinical Measurement Taken` hasta `Nutritional Diagnosis Issued`, `Targets Proposed`, `Targets Accepted As Proposed` o `Targets Overridden`, y culmina en `Nutrition Plan Published` y `Active Targets Updated`. Este último hecho es el que más consecuencias tiene en el resto del tablero, porque desencadena tres políticas simultáneas en zonas distintas del dominio.
 
-<p class="caption"><strong>Figura 13</strong><br><em>Fase 2 del Big Picture EventStorming: acto clínico</em></p>
+<p class="caption"><strong>Figura 14</strong><br><em>Fase 2 del Big Picture EventStorming: acto clínico</em></p>
 
 ![Fase 2 - Acto clínico](../assets/img/artifacts/event-storming/big-picture-fase2-acto-clinico.png)
 
 **Fase 3 — Entre consultas.** Es la zona del tablero donde vive el enunciado del problema. Participan los dos actores de manera asíncrona, sin estar en el mismo lugar ni en el mismo momento, y con conectividad intermitente. El paciente produce `Meal Logged`, `Estimate Confirmed By Patient`, `Off Plan Entry Logged`, `Self Weigh In Recorded` y `Entry Queued Offline`; el sistema reacciona con `Day Evaluated`, `Daily Compliance Computed`, `Deviation Detected`, `Sustained Deviation Detected` y `Consistency Index Recomputed`. Durante la sesión se identificó aquí una decisión de diseño que el equipo dejó explícita en el tablero: la alerta de consistencia notifica primero al paciente mediante `Patient Prompted About Consistency` y solo escala al profesional después de tres semanas sostenidas, mientras que `Logging Gap Detected` nunca escala ni cuenta como incumplimiento.
 
-<p class="caption"><strong>Figura 14</strong><br><em>Fase 3 del Big Picture EventStorming: periodo entre consultas</em></p>
+<p class="caption"><strong>Figura 15</strong><br><em>Fase 3 del Big Picture EventStorming: periodo entre consultas</em></p>
 
 ![Fase 3 - Periodo entre consultas](../assets/img/artifacts/event-storming/big-picture-fase3-entre-consultas.png)
 
 **Fase 4 — La decisión clínica.** El profesional recibe la señal en su bandeja de revisión y decide. Los hechos son `Review Item Created`, `Nutrition Plan Adjusted`, `Plan Version Superseded` y `Review Item Resolved`. La sesión hizo visible que ninguna política conecta la señal con el ajuste del plan: la automatización se detiene en la bandeja y es un humano quien continúa la cadena.
 
-<p class="caption"><strong>Figura 15</strong><br><em>Fase 4 del Big Picture EventStorming: decisión clínica del profesional</em></p>
+<p class="caption"><strong>Figura 16</strong><br><em>Fase 4 del Big Picture EventStorming: decisión clínica del profesional</em></p>
 
 ![Fase 4 - Decisión clínica del profesional](../assets/img/artifacts/event-storming/big-picture-fase4-decision-clinica.png)
 
 **Fase 5 — Cierre.** Comprende `Referral Recorded`, `Treatment Discharged`, `Consent Withdrawn` y `Care Link Revoked`, con la política que cierra la ventana de evaluación cuando el vínculo se revoca.
 
-<p class="caption"><strong>Figura 16</strong><br><em>Fase 5 del Big Picture EventStorming: cierre del tratamiento</em></p>
+<p class="caption"><strong>Figura 17</strong><br><em>Fase 5 del Big Picture EventStorming: cierre del tratamiento</em></p>
 
 ![Fase 5 - Cierre del tratamiento](../assets/img/artifacts/event-storming/big-picture-fase5-cierre.png)
 
@@ -2637,7 +2637,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
 
 #### Impact Mapping - Paciente
 
-<p class="caption"><strong>Figura 17</strong><br><em>Impact Mapping del paciente</em></p>
+<p class="caption"><strong>Figura 18</strong><br><em>Impact Mapping del paciente</em></p>
 
 ![Impact Mapping Paciente](../assets/img/chapter2/ImpactmapPaciente.png)
 
@@ -2648,7 +2648,7 @@ El Impact Mapping del paciente se orienta a promover un registro continuo de inf
 
 #### Impact Mapping - Nutricionista
 
-<p class="caption"><strong>Figura 18</strong><br><em>Impact Mapping del nutricionista</em></p>
+<p class="caption"><strong>Figura 19</strong><br><em>Impact Mapping del nutricionista</em></p>
 
 ![Impact Mapping Nutricionista](../assets/img/chapter2/ImpactmapNutri.png)
 
@@ -2666,7 +2666,7 @@ El Impact Mapping del nutricionista se orienta al uso recurrente de la informaci
 | 2 | SS01 | Investigación de tecnologías para el reconocimiento de alimentos | 3 | Sprint 1 |
 | 3 | SS04 | Investigación de los controles de uso de la IA generativa | 3 | Sprint 1 |
 | 4 | TS09 | Servicios de asistencia con IA | 8 | Sprint 1 |
-| 5 | TS05 | Servicios de registro de ingesta alimentaria | 8 | Sprint 2 |
+| 5 | TS05 | Servicios de registro de ingesta alimentaria | 5 | Sprint 2 |
 | 6 | US10 | Registro manual de comida mediante catálogo | 5 | Sprint 1 |
 | 7 | SS02 | Investigación de Open Food Facts y USDA para el catálogo de alimentos | 3 | Sprint 1 |
 | 8 | US09 | Confirmación o ajuste de estimación de porción | 3 | Sprint 1 |
@@ -2726,7 +2726,7 @@ La columna Sprint indica el sprint en que el Product Owner aceptó la historia (
 
 A continuación, se presenta el Product Backlog elaborado en Trello:
 
-<p class="caption"><strong>Figura 19</strong><br><em>Product Backlog de Healthify</em></p>
+<p class="caption"><strong>Figura 20</strong><br><em>Product Backlog de Healthify</em></p>
 
 ![Product Backlog](../assets/img/chapter2/ProductBacklog.png)
 
