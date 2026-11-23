@@ -10,7 +10,7 @@
 <p align="center">NRC</p>
 <p align="center"><strong>13981</strong></p>
 
-<h2 align="center">Informe del Avance 2</h2>
+<h2 align="center">Informe del Trabajo Final</h2>
 
 <p align="center">Docente</p>
 <p align="center"><strong>Mayta Guillermo, Jorge Luis</strong></p>
@@ -38,7 +38,7 @@
 <br>
 
 <p align="center"><strong>Período 202620</strong></p>
-<p align="center"><strong>Noviembre 2026</strong></p>
+<p align="center"><strong>Diciembre 2026</strong></p>
 
 <div style="page-break-after: always"></div>
 
@@ -73,6 +73,11 @@
 | 2.5.0 | 10/10/2026 – 03/11/2026 | Olenka Del Aguila | Cap. 4: ajuste del Sprint 1 (45 de 55 historias aceptadas) y Sprint 2 con planning, backlog, evidencias de desarrollo, pruebas, ejecución, documentación de servicios, despliegue y colaboración (`feature/sprint-2`) |
 | 2.6.0 | 03/11/2026 | Angel Villarreal | Repositorio de la app Flutter en el README; enlaces de Firebase App Distribution de las apps Android y Flutter en anexos (`feature/sprint-2`) |
 | 3.0.0 | 09/11/2026 | Angel Villarreal | AV2 Report |
+| 3.1.0 | 10/11/2026 – 23/11/2026 | Angel Villarreal | Cap. 4: capturas de las soluciones a los problemas #8 y #10 de la evaluación heurística; espacio para el video de exposición del TB2 en anexos y para la captura de Insights del TB2 |
+| 3.2.0 | 23/11/2026 – 28/11/2026 | Angel Villarreal | Cap. 4: Sprint 3 con planning, líderes y colaboradores, backlog, evidencias de desarrollo, pruebas, ejecución, documentación de servicios, despliegue y colaboración; sección 4.1 actualizada (versiones vigentes, pruebas de interfaz de Android, variables de los recordatorios, ejemplos de ramas y alcances de commits) y renumeración de tablas y figuras |
+| 3.3.0 | 23/11/2026 – 28/11/2026 | Angel Villarreal | Cap. 2: escenarios nuevos en US01, US04, US16, US20, US39 y TS10; columna Sprint del Product Backlog con el sprint en que se aceptó cada historia |
+| 3.4.0 | 23/11/2026 – 28/11/2026 | Angel Villarreal | Conclusiones y recomendaciones finales; acciones y conclusiones TB2 del student outcome; índice con el Sprint 3 |
+| 4.0.0 | 28/12/2026 | Angel Villarreal | TB2 Report |
 
 <div style="page-break-after: always"></div>
 
@@ -101,6 +106,12 @@ AV2:<br>
 <p class="caption"><strong>Figura 3</strong><br><em>Captura de GitHub Insights del repositorio del informe al cierre del AV2</em></p>
 
 ![Report](./assets/img/insights/av2.png)
+
+TB2:<br>
+
+<p class="caption"><strong>Figura 4</strong><br><em>Captura de GitHub Insights del repositorio del informe al cierre del TB2</em></p>
+
+![Report](./assets/img/insights/tb2.png)
 
 <div style="page-break-after: always"></div>
 
@@ -260,6 +271,16 @@ AV2:<br>
     - [4.2.2.7. Services Documentation Evidence for Sprint Review](report/14-chapter4-product-implementation-and-validation.md#4227-services-documentation-evidence-for-sprint-review)
     - [4.2.2.8. Software Deployment Evidence for Sprint Review](report/14-chapter4-product-implementation-and-validation.md#4228-software-deployment-evidence-for-sprint-review)
     - [4.2.2.9. Team Collaboration Insights during Sprint](report/14-chapter4-product-implementation-and-validation.md#4229-team-collaboration-insights-during-sprint)
+  - [4.2.3. Sprint 3](report/14-chapter4-product-implementation-and-validation.md#423-sprint-3)
+    - [4.2.3.1. Sprint Planning 3](report/14-chapter4-product-implementation-and-validation.md#4231-sprint-planning-3)
+    - [4.2.3.2. Aspect Leaders and Collaborators](report/14-chapter4-product-implementation-and-validation.md#4232-aspect-leaders-and-collaborators)
+    - [4.2.3.3. Sprint Backlog 3](report/14-chapter4-product-implementation-and-validation.md#4233-sprint-backlog-3)
+    - [4.2.3.4. Development Evidence for Sprint Review](report/14-chapter4-product-implementation-and-validation.md#4234-development-evidence-for-sprint-review)
+    - [4.2.3.5. Testing Suite Evidence for Sprint Review](report/14-chapter4-product-implementation-and-validation.md#4235-testing-suite-evidence-for-sprint-review)
+    - [4.2.3.6. Execution Evidence for Sprint Review](report/14-chapter4-product-implementation-and-validation.md#4236-execution-evidence-for-sprint-review)
+    - [4.2.3.7. Services Documentation Evidence for Sprint Review](report/14-chapter4-product-implementation-and-validation.md#4237-services-documentation-evidence-for-sprint-review)
+    - [4.2.3.8. Software Deployment Evidence for Sprint Review](report/14-chapter4-product-implementation-and-validation.md#4238-software-deployment-evidence-for-sprint-review)
+    - [4.2.3.9. Team Collaboration Insights during Sprint](report/14-chapter4-product-implementation-and-validation.md#4239-team-collaboration-insights-during-sprint)
 - [4.3. Validation Interviews](report/14-chapter4-product-implementation-and-validation.md#43-validation-interviews)
   - [4.3.1. Diseño de Entrevistas](report/14-chapter4-product-implementation-and-validation.md#431-diseño-de-entrevistas)
   - [4.3.2. Registro de Entrevistas](report/14-chapter4-product-implementation-and-validation.md#432-registro-de-entrevistas)

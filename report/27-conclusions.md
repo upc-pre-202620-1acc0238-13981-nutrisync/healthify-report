@@ -8,9 +8,9 @@
 
 El Problem Statement ubicó la brecha del tratamiento nutricional en el periodo entre consultas: el nutricionista ya tiene dónde guardar la evaluación, el diagnóstico y el plan, pero no recibe información continua, organizada y confiable sobre lo que el paciente come mientras no lo ve. Las entrevistas de descubrimiento lo confirmaron. Willyan diseña el plan y registra las medidas en Nutrimind; Tatiana reparte la información entre la historia clínica, un Excel por paciente y WhatsApp. Ninguno de los dos registra lo que el paciente come entre consultas: Willyan lo reconstruye con una nueva entrevista y Tatiana dedica cerca de un tercio de la cita a preguntarlo día por día. Del lado del paciente, ambas entrevistadas guardan su plan en WhatsApp y tienen sus medidas repartidas entre fotos del celular, el chat y lo que conserva el nutricionista. Una de ellas lo resumió así: el plan está en WhatsApp, las medidas en un bloc de notas y lo que come cada día, solo en su memoria.
 
-Healthify responde hoy a ese problema con cuatro productos en uso. El landing page está publicado en https://landing.healthify.lat, en español e inglés. El backend expone los seis bounded contexts en https://platform.healthify.lat (versión 1.6.0). La app Android (versión 2.1.0) atiende al paciente y al nutricionista, y la app Flutter (versión 1.3.1) le da al nutricionista una herramienta propia para la consulta. Las dos apps se distribuyen firmadas por Firebase App Distribution y como APK en los releases de GitHub. En el primer sprint el Product Owner aceptó 45 de las 55 historias comprometidas; en el segundo aceptó las 26 historias del sprint (106 Story Points), entre ellas las diez que habían quedado pendientes.
+Al cierre del proyecto, Healthify responde a ese problema con cuatro productos en uso. El landing page está publicado en https://landing.healthify.lat, en español e inglés. El backend expone los seis bounded contexts en https://platform.healthify.lat (versión 2.0.1). La app Android (versión 2.2.0) atiende al paciente y al nutricionista, y la app Flutter (versión 1.4.0) le da al nutricionista una herramienta propia para la consulta. Las dos apps se distribuyen firmadas por Firebase App Distribution y como APK en los releases de GitHub. El trabajo se hizo en tres sprints. En el primero el Product Owner aceptó 45 de las 55 historias comprometidas; en el segundo aceptó las 26 historias del sprint (106 Story Points), entre ellas las diez que habían quedado pendientes. El tercero (30 Story Points) atendió dos problemas de la evaluación heurística, la invitación que no se podía compartir y la pestaña Seguimiento recargada, y agregó el recordatorio de cada consulta por correo.
 
-Los principios que el modelo de dominio fijó como respuesta al Problem Statement ya son comportamiento del sistema. El diario del paciente no se borra. La estimación de una foto queda como propuesta hasta que el paciente la confirma o la ajusta. Las comidas y los autopesajes registrados sin conexión se encolan con su identificador y su hora local, y se sincronizan sin duplicarse. La foto viaja sin metadatos EXIF. Las señales automáticas terminan en la bandeja del nutricionista, y la propuesta de ajuste del plan solo cambia algo cuando el profesional la acepta o la edita. WhatsApp sigue siendo el competidor real del periodo entre consultas, porque ambos segmentos ya lo usan como canal de seguimiento.
+Los principios que el modelo de dominio fijó como respuesta al Problem Statement ya son comportamiento del sistema. El diario del paciente no se borra. La estimación de una foto queda como propuesta hasta que el paciente la confirma o la ajusta. Las comidas y los autopesajes registrados sin conexión se encolan con su identificador y su hora local, y se sincronizan sin duplicarse. La foto viaja sin metadatos EXIF. Las señales automáticas terminan en la bandeja del nutricionista, y la propuesta de ajuste del plan solo cambia algo cuando el profesional la acepta o la edita. El paciente recibe un correo un día y una hora antes de cada consulta, y una consulta cancelada deja de recordarse. WhatsApp sigue siendo el competidor real del periodo entre consultas, porque ambos segmentos ya lo usan como canal de seguimiento.
 
 ---
 
@@ -36,13 +36,13 @@ La Hypothesis Statement 1 planteó que el paciente usaría Healthify de forma re
 
 La Hypothesis Statement 2 sostuvo que el paciente seguiría usando la app si pudiera registrar su peso y ver su evolución. La tendencia de peso está implementada, y tras las sesiones de validación se aclaró la pestaña de peso. La frecuencia de pesaje semanal o quincenal sigue indicando que el peso no basta para sostener el uso diario. La hipótesis queda parcialmente validada y su efecto debe medirse junto con el registro de comidas.
 
-La Hypothesis Statement 3 afirmó que los nutricionistas incorporarían Healthify a su seguimiento si tuvieran información continua y organizada sobre la alimentación y el peso de sus pacientes. Tatiana dijo que lo que más le gustaría cambiar es tener toda la información del paciente en un solo lugar. El producto ya le ofrece al nutricionista el expediente unificado, el monitoreo de cada paciente y una cartera agrupada por acción pendiente, en Android y en Flutter. La hipótesis sigue validada de forma cualitativa, con evidencia de dos profesionales; falta comprobar que el nutricionista abra el expediente antes de cada consulta.
+La Hypothesis Statement 3 afirmó que los nutricionistas incorporarían Healthify a su seguimiento si tuvieran información continua y organizada sobre la alimentación y el peso de sus pacientes. Tatiana dijo que lo que más le gustaría cambiar es tener toda la información del paciente en un solo lugar. El producto le ofrece al nutricionista el expediente unificado, el monitoreo de cada paciente y una cartera agrupada por acción pendiente, en Android y en Flutter. Desde el tercer sprint, la pestaña Seguimiento muestra primero la semana, la tendencia de peso, los días con registro y la última medición, porque la nutricionista de la sesión de validación dijo que en un celular pequeño tendría que desplazarse demasiado. La hipótesis sigue validada de forma cualitativa, con evidencia de dos profesionales; falta comprobar que el nutricionista abra el expediente antes de cada consulta.
 
 La Hypothesis Statement 4 propuso que los nutricionistas usarían indicadores derivados de la alimentación y del peso para ajustar el tratamiento, sin ajustes automáticos. Tatiana valoró mucho una alerta de inconsistencia, sobre todo para los pacientes que ve cada uno o tres meses. La bandeja de revisión, con la evidencia de cada señal, la señal de consistencia y la propuesta de ajuste que el nutricionista acepta o edita, ya está construida. La hipótesis queda parcialmente validada: falta ver si los nutricionistas resuelven los ítems de la bandeja y si esas resoluciones cambian sus decisiones.
 
 La Hypothesis Statement 5 planteó que los nutricionistas relacionarían mejor lo ocurrido entre consultas con el plan si pudieran registrarlo y ajustarlo dentro de Healthify. Es la hipótesis con más riesgo. Las conclusiones anteriores recomendaban empezar `Nutritional Care` con una versión mínima, limitada a publicar las metas vigentes. El equipo construyó la versión completa: la consulta guiada en cuatro pasos (evaluación, diagnóstico, propuesta de metas calculadas y publicación del plan) y el ajuste del plan entre consultas. Al paciente solo le llegan las metas vigentes (`Active Targets`), que confirma al recibirlas. Con esto Healthify sirve al caso de Tatiana, que registra sus ajustes en WhatsApp y a veces pierde el hilo de lo último que indicó. Para Willyan, que ya registra el plan en Nutrimind, la consulta guiada puede sentirse como trabajo duplicado, y eso todavía no se ha probado.
 
-La Hypothesis Statement 6 sostuvo que la adopción dependería de un vínculo digital entre paciente y nutricionista con funciones diferenciadas. Ambas pacientes mantienen una relación uno a uno con su nutricionista y quieren centralizar la información del tratamiento. El producto ya cubre el ciclo del vínculo: invitación por código QR, consentimiento, revocación, cambio de nutricionista y alta al terminar el tratamiento. La hipótesis queda parcialmente validada, porque el flujo de invitación todavía no se ha usado durante una consulta real.
+La Hypothesis Statement 6 sostuvo que la adopción dependería de un vínculo digital entre paciente y nutricionista con funciones diferenciadas. Ambas pacientes mantienen una relación uno a uno con su nutricionista y quieren centralizar la información del tratamiento. El producto cubre el ciclo del vínculo: invitación por código QR, consentimiento, revocación, cambio de nutricionista y alta al terminar el tratamiento. Desde el tercer sprint, la nutricionista también puede copiar o compartir el código de la invitación y el paciente puede escribirlo a mano, de modo que la vinculación ya no exige estar juntos en la consulta. La hipótesis queda parcialmente validada, porque ninguno de los dos caminos de invitación se ha usado con un paciente real.
 
 ---
 
@@ -50,7 +50,7 @@ La Hypothesis Statement 6 sostuvo que la adopción dependería de un vínculo di
 
 El Problem Statement definió tres criterios de éxito: que los pacientes registren su alimentación con frecuencia entre consultas, que los nutricionistas consulten esa información antes de la siguiente cita y que la usen para sustentar sus decisiones de seguimiento y ajuste. El Lean UX Canvas añadió tres resultados comerciales: una tasa sostenida de retención de pacientes, una proporción creciente de nutricionistas que usan la plataforma de forma recurrente y un aumento progresivo de usuarios activos.
 
-Ninguno de estos criterios se ha cumplido todavía, porque las apps recién se distribuyen y ningún paciente ha completado con ellas un periodo entre consultas. Lo que cambió es que el producto ya puede medirlos. El modelo del Design Level EventStorming tiene veinticuatro agregados, ochenta y nueve comandos y noventa y seis eventos de dominio, y el backend implementa ochenta y dos de esos eventos. La frecuencia de registro se puede medir con `Meal Logged` y `Daily Compliance Computed`; la consulta del nutricionista, con el acceso al expediente y a los read models del diario; y el uso de la información para decidir, con `Review Item Resolved` y `Nutrition Plan Adjusted`. El siguiente paso del roadmap es poner esas mediciones a trabajar con usuarios reales.
+Al cierre del proyecto ninguno de estos criterios se pudo comprobar, porque ningún paciente ha completado con las apps un periodo entre consultas. Lo que el proyecto deja es un producto que puede medirlos. El modelo del Design Level EventStorming tiene veinticuatro agregados, ochenta y nueve comandos y noventa y seis eventos de dominio, y el backend implementa ochenta y dos de esos eventos. La frecuencia de registro se puede medir con `Meal Logged` y `Daily Compliance Computed`; la consulta del nutricionista, con el acceso al expediente y a los read models del diario; y el uso de la información para decidir, con `Review Item Resolved` y `Nutrition Plan Adjusted`. Esas mediciones son el punto de partida de las recomendaciones.
 
 ---
 
@@ -60,11 +60,11 @@ Se recomienda empezar por un piloto de entre siete y catorce días, la ventana m
 
 Se recomienda probar la consulta guiada con nutricionistas que ya usan otra herramienta clínica, como Willyan con Nutrimind, antes de seguir ampliando `Nutritional Care`. Si el piloto muestra que registrar el plan en Healthify les resulta trabajo duplicado, la alternativa es importar el plan, o al menos las metas vigentes, desde la herramienta que ya usan. Al mismo tiempo, conviene ampliar la muestra de ambos segmentos con pacientes hombres y con nutricionistas de práctica exclusivamente privada, porque cuatro entrevistas no alcanzan para generalizar.
 
-Se recomienda cerrar lo que el producto deja pendiente para salir a usuarios. Los testimonios del landing page son un borrador que falta confirmar con sus autoras. El backend, además, no tiene un flujo de integración continua que ejecute sus 1472 pruebas en cada pull request, como ya ocurre en las dos apps.
+Se recomienda cerrar lo que el producto deja pendiente antes de salir a usuarios. Los testimonios del landing page son un borrador que falta confirmar con sus autoras. El backend no tiene un flujo de integración continua que ejecute sus 1553 pruebas en cada pull request, como ya ocurre en las dos apps, y las 34 pruebas de interfaz que la app Android agregó en el tercer sprint necesitan un emulador, por lo que el CI no las corre. De la evaluación heurística quedan dos decisiones abiertas: el landing page no dice de forma explícita que Healthify es gratuito (problema #7) y la app solo existe para Android (problema #9), con la versión para iOS planificada para una etapa posterior.
 
 En cuanto al modelo de negocio, se recomienda validar el acceso gratuito con nutricionistas, preguntando qué funciones profesionales estarían dispuestos a pagar, sin crear barreras para el paciente. El índice de consistencia debería mostrarse a los nutricionistas solo cuando el piloto confirme que les sirve y existan suficientes días de datos para que la señal sea confiable. Después del piloto, la cobertura puede ampliarse a otras regiones del Perú con conectividad intermitente, donde el diseño offline-first ya está probado en la app.
 
-Healthify trata datos de salud, que la Ley N.º 29733 de Protección de Datos Personales considera datos sensibles. El producto ya pide aceptar los términos al crear la cuenta, publica una política de privacidad en el landing page, permite revocar el consentimiento, exportar los datos del paciente y apagar las funciones de IA, y seudonimiza lo que envía al modelo. Antes del piloto se recomienda que un abogado revise los términos y la política, e inscribir el banco de datos personales ante la Autoridad Nacional de Protección de Datos Personales. En cada iteración, el equipo debería mantener las dos decisiones que las entrevistas mostraron como más valiosas: la app no juzga ni penaliza al paciente, y la decisión clínica es siempre del nutricionista.
+Healthify trata datos de salud, que la Ley N.º 29733 de Protección de Datos Personales considera datos sensibles. El producto ya pide aceptar los términos al crear la cuenta, publica una política de privacidad en el landing page, permite revocar el consentimiento, exportar los datos del paciente y apagar las funciones de IA, y seudonimiza lo que envía al modelo. Antes del piloto se recomienda que un abogado revise los términos y la política, e inscribir el banco de datos personales ante la Autoridad Nacional de Protección de Datos Personales. El recordatorio por correo también envía datos de salud fuera de la app: la fecha de la consulta y la preparación indicada viajan por el servidor de correo, que debería figurar en la política de privacidad. En cada iteración, el equipo debería mantener las dos decisiones que las entrevistas mostraron como más valiosas: la app no juzga ni penaliza al paciente, y la decisión clínica es siempre del nutricionista.
 
 ## Video App Validation
 
@@ -80,7 +80,7 @@ Las pruebas se realizaron con usuarios representativos de los segmentos objetivo
 
 Para facilitar la instalación y evaluación en dispositivos móviles antes del lanzamiento, se habilitaron los siguientes enlaces de distribución:
 
-<p class="caption"><strong>Tabla 290</strong><br><em>Enlaces de distribución de la aplicación en Firebase App Distribution</em></p>
+<p class="caption"><strong>Tabla 309</strong><br><em>Enlaces de distribución de la aplicación en Firebase App Distribution</em></p>
 
 | Plataforma / Build | Enlace de Distribución |
 | --- | --- |
@@ -91,7 +91,7 @@ Para facilitar la instalación y evaluación en dispositivos móviles antes del 
 
 ### Información del Video
 
-<p class="caption"><strong>Tabla 291</strong><br><em>Información del video de validación de la aplicación</em></p>
+<p class="caption"><strong>Tabla 310</strong><br><em>Información del video de validación de la aplicación</em></p>
 
 | Atributo | Contenido |
 | --- | --- |
@@ -121,7 +121,7 @@ El tono de la comunicación es directo, empático y centrado en la evidencia cl�
 
 ### Información del Video
 
-<p class="caption"><strong>Tabla 292</strong><br><em>Información del video About the Product</em></p>
+<p class="caption"><strong>Tabla 311</strong><br><em>Información del video About the Product</em></p>
 
 | Atributo | Contenido |
 | --- | --- |
@@ -172,7 +172,7 @@ Esta sección presenta el Video About-the-Team de Healthify, desarrollado por la
 
 ### Información del Video
 
-<p class="caption"><strong>Tabla 293</strong><br><em>Información del video About the Team</em></p>
+<p class="caption"><strong>Tabla 312</strong><br><em>Información del video About the Team</em></p>
 
 | Atributo | Contenido |
 | --- | --- |
@@ -184,7 +184,7 @@ Esta sección presenta el Video About-the-Team de Healthify, desarrollado por la
 
 ### Pauta de Secuencias de Contenido
 
-<p class="caption"><strong>Tabla 294</strong><br><em>Pauta de secuencias de contenido del video About the Team</em></p>
+<p class="caption"><strong>Tabla 313</strong><br><em>Pauta de secuencias de contenido del video About the Team</em></p>
 
 | Sección | Inicio (hh:mm:ss) |
 | --- | --- |
@@ -218,37 +218,57 @@ Durante el Sprint 1, el equipo abordó 276 Story Points distribuidos de forma si
 **Olenka Priscilla Del Aguila Del Aguila (U202411669):**
 
 * Condujo tres de las cuatro entrevistas a profundidad con nutricionistas y pacientes durante el Needfinding.
-* Documentó el Capítulo 4 del informe técnico, detallando la configuración de entornos, control de versiones, guías de estilo y evidencias del Sprint 1.
-* En la Landing Page, implementó la sección Hero y la sección del problema incorporando un carrusel bilingüe accesible (español e inglés).
-* En el backend, lideró los Bounded Contexts de *Identity & Access Management (IAM)* y *Care Relationship*, implementando autenticación JWT, rotación de refresh tokens, bloqueo temporal de cuentas y consentimiento informado paciente-nutricionista.
-* En la app Android, desarrolló la sección de datos cifrados, la vinculación mediante código QR y el flujo de consentimiento.
+* Documentó el Capítulo 4 del informe técnico: la configuración de entornos, el control de versiones, las guías de estilo y las evidencias del Sprint 1 y del Sprint 2.
+* En el landing page, implementó el hero y la sección del problema, con un carrusel accesible en español e inglés.
+* En el backend, lideró los bounded contexts *Identity & Access Management (IAM)* y *Care Relationship*: autenticación JWT, rotación de refresh tokens, bloqueo temporal de cuentas y consentimiento entre paciente y nutricionista.
+* En la app Android, desarrolló la sesión cifrada, la vinculación mediante código QR y el flujo de consentimiento.
+* En el backend, modeló el restablecimiento de contraseña con códigos de un solo uso, el cálculo de la ingesta del día y las reglas de la sugerencia de plan.
+* En la app Android, implementó el consumo de esa sugerencia, la aceptación de los términos al registrarse y la cartera agrupada por acción pendiente.
+* En la app Flutter, construyó la sesión con renovación de token, el registro, la recuperación de contraseña, el cambio de idioma y las pantallas del catálogo de alimentos.
 
 **Angela Milagros Espinoza Cruz (U202415495):**
 
 * Lideró la fase de Needfinding elaborando User Personas, User Task Matrix, Empathy Maps, Journey Maps y el análisis competitivo.
-* Lideró el Capítulo 3 del informe, abarcando desde la guía de estilo y arquitectura de información hasta wireframes, mockups, wireflows, user flows y el prototipo final en Figma.
-* En la Landing Page, programó las páginas institucionales de "Nosotros" y "Contacto".
-* En el backend, lideró el Bounded Context de *Monitoring & Adherence*, desarrollando el cálculo de ventanas de evaluación, desviaciones, índice de consistencia, tareas en segundo plano (background jobs) y Read Models para el expediente del paciente.
-* En la app Android, implementó la navegación entre roles (paciente y nutricionista), la persistencia local con Room y el flujo integral de consulta guiada.
+* Lideró el Capítulo 3 del informe: la guía de estilo, la arquitectura de información, los wireframes, los mock-ups, los wireflows, los user flows y el prototipo en Figma.
+* En el landing page, programó las páginas «Nosotros» y «Contacto».
+* En el backend, lideró el bounded context *Monitoring & Adherence*: ventanas de evaluación, desviaciones, índice de consistencia, trabajos en segundo plano y read models para el expediente del paciente.
+* En la app Android, implementó la navegación de paciente y de nutricionista, la persistencia local con Room y el flujo completo de la consulta guiada.
+* En el backend, hizo que los días clínicos se evalúen según el calendario del paciente y no según la hora del servidor, y retiró los ocho endpoints que el Sprint 1 dejó marcados como obsoletos.
+* En el landing page, rediseñó «Nosotros» y «Contacto» sobre el diseño V10.
+* En la app Android, implementó la descarga de los datos del paciente y los recordatorios de consulta con WorkManager y el permiso de notificaciones.
+* En la app Flutter, construyó la bandeja de revisión, la propuesta de ajuste, la agenda y los recordatorios locales, y preparó el primer release firmado.
 
 **Joel Fernando Mora Rivera (U20241B227):**
 
-* Diseñó la arquitectura de software integral siguiendo el modelo C4 (diagramas de contexto, contenedores, componentes y despliegue) y el generador de Bounded Context Canvas.
-* En la Landing Page, programó las secciones de funciones dedicadas tanto al paciente como al nutricionista.
-* En el backend, lideró los Bounded Contexts de *Food Catalog* e *Intake & Body Response*, integrando proveedores de datos nutricionales externos (USDA y Open Food Facts), la sincronización sin duplicados offline y el cálculo de la tendencia de peso.
-* En la app Android, implementó el catálogo de alimentos con caché local, la visualización del progreso diario, la agenda y consultas del paciente, e integró la generación de ideas de comidas mediante IA.
+* Diseñó la arquitectura de software con el modelo C4 (diagramas de contexto, contenedores, componentes y despliegue) y el generador de Bounded Context Canvas.
+* En el landing page, programó las secciones de funciones para el paciente y para el nutricionista.
+* En el backend, lideró los bounded contexts *Food Catalog* e *Intake & Body Response*: la integración con USDA y Open Food Facts, la sincronización sin duplicados de lo registrado sin conexión y el cálculo de la tendencia de peso.
+* En la app Android, implementó el catálogo de alimentos con caché local, el progreso del día, la agenda y las consultas del paciente, y las ideas de comidas con IA.
+* En el backend, implementó el envío de correo por SMTP y el almacenamiento con hash de los códigos y tokens de recuperación de contraseña, y adjuntó la sugerencia de plan al análisis de fotos usando los nombres del catálogo.
+* En el landing page, rediseñó el inicio según Figma V10.
+* En la app Android, llevó el detalle de versiones al expediente, armó la semana registrada y aplicó los ajustes de las entrevistas de validación.
+* En la app Flutter, implementó la cartera de pacientes, la invitación por QR, el alta, el shell de navegación y el repositorio del catálogo.
 
 **Rose Almendra Vergaray Calderon (U20241D159):**
 
-* Lideró el Capítulo 1 del informe, redactando la descripción de la startup, análisis 5W2H, el marco Lean UX y la caracterización de los segmentos objetivo.
-* Especificó los requerimientos ágiles mediante User Stories con criterios de aceptación en sintaxis Gherkin, Impact Maps y la gestión del Product Backlog.
-* En la Landing Page, desarrolló la sección "Cómo funciona", el módulo de preguntas frecuentes con filtros dinámicos y la página de Términos y Condiciones.
-* En el backend, lideró el Bounded Context de *Nutritional Care*, abarcando la consulta guiada, diagnóstico clínico, cálculo automatizado de metas, versionado de planes y la bandeja de revisión con sugerencias de ajuste por IA.
-* En la app Android, desarrolló el diario nutricional, el registro de alimentos (por foto y manual), el registro de autopesaje y la cola de sincronización sin conexión.
+* Lideró el Capítulo 1 del informe: la descripción de la startup, el análisis 5W2H, el Lean UX y los segmentos objetivo.
+* Redactó las User Stories con criterios de aceptación en Gherkin, los Impact Maps y el Product Backlog.
+* En el landing page, desarrolló «Cómo funciona», las preguntas frecuentes con filtros y la página de términos y condiciones.
+* En el backend, lideró el bounded context *Nutritional Care*: la consulta guiada, el diagnóstico, el cálculo de metas, las versiones del plan y la bandeja de revisión con la propuesta de ajuste por IA.
+* En la app Android, desarrolló el diario, el registro de comidas por foto y a mano, el autopesaje y la cola de sincronización sin conexión.
+* En el backend, implementó la exportación de datos en ZIP generada en streaming y la verificación del código de restablecimiento, con bloqueo tras cinco intentos fallidos.
+* En el landing page, agregó los textos V10 y rediseñó la página de términos.
+* En la app Android, construyó el medidor de energía del inicio, la pantalla de recuperación, el menú lateral del paciente y los flujos de CI y de distribución firmada.
+* En la app Flutter, implementó el expediente del paciente, el seguimiento y los pasos de la consulta guiada.
 
 **Angel Martin Villarreal Bazan (U202417857):**
 
-* Asumió la estructuración del repositorio del informe técnico, la coordinación de entregables entre los miembros y la planificación integral del Sprint 1.
-* En la Landing Page, diseñó la estructura base del proyecto, el sistema de diseño visual y el motor de traducción e internacionalización entre español e inglés.
-* En el backend, desarrolló la plataforma base en .NET 10 (núcleo compartido, middleware de excepciones, límites de solicitudes/rate limiting), el módulo de IA con Gemini (control de consentimientos y validación de respuestas) y la integración continua/despliegue con Docker y GitHub Actions.
-* En la app Android, estructuró la capa de red, inyección de dependencias, el sistema de sincronización, el design system de Healthify y gestionó la integración de código hacia las ramas develop y main.
+* Estructuró el repositorio del informe, coordinó los entregables entre los integrantes y planificó el Sprint 1.
+* En el landing page, armó la estructura base, el sistema de diseño y el motor de traducción entre español e inglés.
+* En el backend, desarrolló la base en .NET 10 (núcleo compartido, middleware de excepciones y rate limiting), el módulo de IA con Gemini (control de consentimiento y validación de respuestas) y la integración y el despliegue continuos con Docker y GitHub Actions.
+* En la app Android, construyó la capa de red, la inyección de dependencias, la cola de sincronización y el sistema de diseño Healthify M3, e integró el código en las ramas `develop` y `main`.
+* En la app Flutter, creó la base de la app del nutricionista: núcleo compartido, cliente HTTP con Problem Details, sistema de diseño, localización y CI.
+* Configuró la firma de APKs y Firebase App Distribution para distribuir las dos apps.
+* En el backend, acotó el razonamiento de Gemini.
+* En el landing page, reconstruyó los estilos sobre los tokens V10 y agregó los testimonios.
+* En las dos apps, implementó el cierre de derivaciones, y corrigió la prueba que fallaba en el CI de Flutter para publicar la versión 1.3.1.
