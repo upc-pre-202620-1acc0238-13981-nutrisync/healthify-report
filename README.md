@@ -73,10 +73,10 @@
 | 2.5.0 | 10/10/2026 – 03/11/2026 | Olenka Del Aguila | Cap. 4: ajuste del Sprint 1 (45 de 55 historias aceptadas) y Sprint 2 con planning, backlog, evidencias de desarrollo, pruebas, ejecución, documentación de servicios, despliegue y colaboración (`feature/sprint-2`) |
 | 2.6.0 | 03/11/2026 | Angel Villarreal | Repositorio de la app Flutter en el README; enlaces de Firebase App Distribution de las apps Android y Flutter en anexos (`feature/sprint-2`) |
 | 3.0.0 | 09/11/2026 | Angel Villarreal | AV2 Report |
-| 3.1.0 | 10/11/2026 – 23/11/2026 | Angel Villarreal | Cap. 4: capturas de las soluciones a los problemas #8 y #10 de la evaluación heurística; espacio para el video de exposición del TB2 en anexos y para la captura de Insights del TB2 |
-| 3.2.0 | 23/11/2026 – 28/11/2026 | Angel Villarreal | Cap. 4: Sprint 3 con planning, líderes y colaboradores, backlog, evidencias de desarrollo, pruebas, ejecución, documentación de servicios, despliegue y colaboración; sección 4.1 actualizada (versiones vigentes, pruebas de interfaz de Android, variables de los recordatorios, ejemplos de ramas y alcances de commits) y renumeración de tablas y figuras |
-| 3.3.0 | 23/11/2026 – 28/11/2026 | Angel Villarreal | Cap. 2: escenarios nuevos en US01, US04, US16, US20, US39 y TS10; columna Sprint del Product Backlog con el sprint en que se aceptó cada historia |
-| 3.4.0 | 23/11/2026 – 28/11/2026 | Angel Villarreal | Conclusiones y recomendaciones finales; acciones y conclusiones TB2 del student outcome; índice con el Sprint 3 |
+| 3.1.0 | 10/11/2026 – 23/11/2026 | Angela Espinoza / Angel Villarreal | Cap. 4: capturas de las soluciones a los problemas #8 y #10 de la evaluación heurística; espacio para el video de exposición del TB2 en anexos y para la captura de Insights del TB2 |
+| 3.2.0 | 23/11/2026 – 28/11/2026 | Joel Mora / Olenka Del Aguila / Rose Vergaray / Angel Villarreal | Cap. 4: Sprint 3 con planning, líderes y colaboradores, backlog, evidencias de desarrollo, pruebas, ejecución, documentación de servicios, despliegue y colaboración; sección 4.1 actualizada (versiones vigentes, pruebas de interfaz de Android, variables de los recordatorios, ejemplos de ramas y alcances de commits) y renumeración de tablas y figuras |
+| 3.3.0 | 23/11/2026 – 28/11/2026 | Rose Vergaray | Cap. 2: escenarios nuevos en US01, US04, US16, US20, US39 y TS10; columna Sprint del Product Backlog con el sprint en que se aceptó cada historia |
+| 3.4.0 | 23/11/2026 – 28/11/2026 | Angela Espinoza / Olenka Del Aguila / Angel Villarreal | Conclusiones y recomendaciones finales; acciones y conclusiones TB2 del student outcome; índice con el Sprint 3 |
 | 4.0.0 | 28/12/2026 | Angel Villarreal | TB2 Report |
 
 <div style="page-break-after: always"></div>
