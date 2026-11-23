@@ -3039,7 +3039,7 @@ Cada aspecto lo escribió su líder en una sola rama. En el backend, Mora Rivera
 
 El objetivo del Sprint 3 es que el paciente pueda vincularse sin escanear el QR, que la pestaña Seguimiento quepa en un celular pequeño y que cada consulta se recuerde por correo. Las tareas sin historia asociada publican las versiones de cada producto.
 
-<p class="caption"><strong>Figura 210</strong><br><em>Tablero de Trello del Sprint 3</em></p>
+<p class="caption"><strong>Figura 211</strong><br><em>Tablero de Trello del Sprint 3</em></p>
 
 ![Board Sprint 3](../assets/img/chapter4/sprint3/trello.png)
 
@@ -3095,15 +3095,15 @@ El trabajo siguió GitFlow como en los sprints anteriores. La columna **Branch**
 | Mobile Application (Android) | `healthify-android-app` | 3 (#36 a #38) | `v2.2.0` |
 | Mobile Application (Flutter) | `healthify-flutter-app` | 3 (#23 a #25) | `v1.4.0` |
 
-<p class="caption"><strong>Figura 211</strong><br><em>Captura de GitHub: pull requests del backend en el Sprint 3</em></p>
+<p class="caption"><strong>Figura 212</strong><br><em>Captura de GitHub: pull requests del backend en el Sprint 3</em></p>
 
 ![Pull requests del backend](../assets/img/chapter4/sprint3/gh-platform-pulls.png)
 
-<p class="caption"><strong>Figura 212</strong><br><em>Captura de GitHub: pull requests de la aplicación Android en el Sprint 3</em></p>
+<p class="caption"><strong>Figura 213</strong><br><em>Captura de GitHub: pull requests de la aplicación Android en el Sprint 3</em></p>
 
 ![Pull requests de la aplicación Android](../assets/img/chapter4/sprint3/gh-android-pulls.png)
 
-<p class="caption"><strong>Figura 213</strong><br><em>Captura de GitHub: pull requests de la aplicación Flutter en el Sprint 3</em></p>
+<p class="caption"><strong>Figura 214</strong><br><em>Captura de GitHub: pull requests de la aplicación Flutter en el Sprint 3</em></p>
 
 ![Pull requests de la aplicación Flutter](../assets/img/chapter4/sprint3/gh-flutter-pulls.png)
 
@@ -3255,7 +3255,7 @@ En el Sprint 3 se desplegaron las versiones 2.0.0 y 2.0.1 del backend, la app An
 
 Las capturas corresponden a la app Flutter 1.4.0 en un teléfono Android, con la sesión de una nutricionista y conectada al backend publicado.
 
-<p class="caption"><strong>Figura 214</strong><br><em>Capturas de la aplicación Flutter del nutricionista en el Sprint 3</em></p>
+<p class="caption"><strong>Figura 215</strong><br><em>Capturas de la aplicación Flutter del nutricionista en el Sprint 3</em></p>
 
 <table>
   <tr>
@@ -3272,7 +3272,7 @@ Las capturas corresponden a la app Flutter 1.4.0 en un teléfono Android, con la
 
 La captura corresponde a la app Android 2.2.0 en un teléfono, con la sesión de un paciente que va a vincularse con su nutricionista.
 
-<p class="caption"><strong>Figura 215</strong><br><em>Captura de la aplicación Android del paciente en el Sprint 3</em></p>
+<p class="caption"><strong>Figura 216</strong><br><em>Captura de la aplicación Android del paciente en el Sprint 3</em></p>
 
 <table>
   <tr>
@@ -3338,11 +3338,11 @@ Durante el Sprint 3 se desplegaron dos versiones del backend y se distribuyó un
 
 *Releases.* Los pull requests #26 y #28, de `develop` a `main`, dispararon el flujo `Release`, que publicó `v2.0.0` y `v2.0.1`.
 
-<p class="caption"><strong>Figura 216</strong><br><em>Captura de GitHub Actions: ejecuciones del flujo Release del backend en el Sprint 3</em></p>
+<p class="caption"><strong>Figura 217</strong><br><em>Captura de GitHub Actions: ejecuciones del flujo Release del backend en el Sprint 3</em></p>
 
 ![Ejecuciones del flujo Release](../assets/img/chapter4/sprint3/gh-platform-actions.png)
 
-<p class="caption"><strong>Figura 217</strong><br><em>Captura de GitHub: release v2.0.1 del backend</em></p>
+<p class="caption"><strong>Figura 218</strong><br><em>Captura de GitHub: release v2.0.1 del backend</em></p>
 
 ![Releases del backend](../assets/img/chapter4/sprint3/gh-platform-releases.png)
 
@@ -3360,11 +3360,11 @@ Durante el Sprint 3 se desplegaron dos versiones del backend y se distribuyó un
 
 *Integración continua y distribución.* Los flujos `CI` y `Distribute` son los del Sprint 2. Las ejecuciones de `CI` sobre `develop`, tras integrar los pull requests #36 y #37, y la del pull request #38 (`Release/2.2.0`) terminaron en verde. Con el push a `main`, `Distribute` subió la versión 2.2.0 a Firebase App Distribution y creó el release de GitHub con el APK.
 
-<p class="caption"><strong>Figura 218</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Android en el Sprint 3</em></p>
+<p class="caption"><strong>Figura 219</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Android en el Sprint 3</em></p>
 
 ![Actions de la aplicación Android](../assets/img/chapter4/sprint3/gh-android-actions.png)
 
-<p class="caption"><strong>Figura 219</strong><br><em>Captura de GitHub: release v2.2.0 de la aplicación Android con el APK</em></p>
+<p class="caption"><strong>Figura 220</strong><br><em>Captura de GitHub: release v2.2.0 de la aplicación Android con el APK</em></p>
 
 ![Releases de la aplicación Android](../assets/img/chapter4/sprint3/gh-android-releases.png)
 
@@ -3372,11 +3372,11 @@ Durante el Sprint 3 se desplegaron dos versiones del backend y se distribuyó un
 
 *Integración continua y distribución.* Las ejecuciones de `CI` de los pull requests #23, #24 y #25 terminaron en verde, igual que las ejecuciones sobre `develop`. El pull request #25 (`Release/1.4.0`) llevó la versión 1.4.0 a `main`. `Distribute` comprobó que la versión de `pubspec.yaml` fuera nueva, compiló el APK firmado, lo subió a Firebase App Distribution y creó el release de GitHub. La versión agrega el paquete `share_plus`, que abre la hoja para compartir de Android.
 
-<p class="caption"><strong>Figura 220</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Flutter en el Sprint 3</em></p>
+<p class="caption"><strong>Figura 221</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Flutter en el Sprint 3</em></p>
 
 ![Actions de la aplicación Flutter](../assets/img/chapter4/sprint3/gh-flutter-actions.png)
 
-<p class="caption"><strong>Figura 221</strong><br><em>Captura de GitHub: release v1.4.0 de la aplicación Flutter con el APK</em></p>
+<p class="caption"><strong>Figura 222</strong><br><em>Captura de GitHub: release v1.4.0 de la aplicación Flutter con el APK</em></p>
 
 ![Releases de la aplicación Flutter](../assets/img/chapter4/sprint3/gh-flutter-releases.png)
 
@@ -3386,19 +3386,19 @@ En el Sprint 3 cada rama la escribió un solo integrante. Mora Rivera escribió 
 
 Backend (`healthify-platform`):
 
-<p class="caption"><strong>Figura 222</strong><br><em>Captura de GitHub: contribuyentes del backend en el Sprint 3</em></p>
+<p class="caption"><strong>Figura 223</strong><br><em>Captura de GitHub: contribuyentes del backend en el Sprint 3</em></p>
 
 ![Contribuyentes del backend](../assets/img/chapter4/sprint3/gh-platform-contributors.png)
 
 Aplicación Android (`healthify-android-app`):
 
-<p class="caption"><strong>Figura 223</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Android en el Sprint 3</em></p>
+<p class="caption"><strong>Figura 224</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Android en el Sprint 3</em></p>
 
 ![Contribuyentes de la aplicación Android](../assets/img/chapter4/sprint3/gh-android-contributors.png)
 
 Aplicación Flutter (`healthify-flutter-app`):
 
-<p class="caption"><strong>Figura 224</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Flutter en el Sprint 3</em></p>
+<p class="caption"><strong>Figura 225</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Flutter en el Sprint 3</em></p>
 
 ![Contribuyentes de la aplicación Flutter](../assets/img/chapter4/sprint3/gh-flutter-contributors.png)
 
@@ -3620,7 +3620,7 @@ Problema:
 
 Para el mismo paciente, cada pantalla calcula la tendencia de peso de forma distinta. En Tu tendencia, el paciente lee "Resumen: bajó 2.8 kg en 4 semanas", escrito en letra pequeña debajo de la gráfica. En la pestaña Seguimiento, la nutricionista ve una tendencia de −1.8 kg/sem, y el resumen con IA de esa misma pestaña habla de un cambio de −1.4 kg con una pendiente de −1.9 kg por semana. La paciente entrevistada no supo cuánto había bajado realmente, y la nutricionista no tendría claro qué valor comentar en consulta, lo que afecta la confianza en el dato central del progreso.
 
-<p class="caption"><strong>Figura 225</strong><br><em>Problema #1: valores distintos de tendencia de peso en las vistas del paciente y del nutricionista</em></p>
+<p class="caption"><strong>Figura 226</strong><br><em>Problema #1: valores distintos de tendencia de peso en las vistas del paciente y del nutricionista</em></p>
 
 ![Problema 1](../assets/img/chapter4/heuristics/problema1.png)
 
@@ -3632,7 +3632,7 @@ Solución:
 
 El resumen de la tendencia ahora se genera a partir del mismo cálculo que alimenta la gráfica y el expediente, y se muestra como texto principal de la tarjeta en lenguaje simple, por ejemplo "En las últimas 4 semanas, tu promedio subió 0.6 kg". En Mi expediente, el indicador Mi tendencia (+0.2 kg/sem en las últimas 4 semanas) es coherente con ese resumen y con la dirección de la gráfica, por lo que el paciente y la nutricionista leen el mismo dato.
 
-<p class="caption"><strong>Figura 226</strong><br><em>Solución al problema #1: resumen de la tendencia coherente con la gráfica y el expediente</em></p>
+<p class="caption"><strong>Figura 227</strong><br><em>Solución al problema #1: resumen de la tendencia coherente con la gráfica y el expediente</em></p>
 
 ![Solución 1](../assets/img/chapter4/heuristics/solucion1.png)
 
@@ -3646,7 +3646,7 @@ Problema:
 
 La acción más frecuente del paciente, registrar una comida, solo aparece con texto en la pestaña Diario, mediante el botón "Registrar comida". En la pantalla de Inicio, donde se muestran sus metas del día, la única opción es un ícono de cámara sin etiqueta en la barra inferior, que la paciente no reconoció como la forma de registrar. Por eso tardó en encontrar cómo hacerlo.
 
-<p class="caption"><strong>Figura 227</strong><br><em>Problema #2: ícono de registro sin etiqueta en Inicio y botón con texto solo en Diario</em></p>
+<p class="caption"><strong>Figura 228</strong><br><em>Problema #2: ícono de registro sin etiqueta en Inicio y botón con texto solo en Diario</em></p>
 
 ![Problema 2](../assets/img/chapter4/heuristics/problema2.png)
 
@@ -3658,7 +3658,7 @@ Solución:
 
 La barra de navegación inferior ahora muestra el botón central con la etiqueta "Registrar". Así, la acción para registrar una comida queda visible e identificable desde Inicio y desde todas las pestañas principales.
 
-<p class="caption"><strong>Figura 228</strong><br><em>Solución al problema #2: botón «Registrar» con etiqueta en la barra inferior</em></p>
+<p class="caption"><strong>Figura 229</strong><br><em>Solución al problema #2: botón «Registrar» con etiqueta en la barra inferior</em></p>
 
 ![Solución 2](../assets/img/chapter4/heuristics/solucion2.png)
 
@@ -3672,7 +3672,7 @@ Problema:
 
 Para registrar su peso, la paciente buscó primero en Expediente y necesitó ayuda para llegar a "Registrar autopesaje", dentro de la pestaña Progreso. La etiqueta "Progreso" no comunica que en esa pestaña se registra el peso, solo que se consulta.
 
-<p class="caption"><strong>Figura 229</strong><br><em>Problema #3: pestaña «Progreso» para registrar el autopesaje</em></p>
+<p class="caption"><strong>Figura 230</strong><br><em>Problema #3: pestaña «Progreso» para registrar el autopesaje</em></p>
 
 ![Problema 3](../assets/img/chapter4/heuristics/problema3.png)
 
@@ -3684,7 +3684,7 @@ Solución:
 
 La pestaña "Progreso" pasó a llamarse "Peso", y el botón de esa pantalla ahora dice "Registrar mi peso". La paciente puede asociar directamente la pestaña con la tarea de registrar su peso, y no solo con consultarlo.
 
-<p class="caption"><strong>Figura 230</strong><br><em>Solución al problema #3: pestaña «Peso» y botón «Registrar mi peso»</em></p>
+<p class="caption"><strong>Figura 231</strong><br><em>Solución al problema #3: pestaña «Peso» y botón «Registrar mi peso»</em></p>
 
 ![Solución 3](../assets/img/chapter4/heuristics/solucion3.png)
 
@@ -3698,7 +3698,7 @@ Problema:
 
 La nutricionista buscó la opción para iniciar la consulta en la pestaña Expediente, porque asoció la consulta con el historial clínico. El botón "Iniciar consulta" solo está al final de la pestaña Resumen, por lo que no lo encontró al primer intento. Es la acción que más usará en cada cita.
 
-<p class="caption"><strong>Figura 231</strong><br><em>Problema #4: pestaña Expediente sin acceso para iniciar la consulta</em></p>
+<p class="caption"><strong>Figura 232</strong><br><em>Problema #4: pestaña Expediente sin acceso para iniciar la consulta</em></p>
 
 ![Problema 4](../assets/img/chapter4/heuristics/problema4.png)
 
@@ -3710,7 +3710,7 @@ Solución:
 
 La pestaña Expediente pasó a llamarse "Historia", y en ella se agregó el botón fijo "Nueva consulta" en la parte inferior de la pantalla. La nutricionista encuentra la acción justo donde la buscó, sin tener que volver a la pestaña Resumen.
 
-<p class="caption"><strong>Figura 232</strong><br><em>Solución al problema #4: pestaña Historia con el botón fijo «Nueva consulta»</em></p>
+<p class="caption"><strong>Figura 233</strong><br><em>Solución al problema #4: pestaña Historia con el botón fijo «Nueva consulta»</em></p>
 
 ![Solución 4](../assets/img/chapter4/heuristics/solucion4.png)
 
@@ -3724,7 +3724,7 @@ Problema:
 
 En la pestaña Seguimiento, algunas comidas aparecen con la etiqueta "Por confirmar". La nutricionista no supo si debía considerarlas en su evaluación, porque la vista no explica que aún no suman al cumplimiento del paciente.
 
-<p class="caption"><strong>Figura 233</strong><br><em>Problema #5: estados de las comidas sin explicación en la pestaña Seguimiento</em></p>
+<p class="caption"><strong>Figura 234</strong><br><em>Problema #5: estados de las comidas sin explicación en la pestaña Seguimiento</em></p>
 
 ![Problema 5](../assets/img/chapter4/heuristics/problema5.png)
 
@@ -3736,7 +3736,7 @@ Solución:
 
 La tarjeta Diario de hoy de la pestaña Seguimiento incluye ahora un texto de apoyo: «Por confirmar»: el paciente aún no confirmó la porción. No suma a su cumplimiento hasta que la confirme. Además, la etiqueta "Por confirmar" usa un color ámbar y un ícono de reloj que la distinguen de las comidas confirmadas.
 
-<p class="caption"><strong>Figura 234</strong><br><em>Solución al problema #5: explicación del estado «Por confirmar» en el Diario de hoy</em></p>
+<p class="caption"><strong>Figura 235</strong><br><em>Solución al problema #5: explicación del estado «Por confirmar» en el Diario de hoy</em></p>
 
 ![Solución 5](../assets/img/chapter4/heuristics/solucion5.png)
 
@@ -3750,7 +3750,7 @@ Problema:
 
 La paciente entrevistada comentó que le costó leer los textos pequeños debajo de la gráfica de tendencia y tuvo que acercar el teléfono. Ese texto contiene la explicación del cálculo y el aviso sobre los registros fuera de protocolo, por lo que quien tiene dificultades visuales pierde información relevante.
 
-<p class="caption"><strong>Figura 235</strong><br><em>Problema #6: texto secundario pequeño bajo la gráfica de tendencia</em></p>
+<p class="caption"><strong>Figura 236</strong><br><em>Problema #6: texto secundario pequeño bajo la gráfica de tendencia</em></p>
 
 ![Problema 6](../assets/img/chapter4/heuristics/problema6.png)
 
@@ -3762,7 +3762,7 @@ Solución:
 
 El dato más importante de la tendencia ya no depende del texto pequeño: el resumen se muestra como texto principal de la tarjeta, sobre la gráfica y con mayor tamaño. El texto secundario queda solo para la explicación del cálculo y el aviso de registros fuera de protocolo.
 
-<p class="caption"><strong>Figura 236</strong><br><em>Solución al problema #6: resumen de la tendencia como texto principal</em></p>
+<p class="caption"><strong>Figura 237</strong><br><em>Solución al problema #6: resumen de la tendencia como texto principal</em></p>
 
 ![Solución 6](../assets/img/chapter4/heuristics/solucion6.png)
 
@@ -3776,7 +3776,7 @@ Problema:
 
 Al revisar el Landing Page, la nutricionista indicó que lo primero que preguntaría antes de descargar la aplicación es si tiene costo, y no encontró esa información en ninguna sección.
 
-<p class="caption"><strong>Figura 237</strong><br><em>Problema #7: sección principal del Landing Page sin información de costo</em></p>
+<p class="caption"><strong>Figura 238</strong><br><em>Problema #7: sección principal del Landing Page sin información de costo</em></p>
 
 ![Problema 7](../assets/img/chapter4/heuristics/problema7.png)
 
@@ -3798,7 +3798,7 @@ Problema:
 
 La pantalla Invitar paciente solo permite mostrar el código QR para que el paciente lo escanee en consulta. La nutricionista señaló que a veces el paciente no tiene el celular disponible y no hay otra forma de hacerle llegar la invitación.
 
-<p class="caption"><strong>Figura 238</strong><br><em>Problema #8: invitación QR disponible solo para mostrarse en pantalla</em></p>
+<p class="caption"><strong>Figura 239</strong><br><em>Problema #8: invitación QR disponible solo para mostrarse en pantalla</em></p>
 
 ![Problema 8](../assets/img/chapter4/heuristics/problema8.png)
 
@@ -3810,7 +3810,7 @@ Solución:
 
 En el Sprint 3 (sección 4.2.3), debajo del código QR, la pantalla Invitar paciente pasó a mostrar un código para escribir a mano, con los botones Copiar y Compartir. Si el paciente no puede escanear en consulta, la nutricionista le envía ese código por WhatsApp o correo, y el paciente lo escribe en la hoja "Escribe tu código" de la pantalla de escaneo para vincularse. El código sigue venciendo en 24 horas y es de un solo uso.
 
-<p class="caption"><strong>Figura 239</strong><br><em>Solución al problema #8: código de invitación para compartir y escribir a mano</em></p>
+<p class="caption"><strong>Figura 240</strong><br><em>Solución al problema #8: código de invitación para compartir y escribir a mano</em></p>
 
 ![Solución 8](../assets/img/chapter4/heuristics/solucion8.png)
 
@@ -3824,7 +3824,7 @@ Problema:
 
 El Landing Page solo ofrece el botón "Descargar para Android". Los pacientes y nutricionistas que usan iPhone no tienen una forma de acceder al producto ni información sobre cuándo podrán hacerlo, lo que los excluye del seguimiento.
 
-<p class="caption"><strong>Figura 240</strong><br><em>Problema #9: descarga ofrecida solo para Android en el Landing Page</em></p>
+<p class="caption"><strong>Figura 241</strong><br><em>Problema #9: descarga ofrecida solo para Android en el Landing Page</em></p>
 
 ![Problema 9](../assets/img/chapter4/heuristics/problema9.png)
 
@@ -3846,7 +3846,7 @@ Problema:
 
 La pestaña Seguimiento reúne el cumplimiento semanal, la tendencia de peso, el registro de comidas, el resumen con IA, el diario de hoy y la última medición clínica. La nutricionista indicó que en un celular pequeño tendría que desplazarse bastante para revisar todo.
 
-<p class="caption"><strong>Figura 241</strong><br><em>Problema #10: cantidad de bloques de información en la pestaña Seguimiento</em></p>
+<p class="caption"><strong>Figura 242</strong><br><em>Problema #10: cantidad de bloques de información en la pestaña Seguimiento</em></p>
 
 ![Problema 10](../assets/img/chapter4/heuristics/problema10.png)
 
@@ -3858,7 +3858,7 @@ Solución:
 
 Desde el Sprint 3 (sección 4.2.3), la pestaña Seguimiento muestra arriba los indicadores clave de la semana: el cumplimiento por día y tres tarjetas con la tendencia de peso, los días con registro y la última medición clínica. El resumen con IA y el Diario de hoy pasaron a ser secciones colapsables, y la nutricionista las abre solo cuando necesita el detalle. Así se desplaza menos en un celular pequeño.
 
-<p class="caption"><strong>Figura 242</strong><br><em>Solución al problema #10: indicadores clave arriba y secciones colapsables en Seguimiento</em></p>
+<p class="caption"><strong>Figura 243</strong><br><em>Solución al problema #10: indicadores clave arriba y secciones colapsables en Seguimiento</em></p>
 
 ![Solución 10](../assets/img/chapter4/heuristics/solucion10.png)
 
@@ -3872,7 +3872,7 @@ Problema:
 
 La nutricionista quiso ver la foto de una comida para validar la estimación de la porción. Por diseño, las fotos se procesan en el teléfono del paciente y no se envían, pero la pestaña Seguimiento no lo explica, por lo que puede parecer una función faltante.
 
-<p class="caption"><strong>Figura 243</strong><br><em>Problema #11: comida registrada por foto sin explicación sobre la imagen</em></p>
+<p class="caption"><strong>Figura 244</strong><br><em>Problema #11: comida registrada por foto sin explicación sobre la imagen</em></p>
 
 ![Problema 11](../assets/img/chapter4/heuristics/problema11.png)
 
