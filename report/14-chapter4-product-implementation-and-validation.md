@@ -59,6 +59,7 @@ La solución de Healthify tiene cuatro productos digitales: el **landing page** 
 |---|---|---|---|
 | xUnit y NSubstitute | Librerías de .NET | Pruebas unitarias y de integración del backend (`dotnet test healthify-platform.sln`). Las pruebas de integración con MySQL se activan con la variable `HEALTHIFY_IT_MYSQL`. | [xunit.net](https://xunit.net) |
 | JUnit 4, MockK, Turbine, `kotlinx-coroutines-test` y MockWebServer | Librerías de Kotlin | Pruebas de JVM de los use cases, ViewModels, mappers y clientes HTTP de la aplicación nativa (`./gradlew :app:testDebugUnitTest`). | [junit.org](https://junit.org/junit4/) |
+| Compose UI Test (`androidx.compose.ui:ui-test-junit4`) | Librería de Android | Pruebas de interfaz de la aplicación nativa en `app/src/androidTest`, agregadas en el Sprint 3. Necesitan un emulador o un teléfono (`./gradlew :app:connectedDebugAndroidTest`), por lo que el flujo `CI` no las ejecuta. | [developer.android.com/develop/ui/compose/testing](https://developer.android.com/develop/ui/compose/testing) |
 | `flutter_test`, `bloc_test` y `mocktail` | Librerías de Dart | Pruebas de widgets, cubits, use cases y mappers de la aplicación Flutter (`flutter test --coverage`). | [docs.flutter.dev/testing](https://docs.flutter.dev/testing/overview) |
 | Swagger UI (Swashbuckle) | Incluido en el backend | Exploración y prueba manual de los endpoints REST en `/swagger`. | [swagger.io](https://swagger.io) |
 | Android Lint | Incluido en Android Gradle Plugin | Análisis estático de la aplicación nativa (`./gradlew :app:lintDebug`). | [developer.android.com/studio/write/lint](https://developer.android.com/studio/write/lint) |
@@ -119,9 +120,9 @@ El equipo aplica GitFlow, según el modelo de Vincent Driessen en «A successful
 | Release | `develop` | `main` y `develop` | `release/vX.Y.Z` | Preparación de una versión: ajuste del número de versión y revisión final. |
 | Hotfix | `main` | `main` y `develop` | `hotfix/<descripcion-corta>` | Corrección urgente de un error de la versión publicada. |
 
-Hasta ahora no se han necesitado ramas `release` ni `hotfix`: el número de versión se sube con un commit en `develop` y la versión se publica al integrar `develop` en `main`.
+En el proyecto no se necesitaron ramas `release` ni `hotfix`: el número de versión se sube con un commit en `develop` y la versión se publica al integrar `develop` en `main`.
 
-Ejemplos reales de los repositorios: `feature/platform-foundation`, `feature/password-recovery`, `feature/plan-fit-suggestion`, `fix/monitoring-clinical-day` y `refactor/retire-legacy-clinical-endpoints` en el backend; `feature/redesign-website`, `feature/testimonials`, `feature/dual-app-download` y `fix/restore-sources` en el landing page; `feature/ci-cd-app-distribution`, `feature/home-gauge-roster-and-reminders` y `feature/interview-validation-fixes` en la aplicación nativa; `feature/core-foundation`, `feature/auth-onboarding` y `feature/patient-record-consultation` en la aplicación Flutter; y `feature/chapter2-bounded-context` en el informe.
+Ejemplos reales de los repositorios: `feature/platform-foundation`, `feature/password-recovery`, `feature/plan-fit-suggestion`, `fix/monitoring-clinical-day`, `refactor/retire-legacy-clinical-endpoints` y `feature/follow-up-reminder-core` en el backend; `feature/redesign-website`, `feature/testimonials`, `feature/dual-app-download` y `fix/restore-sources` en el landing page; `feature/ci-cd-app-distribution`, `feature/home-gauge-roster-and-reminders`, `feature/interview-validation-fixes` y `feature/manual-invitation-code` en la aplicación nativa; `feature/core-foundation`, `feature/auth-onboarding`, `feature/patient-record-consultation` y `feature/invite-code-share` en la aplicación Flutter; y `feature/chapter2-bounded-context` en el informe.
 
 Flujo de trabajo de una funcionalidad:
 
@@ -142,11 +143,11 @@ Las versiones usan Semantic Versioning 2.0.0 con el formato `vMAJOR.MINOR.PATCH`
 
 | Producto | Tags publicados | Dónde se define la versión |
 |---|---|---|
-| Backend | `v0.1.0`, `v0.5.0`, `v1.0.0`, `v1.1.0`, `v1.1.1` y de `v1.2.0` a `v1.6.0` | Elemento `<Version>` de `Healthify.Platform.csproj`. El flujo `Release` lee ese valor y crea el tag `v<versión>` con las notas de la versión. |
+| Backend | `v0.1.0`, `v0.5.0`, `v1.0.0`, `v1.1.0`, `v1.1.1`, de `v1.2.0` a `v1.6.0`, `v2.0.0` y `v2.0.1` | Elemento `<Version>` de `Healthify.Platform.csproj`. El flujo `Release` lee ese valor y crea el tag `v<versión>` con las notas de la versión. |
 | Landing Page | `v1.0.0`, `v1.0.1`, `v2.0.0`, `v2.1.0` y `v2.2.0` | Tag en `main`. La versión `v2.0.0` corresponde al rediseño del sitio. |
-| Aplicación nativa | De `v1.0.0` a `v2.1.0` (14 versiones, entre ellas `v1.4.1`, `v1.5.1` y `v1.7.1`) | `versionName` de `app/build.gradle.kts`. El `versionCode` lo asigna el flujo `Distribute` con el número de ejecución. |
-| Aplicación Flutter | `v1.0.0`, `v1.1.0`, `v1.2.0`, `v1.3.0` y `v1.3.1` | Campo `version` de `pubspec.yaml` (`1.3.1+11`). El número de compilación lo asigna el flujo `Distribute` con el número de ejecución. |
-| Informe | `1.0.0` (AV1) y `2.0.0` (TB1) | Registro de versiones del `README.md`. |
+| Aplicación nativa | De `v1.0.0` a `v2.2.0` (15 versiones, entre ellas `v1.4.1`, `v1.5.1` y `v1.7.1`) | `versionName` de `app/build.gradle.kts`. El `versionCode` lo asigna el flujo `Distribute` con el número de ejecución. |
+| Aplicación Flutter | `v1.0.0`, `v1.1.0`, `v1.2.0`, `v1.3.0`, `v1.3.1` y `v1.4.0` | Campo `version` de `pubspec.yaml` (`1.4.0+12`). El número de compilación lo asigna el flujo `Distribute` con el número de ejecución. |
+| Informe | `1.0.0` (AV1), `2.0.0` (TB1), `3.0.0` (AV2) y `4.0.0` (TB2) | Registro de versiones del `README.md`. |
 
 **Conventional Commits**
 
@@ -167,12 +168,12 @@ Los mensajes de commit siguen Conventional Commits 1.0.0, en inglés, en modo im
 | `docs` | Documentación | `docs(readme): add running instructions` |
 | `test` | Pruebas | `test(home): cover the tolerance band of the energy goal` |
 | `refactor` | Cambio interno sin cambio de comportamiento | `refactor(nutritionalcare): extract the consultation primary button` |
-| `chore` | Mantenimiento y configuración | `chore(csproj): set project version to 1.6.0` |
+| `chore` | Mantenimiento y configuración | `chore(csproj): bump project version to 2.0.1` |
 | `build` | Sistema de compilación y dependencias | `build(app): bump version to 2.0.0` |
 | `ci` | Integración y entrega continuas | `ci(release): add release workflow` |
 | `style` | Formato sin cambio de lógica | Sin uso hasta ahora |
 
-El alcance (`scope`) indica el módulo afectado: un bounded context (`iam`, `care-relationship`, `nutritional-care`, `food-catalog`, `intake`, `monitoring` en el backend; `carerelationship`, `nutritionalcare`, `foodcatalog` en las aplicaciones móviles), una capa compartida (`designsystem`, `l10n`, `navigation`), una página (`index`, `css`, `i18n`) o un archivo de configuración (`csproj`, `app`, `release`, `readme`).
+El alcance (`scope`) indica el módulo afectado: un bounded context (`iam`, `care-relationship`, `nutritional-care`, `food-catalog`, `intake`, `monitoring` en el backend; `carerelationship`, `nutritionalcare`, `foodcatalog` en las aplicaciones móviles), una capa compartida (`shared`, `persistence` y `startup` en el backend; `designsystem`, `l10n`, `navigation` y `main` en las aplicaciones móviles), una página (`index`, `css`, `i18n`) o un archivo de configuración (`csproj`, `app`, `release`, `readme`).
 
 ### 4.1.3. Source Code Style Guide & Conventions
 
@@ -270,14 +271,16 @@ El backend se empaqueta en una imagen de Docker de dos etapas (`Dockerfile`): la
    | `JWT_SECRET` | Clave de firma de los tokens, de al menos 32 caracteres (obligatoria; sin ella el API no inicia). |
    | `DATABASE_PASSWORD`, `DATABASE_SCHEMA`, `DATABASE_USER`, `DATABASE_HOST` | Credenciales y esquema de MySQL. |
    | `USDA_API_KEY` | Clave de USDA FoodData Central; vacía desactiva ese proveedor. |
-   | `SMTP_HOST`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM` | Servidor de correo para el código de recuperación de contraseña; sin `SMTP_HOST` no se envía ningún correo. |
+   | `SMTP_HOST`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM` | Servidor de correo para el código de recuperación de contraseña y los recordatorios de consulta; sin `SMTP_HOST` no se envía ningún correo. |
+   | `REMINDERS_ENABLED`, `REMINDERS_LEAD_HOURS`, `REMINDERS_NOTIFY_PRACTITIONER` | Recordatorios de consulta por correo: activación (`true` por defecto), horas de aviso antes de la consulta (`24,1` por defecto) y copia al nutricionista (`false` por defecto). |
+   | `REMINDERS_PRACTICE_ADDRESS`, `REMINDERS_VIDEO_CALL_URL` | Dirección del consultorio y enlace de videollamada que muestra el correo de recordatorio; el enlace solo se muestra si usa `https`. |
    | `ASPNETCORE_ENVIRONMENT` | Entorno de ejecución. `Production` carga `appsettings.Production.json` (zona horaria clínica `America/Lima`, bloqueo de cuenta y vigencia de los códigos de recuperación). |
    | `Ai__Enabled`, `Ai__Gemini__ApiKey` | Activan las funciones con IA. En `appsettings.Production.json` la IA está apagada (`Ai:Enabled=false`) y configurada con el modelo `gemini-3.5-flash`. |
 
 3. Se ejecuta `docker compose up --build -d`.
 4. El API queda disponible en `https://platform.healthify.lat` y su documentación en `/swagger`.
 
-Además, el flujo de GitHub Actions `Release` (`.github/workflows/release.yml`) se ejecuta con cada push a `main`: restaura y compila la solución en *Release*, lee `<Version>` de `Healthify.Platform.csproj` (hoy `1.6.0`) y crea el release `v<versión>` con las notas generadas automáticamente.
+Además, el flujo de GitHub Actions `Release` (`.github/workflows/release.yml`) se ejecuta con cada push a `main`: restaura y compila la solución en *Release*, lee `<Version>` de `Healthify.Platform.csproj` (hoy `2.0.1`) y crea el release `v<versión>` con las notas generadas automáticamente.
 
 **Mobile Applications (Android nativa y Flutter)**
 
@@ -295,10 +298,11 @@ Cada repositorio tiene dos flujos de GitHub Actions con la misma forma:
 | Generación de código | — (KSP corre dentro de la compilación) | `dart run build_runner build -d` y `flutter gen-l10n` |
 | Análisis estático | `./gradlew :app:lintDebug` | `flutter analyze` |
 | Pruebas | `./gradlew :app:testDebugUnitTest` | `flutter test --coverage` |
+| Pruebas de interfaz | `./gradlew :app:connectedDebugAndroidTest` (emulador o teléfono) | Incluidas en `flutter test` |
 | APK de depuración | `./gradlew :app:assembleDebug` | `flutter build apk --debug` |
 | APK firmado y distribución | `./gradlew assembleRelease appDistributionUploadRelease` | `flutter build apk --release` y `firebase appdistribution:distribute` |
 
-La aplicación nativa (`pe.edu.upc.healthify`, versión 2.1.0) se instala en Android 7.0 (API 24) o superior. Guarda los datos de sesión cifrados en el dispositivo y funciona sin conexión para registrar comidas y autopesajes, que se sincronizan al recuperar la red. La aplicación Flutter (`pe.edu.upc.healthify.practitioner`, versión 1.3.1) usa otro identificador de paquete, así que convive en el mismo dispositivo con la nativa; guarda la sesión con `flutter_secure_storage`.
+La aplicación nativa (`pe.edu.upc.healthify`, versión 2.2.0) se instala en Android 7.0 (API 24) o superior. Guarda los datos de sesión cifrados en el dispositivo y funciona sin conexión para registrar comidas y autopesajes, que se sincronizan al recuperar la red. La aplicación Flutter (`pe.edu.upc.healthify.practitioner`, versión 1.4.0) usa otro identificador de paquete, así que convive en el mismo dispositivo con la nativa; guarda la sesión con `flutter_secure_storage`.
 
 **Deployment Diagram (C4 Model)**
 
@@ -2906,6 +2910,500 @@ Aplicación Flutter (`healthify-flutter-app`):
 
 <div style="page-break-after: always"></div>
 
+### 4.2.3. Sprint 3
+
+#### 4.2.3.1. Sprint Planning 3
+
+El Sprint 3 se desarrolló entre el 05/11/2026 y el 28/11/2026. Abarca tres productos: los **RESTful Web Services**, la **aplicación móvil Android** y la **aplicación Flutter** del nutricionista. El landing page no tuvo cambios. El sprint atiende dos problemas de la evaluación heurística (sección 4.3.3): la invitación QR que solo se podía mostrar en pantalla (problema #8) y la pestaña Seguimiento con demasiados bloques para un celular pequeño (problema #10). También agrega el recordatorio de cada consulta por correo.
+
+<p class="caption"><strong>Tabla 279</strong><br><em>Datos de la reunión de Sprint Planning 3</em></p>
+<table>
+  <tr>
+    <th colspan="2">Sprint #</th>
+    <th colspan="2">Sprint 3</th>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint Planning Background</th>
+  </tr>
+  <tr>
+    <td colspan="2">Date</td>
+    <td colspan="2">2026-11-05</td>
+  </tr>
+  <tr>
+    <td colspan="2">Time</td>
+    <td colspan="2">10:00 AM (GMT-5)</td>
+  </tr>
+  <tr>
+    <td colspan="2">Location</td>
+    <td colspan="2">Reunión virtual</td>
+  </tr>
+  <tr>
+    <td colspan="2">Prepared By</td>
+    <td colspan="2">Villarreal Bazan, Angel Martin</td>
+  </tr>
+  <tr>
+    <td colspan="2">Attendees (to planning meeting)</td>
+    <td colspan="2">Del Aguila Del Aguila, Olenka Priscilla / Espinoza Cruz, Angela Milagros / Mora Rivera, Joel Fernando / Vergaray Calderon, Rose Almendra / Villarreal Bazan, Angel Martin</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 2 Review Summary</td>
+    <td colspan="2">Se publicaron el landing page V10, las versiones 1.1.0 a 1.6.0 del backend, la app Android 2.1.0 y la app Flutter 1.3.1, las dos últimas firmadas y distribuidas por Firebase App Distribution. El Product Owner aceptó las 26 historias del sprint (106 Story Points), entre ellas las diez que habían quedado pendientes del Sprint 1. La evaluación heurística de las entrevistas de validación registró once problemas; los problemas #8 y #10 quedaron para este sprint.</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 2 Retrospective Summary</td>
+    <td colspan="2">Funcionó distribuir las dos apps desde GitHub Actions y construir la app Flutter módulo por módulo sobre el mismo backend. Como mejora, el equipo acordó exigir el CI en verde antes de fusionar, porque una prueba de Flutter falló entre los pull requests #15 y #20 sin bloquear la distribución, y revisar los escenarios de cada historia antes de darla por terminada.</td>
+  </tr>
+  <tr>
+    <th colspan="4">Sprint Goal &amp; User Stories</th>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 3 Goal</td>
+    <td colspan="2">Nuestro enfoque está en que el paciente pueda vincularse aunque no escanee el QR, en que la pestaña Seguimiento muestre lo esencial sin desplazarse y en que cada consulta se recuerde por correo. Creemos que esto permite invitar al paciente fuera de la consulta, que el nutricionista revise la semana del paciente de un vistazo y que menos pacientes olviden su cita. Esto se confirmará cuando una nutricionista comparta el código de invitación por WhatsApp y el paciente se vincule escribiéndolo en la app, cuando la nutricionista vea el cumplimiento de la semana, la tendencia de peso, los días con registro y la última medición sin desplazarse, y cuando el paciente reciba un correo un día y una hora antes de su consulta.</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sprint 3 Velocity</td>
+    <td colspan="2">30 Story Points</td>
+  </tr>
+  <tr>
+    <td colspan="2">Sum of Story Points</td>
+    <td colspan="2">30 Story Points (seis historias aceptadas en sprints anteriores que suman un escenario nuevo)</td>
+  </tr>
+</table>
+
+La velocidad baja de 106 a 30 Story Points porque el sprint retoma seis historias que el Product Owner ya había aceptado. Cada una suma un escenario de aceptación nuevo en la sección 2.4.1. Historias incluidas en el Sprint 3:
+
+<p class="caption"><strong>Tabla 280</strong><br><em>Historias de usuario incluidas en el Sprint 3</em></p>
+
+| Épico | Story ID | Título | Origen | Story Points |
+|---|---|---|---|:---:|
+| EP01 | US01 | Vinculación mediante invitación QR | Evaluación heurística, problema #8 | 5 |
+| EP01 | US04 | Generación de invitación QR para un nuevo paciente | Evaluación heurística, problema #8 | 5 |
+| EP04 | US16 | Consulta del monitoreo del paciente | Evaluación heurística, problema #10 | 5 |
+| EP05 | US20 | Acceso al expediente unificado del paciente | Pestañas del expediente en pantallas pequeñas | 5 |
+| EP04 | US39 | Agenda de consultas | Recordatorio de consulta por correo | 5 |
+| EP_TS | TS10 | Servicios de agenda y respuesta previa a la consulta | Recordatorio de consulta por correo | 5 |
+| | | **Total** | | **30** |
+
+#### 4.2.3.2. Aspect Leaders and Collaborators
+
+Los aspectos del Sprint 3 siguen la división de los sprints anteriores: en el backend y en las apps, cada aspecto es un bloque de funcionalidad con su propia rama. La columna de un aspecto marca con **L** al líder, que responde por su diseño, sus commits y su pull request, y con **C** a quienes colaboran en él revisando el pull request o escribiendo parte de sus commits.
+
+**Backend (RESTful Web Services)**
+
+- **Núcleo de recordatorios:** configuración, abstracción del envío de correo, registro de recordatorios enviados, planificador de ventanas y migración (TS10).
+- **Entrega de recordatorios:** servicio de comandos, envío por SMTP, plantilla del correo, trabajo en segundo plano, pruebas y versiones 2.0.0 y 2.0.1 (US39, TS10).
+
+<p class="caption"><strong>Tabla 281</strong><br><em>Líderes y colaboradores del backend en el Sprint 3</em></p>
+
+| Team Member (Last Name, First Name) | GitHub Username | Núcleo de recordatorios | Entrega de recordatorios |
+|---|---|:---:|:---:|
+| Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | C | C |
+| Espinoza Cruz, Angela Milagros | Emy127 | C | C |
+| Mora Rivera, Joel Fernando | xJoelFMRx | L | C |
+| Vergaray Calderon, Rose Almendra | rosealmendra | C | C |
+| Villarreal Bazan, Angel Martin | Nevatrix | C | L |
+
+**Mobile Application (Android)**
+
+- **Código de invitación escrito a mano:** campo de código del sistema de diseño, validación del código, hoja «Escribe tu código» en la pantalla de escaneo y código con Copiar y Compartir en la invitación (US01, US04).
+- **Seguimiento compacto:** pestañas del paciente espaciadas según su etiqueta, panel compacto de Seguimiento, pruebas de UI y versión 2.2.0 (US16, US20).
+
+<p class="caption"><strong>Tabla 282</strong><br><em>Líderes y colaboradores de la aplicación Android en el Sprint 3</em></p>
+
+| Team Member (Last Name, First Name) | GitHub Username | Código de invitación escrito a mano | Seguimiento compacto |
+|---|---|:---:|:---:|
+| Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | L | C |
+| Espinoza Cruz, Angela Milagros | Emy127 | C | C |
+| Mora Rivera, Joel Fernando | xJoelFMRx | C | C |
+| Vergaray Calderon, Rose Almendra | rosealmendra | C | C |
+| Villarreal Bazan, Angel Martin | Nevatrix | C | L |
+
+**Mobile Application (Flutter, nutricionista)**
+
+- **Expediente compacto:** pestañas del paciente ajustadas a sus etiquetas, textos del panel y rediseño de la pestaña Seguimiento (US16, US20).
+- **Código de invitación compartible:** token agrupado en bloques de cuatro, botones Copiar y Compartir y versión 1.4.0 (US04).
+
+<p class="caption"><strong>Tabla 283</strong><br><em>Líderes y colaboradores de la aplicación Flutter en el Sprint 3</em></p>
+
+| Team Member (Last Name, First Name) | GitHub Username | Expediente compacto | Código de invitación compartible |
+|---|---|:---:|:---:|
+| Del Aguila Del Aguila, Olenka Priscilla | olenkisha14 | C | C |
+| Espinoza Cruz, Angela Milagros | Emy127 | C | L |
+| Mora Rivera, Joel Fernando | xJoelFMRx | C | C |
+| Vergaray Calderon, Rose Almendra | rosealmendra | L | C |
+| Villarreal Bazan, Angel Martin | Nevatrix | C | C |
+
+Cada aspecto lo escribió su líder en una sola rama. En el backend, Mora Rivera escribió el núcleo y Villarreal Bazan la entrega; en la app Android, Del Aguila Del Aguila escribió el código a mano y Villarreal Bazan el Seguimiento compacto. Nevatrix integró las ramas a `develop` y `main` en los tres repositorios.
+
+#### 4.2.3.3. Sprint Backlog 3
+
+El objetivo del Sprint 3 es que el paciente pueda vincularse sin escanear el QR, que la pestaña Seguimiento quepa en un celular pequeño y que cada consulta se recuerde por correo. Las tareas sin historia asociada publican las versiones de cada producto.
+
+<p class="caption"><strong>Figura 210</strong><br><em>Tablero de Trello del Sprint 3</em></p>
+
+![Board Sprint 3](../assets/img/chapter4/sprint3/trello.png)
+
+URL del Board (Trello): [Enlace del Trello](https://trello.com/b/42wgo6Jo/sprint-backlog-3-healthify)
+
+<p class="caption"><strong>Tabla 284</strong><br><em>Sprint Backlog 3: tareas por historia de usuario</em></p>
+
+| US ID | US Title | Task ID | Task Title | Description | Est. (h) | Assigned To | Status |
+|---|---|---|---|---|:---:|---|---|
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T01 | Agregar la configuración de los recordatorios | Agregar la sección `Reminders:FollowUp` a `appsettings.json` y documentar en el README las horas de aviso, el intervalo del trabajo y el tamaño del lote. | 2 | Mora Rivera, Joel Fernando | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T02 | Definir la abstracción del envío de correo | Crear `IMailSender` en el núcleo compartido para que Monitoring & Adherence envíe correos sin depender de SMTP. | 2 | Mora Rivera, Joel Fernando | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T03 | Modelar el registro de recordatorios enviados | Crear el agregado `FollowUpReminderLog` y el objeto de valor `ReminderRecipient` para no enviar dos veces el mismo aviso. | 4 | Mora Rivera, Joel Fernando | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T04 | Definir el planificador y el contrato del notificador | Crear `FollowUpReminderPlanner`, que decide qué ventana de aviso está abierta para cada consulta, y el contrato `IFollowUpReminderNotifier`. | 5 | Mora Rivera, Joel Fernando | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T05 | Agregar la migración de los recordatorios | Crear la migración `Monitoring_AddFollowUpReminderLogs` con la tabla de recordatorios enviados. | 2 | Mora Rivera, Joel Fernando | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T06 | Leer la configuración de los recordatorios | Leer las horas de aviso (por defecto 24 y 1), el aviso al nutricionista, el intervalo y el lote, descartando valores vacíos, nulos o negativos. | 3 | Villarreal Bazan, Angel Martin | Done |
+| US39 | Agenda de consultas | T07 | Implementar el servicio de comandos de los recordatorios | Recorrer las consultas agendadas, enviar el aviso de la ventana abierta y registrarlo solo si el correo salió. | 6 | Villarreal Bazan, Angel Martin | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T08 | Implementar el envío por SMTP | Crear `SmtpMailSender` con MailKit sobre las variables `Smtp__*` ya usadas por la recuperación de contraseña. | 3 | Villarreal Bazan, Angel Martin | Done |
+| US39 | Agenda de consultas | T09 | Redactar la plantilla del correo | Crear el correo con la marca Healthify, en el idioma de la cuenta y la hora de la consulta, con la dirección o el enlace de videollamada y la preparación indicada. | 5 | Villarreal Bazan, Angel Martin | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T10 | Persistir el registro de recordatorios | Agregar la configuración de EF Core y el repositorio de `FollowUpReminderLog`. | 3 | Villarreal Bazan, Angel Martin | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T11 | Agregar el trabajo en segundo plano | Crear `FollowUpReminderHostedService`, que ejecuta un ciclo al iniciar y luego cada diez minutos, y el reloj con la zona horaria del consultorio. | 4 | Villarreal Bazan, Angel Martin | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T12 | Registrar los servicios de los recordatorios | Registrar el remitente, el notificador, el repositorio, el servicio de comandos y el trabajo en `Program.cs`. | 1 | Villarreal Bazan, Angel Martin | Done |
+| TS10 | Servicios de agenda y respuesta previa a la consulta | T13 | Escribir las pruebas del planificador y la configuración | Escribir `FollowUpReminderPlannerTests` y `FollowUpReminderSettingsTests`. | 4 | Villarreal Bazan, Angel Martin | Done |
+| US39 | Agenda de consultas | T14 | Escribir las pruebas del servicio, el envío y la plantilla | Escribir `FollowUpReminderCommandServiceTests`, `FollowUpReminderDeliveryTests` y `FollowUpReminderEmailTemplateTests`. | 5 | Villarreal Bazan, Angel Martin | Done |
+| — | — | T15 | Publicar las versiones 2.0.0 y 2.0.1 del backend | Fijar las versiones en `Healthify.Platform.csproj` y retirar del README la sección de recordatorios que quedó desactualizada. | 1 | Villarreal Bazan, Angel Martin | Done |
+| US01 | Vinculación mediante invitación QR | T16 | Agregar el tipo de campo para códigos | Agregar a `HealthifyTextField` un tipo de campo sin autocorrección ni mayúscula automática, para escribir códigos. | 2 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| US01 | Vinculación mediante invitación QR | T17 | Validar el código escrito a mano | Crear `InvitationCodeInput`, que ignora los espacios, conserva mayúsculas y minúsculas y exige entre 22 y 64 caracteres válidos. | 4 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| US01 | Vinculación mediante invitación QR | T18 | Permitir al paciente escribir el código | Agregar a la pantalla de escaneo la hoja «Escribe tu código», que pausa la cámara y canjea el código con el mismo caso de uso del QR. | 6 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| US04 | Generación de invitación QR para un nuevo paciente | T19 | Mostrar el código con Copiar y Compartir | Mostrar debajo del QR el código en bloques de cuatro, con los botones Copiar y Compartir. | 4 | Del Aguila Del Aguila, Olenka Priscilla | Done |
+| US20 | Acceso al expediente unificado del paciente | T20 | Espaciar las pestañas del paciente | Repartir el espacio entre Resumen, Seguimiento, Historia y Plan según el ancho de cada etiqueta. | 2 | Villarreal Bazan, Angel Martin | Done |
+| US16 | Consulta del monitoreo del paciente | T21 | Rediseñar Seguimiento como panel compacto | Mostrar arriba la semana y tres indicadores (peso, registro y medición) y volver colapsables el resumen con IA y el Diario de hoy. | 8 | Villarreal Bazan, Angel Martin | Done |
+| US16 | Consulta del monitoreo del paciente | T22 | Escribir las pruebas de UI del panel compacto | Escribir `PatientFollowUpTabTest` y `PatientTabRowTest` con Compose UI Test. | 4 | Villarreal Bazan, Angel Martin | Done |
+| — | — | T23 | Publicar la versión 2.2.0 de la app Android | Fijar `versionName` 2.2.0 en Gradle. | 1 | Villarreal Bazan, Angel Martin | Done |
+| US20 | Acceso al expediente unificado del paciente | T24 | Ajustar las pestañas del paciente a sus etiquetas | Dimensionar las pestañas del expediente según su etiqueta, con desplazamiento horizontal cuando el texto es muy grande. | 3 | Vergaray Calderon, Rose Almendra | Done |
+| US16 | Consulta del monitoreo del paciente | T25 | Agregar los textos del panel compacto | Agregar en español e inglés los textos de los indicadores, la leyenda y las secciones colapsables. | 2 | Vergaray Calderon, Rose Almendra | Done |
+| US16 | Consulta del monitoreo del paciente | T26 | Rediseñar Seguimiento como panel compacto | Reescribir `patient_follow_up_tab.dart` con la semana, los tres indicadores y las secciones colapsables, con sus pruebas. | 8 | Vergaray Calderon, Rose Almendra | Done |
+| US04 | Generación de invitación QR para un nuevo paciente | T27 | Agrupar el token de invitación | Agregar a `InvitationToken` la forma en bloques de cuatro, que se vuelve a escribir como el mismo token. | 2 | Espinoza Cruz, Angela Milagros | Done |
+| US04 | Generación de invitación QR para un nuevo paciente | T28 | Copiar y compartir el código de invitación | Agregar `share_plus` y los botones Copiar y Compartir, que envían el token real y se desactivan cuando la invitación vence. | 5 | Espinoza Cruz, Angela Milagros | Done |
+| — | — | T29 | Publicar la versión 1.4.0 de la app Flutter | Fijar la versión 1.4.0 en `pubspec.yaml`. | 1 | Espinoza Cruz, Angela Milagros | Done |
+
+La estimación total es de 102 horas en 29 tareas, y las 29 quedaron en Done. Villarreal Bazan tuvo 50 horas; Del Aguila Del Aguila, 16; Mora Rivera, 15; Vergaray Calderon, 13, y Espinoza Cruz, 8.
+
+#### 4.2.3.4. Development Evidence for Sprint Review
+
+En el Sprint 3 el equipo trabajó sobre tres repositorios. En el backend se agregó el recordatorio de consulta por correo, que llegó en las versiones 2.0.0 y 2.0.1. En la app Android, el paciente puede escribir a mano el código de invitación y la pestaña Seguimiento se rediseñó como un panel compacto (versión 2.2.0). En la app Flutter, la nutricionista puede copiar y compartir el código de invitación, y Seguimiento tiene el mismo panel compacto (versión 1.4.0). El landing page no tuvo cambios.
+
+El trabajo siguió GitFlow como en los sprints anteriores. La columna **Branch** indica la rama en la que se hizo el commit, y las ramas `develop` y `main` solo muestran los merges de pull requests. Cada commit aparece una sola vez.
+
+<p class="caption"><strong>Tabla 285</strong><br><em>Pull requests y releases por producto en el Sprint 3</em></p>
+
+| Producto | Repositorio | Pull requests | Releases |
+|---|---|:---:|---|
+| Web Services | `healthify-platform` | 5 (#24 a #28) | `v2.0.0`, `v2.0.1` |
+| Mobile Application (Android) | `healthify-android-app` | 3 (#36 a #38) | `v2.2.0` |
+| Mobile Application (Flutter) | `healthify-flutter-app` | 3 (#23 a #25) | `v1.4.0` |
+
+<p class="caption"><strong>Figura 211</strong><br><em>Captura de GitHub: pull requests del backend en el Sprint 3</em></p>
+
+![Pull requests del backend](../assets/img/chapter4/sprint3/gh-platform-pulls.png)
+
+<p class="caption"><strong>Figura 212</strong><br><em>Captura de GitHub: pull requests de la aplicación Android en el Sprint 3</em></p>
+
+![Pull requests de la aplicación Android](../assets/img/chapter4/sprint3/gh-android-pulls.png)
+
+<p class="caption"><strong>Figura 213</strong><br><em>Captura de GitHub: pull requests de la aplicación Flutter en el Sprint 3</em></p>
+
+![Pull requests de la aplicación Flutter](../assets/img/chapter4/sprint3/gh-flutter-pulls.png)
+
+**Web Services (backend)**
+
+<p class="caption"><strong>Tabla 286</strong><br><em>Commits del Sprint 3 del backend</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | 3050903 | chore(config): add follow-up reminder settings | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | b72d4b0 | docs(readme): document appointment reminder settings | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | c13b337 | feat(shared): add mail sender abstraction | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | cbb31f7 | feat(monitoring): add follow-up reminder log aggregate | — | 14/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | cc48d0a | feat(monitoring): add reminder planner and notifier contract | — | 14/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | d047d2a | feat(persistence): add follow-up reminder logs migration | — | 14/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 543457e | feat(monitoring): add follow-up reminder settings | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | f1c1e70 | feat(monitoring): add follow-up reminder command service | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 582539d | feat(shared): add SMTP mail sender | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 3d118c6 | feat(monitoring): add reminder email template and SMTP notifier | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | f8c9c2e | feat(persistence): add reminder log EF configuration and repository | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | b48575e | feat(monitoring): add reminder hosted service and local clock | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 1da7b9e | feat(startup): register reminder services and hosted worker | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 3926b27 | test(monitoring): add reminder planner and settings tests | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | c1fe164 | test(monitoring): add reminder service, delivery and template tests | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | df468ba | chore(csproj): bump project version to 2.0.0 | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | 832bd7c | Merge pull request #24 from upc-pre-202620-1acc0238-13981-nutrisync/feature/follow-up-reminder-core | Feature/follow up reminder core | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | 84d1b71 | Merge pull request #25 from upc-pre-202620-1acc0238-13981-nutrisync/feature/follow-up-reminder-delivery | Feature/follow up reminder delivery | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `main` | 09b8529 | Merge pull request #26 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/2.0.0 | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 8822502 | docs(readme): remove outdated appointment reminders section | — | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 290e8a0 | chore(csproj): bump project version to 2.0.1 | — | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `develop` | 66a3828 | Merge pull request #27 from upc-pre-202620-1acc0238-13981-nutrisync/feature/follow-up-reminder-delivery | Feature/follow up reminder delivery | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `main` | eb34372 | Merge pull request #28 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/2.0.1 | 16/11/2026 |
+
+**Mobile Application (Android)**
+
+<p class="caption"><strong>Tabla 287</strong><br><em>Commits del Sprint 3 de la aplicación Android</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/manual-invitation-code` | 97e30d5 | feat(designsystem): add code field type for hand-typed codes | — | 09/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/manual-invitation-code` | 5a57378 | feat(carerelationship): validate hand-typed invitation codes | — | 09/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/manual-invitation-code` | e1d4eb5 | feat(carerelationship): let patients type the invitation code by hand | — | 10/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/manual-invitation-code` | 853f8b8 | feat(carerelationship): show invitation code with copy and share | — | 11/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/compact-follow-up-dashboard` | 19b9f73 | fix(main): space patient tabs evenly by label width | — | 12/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/compact-follow-up-dashboard` | 49286a8 | feat(monitoring): redesign follow-up tab as a compact dashboard | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/compact-follow-up-dashboard` | cc9241f | test(monitoring): add UI tests for the compact follow-up tab | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/compact-follow-up-dashboard` | bc8abff | build(app): bump version to 2.2.0 | — | 14/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | c65fa26 | Merge pull request #36 from upc-pre-202620-1acc0238-13981-nutrisync/feature/manual-invitation-code | Feature/manual invitation code | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `develop` | b77bcf7 | Merge pull request #37 from upc-pre-202620-1acc0238-13981-nutrisync/feature/compact-follow-up-dashboard | Feature/compact follow up dashboard | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `main` | b7c1971 | Merge pull request #38 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/2.2.0 | 16/11/2026 |
+
+**Mobile Application (Flutter)**
+
+<p class="caption"><strong>Tabla 288</strong><br><em>Commits del Sprint 3 de la aplicación Flutter</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-file-dashboard` | 5ab2587 | feat(main): size patient tabs to their labels | — | 05/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-file-dashboard` | a4b5463 | feat(l10n): add compact follow-up dashboard strings | — | 08/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-file-dashboard` | b62cebb | feat(monitoring): redesign follow-up tab as compact dashboard | — | 09/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/invite-code-share` | dc39c2a | feat(carerelationship): add grouped display form to invitation token | — | 11/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/invite-code-share` | aee30aa | feat(carerelationship): let practitioners copy and share invite code | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/invite-code-share` | 9803191 | chore(release): bump version to 1.4.0 | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | f9988fb | Merge pull request #23 from upc-pre-202620-1acc0238-13981-nutrisync/feature/patient-file-dashboard | Feature/patient file dashboard | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `develop` | 56a7be0 | Merge pull request #24 from upc-pre-202620-1acc0238-13981-nutrisync/feature/invite-code-share | Feature/invite code share | 16/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `main` | b323fcf | Merge pull request #25 from upc-pre-202620-1acc0238-13981-nutrisync/develop | Release/1.4.0 | 16/11/2026 |
+
+#### 4.2.3.5. Testing Suite Evidence for Sprint Review
+
+El Sprint 3 amplía las tres suites automatizadas. Como en los sprints anteriores, los criterios de aceptación están en Gherkin en la sección 2.4.1 y los escenarios se automatizaron como pruebas cuyo nombre describe el comportamiento.
+
+**Web Services (backend)**
+
+La suite está en `Healthify.Platform.Tests`, con xUnit y NSubstitute. El sprint agregó cinco clases de prueba con 67 métodos `[Fact]` y `[Theory]`, y una clase de apoyo (`InMemoryFollowUpReminders`) que guarda en memoria la agenda y los recordatorios enviados.
+
+El backend sigue sin un flujo de CI que corra las pruebas, así que el equipo ejecutó `dotnet test healthify-platform.sln` sobre `main` (v2.0.1). El resultado fue de **1553 pruebas: 1517 superadas, 0 con error y 36 omitidas**, frente a las 1472 del cierre del Sprint 2. Las 36 omitidas son las pruebas de integración contra MySQL, que solo corren cuando está definida la variable `HEALTHIFY_IT_MYSQL`.
+
+<p class="caption"><strong>Tabla 289</strong><br><em>Clases de prueba agregadas al backend en el Sprint 3</em></p>
+
+| Historia | Clase de prueba (métodos) | Comportamientos verificados |
+|---|---|---|
+| TS10 | `FollowUpReminderPlannerTests` (19) | La ventana de un día abre exactamente 24 horas antes y la de una hora, una hora antes; si las dos están abiertas solo se envía la más cercana; una consulta cancelada o ya iniciada no se recuerda, y una reprogramada se recuerda de nuevo para su nueva hora. |
+| TS10 | `FollowUpReminderSettingsTests` (6) | Sin configuración se avisa 24 y 1 horas antes solo al paciente; las horas se ordenan y se quitan las repetidas, y los valores vacíos, nulos o negativos se ignoran. |
+| US39 | `FollowUpReminderCommandServiceTests` (19) | El mismo aviso no se envía dos veces, un envío fallido no se registra y se reintenta en el siguiente ciclo, un destinatario que falla no detiene a los demás y sin configuración de correo el ciclo no lee la agenda. |
+| US39 | `FollowUpReminderDeliveryTests` (9) | Sin servidor ni remitente no se envía nada y no se lanza ningún error; el trabajo ejecuta un ciclo al iniciar, un ciclo con error no lo detiene y, desactivado, nunca abre un ámbito. |
+| US39 | `FollowUpReminderEmailTemplateTests` (14) | La hora se escribe en la zona horaria del consultorio, el correo en inglés usa reloj de 12 horas, el enlace de videollamada solo aparece si es `https`, la preparación solo va al paciente y los nombres se codifican como HTML. |
+
+<p class="caption"><strong>Tabla 290</strong><br><em>Commits de pruebas del backend en el Sprint 3</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 3926b27 | test(monitoring): add reminder planner and settings tests | — | 15/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | c1fe164 | test(monitoring): add reminder service, delivery and template tests | — | 15/11/2026 |
+
+**Mobile Application (Android)**
+
+Las pruebas unitarias están en `app/src/test`, con JUnit 4, MockK, Turbine y `kotlinx-coroutines-test`, y el flujo `CI` las ejecuta en cada pull request con `./gradlew lintDebug testDebugUnitTest assembleDebug`. La suite pasó de 652 pruebas en 71 clases a 687 pruebas en 73 clases. Las ejecuciones de `CI` sobre `develop` y la del release 2.2.0 terminaron en verde (sección 4.2.3.8). El sprint también agregó las primeras pruebas de interfaz, con Compose UI Test en `app/src/androidTest`: 34 pruebas en tres clases. Estas necesitan un emulador o un teléfono (`./gradlew connectedDebugAndroidTest`), por lo que el flujo `CI` no las ejecuta.
+
+<p class="caption"><strong>Tabla 291</strong><br><em>Clases de prueba agregadas a la aplicación Android en el Sprint 3</em></p>
+
+| Historia | Clase de prueba (pruebas) | Tipo | Comportamientos verificados |
+|---|---|---|---|
+| US01 | `InvitationCodeInputTest` (11) | Unitaria | Los espacios, tabulaciones y saltos de línea se ignoran, las mayúsculas y minúsculas se conservan, la forma en bloques de cuatro se vuelve a escribir como el mismo token y un código válido nunca se imprime. |
+| US01 | `ScanInvitationManualEntryViewModelTest` (24) | Unitaria | Abrir la hoja pausa la cámara y cerrarla la reanuda y olvida lo escrito, un código que no puede ser un token nunca llega al backend y un código válido se canjea con el mismo caso de uso del QR. |
+| US01, US04 | `ManualInvitationCodeUiTest` (20) | Interfaz | El paciente abre la hoja, escribe el código y ve cuántos caracteres le faltan; la nutricionista ve el código en bloques con Copiar y Compartir. |
+| US16 | `PatientFollowUpTabTest` (10) | Interfaz | Los indicadores muestran sus valores, el resumen con IA y el Diario de hoy se pliegan y se abren, y un día sin comidas lo indica. |
+| US20 | `PatientTabRowTest` (4) | Interfaz | Las cuatro pestañas caben en una pantalla de 360 dp y el espacio entre etiquetas es parejo. |
+
+<p class="caption"><strong>Tabla 292</strong><br><em>Commits de pruebas de la aplicación Android en el Sprint 3</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/manual-invitation-code` | 5a57378 | feat(carerelationship): validate hand-typed invitation codes | — | 09/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/manual-invitation-code` | e1d4eb5 | feat(carerelationship): let patients type the invitation code by hand | — | 10/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/compact-follow-up-dashboard` | 19b9f73 | fix(main): space patient tabs evenly by label width | — | 12/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-android-app | `feature/compact-follow-up-dashboard` | cc9241f | test(monitoring): add UI tests for the compact follow-up tab | — | 13/11/2026 |
+
+Los tres primeros commits traen la funcionalidad junto con sus pruebas.
+
+**Mobile Application (Flutter)**
+
+La suite está en `test/`, con `flutter_test`, `bloc_test` y `mocktail`. El sprint agregó cuatro archivos de prueba con 33 casos declarados, y la suite pasó de 69 archivos y 869 casos a 73 archivos y 902 casos. Con `flutter test` sobre la versión 1.4.0 pasan las **1032 pruebas**, sin fallas (991 al cierre del Sprint 2). El CI reporta más pruebas que casos declarados porque algunas se generan en bucles.
+
+<p class="caption"><strong>Tabla 293</strong><br><em>Archivos de prueba agregados a la aplicación Flutter en el Sprint 3</em></p>
+
+| Historia | Archivo de prueba (casos) | Comportamientos verificados |
+|---|---|---|
+| US04 | `invitation_token_test` (7) | El token se escribe en bloques de cuatro sin bloque corto al final, los bloques se vuelven a escribir como el mismo token y `toString` nunca imprime el secreto. |
+| US04 | `invite_patient_code_test` (9) | Copiar y Compartir envían el token real y no el texto agrupado, una invitación vencida no se puede copiar ni compartir y la pantalla cabe en 360 × 640 sin desbordarse. |
+| US16 | `patient_follow_up_tab_test` (12) | Los indicadores caben en un teléfono pequeño, el resumen con IA y el diario se pliegan y se abren, el encabezado anuncia «Mostrar» u «Ocultar» al lector de pantalla y una medición faltante se muestra con un guion. |
+| US20 | `patient_tab_bar_test` (5) | Las cuatro pestañas caben en 360 de ancho, el espacio entre etiquetas es parejo y, con texto muy grande, las etiquetas se desplazan sin desbordarse. |
+
+<p class="caption"><strong>Tabla 294</strong><br><em>Commits de pruebas de la aplicación Flutter en el Sprint 3</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-file-dashboard` | 5ab2587 | feat(main): size patient tabs to their labels | — | 05/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/patient-file-dashboard` | b62cebb | feat(monitoring): redesign follow-up tab as compact dashboard | — | 09/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/invite-code-share` | dc39c2a | feat(carerelationship): add grouped display form to invitation token | — | 11/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-flutter-app | `feature/invite-code-share` | aee30aa | feat(carerelationship): let practitioners copy and share invite code | — | 13/11/2026 |
+
+En la app Flutter cada commit trae la funcionalidad junto con sus pruebas.
+
+#### 4.2.3.6. Execution Evidence for Sprint Review
+
+En el Sprint 3 se desplegaron las versiones 2.0.0 y 2.0.1 del backend, la app Android llegó a la versión 2.2.0 y la app Flutter, a la 1.4.0. Las dos apps siguen distribuyéndose firmadas por Firebase App Distribution y como APK en los releases de GitHub.
+
+**Mobile Application (Flutter, nutricionista)**
+
+Las capturas corresponden a la app Flutter 1.4.0 en un teléfono Android, con la sesión de una nutricionista y conectada al backend publicado.
+
+<p class="caption"><strong>Figura 214</strong><br><em>Capturas de la aplicación Flutter del nutricionista en el Sprint 3</em></p>
+
+<table>
+  <tr>
+    <td align="center"><img src="../assets/img/chapter4/sprint3/flutter-invite-code.jpg" alt="Invitar paciente" width="220" /></td>
+    <td align="center"><img src="../assets/img/chapter4/sprint3/flutter-follow-up-dashboard.jpg" alt="Seguimiento compacto" width="220" /></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Invitar paciente.</strong> Debajo del QR aparece el código para escribir a mano, en bloques de cuatro, con los botones Copiar y Compartir. El código vence en 24 horas y es de un solo uso (US04).</td>
+    <td valign="top"><strong>Seguimiento.</strong> Arriba, el cumplimiento de la semana por día y tres tarjetas: tendencia de peso (−2,8 kg por semana en 4 semanas), días con registro (1 de 7) y última medición (65,0 kg el 12 de noviembre). El Diario de hoy es una sección colapsable (US16, US20).</td>
+  </tr>
+</table>
+
+**Mobile Application (Android, paciente)**
+
+La captura corresponde a la app Android 2.2.0 en un teléfono, con la sesión de un paciente que va a vincularse con su nutricionista.
+
+<p class="caption"><strong>Figura 215</strong><br><em>Captura de la aplicación Android del paciente en el Sprint 3</em></p>
+
+<table>
+  <tr>
+    <td align="center"><img src="../assets/img/chapter4/sprint3/android-manual-code.jpg" alt="Escribe tu código" width="220" /></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Escribe tu código.</strong> Desde la pantalla de escaneo, el paciente abre la hoja, escribe el código que le compartió su nutricionista y pulsa «Vincular». El contador indica cuántos caracteres faltan para el mínimo de 22 (US01).</td>
+  </tr>
+</table>
+
+La app Android de la nutricionista muestra el mismo código con Copiar y Compartir, y la misma pestaña Seguimiento compacta que la app Flutter.
+
+**Web Services**
+
+El recordatorio por correo no tiene pantalla en las apps. Su configuración se describe en la sección 4.2.3.7.
+
+**URL del video de demostración del Sprint 3:** [Video del Sprint 3](https://upcedupe-my.sharepoint.com/:v:/g/personal/u202417857_upc_edu_pe/IQC35upqUSOKSIlYP3-duMY_ARJmIMDxPVb7NzTBnvgxL7Q?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=ODRscU)
+
+#### 4.2.3.7. Services Documentation Evidence for Sprint Review
+
+El Sprint 3 no agrega ni retira operaciones. El documento OpenAPI publicado con la versión 2.0.1 sigue describiendo **98 operaciones en 92 rutas**, con 159 esquemas, y las convenciones son las de la sección 4.2.1.7. El recordatorio por correo corre dentro del backend como un trabajo en segundo plano: lee las consultas agendadas que ya crea `POST /api/v1/scheduled-follow-ups` y no necesita que la app llame a ningún endpoint.
+
+<p class="caption"><strong>Tabla 295</strong><br><em>Recursos de documentación de los servicios en el Sprint 3</em></p>
+
+| Recurso | Enlace |
+|---|---|
+| Swagger UI | https://platform.healthify.lat/swagger |
+| Documento OpenAPI | https://platform.healthify.lat/swagger/v1/swagger.json |
+| Configuración de los recordatorios (README) | https://github.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform#readme |
+
+La configuración se documentó en el README del repositorio, junto con las variables de entorno de los sprints anteriores:
+
+<p class="caption"><strong>Tabla 296</strong><br><em>Variables de configuración del recordatorio de consulta</em></p>
+
+| Variable | Valor por defecto | Uso |
+|---|---|---|
+| `Smtp__Host`, `Smtp__Username`, `Smtp__Password`, `Smtp__From` | Sin valor | Servidor de correo, compartido con la recuperación de contraseña. Sin `Smtp__Host` no se envía ningún correo. |
+| `Reminders__FollowUp__Enabled` | `true` | Activa o desactiva los recordatorios. |
+| `Reminders__FollowUp__LeadHours` | `24,1` | Horas antes de la consulta en que se avisa, separadas por comas. Si hay varias ventanas abiertas, solo se envía la más cercana. |
+| `Reminders__FollowUp__NotifyPractitioner` | `false` | Envía también el aviso al nutricionista, en su propio idioma. |
+| `Reminders__FollowUp__IntervalMinutes`, `Reminders__FollowUp__BatchSize` | `10`, `200` | Cada cuántos minutos revisa la agenda el trabajo y cuántas consultas procesa por ciclo. |
+| `Reminders__FollowUp__PracticeAddress`, `Reminders__FollowUp__VideoCallUrl` | Sin valor | Dirección del consultorio para las consultas presenciales y enlace de videollamada para las remotas. El enlace solo se muestra si usa `https`. |
+
+**Ejemplo de uso**
+
+La nutricionista agenda una consulta presencial para el 20/11/2026 a las 10:00 con `POST /api/v1/scheduled-follow-ups`. El 19/11 a las 10:00 el trabajo encuentra abierta la ventana de 24 horas y envía al paciente un correo cuyo asunto empieza con «Recordatorio: tu consulta es mañana» y sigue con la fecha y la hora; el cuerpo trae la dirección del consultorio y la preparación indicada. El 20/11 a las 9:00 envía el aviso de una hora. Cada envío queda en la tabla de recordatorios, así que el siguiente ciclo no lo repite. Si la nutricionista reprograma la consulta, el paciente recibe un aviso nuevo para la nueva hora, con «Reprogramada» al inicio del asunto; si la cancela, no recibe más avisos.
+
+Commits relacionados con la documentación de los servicios en el Sprint 3:
+
+<p class="caption"><strong>Tabla 297</strong><br><em>Commits relacionados con la documentación de servicios en el Sprint 3</em></p>
+
+| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
+|---|---|---|---|---|---|
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | 3050903 | chore(config): add follow-up reminder settings | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-core` | b72d4b0 | docs(readme): document appointment reminder settings | — | 13/11/2026 |
+| upc-pre-202620-1acc0238-13981-nutrisync/healthify-platform | `feature/follow-up-reminder-delivery` | 8822502 | docs(readme): remove outdated appointment reminders section | — | 16/11/2026 |
+
+#### 4.2.3.8. Software Deployment Evidence for Sprint Review
+
+Durante el Sprint 3 se desplegaron dos versiones del backend y se distribuyó una versión de cada app. La configuración general de cada producto está en la sección 4.1.4.
+
+**Web Services (backend)**
+
+*Releases.* Los pull requests #26 y #28, de `develop` a `main`, dispararon el flujo `Release`, que publicó `v2.0.0` y `v2.0.1`.
+
+<p class="caption"><strong>Figura 216</strong><br><em>Captura de GitHub Actions: ejecuciones del flujo Release del backend en el Sprint 3</em></p>
+
+![Ejecuciones del flujo Release](../assets/img/chapter4/sprint3/gh-platform-actions.png)
+
+<p class="caption"><strong>Figura 217</strong><br><em>Captura de GitHub: release v2.0.1 del backend</em></p>
+
+![Releases del backend](../assets/img/chapter4/sprint3/gh-platform-releases.png)
+
+*Máquina virtual.* El despliegue en la máquina virtual de Oracle Cloud siguió el procedimiento de los sprints anteriores, con estos cambios:
+
+1. Agregar al entorno las variables `REMINDERS_*` que se quieran cambiar (Tabla 229); `docker-compose.yml` las pasa a la API como `Reminders__FollowUp__*`. Las variables `SMTP_*` del Sprint 2 ya estaban definidas.
+2. Actualizar el repositorio a `main` y ejecutar `docker compose up --build -d`. Al iniciar, la API aplica la migración `Monitoring_AddFollowUpReminderLogs` y arranca el trabajo de recordatorios.
+
+*URLs de despliegue:*
+
+- API: https://platform.healthify.lat
+- Documentación: https://platform.healthify.lat/swagger
+
+**Mobile Application (Android)**
+
+*Integración continua y distribución.* Los flujos `CI` y `Distribute` son los del Sprint 2. Las ejecuciones de `CI` sobre `develop`, tras integrar los pull requests #36 y #37, y la del pull request #38 (`Release/2.2.0`) terminaron en verde. Con el push a `main`, `Distribute` subió la versión 2.2.0 a Firebase App Distribution y creó el release de GitHub con el APK.
+
+<p class="caption"><strong>Figura 218</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Android en el Sprint 3</em></p>
+
+![Actions de la aplicación Android](../assets/img/chapter4/sprint3/gh-android-actions.png)
+
+<p class="caption"><strong>Figura 219</strong><br><em>Captura de GitHub: release v2.2.0 de la aplicación Android con el APK</em></p>
+
+![Releases de la aplicación Android](../assets/img/chapter4/sprint3/gh-android-releases.png)
+
+**Mobile Application (Flutter, nutricionista)**
+
+*Integración continua y distribución.* Las ejecuciones de `CI` de los pull requests #23, #24 y #25 terminaron en verde, igual que las ejecuciones sobre `develop`. El pull request #25 (`Release/1.4.0`) llevó la versión 1.4.0 a `main`. `Distribute` comprobó que la versión de `pubspec.yaml` fuera nueva, compiló el APK firmado, lo subió a Firebase App Distribution y creó el release de GitHub. La versión agrega el paquete `share_plus`, que abre la hoja para compartir de Android.
+
+<p class="caption"><strong>Figura 220</strong><br><em>Captura de GitHub Actions: flujos CI y Distribute de la aplicación Flutter en el Sprint 3</em></p>
+
+![Actions de la aplicación Flutter](../assets/img/chapter4/sprint3/gh-flutter-actions.png)
+
+<p class="caption"><strong>Figura 221</strong><br><em>Captura de GitHub: release v1.4.0 de la aplicación Flutter con el APK</em></p>
+
+![Releases de la aplicación Flutter](../assets/img/chapter4/sprint3/gh-flutter-releases.png)
+
+#### 4.2.3.9. Team Collaboration Insights during Sprint
+
+En el Sprint 3 cada rama la escribió un solo integrante. Mora Rivera escribió el núcleo de los recordatorios en el backend; Del Aguila Del Aguila, el código escrito a mano en la app Android; Vergaray Calderon, el Seguimiento compacto en Flutter, y Espinoza Cruz, el código compartible en Flutter. Villarreal Bazan escribió la entrega de los recordatorios y el Seguimiento compacto de la app Android, y concentró 50 de las 102 horas estimadas. La integración a `develop` y `main` la hizo Nevatrix en los tres repositorios. El landing page no tuvo commits en este sprint.
+
+Backend (`healthify-platform`):
+
+<p class="caption"><strong>Figura 222</strong><br><em>Captura de GitHub: contribuyentes del backend en el Sprint 3</em></p>
+
+![Contribuyentes del backend](../assets/img/chapter4/sprint3/gh-platform-contributors.png)
+
+Aplicación Android (`healthify-android-app`):
+
+<p class="caption"><strong>Figura 223</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Android en el Sprint 3</em></p>
+
+![Contribuyentes de la aplicación Android](../assets/img/chapter4/sprint3/gh-android-contributors.png)
+
+Aplicación Flutter (`healthify-flutter-app`):
+
+<p class="caption"><strong>Figura 224</strong><br><em>Captura de GitHub: contribuyentes de la aplicación Flutter en el Sprint 3</em></p>
+
+![Contribuyentes de la aplicación Flutter](../assets/img/chapter4/sprint3/gh-flutter-contributors.png)
+
+<div style="page-break-after: always"></div>
+
 ## 4.3. Validation Interviews
 
 En esta sección se registran las entrevistas de validación realizadas con usuarios de los dos segmentos objetivo de Healthify: nutricionistas y pacientes en tratamiento nutricional activo para bajar de peso. En cada sesión, el entrevistado revisó el Landing Page y luego completó un conjunto de tareas en el prototipo de la aplicación móvil, que fue el foco principal de la validación. A partir de lo observado se realizó una evaluación según heurísticas de usabilidad, arquitectura de información y diseño inclusivo.
@@ -2925,7 +3423,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **Elementos incluidos en la sesión**
 
-<p class="caption"><strong>Tabla 279</strong><br><em>Elementos incluidos en la sesión de validación con el segmento nutricionista</em></p>
+<p class="caption"><strong>Tabla 298</strong><br><em>Elementos incluidos en la sesión de validación con el segmento nutricionista</em></p>
 
 | Elemento | Secciones o pantallas |
 | --- | --- |
@@ -2934,7 +3432,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **User flows a validar**
 
-<p class="caption"><strong>Tabla 280</strong><br><em>User flows a validar con el segmento nutricionista</em></p>
+<p class="caption"><strong>Tabla 299</strong><br><em>User flows a validar con el segmento nutricionista</em></p>
 
 | # | User flow | Recorrido en el prototipo | User Stories |
 | --- | --- | --- | --- |
@@ -2945,7 +3443,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **Guion de la sesión**
 
-<p class="caption"><strong>Tabla 281</strong><br><em>Guion de la sesión de validación con el segmento nutricionista</em></p>
+<p class="caption"><strong>Tabla 300</strong><br><em>Guion de la sesión de validación con el segmento nutricionista</em></p>
 
 | Momento | Indicación del entrevistador | Pregunta |
 | --- | --- | --- |
@@ -2960,7 +3458,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **Elementos incluidos en la sesión**
 
-<p class="caption"><strong>Tabla 282</strong><br><em>Elementos incluidos en la sesión de validación con el segmento paciente en tratamiento nutricional activo</em></p>
+<p class="caption"><strong>Tabla 301</strong><br><em>Elementos incluidos en la sesión de validación con el segmento paciente en tratamiento nutricional activo</em></p>
 
 | Elemento | Secciones o pantallas |
 | --- | --- |
@@ -2969,7 +3467,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **User flows a validar**
 
-<p class="caption"><strong>Tabla 283</strong><br><em>User flows a validar con el segmento paciente en tratamiento nutricional activo</em></p>
+<p class="caption"><strong>Tabla 302</strong><br><em>User flows a validar con el segmento paciente en tratamiento nutricional activo</em></p>
 
 | # | User flow | Recorrido en el prototipo | User Stories |
 | --- | --- | --- | --- |
@@ -2981,7 +3479,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 **Guion de la sesión**
 
-<p class="caption"><strong>Tabla 284</strong><br><em>Guion de la sesión de validación con el segmento paciente en tratamiento nutricional activo</em></p>
+<p class="caption"><strong>Tabla 303</strong><br><em>Guion de la sesión de validación con el segmento paciente en tratamiento nutricional activo</em></p>
 
 | Momento | Indicación del entrevistador | Pregunta |
 | --- | --- | --- |
@@ -2996,7 +3494,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 ### 4.3.2. Registro de Entrevistas
 
-<p class="caption"><strong>Tabla 285</strong><br><em>Registro de la entrevista de validación al segmento nutricionista</em></p>
+<p class="caption"><strong>Tabla 304</strong><br><em>Registro de la entrevista de validación al segmento nutricionista</em></p>
 
 | Segmento: Nutricionista | Entrevista |
 | --- | --- |
@@ -3014,7 +3512,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 
 <div style="page-break-after: always"></div>
 
-<p class="caption"><strong>Tabla 286</strong><br><em>Registro de la entrevista de validación al segmento paciente en tratamiento nutricional activo</em></p>
+<p class="caption"><strong>Tabla 305</strong><br><em>Registro de la entrevista de validación al segmento paciente en tratamiento nutricional activo</em></p>
 
 | Segmento: Paciente en tratamiento nutricional activo | Entrevista |
 | --- | --- |
@@ -3037,7 +3535,7 @@ Para no influir en el resultado, el entrevistador planteó cada tarea como una m
 **UX Heuristics & Principles Evaluation**
 **Usability · Inclusive Design · Information Architecture**
 
-<p class="caption"><strong>Tabla 287</strong><br><em>Datos generales de la evaluación heurística</em></p>
+<p class="caption"><strong>Tabla 306</strong><br><em>Datos generales de la evaluación heurística</em></p>
 
 | | |
 | --- | --- |
@@ -3081,7 +3579,7 @@ No están incluidas en esta versión de la evaluación las siguientes tareas:
 
 Los errores serán puntuados tomando en cuenta la siguiente escala de severidad:
 
-<p class="caption"><strong>Tabla 288</strong><br><em>Escala de severidad de la evaluación heurística</em></p>
+<p class="caption"><strong>Tabla 307</strong><br><em>Escala de severidad de la evaluación heurística</em></p>
 
 | Nivel | Descripción |
 | --- | --- |
@@ -3092,7 +3590,7 @@ Los errores serán puntuados tomando en cuenta la siguiente escala de severidad:
 
 **TABLA RESUMEN:**
 
-<p class="caption"><strong>Tabla 289</strong><br><em>Resumen de los problemas identificados en la evaluación heurística</em></p>
+<p class="caption"><strong>Tabla 308</strong><br><em>Resumen de los problemas identificados en la evaluación heurística</em></p>
 
 | # | Problema | Escala de severidad | Heurística/Principio violada(o) |
 | --- | --- | --- | --- |
@@ -3122,7 +3620,7 @@ Problema:
 
 Para el mismo paciente, cada pantalla calcula la tendencia de peso de forma distinta. En Tu tendencia, el paciente lee "Resumen: bajó 2.8 kg en 4 semanas", escrito en letra pequeña debajo de la gráfica. En la pestaña Seguimiento, la nutricionista ve una tendencia de −1.8 kg/sem, y el resumen con IA de esa misma pestaña habla de un cambio de −1.4 kg con una pendiente de −1.9 kg por semana. La paciente entrevistada no supo cuánto había bajado realmente, y la nutricionista no tendría claro qué valor comentar en consulta, lo que afecta la confianza en el dato central del progreso.
 
-<p class="caption"><strong>Figura 210</strong><br><em>Problema #1: valores distintos de tendencia de peso en las vistas del paciente y del nutricionista</em></p>
+<p class="caption"><strong>Figura 225</strong><br><em>Problema #1: valores distintos de tendencia de peso en las vistas del paciente y del nutricionista</em></p>
 
 ![Problema 1](../assets/img/chapter4/heuristics/problema1.png)
 
@@ -3134,7 +3632,7 @@ Solución:
 
 El resumen de la tendencia ahora se genera a partir del mismo cálculo que alimenta la gráfica y el expediente, y se muestra como texto principal de la tarjeta en lenguaje simple, por ejemplo "En las últimas 4 semanas, tu promedio subió 0.6 kg". En Mi expediente, el indicador Mi tendencia (+0.2 kg/sem en las últimas 4 semanas) es coherente con ese resumen y con la dirección de la gráfica, por lo que el paciente y la nutricionista leen el mismo dato.
 
-<p class="caption"><strong>Figura 211</strong><br><em>Solución al problema #1: resumen de la tendencia coherente con la gráfica y el expediente</em></p>
+<p class="caption"><strong>Figura 226</strong><br><em>Solución al problema #1: resumen de la tendencia coherente con la gráfica y el expediente</em></p>
 
 ![Solución 1](../assets/img/chapter4/heuristics/solucion1.png)
 
@@ -3148,7 +3646,7 @@ Problema:
 
 La acción más frecuente del paciente, registrar una comida, solo aparece con texto en la pestaña Diario, mediante el botón "Registrar comida". En la pantalla de Inicio, donde se muestran sus metas del día, la única opción es un ícono de cámara sin etiqueta en la barra inferior, que la paciente no reconoció como la forma de registrar. Por eso tardó en encontrar cómo hacerlo.
 
-<p class="caption"><strong>Figura 212</strong><br><em>Problema #2: ícono de registro sin etiqueta en Inicio y botón con texto solo en Diario</em></p>
+<p class="caption"><strong>Figura 227</strong><br><em>Problema #2: ícono de registro sin etiqueta en Inicio y botón con texto solo en Diario</em></p>
 
 ![Problema 2](../assets/img/chapter4/heuristics/problema2.png)
 
@@ -3160,7 +3658,7 @@ Solución:
 
 La barra de navegación inferior ahora muestra el botón central con la etiqueta "Registrar". Así, la acción para registrar una comida queda visible e identificable desde Inicio y desde todas las pestañas principales.
 
-<p class="caption"><strong>Figura 213</strong><br><em>Solución al problema #2: botón «Registrar» con etiqueta en la barra inferior</em></p>
+<p class="caption"><strong>Figura 228</strong><br><em>Solución al problema #2: botón «Registrar» con etiqueta en la barra inferior</em></p>
 
 ![Solución 2](../assets/img/chapter4/heuristics/solucion2.png)
 
@@ -3174,7 +3672,7 @@ Problema:
 
 Para registrar su peso, la paciente buscó primero en Expediente y necesitó ayuda para llegar a "Registrar autopesaje", dentro de la pestaña Progreso. La etiqueta "Progreso" no comunica que en esa pestaña se registra el peso, solo que se consulta.
 
-<p class="caption"><strong>Figura 214</strong><br><em>Problema #3: pestaña «Progreso» para registrar el autopesaje</em></p>
+<p class="caption"><strong>Figura 229</strong><br><em>Problema #3: pestaña «Progreso» para registrar el autopesaje</em></p>
 
 ![Problema 3](../assets/img/chapter4/heuristics/problema3.png)
 
@@ -3186,7 +3684,7 @@ Solución:
 
 La pestaña "Progreso" pasó a llamarse "Peso", y el botón de esa pantalla ahora dice "Registrar mi peso". La paciente puede asociar directamente la pestaña con la tarea de registrar su peso, y no solo con consultarlo.
 
-<p class="caption"><strong>Figura 215</strong><br><em>Solución al problema #3: pestaña «Peso» y botón «Registrar mi peso»</em></p>
+<p class="caption"><strong>Figura 230</strong><br><em>Solución al problema #3: pestaña «Peso» y botón «Registrar mi peso»</em></p>
 
 ![Solución 3](../assets/img/chapter4/heuristics/solucion3.png)
 
@@ -3200,7 +3698,7 @@ Problema:
 
 La nutricionista buscó la opción para iniciar la consulta en la pestaña Expediente, porque asoció la consulta con el historial clínico. El botón "Iniciar consulta" solo está al final de la pestaña Resumen, por lo que no lo encontró al primer intento. Es la acción que más usará en cada cita.
 
-<p class="caption"><strong>Figura 216</strong><br><em>Problema #4: pestaña Expediente sin acceso para iniciar la consulta</em></p>
+<p class="caption"><strong>Figura 231</strong><br><em>Problema #4: pestaña Expediente sin acceso para iniciar la consulta</em></p>
 
 ![Problema 4](../assets/img/chapter4/heuristics/problema4.png)
 
@@ -3212,7 +3710,7 @@ Solución:
 
 La pestaña Expediente pasó a llamarse "Historia", y en ella se agregó el botón fijo "Nueva consulta" en la parte inferior de la pantalla. La nutricionista encuentra la acción justo donde la buscó, sin tener que volver a la pestaña Resumen.
 
-<p class="caption"><strong>Figura 217</strong><br><em>Solución al problema #4: pestaña Historia con el botón fijo «Nueva consulta»</em></p>
+<p class="caption"><strong>Figura 232</strong><br><em>Solución al problema #4: pestaña Historia con el botón fijo «Nueva consulta»</em></p>
 
 ![Solución 4](../assets/img/chapter4/heuristics/solucion4.png)
 
@@ -3226,7 +3724,7 @@ Problema:
 
 En la pestaña Seguimiento, algunas comidas aparecen con la etiqueta "Por confirmar". La nutricionista no supo si debía considerarlas en su evaluación, porque la vista no explica que aún no suman al cumplimiento del paciente.
 
-<p class="caption"><strong>Figura 218</strong><br><em>Problema #5: estados de las comidas sin explicación en la pestaña Seguimiento</em></p>
+<p class="caption"><strong>Figura 233</strong><br><em>Problema #5: estados de las comidas sin explicación en la pestaña Seguimiento</em></p>
 
 ![Problema 5](../assets/img/chapter4/heuristics/problema5.png)
 
@@ -3238,7 +3736,7 @@ Solución:
 
 La tarjeta Diario de hoy de la pestaña Seguimiento incluye ahora un texto de apoyo: «Por confirmar»: el paciente aún no confirmó la porción. No suma a su cumplimiento hasta que la confirme. Además, la etiqueta "Por confirmar" usa un color ámbar y un ícono de reloj que la distinguen de las comidas confirmadas.
 
-<p class="caption"><strong>Figura 219</strong><br><em>Solución al problema #5: explicación del estado «Por confirmar» en el Diario de hoy</em></p>
+<p class="caption"><strong>Figura 234</strong><br><em>Solución al problema #5: explicación del estado «Por confirmar» en el Diario de hoy</em></p>
 
 ![Solución 5](../assets/img/chapter4/heuristics/solucion5.png)
 
@@ -3252,7 +3750,7 @@ Problema:
 
 La paciente entrevistada comentó que le costó leer los textos pequeños debajo de la gráfica de tendencia y tuvo que acercar el teléfono. Ese texto contiene la explicación del cálculo y el aviso sobre los registros fuera de protocolo, por lo que quien tiene dificultades visuales pierde información relevante.
 
-<p class="caption"><strong>Figura 220</strong><br><em>Problema #6: texto secundario pequeño bajo la gráfica de tendencia</em></p>
+<p class="caption"><strong>Figura 235</strong><br><em>Problema #6: texto secundario pequeño bajo la gráfica de tendencia</em></p>
 
 ![Problema 6](../assets/img/chapter4/heuristics/problema6.png)
 
@@ -3264,7 +3762,7 @@ Solución:
 
 El dato más importante de la tendencia ya no depende del texto pequeño: el resumen se muestra como texto principal de la tarjeta, sobre la gráfica y con mayor tamaño. El texto secundario queda solo para la explicación del cálculo y el aviso de registros fuera de protocolo.
 
-<p class="caption"><strong>Figura 221</strong><br><em>Solución al problema #6: resumen de la tendencia como texto principal</em></p>
+<p class="caption"><strong>Figura 236</strong><br><em>Solución al problema #6: resumen de la tendencia como texto principal</em></p>
 
 ![Solución 6](../assets/img/chapter4/heuristics/solucion6.png)
 
@@ -3278,7 +3776,7 @@ Problema:
 
 Al revisar el Landing Page, la nutricionista indicó que lo primero que preguntaría antes de descargar la aplicación es si tiene costo, y no encontró esa información en ninguna sección.
 
-<p class="caption"><strong>Figura 222</strong><br><em>Problema #7: sección principal del Landing Page sin información de costo</em></p>
+<p class="caption"><strong>Figura 237</strong><br><em>Problema #7: sección principal del Landing Page sin información de costo</em></p>
 
 ![Problema 7](../assets/img/chapter4/heuristics/problema7.png)
 
@@ -3300,7 +3798,7 @@ Problema:
 
 La pantalla Invitar paciente solo permite mostrar el código QR para que el paciente lo escanee en consulta. La nutricionista señaló que a veces el paciente no tiene el celular disponible y no hay otra forma de hacerle llegar la invitación.
 
-<p class="caption"><strong>Figura 223</strong><br><em>Problema #8: invitación QR disponible solo para mostrarse en pantalla</em></p>
+<p class="caption"><strong>Figura 238</strong><br><em>Problema #8: invitación QR disponible solo para mostrarse en pantalla</em></p>
 
 ![Problema 8](../assets/img/chapter4/heuristics/problema8.png)
 
@@ -3310,7 +3808,11 @@ Agregar una opción "Compartir invitación" que permita enviar el código o un e
 
 Solución:
 
-Además de mostrar el código en consulta, la invitación ya no exige que el paciente esté presente con su celular. La nutricionista puede enviarle por WhatsApp o correo una imagen del código QR, y el paciente solo tiene que adjuntarla desde su galería en la pantalla de escaneo: la aplicación lee el QR directamente de la imagen. El código mantiene su vigencia de 24 horas y su uso único.
+En el Sprint 3 (sección 4.2.3), debajo del código QR, la pantalla Invitar paciente pasó a mostrar un código para escribir a mano, con los botones Copiar y Compartir. Si el paciente no puede escanear en consulta, la nutricionista le envía ese código por WhatsApp o correo, y el paciente lo escribe en la hoja "Escribe tu código" de la pantalla de escaneo para vincularse. El código sigue venciendo en 24 horas y es de un solo uso.
+
+<p class="caption"><strong>Figura 239</strong><br><em>Solución al problema #8: código de invitación para compartir y escribir a mano</em></p>
+
+![Solución 8](../assets/img/chapter4/heuristics/solucion8.png)
 
 **PROBLEMA #9: La aplicación solo se ofrece para Android**
 
@@ -3322,7 +3824,7 @@ Problema:
 
 El Landing Page solo ofrece el botón "Descargar para Android". Los pacientes y nutricionistas que usan iPhone no tienen una forma de acceder al producto ni información sobre cuándo podrán hacerlo, lo que los excluye del seguimiento.
 
-<p class="caption"><strong>Figura 224</strong><br><em>Problema #9: descarga ofrecida solo para Android en el Landing Page</em></p>
+<p class="caption"><strong>Figura 240</strong><br><em>Problema #9: descarga ofrecida solo para Android en el Landing Page</em></p>
 
 ![Problema 9](../assets/img/chapter4/heuristics/problema9.png)
 
@@ -3344,7 +3846,7 @@ Problema:
 
 La pestaña Seguimiento reúne el cumplimiento semanal, la tendencia de peso, el registro de comidas, el resumen con IA, el diario de hoy y la última medición clínica. La nutricionista indicó que en un celular pequeño tendría que desplazarse bastante para revisar todo.
 
-<p class="caption"><strong>Figura 225</strong><br><em>Problema #10: cantidad de bloques de información en la pestaña Seguimiento</em></p>
+<p class="caption"><strong>Figura 241</strong><br><em>Problema #10: cantidad de bloques de información en la pestaña Seguimiento</em></p>
 
 ![Problema 10](../assets/img/chapter4/heuristics/problema10.png)
 
@@ -3354,7 +3856,11 @@ Mostrar primero los indicadores clave de la semana y agrupar el resto en seccion
 
 Solución:
 
-La pestaña Seguimiento prioriza los indicadores clave de la semana (cumplimiento, tendencia de peso y registro de comidas) en la parte superior, y el resumen con IA se reduce a una frase breve. Los bloques de detalle, como "Diario de hoy" y "Última medición clínica", se agrupan en secciones colapsables para reducir el desplazamiento en celulares pequeños.
+Desde el Sprint 3 (sección 4.2.3), la pestaña Seguimiento muestra arriba los indicadores clave de la semana: el cumplimiento por día y tres tarjetas con la tendencia de peso, los días con registro y la última medición clínica. El resumen con IA y el Diario de hoy pasaron a ser secciones colapsables, y la nutricionista las abre solo cuando necesita el detalle. Así se desplaza menos en un celular pequeño.
+
+<p class="caption"><strong>Figura 242</strong><br><em>Solución al problema #10: indicadores clave arriba y secciones colapsables en Seguimiento</em></p>
+
+![Solución 10](../assets/img/chapter4/heuristics/solucion10.png)
 
 **PROBLEMA #11: No se explica al nutricionista por qué no puede ver la foto del plato**
 
@@ -3366,7 +3872,7 @@ Problema:
 
 La nutricionista quiso ver la foto de una comida para validar la estimación de la porción. Por diseño, las fotos se procesan en el teléfono del paciente y no se envían, pero la pestaña Seguimiento no lo explica, por lo que puede parecer una función faltante.
 
-<p class="caption"><strong>Figura 226</strong><br><em>Problema #11: comida registrada por foto sin explicación sobre la imagen</em></p>
+<p class="caption"><strong>Figura 243</strong><br><em>Problema #11: comida registrada por foto sin explicación sobre la imagen</em></p>
 
 ![Problema 11](../assets/img/chapter4/heuristics/problema11.png)
 
