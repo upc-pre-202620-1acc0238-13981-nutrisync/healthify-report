@@ -677,7 +677,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Vinculación exitosa</strong><br>Dado que el paciente posee una invitación válida y vigente emitida por un nutricionista<br>Cuando el paciente utiliza la invitación<br>Entonces el sistema establece el vínculo entre ambas cuentas.<br><br><strong>Escenario 2: Invitación vencida</strong><br>Dado que el paciente posee una invitación que ha superado su periodo de vigencia<br>Cuando el paciente intenta utilizarla<br>Entonces el sistema rechaza la vinculación e identifica la invitación como vencida.<br><br><strong>Escenario 3: Invitación previamente utilizada</strong><br>Dado que el paciente dispone de una invitación que ya ha sido utilizada<br>Cuando el paciente intenta utilizar nuevamente la invitación<br>Entonces el sistema rechaza la operación y conserva el vínculo previamente establecido.</td>
+    <td colspan="8"><strong>Escenario 1: Vinculación exitosa</strong><br>Dado que el paciente posee una invitación válida y vigente emitida por un nutricionista<br>Cuando el paciente utiliza la invitación<br>Entonces el sistema establece el vínculo entre ambas cuentas.<br><br><strong>Escenario 2: Invitación vencida</strong><br>Dado que el paciente posee una invitación que ha superado su periodo de vigencia<br>Cuando el paciente intenta utilizarla<br>Entonces el sistema rechaza la vinculación e identifica la invitación como vencida.<br><br><strong>Escenario 3: Invitación previamente utilizada</strong><br>Dado que el paciente dispone de una invitación que ya ha sido utilizada<br>Cuando el paciente intenta utilizar nuevamente la invitación<br>Entonces el sistema rechaza la operación y conserva el vínculo previamente establecido.<br><br><strong>Escenario 4: Invitación escrita a mano</strong><br>Dado que el paciente recibió de su nutricionista el código de una invitación vigente y no puede escanear el QR<br>Cuando el paciente escribe el código en la aplicación<br>Entonces el sistema ignora los espacios, valida el código sin enviarlo si no tiene un formato válido y, si es válido, establece el vínculo igual que con el QR.</td>
   </tr>
 </table>
 
@@ -776,7 +776,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Invitación generada</strong><br>Dado que el nutricionista se encuentra autorizado<br>Cuando el nutricionista solicita una nueva invitación<br>Entonces el sistema genera una invitación única asociada al nutricionista y con vigencia limitada.<br><br><strong>Escenario 2: Invitación canjeada</strong><br>Dado que un paciente canjeó la invitación del nutricionista<br>Cuando el nutricionista consulta su cartera de pacientes<br>Entonces el sistema muestra al paciente como pendiente de consentimiento.<br><br><strong>Escenario 3: Invitación vencida</strong><br>Dado que la invitación superó su vigencia sin ser canjeada<br>Cuando el nutricionista la consulta<br>Entonces el sistema la identifica como vencida y permite generar una nueva.</td>
+    <td colspan="8"><strong>Escenario 1: Invitación generada</strong><br>Dado que el nutricionista se encuentra autorizado<br>Cuando el nutricionista solicita una nueva invitación<br>Entonces el sistema genera una invitación única asociada al nutricionista y con vigencia limitada.<br><br><strong>Escenario 2: Invitación canjeada</strong><br>Dado que un paciente canjeó la invitación del nutricionista<br>Cuando el nutricionista consulta su cartera de pacientes<br>Entonces el sistema muestra al paciente como pendiente de consentimiento.<br><br><strong>Escenario 3: Invitación vencida</strong><br>Dado que la invitación superó su vigencia sin ser canjeada<br>Cuando el nutricionista la consulta<br>Entonces el sistema la identifica como vencida y permite generar una nueva.<br><br><strong>Escenario 4: Invitación compartida a distancia</strong><br>Dado que el nutricionista generó una invitación vigente y el paciente no está en la consulta<br>Cuando el nutricionista copia o comparte el código de la invitación<br>Entonces el sistema entrega el código completo, legible en bloques de cuatro caracteres, con la misma vigencia y el mismo uso único que el QR, y no permite copiarlo ni compartirlo una vez vencido.</td>
   </tr>
 </table>
 
@@ -1214,7 +1214,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Información disponible</strong><br>Dado que el nutricionista atiende a un paciente con vínculo activo que ha generado información de seguimiento<br>Cuando el nutricionista consulta el monitoreo del paciente<br>Entonces el sistema proporciona la tendencia de peso, cumplimiento, registros de alimentación y demás datos autorizados disponibles.<br><br><strong>Escenario 2: Procedencia de registros estimados</strong><br>Dado que el nutricionista consulta una ingesta que proviene de una estimación<br>Cuando el nutricionista consulta una ingesta estimada dentro del monitoreo<br>Entonces el sistema conserva su procedencia y nivel de confianza.<br><br><strong>Escenario 3: Ausencia de información</strong><br>Dado que el nutricionista consulta un periodo sin suficientes registros<br>Cuando el nutricionista consulta el seguimiento del periodo<br>Entonces el sistema distingue la ausencia de datos de una desviación del tratamiento.<br><br><strong>Escenario 4: Resumen del periodo con apoyo de IA</strong><br>Dado que el nutricionista consulta el seguimiento de un paciente con registros en el periodo<br>Cuando el nutricionista solicita el resumen del periodo<br>Entonces el sistema presenta los datos del periodo y, si la IA está habilitada y existe consentimiento, un texto que los resume; en caso contrario presenta solo los datos, sin error.</td>
+    <td colspan="8"><strong>Escenario 1: Información disponible</strong><br>Dado que el nutricionista atiende a un paciente con vínculo activo que ha generado información de seguimiento<br>Cuando el nutricionista consulta el monitoreo del paciente<br>Entonces el sistema proporciona la tendencia de peso, cumplimiento, registros de alimentación y demás datos autorizados disponibles.<br><br><strong>Escenario 2: Procedencia de registros estimados</strong><br>Dado que el nutricionista consulta una ingesta que proviene de una estimación<br>Cuando el nutricionista consulta una ingesta estimada dentro del monitoreo<br>Entonces el sistema conserva su procedencia y nivel de confianza.<br><br><strong>Escenario 3: Ausencia de información</strong><br>Dado que el nutricionista consulta un periodo sin suficientes registros<br>Cuando el nutricionista consulta el seguimiento del periodo<br>Entonces el sistema distingue la ausencia de datos de una desviación del tratamiento.<br><br><strong>Escenario 4: Resumen del periodo con apoyo de IA</strong><br>Dado que el nutricionista consulta el seguimiento de un paciente con registros en el periodo<br>Cuando el nutricionista solicita el resumen del periodo<br>Entonces el sistema presenta los datos del periodo y, si la IA está habilitada y existe consentimiento, un texto que los resume; en caso contrario presenta solo los datos, sin error.<br><br><strong>Escenario 5: Indicadores clave en pantallas pequeñas</strong><br>Dado que el nutricionista consulta el seguimiento de un paciente desde un celular<br>Cuando abre la pestaña de seguimiento<br>Entonces el sistema muestra primero el cumplimiento de la semana, la tendencia de peso, los días con registro y la última medición, y agrupa el resumen con IA y el diario del día en secciones que el nutricionista puede plegar y abrir.</td>
   </tr>
 </table>
 
@@ -1280,7 +1280,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Consulta agendada</strong><br>Dado que el nutricionista mantiene un vínculo activo con el paciente<br>Cuando el nutricionista agenda una consulta en una fecha y hora futuras, con su modalidad e indicaciones de preparación<br>Entonces el sistema registra la consulta en la agenda del nutricionista y la deja visible para el paciente.<br><br><strong>Escenario 2: Fecha no futura</strong><br>Dado que el nutricionista intenta agendar una consulta<br>Cuando indica una fecha y hora que no son futuras<br>Entonces el sistema rechaza el registro e informa que la fecha debe ser posterior al momento actual.<br><br><strong>Escenario 3: Consulta ya agendada</strong><br>Dado que el paciente ya tiene una consulta agendada pendiente<br>Cuando el nutricionista intenta agendar otra consulta para el mismo paciente<br>Entonces el sistema rechaza la operación y conserva la consulta vigente.<br><br><strong>Escenario 4: Reprogramación o cancelación</strong><br>Dado que el nutricionista tiene una consulta agendada<br>Cuando el nutricionista la reprograma o la cancela<br>Entonces el sistema actualiza la agenda, conserva la respuesta previa del paciente cuando se reprograma y retira la consulta de las próximas cuando se cancela.<br><br><strong>Escenario 5: Consulta no acudida</strong><br>Dado que una consulta agendada ha vencido sin completarse<br>Cuando transcurre el periodo de revisión del sistema<br>Entonces el sistema la marca como no acudida y la conserva en la agenda sin finalizar el vínculo de cuidado.</td>
+    <td colspan="8"><strong>Escenario 1: Consulta agendada</strong><br>Dado que el nutricionista mantiene un vínculo activo con el paciente<br>Cuando el nutricionista agenda una consulta en una fecha y hora futuras, con su modalidad e indicaciones de preparación<br>Entonces el sistema registra la consulta en la agenda del nutricionista y la deja visible para el paciente.<br><br><strong>Escenario 2: Fecha no futura</strong><br>Dado que el nutricionista intenta agendar una consulta<br>Cuando indica una fecha y hora que no son futuras<br>Entonces el sistema rechaza el registro e informa que la fecha debe ser posterior al momento actual.<br><br><strong>Escenario 3: Consulta ya agendada</strong><br>Dado que el paciente ya tiene una consulta agendada pendiente<br>Cuando el nutricionista intenta agendar otra consulta para el mismo paciente<br>Entonces el sistema rechaza la operación y conserva la consulta vigente.<br><br><strong>Escenario 4: Reprogramación o cancelación</strong><br>Dado que el nutricionista tiene una consulta agendada<br>Cuando el nutricionista la reprograma o la cancela<br>Entonces el sistema actualiza la agenda, conserva la respuesta previa del paciente cuando se reprograma y retira la consulta de las próximas cuando se cancela.<br><br><strong>Escenario 5: Consulta no acudida</strong><br>Dado que una consulta agendada ha vencido sin completarse<br>Cuando transcurre el periodo de revisión del sistema<br>Entonces el sistema la marca como no acudida y la conserva en la agenda sin finalizar el vínculo de cuidado.<br><br><strong>Escenario 6: Recordatorio de la consulta por correo</strong><br>Dado que el paciente tiene una consulta agendada y el servicio de correo está configurado<br>Cuando faltan 24 horas y luego una hora para la consulta<br>Entonces el sistema envía al paciente un correo en el idioma de su cuenta con la fecha, la hora, la modalidad y la preparación indicada, una sola vez por cada aviso, y no lo envía si la consulta se canceló.</td>
   </tr>
 </table>
 
@@ -1415,7 +1415,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Acceso autorizado</strong><br>Dado que el nutricionista mantiene un vínculo activo con el paciente y existe consentimiento vigente<br>Cuando el nutricionista solicita consultar el expediente del paciente<br>Entonces el sistema proporciona la información clínica y de seguimiento autorizada.<br><br><strong>Escenario 2: Información histórica</strong><br>Dado que el nutricionista atiende a un paciente con información clínica y de seguimiento registrada<br>Cuando el nutricionista consulta el expediente unificado del paciente<br>Entonces el sistema conserva y proporciona la trazabilidad de la información correspondiente.<br><br><strong>Escenario 3: Acceso no autorizado</strong><br>Dado que el nutricionista no cuenta con un vínculo activo o consentimiento vigente<br>Cuando el nutricionista solicita consultar el expediente del paciente<br>Entonces el sistema rechaza el acceso.</td>
+    <td colspan="8"><strong>Escenario 1: Acceso autorizado</strong><br>Dado que el nutricionista mantiene un vínculo activo con el paciente y existe consentimiento vigente<br>Cuando el nutricionista solicita consultar el expediente del paciente<br>Entonces el sistema proporciona la información clínica y de seguimiento autorizada.<br><br><strong>Escenario 2: Información histórica</strong><br>Dado que el nutricionista atiende a un paciente con información clínica y de seguimiento registrada<br>Cuando el nutricionista consulta el expediente unificado del paciente<br>Entonces el sistema conserva y proporciona la trazabilidad de la información correspondiente.<br><br><strong>Escenario 3: Acceso no autorizado</strong><br>Dado que el nutricionista no cuenta con un vínculo activo o consentimiento vigente<br>Cuando el nutricionista solicita consultar el expediente del paciente<br>Entonces el sistema rechaza el acceso.<br><br><strong>Escenario 4: Secciones del expediente en pantallas pequeñas</strong><br>Dado que el nutricionista consulta el expediente desde un celular de pantalla pequeña o con el texto ampliado<br>Cuando el sistema muestra las pestañas del expediente<br>Entonces cada pestaña ocupa un espacio acorde a su etiqueta y todas quedan visibles o desplazables, sin que ningún texto se corte.</td>
   </tr>
 </table>
 <br>
@@ -2492,7 +2492,7 @@ Los criterios de aceptación se expresan mediante escenarios Given–When–Then
     <th colspan="8">Acceptance Criteria</th>
   </tr>
   <tr>
-    <td colspan="8"><strong>Escenario 1: Consulta agendada</strong><br>Dado que el Developer dispone de una solicitud válida con una fecha futura para un paciente con vínculo activo<br>Cuando el Developer envía la solicitud de agendamiento<br>Entonces el sistema responde 201 Created y registra la consulta en estado programado.<br><br><strong>Escenario 2: Fecha no futura o consulta duplicada</strong><br>Dado que el Developer envía una solicitud con una fecha no futura o para un paciente que ya tiene una consulta agendada<br>Cuando el sistema valida la solicitud<br>Entonces el sistema rechaza la operación y conserva la agenda sin cambios.<br><br><strong>Escenario 3: Respuesta previa fuera de plazo</strong><br>Dado que el Developer envía la respuesta previa de una consulta cuya hora ya pasó<br>Cuando el sistema valida la solicitud<br>Entonces el sistema responde 409 Conflict y conserva la respuesta anterior.<br><br><strong>Escenario 4: Reprogramación y cancelación</strong><br>Dado que el Developer dispone de una consulta agendada del nutricionista autenticado<br>Cuando el Developer envía la solicitud de reprogramación o de cancelación<br>Entonces el sistema responde 200 OK con la nueva fecha en la reprogramación y 204 No Content en la cancelación, conservando la respuesta previa del paciente.</td>
+    <td colspan="8"><strong>Escenario 1: Consulta agendada</strong><br>Dado que el Developer dispone de una solicitud válida con una fecha futura para un paciente con vínculo activo<br>Cuando el Developer envía la solicitud de agendamiento<br>Entonces el sistema responde 201 Created y registra la consulta en estado programado.<br><br><strong>Escenario 2: Fecha no futura o consulta duplicada</strong><br>Dado que el Developer envía una solicitud con una fecha no futura o para un paciente que ya tiene una consulta agendada<br>Cuando el sistema valida la solicitud<br>Entonces el sistema rechaza la operación y conserva la agenda sin cambios.<br><br><strong>Escenario 3: Respuesta previa fuera de plazo</strong><br>Dado que el Developer envía la respuesta previa de una consulta cuya hora ya pasó<br>Cuando el sistema valida la solicitud<br>Entonces el sistema responde 409 Conflict y conserva la respuesta anterior.<br><br><strong>Escenario 4: Reprogramación y cancelación</strong><br>Dado que el Developer dispone de una consulta agendada del nutricionista autenticado<br>Cuando el Developer envía la solicitud de reprogramación o de cancelación<br>Entonces el sistema responde 200 OK con la nueva fecha en la reprogramación y 204 No Content en la cancelación, conservando la respuesta previa del paciente.<br><br><strong>Escenario 5: Envío de los recordatorios de consulta</strong><br>Dado que el Developer dispone de consultas agendadas y de la configuración de correo y de recordatorios<br>Cuando el trabajo de recordatorios ejecuta su ciclo<br>Entonces el sistema envía el aviso de la ventana más cercana que esté abierta, registra solo los envíos exitosos para no repetirlos y reintenta en el siguiente ciclo los que fallaron.</td>
   </tr>
 </table>
 <br>
@@ -2666,61 +2666,63 @@ El Impact Mapping del nutricionista se orienta al uso recurrente de la informaci
 | 2 | SS01 | Investigación de tecnologías para el reconocimiento de alimentos | 3 | Sprint 1 |
 | 3 | SS04 | Investigación de los controles de uso de la IA generativa | 3 | Sprint 1 |
 | 4 | TS09 | Servicios de asistencia con IA | 8 | Sprint 1 |
-| 5 | TS05 | Servicios de registro de ingesta alimentaria | 8 | Sprint 1 |
+| 5 | TS05 | Servicios de registro de ingesta alimentaria | 8 | Sprint 2 |
 | 6 | US10 | Registro manual de comida mediante catálogo | 5 | Sprint 1 |
 | 7 | SS02 | Investigación de Open Food Facts y USDA para el catálogo de alimentos | 3 | Sprint 1 |
 | 8 | US09 | Confirmación o ajuste de estimación de porción | 3 | Sprint 1 |
-| 9 | US11 | Indicación de adherencia al plan en un registro | 2 | Sprint 1 |
+| 9 | US11 | Indicación de adherencia al plan en un registro | 2 | Sprint 2 |
 | 10 | US23 | Visualización de metas nutricionales vigentes | 3 | Sprint 1 |
-| 11 | US26 | Prescripción y publicación del plan nutricional | 8 | Sprint 2 |
-| 12 | US25 | Obtención de propuesta de metas nutricionales calculadas | 5 | Sprint 2 |
+| 11 | US26 | Prescripción y publicación del plan nutricional | 8 | Sprint 1 |
+| 12 | US25 | Obtención de propuesta de metas nutricionales calculadas | 5 | Sprint 1 |
 | 13 | TS04 | Servicios de prescripción y gestión del plan nutricional | 8 | Sprint 1 |
 | 14 | US14 | Consulta del cumplimiento nutricional diario | 5 | Sprint 2 |
-| 15 | US16 | Consulta del monitoreo del paciente | 5 | Sprint 2 |
+| 15 | US16 | Consulta del monitoreo del paciente | 5 | Sprint 1, Sprint 3 |
 | 16 | TS07 | Servicios de monitoreo y expediente del paciente | 8 | Sprint 2 |
-| 17 | US21 | Registro y finalización de la evaluación nutricional | 5 | Sprint 2 |
-| 18 | US22 | Emisión del diagnóstico nutricional | 5 | Sprint 2 |
+| 17 | US21 | Registro y finalización de la evaluación nutricional | 5 | Sprint 1 |
+| 18 | US22 | Emisión del diagnóstico nutricional | 5 | Sprint 1 |
 | 19 | TS03 | Servicios de evaluación y diagnóstico nutricional | 5 | Sprint 1 |
-| 20 | US01 | Vinculación mediante invitación QR | 5 | Sprint 1 |
-| 21 | US04 | Generación de invitación QR para un nuevo paciente | 5 | Sprint 1 |
+| 20 | US01 | Vinculación mediante invitación QR | 5 | Sprint 1, Sprint 3 |
+| 21 | US04 | Generación de invitación QR para un nuevo paciente | 5 | Sprint 1, Sprint 3 |
 | 22 | US02 | Otorgamiento de consentimiento para compartir información | 3 | Sprint 1 |
 | 23 | TS02 | Servicios de gestión de vínculos de cuidado | 5 | Sprint 1 |
-| 24 | US12 | Registro de autopesaje | 3 | Sprint 2 |
-| 25 | US13 | Visualización de tendencia de peso | 5 | Sprint 2 |
+| 24 | US12 | Registro de autopesaje | 3 | Sprint 1 |
+| 25 | US13 | Visualización de tendencia de peso | 5 | Sprint 1 |
 | 26 | TS06 | Servicios de autopesaje y seguimiento corporal | 5 | Sprint 1 |
-| 27 | US20 | Acceso al expediente unificado del paciente | 5 | Sprint 2 |
-| 28 | US44 | Alimentos locales del catálogo | 2 | Sprint 2 |
-| 29 | US05 | Consulta de pacientes con vínculo activo | 3 | Sprint 2 |
-| 30 | US39 | Agenda de consultas | 5 | Sprint 2 |
-| 31 | TS10 | Servicios de agenda y respuesta previa a la consulta | 5 | Sprint 2 |
-| 32 | US17 | Revisión y resolución de señales de seguimiento | 5 | Sprint 3 |
+| 27 | US20 | Acceso al expediente unificado del paciente | 5 | Sprint 1, Sprint 3 |
+| 28 | US44 | Alimentos locales del catálogo | 2 | Sprint 1 |
+| 29 | US05 | Consulta de pacientes con vínculo activo | 3 | Sprint 1 |
+| 30 | US39 | Agenda de consultas | 5 | Sprint 1, Sprint 3 |
+| 31 | TS10 | Servicios de agenda y respuesta previa a la consulta | 5 | Sprint 1, Sprint 3 |
+| 32 | US17 | Revisión y resolución de señales de seguimiento | 5 | Sprint 1 |
 | 33 | SS03 | Investigación y definición de la lógica de la señal de consistencia | 3 | Sprint 3 |
-| 34 | US15 | Visualización de señal de consistencia | 8 | Sprint 3 |
-| 35 | US27 | Ajuste del plan nutricional entre consultas | 5 | Sprint 3 |
-| 36 | US41 | Control de las funciones con IA | 5 | Sprint 2 |
-| 37 | US42 | Resumen semanal, ideas de comidas y preguntas sugeridas con IA | 8 | Sprint 3 |
-| 38 | US31 | Registro y sincronización sin conexión | 8 | Sprint 2 |
-| 39 | TS08 | Sincronización de registros offline | 8 | Sprint 2 |
-| 40 | US18 | Acceso al expediente personal unificado | 5 | Sprint 3 |
-| 41 | US40 | Preparación y respuesta previa a la consulta | 3 | Sprint 3 |
-| 42 | US24 | Confirmación de recepción de nuevas metas nutricionales | 2 | Sprint 2 |
-| 43 | US19 | Registro de derivación a otro especialista | 2 | Sprint 3 |
-| 44 | US06 | Alta del paciente al finalizar el tratamiento | 2 | Sprint 3 |
-| 45 | US07 | Cambio de nutricionista | 2 | Sprint 3 |
-| 46 | US03 | Revocación del consentimiento | 2 | Sprint 3 |
+| 34 | US15 | Visualización de señal de consistencia | 8 | Sprint 1 |
+| 35 | US27 | Ajuste del plan nutricional entre consultas | 5 | Sprint 1 |
+| 36 | US41 | Control de las funciones con IA | 5 | Sprint 1 |
+| 37 | US42 | Resumen semanal, ideas de comidas y preguntas sugeridas con IA | 8 | Sprint 1 |
+| 38 | US31 | Registro y sincronización sin conexión | 8 | Sprint 1 |
+| 39 | TS08 | Sincronización de registros offline | 8 | Sprint 1 |
+| 40 | US18 | Acceso al expediente personal unificado | 5 | Sprint 2 |
+| 41 | US40 | Preparación y respuesta previa a la consulta | 3 | Sprint 1 |
+| 42 | US24 | Confirmación de recepción de nuevas metas nutricionales | 2 | Sprint 1 |
+| 43 | US19 | Registro de derivación a otro especialista | 2 | Sprint 2 |
+| 44 | US06 | Alta del paciente al finalizar el tratamiento | 2 | Sprint 1 |
+| 45 | US07 | Cambio de nutricionista | 2 | Sprint 1 |
+| 46 | US03 | Revocación del consentimiento | 2 | Sprint 1 |
 | 47 | US28 | Creación de cuenta | 3 | Sprint 1 |
-| 48 | US29 | Inicio de sesión | 3 | Sprint 1 |
+| 48 | US29 | Inicio de sesión | 3 | Sprint 2 |
 | 49 | US30 | Cierre de sesión | 1 | Sprint 1 |
-| 50 | US43 | Preferencias de la cuenta: idioma y recordatorios | 3 | Sprint 2 |
-| 51 | TS01 | Servicios de registro, autenticación y autorización | 5 | Sprint 1 |
-| 52 | US32 | Visualización de la propuesta de valor de Healthify | 2 | Sprint 1 |
+| 50 | US43 | Preferencias de la cuenta: idioma y recordatorios | 3 | Sprint 1 |
+| 51 | TS01 | Servicios de registro, autenticación y autorización | 5 | Sprint 2 |
+| 52 | US32 | Visualización de la propuesta de valor de Healthify | 2 | Sprint 2 |
 | 53 | US33 | Consulta de las principales funcionalidades de Healthify | 2 | Sprint 1 |
-| 54 | US36 | Acceso al inicio de uso de Healthify desde el Landing Page | 2 | Sprint 1 |
+| 54 | US36 | Acceso al inicio de uso de Healthify desde el Landing Page | 2 | Sprint 2 |
 | 55 | US38 | Consulta de términos y políticas de Healthify | 2 | Sprint 1 |
-| 56 | US45 | Consulta de preguntas frecuentes | 2 | Sprint 3 |
+| 56 | US45 | Consulta de preguntas frecuentes | 2 | Sprint 1 |
 | 57 | US35 | Cambio de idioma del Landing Page | 3 | Sprint 1 |
-| 58 | US37 | Envío de consulta mediante formulario de contacto | 3 | Sprint 3 |
-| 59 | US34 | Conocimiento de la startup, misión y visión | 1 | Sprint 3 |
+| 58 | US37 | Envío de consulta mediante formulario de contacto | 3 | Sprint 1 |
+| 59 | US34 | Conocimiento de la startup, misión y visión | 1 | Sprint 1 |
+
+La columna Sprint indica el sprint en que el Product Owner aceptó la historia (sección 4.2). Las seis historias que el Sprint 3 retomó para sumarles un escenario muestran los dos sprints.
 
 A continuación, se presenta el Product Backlog elaborado en Trello:
 
