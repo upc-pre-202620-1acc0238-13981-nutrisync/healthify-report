@@ -612,7 +612,7 @@ La versión móvil usa los mismos colores, tipografías y componentes. Los cambi
 
 La aplicación Android de Healthify tiene dos roles, paciente y nutricionista, y se diseñó en 360 × 800 dp. En total el diseño tiene más de cien pantallas con sus estados (carga, vacío, sin conexión y error). Se presentan seis wireframes representativos: tres del paciente (Inicio, estimación por foto y tendencia de peso) y tres del nutricionista (Bandeja, ficha del paciente y diagnóstico con IA). Los wireframes se elaboraron en Figma, con textos reales y componentes del sistema de diseño en escala de grises.
 
-<p class="caption"><strong>Figura 131</strong><br><em>Wireframes de las pantallas representativas de la aplicación móvil</em></p>
+<p class="caption"><strong>Figura 132</strong><br><em>Wireframes de las pantallas representativas de la aplicación móvil</em></p>
 
 <table align="center">
   <tr>
@@ -669,7 +669,7 @@ Se elaboró un wireflow por cada objetivo del usuario. Los objetivos 1 a 3 corre
 
 El flujo recorre las cuatro etapas de la consulta con una barra de progreso («Paso 1 de 4», «Paso 2 de 4»). El botón principal al pie cambia de etiqueta según el paso y siempre indica a dónde lleva. Al final, el aviso temporal confirma la publicación sin interrumpir al nutricionista.
 
-<p class="caption"><strong>Figura 132</strong><br><em>Wireflow 1: Atender una consulta</em></p>
+<p class="caption"><strong>Figura 133</strong><br><em>Wireflow 1: Atender una consulta</em></p>
 
 <img src="../assets/img/chapter3/wireflows/01_Attend_Consultation_Wireflow.png" alt="Wireflow 1: Atender una consulta" width="100%" />
 
@@ -691,7 +691,7 @@ El flujo recorre las cuatro etapas de la consulta con una barra de progreso («P
 
 El perfil de un paciente sin datos base muestra una llamada a registrarlos antes de iniciar la consulta. Una vez guardados, el paso 1 los toma como punto de partida y solo pide lo que cambió.
 
-<p class="caption"><strong>Figura 133</strong><br><em>Wireflow 2: Evaluar a un paciente nuevo</em></p>
+<p class="caption"><strong>Figura 134</strong><br><em>Wireflow 2: Evaluar a un paciente nuevo</em></p>
 
 <img src="../assets/img/chapter3/wireflows/02_Evaluate_New_Patient_Wireflow.png" alt="Wireflow 2: Evaluar a un paciente nuevo" width="75%" />
 
@@ -713,7 +713,7 @@ El perfil de un paciente sin datos base muestra una llamada a registrarlos antes
 
 La IA propone un plan y el nutricionista lo acepta con cambios. Nada se asigna al paciente sin esa decisión.
 
-<p class="caption"><strong>Figura 134</strong><br><em>Wireflow 3: Atender una señal de la bandeja</em></p>
+<p class="caption"><strong>Figura 135</strong><br><em>Wireflow 3: Atender una señal de la bandeja</em></p>
 
 <img src="../assets/img/chapter3/wireflows/03_Handle_Inbox_Signal_Wireflow.png" alt="Wireflow 3: Atender una señal de la bandeja" width="75%" />
 
@@ -738,7 +738,7 @@ La IA propone un plan y el nutricionista lo acepta con cambios. Nada se asigna a
 
 Desde la barra inferior hasta la confirmación hay seis pasos y solo uno requiere escribir (la porción). La pantalla de espera informa qué ocurre («Viendo tu foto…»), y la estimación muestra su porcentaje de confianza.
 
-<p class="caption"><strong>Figura 135</strong><br><em>Wireflow 4: Registrar una comida con foto</em></p>
+<p class="caption"><strong>Figura 136</strong><br><em>Wireflow 4: Registrar una comida con foto</em></p>
 
 <img src="../assets/img/chapter3/wireflows/04_Log_Meal_With_Photo_Wireflow.png" alt="Wireflow 4: Registrar una comida con foto" width="100%" />
 
@@ -759,7 +759,7 @@ Desde la barra inferior hasta la confirmación hay seis pasos y solo uno requier
 | 4. Le cuenta a su nutricionista cómo le fue y toca «Enviar a mi nutricionista». |
 | 5. Ve «Mis consultas» con la respuesta enviada. |
 
-<p class="caption"><strong>Figura 136</strong><br><em>Wireflow 5: Prepararme para la consulta</em></p>
+<p class="caption"><strong>Figura 137</strong><br><em>Wireflow 5: Prepararme para la consulta</em></p>
 
 <img src="../assets/img/chapter3/wireflows/05_Prepare_For_Consultation_Wireflow.png" alt="Wireflow 5: Prepararme para la consulta" width="85%" />
 
@@ -767,7 +767,7 @@ Desde la barra inferior hasta la confirmación hay seis pasos y solo uno requier
 
 Los mock-ups aplican el sistema de diseño «Healthify M3» sobre los wireframes de 3.1.4.1: fondo crema `#F6F4EE`, tarjetas blancas, verde `#3B6E23` para la navegación activa y los enlaces, naranja `#F5A623` para la acción principal, Anton en títulos y métricas, y Open Sans en el resto. Se presentan las mismas seis pantallas.
 
-<p class="caption"><strong>Figura 137</strong><br><em>Mock-ups de las pantallas representativas de la aplicación móvil</em></p>
+<p class="caption"><strong>Figura 138</strong><br><em>Mock-ups de las pantallas representativas de la aplicación móvil</em></p>
 
 <table align="center">
   <tr>
@@ -837,7 +837,7 @@ Cada User Flow parte del mismo objetivo que su Wireflow y se construye con los m
 
 La consulta se puede interrumpir sin perder lo ingresado: queda como borrador y se reanuda desde el perfil del paciente. Si la consulta se abrió por error, el paso 1 permite borrarla («¿Borrar esta consulta?»); el plan y las metas vigentes no cambian.
 
-<p class="caption"><strong>Figura 138</strong><br><em>User Flow 1: Atender una consulta</em></p>
+<p class="caption"><strong>Figura 139</strong><br><em>User Flow 1: Atender una consulta</em></p>
 
 <img src="../assets/img/chapter3/userflows/01_Attend_Consultation_Userflow.png" alt="User Flow 1: Atender una consulta" width="100%" />
 
@@ -864,7 +864,7 @@ La consulta se puede interrumpir sin perder lo ingresado: queda como borrador y 
 | 1. El nutricionista ingresa los datos base y toca «Guardar y salir». |
 | 2. Vuelve al perfil del paciente sin iniciar la consulta. |
 
-<p class="caption"><strong>Figura 139</strong><br><em>User Flow 2: Evaluar a un paciente nuevo</em></p>
+<p class="caption"><strong>Figura 140</strong><br><em>User Flow 2: Evaluar a un paciente nuevo</em></p>
 
 <img src="../assets/img/chapter3/userflows/02_Evaluate_New_Patient_Userflow.png" alt="User Flow 2: Evaluar a un paciente nuevo" width="75%" />
 
@@ -886,7 +886,7 @@ La consulta se puede interrumpir sin perder lo ingresado: queda como borrador y 
 
 Este flujo no tiene ruta alternativa documentada: la pantalla de la señal solo ofrece «Ajustar», «Resolver» y el retroceso.
 
-<p class="caption"><strong>Figura 140</strong><br><em>User Flow 3: Atender una señal de la bandeja</em></p>
+<p class="caption"><strong>Figura 141</strong><br><em>User Flow 3: Atender una señal de la bandeja</em></p>
 
 <img src="../assets/img/chapter3/userflows/03_Handle_Inbox_Signal_Userflow.png" alt="User Flow 3: Atender una señal de la bandeja" width="75%" />
 
@@ -920,7 +920,7 @@ Este flujo no tiene ruta alternativa documentada: la pantalla de la señal solo 
 
 Si la foto no se reconoce, el paciente no pierde el registro: la app le ofrece la búsqueda de alimentos de 3.1.2.4 con el mismo destino final.
 
-<p class="caption"><strong>Figura 141</strong><br><em>User Flow 4: Registrar una comida con foto</em></p>
+<p class="caption"><strong>Figura 142</strong><br><em>User Flow 4: Registrar una comida con foto</em></p>
 
 <img src="../assets/img/chapter3/userflows/04_Log_Meal_With_Photo_Userflow.png" alt="User Flow 4: Registrar una comida con foto" width="100%" />
 
@@ -949,13 +949,13 @@ Si la foto no se reconoce, el paciente no pierde el registro: la app le ofrece l
 | 2. Ve «No pudimos enviar tu respuesta» y toca «Volver a intentarlo». |
 | 3. Vuelve al formulario de respuesta para enviarla otra vez. |
 
-<p class="caption"><strong>Figura 142</strong><br><em>User Flow 5: Prepararme para la consulta</em></p>
+<p class="caption"><strong>Figura 143</strong><br><em>User Flow 5: Prepararme para la consulta</em></p>
 
 <img src="../assets/img/chapter3/userflows/05_Prepare_For_Consultation_Userflow.png" alt="User Flow 5: Prepararme para la consulta" width="100%" />
 
 #### 3.1.4.5. Mobile Applications Prototyping
 
-<p class="caption"><strong>Figura 143</strong><br><em>Prototipo del landing page en móvil (Mobile Web Browser)</em></p>
+<p class="caption"><strong>Figura 144</strong><br><em>Prototipo del landing page en móvil (Mobile Web Browser)</em></p>
 
 |<center> Mobile Web Browser|
 |---|
