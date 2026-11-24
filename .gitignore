@@ -8,6 +8,9 @@ venv/
 *.pdf
 !assets/**/*.pdf
 
+# Runtime de Structurizr Lite (logs, indice Lucene, miniaturas)
+.structurizr/
+
 # Sistema operativo
 Thumbs.db
 desktop.ini
