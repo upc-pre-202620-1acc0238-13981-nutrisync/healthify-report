@@ -2944,7 +2944,9 @@ El mapa resultante contiene veintidós integraciones por evento originadas en di
 
 ### 2.5.3. Software Architecture
 
-La arquitectura de software de Healthify se representa mediante el modelo C4, aplicando tres de sus niveles de abstracción — Contexto, Contenedores y Componentes — sobre la solución completa: las dos aplicaciones móviles (la nativa en Kotlin, para el paciente y el nutricionista, y la de Flutter, solo para el nutricionista), el backend ASP\.NET Core 10, el Landing Page estático y la base de datos MySQL 8.4. El diseño sigue los seis Bounded Contexts identificados en el proceso estratégico de Domain-Driven Design (2.5.1 y 2.5.2), materializados aquí como módulos concretos tanto en el cliente como en el servidor. Estos tres niveles se detallan en las secciones 2.5.3.1 a 2.5.3.3; adicionalmente, se presenta en la sección 2.5.3.4 el Deployment Diagram, diagrama suplementario del modelo C4 que describe la distribución física de la solución sobre la infraestructura.
+La arquitectura de software de Healthify se representa mediante el modelo C4, aplicando tres de sus niveles de abstracción — Contexto, Contenedores y Componentes — sobre la solución completa: las dos aplicaciones móviles (la nativa en Kotlin, para el paciente y el nutricionista, y la de Flutter, solo para el nutricionista), el backend ASP\.NET Core 10, el Landing Page estático y la base de datos MySQL 8.4. El diseño sigue los seis Bounded Contexts identificados en el proceso estratégico de Domain-Driven Design (2.5.1 y 2.5.2), materializados aquí como módulos concretos tanto en las aplicaciones como en el servidor. Estos tres niveles se detallan en las secciones 2.5.3.1 a 2.5.3.3; adicionalmente, se presenta en la sección 2.5.3.4 el Deployment Diagram, diagrama suplementario del modelo C4 que describe la distribución física de la solución sobre la infraestructura.
+
+Todos los diagramas de esta sección salen de un único modelo escrito en Structurizr DSL, en `docs/c4-diagrams/structurizr/workspace.dsl`. Cada vista del modelo tiene la misma clave que el nombre de su imagen (por ejemplo, la vista `SystemContext` se exporta como `healthify-SystemContext.png`).
 
 #### 2.5.3.1. Software Architecture Context Level Diagrams
 
@@ -2953,11 +2955,14 @@ El Diagrama de Contexto (Nivel 1 del modelo C4) representa a Healthify como un s
 **Elementos:**
 
 - **Healthify:** Sistema central que provee el seguimiento nutricional entre consultas, la comunicación entre paciente y nutricionista, y el monitoreo de adherencia al plan.
-- **Patient:** Persona que registra sus comidas y peso entre consultas, y sigue el plan prescrito por su nutricionista.
-- **Practitioner:** Persona que realiza el acto clínico (evaluación, diagnóstico, prescripción) y revisa las señales de adherencia de sus pacientes.
+- **Patient:** Persona que registra sus comidas y peso entre consultas, y sigue el plan prescrito por su nutricionista. Usa la aplicación nativa.
+- **Practitioner:** Persona que realiza el acto clínico (evaluación, diagnóstico, prescripción) y revisa las señales de adherencia de sus pacientes. Puede usar la aplicación nativa o la aplicación Flutter.
 - **External Systems:**
-	- `AI Provider (Gemini):` Modelo de IA generativa al que el servidor envía la foto de la comida, a través del módulo técnico de IA, para obtener el plato, la porción estimada y su nivel de confianza. La foto se procesa en memoria y no se conserva. El código QR de invitación se lee en el dispositivo con ML Kit, sin pasar por Gemini.
-	- `Nutritional Data Providers:` Fuentes externas de catálogo nutricional (Open Food Facts, USDA) consultadas a través del Anticorruption Layer de Food Catalog.
+	- `Google Gemini API:` Modelo de IA generativa al que el servidor envía, a través del pipeline de IA del módulo compartido, la foto de la comida y los datos seudonimizados que necesitan el análisis de la foto, las ideas de comida, las sugerencias de diagnóstico y de plan, y los resúmenes semanales. Está apagado por defecto y depende del consentimiento del paciente; la foto se procesa en memoria y no se conserva.
+	- `Nutritional Data Providers:` Fuentes externas de catálogo nutricional (Open Food Facts, USDA FoodData Central) consultadas a través del Anticorruption Layer de Food Catalog.
+	- `SMTP Mail Server:` Servidor de correo por el que el backend envía los códigos de recuperación de contraseña y los recordatorios de consulta al paciente y al nutricionista.
+
+Las versiones anteriores de este diagrama incluían ML Kit, un servicio de notificaciones push y un proveedor de identidad externo. Ya no aparecen: ML Kit es una librería que se ejecuta dentro de la aplicación nativa (solo lee el código QR de invitación), los avisos de consulta se programan en el propio teléfono, e IAM emite sus propios tokens JWT con contraseñas cifradas con BCrypt.
 
 <p class="caption"><strong>Figura 35</strong><br><em>Diagrama de contexto de Healthify (C4, nivel 1)</em></p>
 
