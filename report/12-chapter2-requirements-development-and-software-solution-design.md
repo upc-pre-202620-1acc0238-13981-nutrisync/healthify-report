@@ -2974,20 +2974,26 @@ El Diagrama de Contenedores (Nivel 2 del modelo C4) desglosa el sistema Healthif
 
 **Elementos:**
 
-- **Landing Page:** Sitio web estático que presenta la propuesta de valor de Healthify y dirige a los usuarios hacia la descarga de la aplicación.
+- **Landing Page:** Sitio web estático y bilingüe (español e inglés) que presenta la propuesta de valor de Healthify. Sus botones de descarga enlazan a la invitación de Firebase App Distribution de cada aplicación.
    - **Tecnología:** `HTML5 + CSS3 + JavaScript`.
-- **Mobile Application:** Frontend donde Patient y Practitioner interactúan con la plataforma. El diagrama lo muestra como un solo contenedor, pero se implementa en dos aplicaciones que consumen el mismo API y se dividen por los mismos Bounded Contexts. La aplicación nativa atiende a los dos roles y elige el navigation shell según el claim de rol de la sesión. La aplicación Flutter atiende solo al nutricionista y no incluye el registro de comidas ni el autopesaje. Las dos programan en el teléfono el aviso de cada consulta, sin depender de un servicio externo.
-   - **Tecnología:** `Kotlin + Jetpack Compose` (aplicación nativa) y `Flutter` (aplicación del nutricionista).
-- **API Application:** Backend que maneja la lógica de negocio de los seis Bounded Contexts, expuesta vía una API RESTful.
-   - **Tecnología:** `ASP.NET Core 10 (C#)`.
-- **Database:** Almacena usuarios, vínculos de cuidado, evaluaciones, diagnósticos, planes, entradas del diario y ventanas de monitoreo.
+- **Healthify Android App:** Aplicación nativa que atiende a los dos roles y elige el navigation shell (paciente o nutricionista) según el claim de rol de la sesión. Funciona sin conexión: guarda las escrituras en una cola Outbox y las envía cuando vuelve la red. Lee el código QR de invitación con ML Kit en el dispositivo y programa los avisos de consulta con WorkManager.
+   - **Tecnología:** `Kotlin + Jetpack Compose + Hilt`, cliente HTTP `Retrofit + OkHttp`.
+- **Android Local Database:** Base de datos local de la aplicación nativa. Guarda el usuario de la sesión, la cola de operaciones pendientes, el diario offline, la copia de las metas activas y el catálogo local de alimentos.
+   - **Tecnología:** `Room (SQLite)`.
+- **Healthify Practitioner App:** Aplicación solo para el nutricionista. Cubre cinco Bounded Contexts y no incluye el registro de comidas ni el autopesaje. Programa los avisos de consulta con notificaciones locales del teléfono.
+   - **Tecnología:** `Flutter + Dart + flutter_bloc`, cliente HTTP `package:http`.
+- **Healthify Platform API:** Backend que maneja la lógica de negocio de los seis Bounded Contexts y de los read models compuestos, expuesta vía una API RESTful bajo `/api/v1`, con Swagger.
+   - **Tecnología:** `ASP.NET Core 10 (C#)`, `Entity Framework Core 10`.
+- **Healthify Database:** Almacena usuarios y sesiones, vínculos de cuidado, consultas, evaluaciones, diagnósticos, planes, entradas del diario, pesajes, ventanas de monitoreo, seguimientos, alimentos de referencia y el registro de generaciones de IA.
    - **Tecnología:** `MySQL 8.4`.
-- **External Systems:** APIs de terceros que se integran con el backend y con el cliente para extender las capacidades del sistema.
-   - **Tecnología:** `JSON/HTTPS (REST)` para el backend; las llamadas al proveedor de IA y a los catálogos nutricionales las hace el backend. ML Kit se ejecuta en el dispositivo, sin red, solo para leer el código QR.
+- **External Systems:** Google Gemini API, Nutritional Data Providers y SMTP Mail Server. Todas las llamadas a terceros las hace el backend.
+   - **Tecnología:** `JSON/HTTPS (REST)` para Gemini y los catálogos; `SMTP` (puerto 587) para el correo.
 
 <p class="caption"><strong>Figura 36</strong><br><em>Diagrama de contenedores de Healthify (C4, nivel 2)</em></p>
 
 ![Container Diagram](../assets/img/artifacts/healthify-ContainerDiagram.png)
+
+La vista resumida conserva solo los actores, las dos aplicaciones, la base de datos local, el API y la base de datos central.
 
 <p class="caption"><strong>Figura 37</strong><br><em>Diagrama de contenedores resumido de Healthify</em></p>
 
