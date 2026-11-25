@@ -3273,12 +3273,12 @@ Módulo de la API que arma las vistas que necesitan datos de más de un Bounded 
 
 #### 2.5.3.4. Software Architecture Deployment Diagram
 
-El Deployment Diagram (diagrama suplementario del modelo C4) muestra la distribución física de Healthify sobre la infraestructura y los entornos de ejecución: los dispositivos, servidores y contenedores que alojan cada artefacto de software, y los protocolos con que se comunican. El fuente está en `docs/c4-diagrams/deployment.puml`.
+El Deployment Diagram (diagrama suplementario del modelo C4) muestra la distribución física de Healthify sobre la infraestructura y los entornos de ejecución: los dispositivos, servidores y contenedores que alojan cada artefacto de software, y los protocolos con que se comunican. Se modela como el entorno `Production` del mismo workspace de Structurizr (`docs/c4-diagrams/structurizr/workspace.dsl`).
 
 **Elementos:**
 
-- **Patient's / Practitioner's Android Device:** Dispositivo del paciente o del nutricionista, con Android 7.0 (API 24) o superior. Ejecuta la aplicación nativa `Healthify` (Kotlin y Jetpack Compose, paquete `pe.edu.upc.healthify`), que atiende a ambos roles.
-- **Practitioner's Android Device:** Dispositivo del nutricionista que ejecuta `Healthify Practitioner` (Flutter y Dart, paquete `pe.edu.upc.healthify.practitioner`), una aplicación solo para el rol nutricionista.
+- **Patient's / Practitioner's Android Device:** Dispositivo del paciente o del nutricionista, con Android 7.0 (API 24) o superior. Ejecuta la aplicación nativa `Healthify Android App` (Kotlin y Jetpack Compose, paquete `pe.edu.upc.healthify`), que atiende a ambos roles, y su base de datos local `Android Local Database` (Room).
+- **Practitioner's Android Device:** Dispositivo del nutricionista que ejecuta `Healthify Practitioner App` (Flutter y Dart, paquete `pe.edu.upc.healthify.practitioner`), una aplicación solo para el rol nutricionista.
 - **Firebase App Distribution:** Servicio de Google Cloud que guarda los APK firmados de ambas aplicaciones y los entrega al grupo de prueba `qa`.
 - **GitHub:** Organización `upc-pre-202620-1acc0238-13981-nutrisync`, con dos nodos:
    - **GitHub Pages:** Aloja el `Landing Page` (HTML5, CSS3 y JavaScript) en `landing.healthify.lat`.
@@ -3287,21 +3287,22 @@ El Deployment Diagram (diagrama suplementario del modelo C4) muestra la distribu
    - **Compute Instance:** Máquina virtual que hospeda el `Docker Engine`.
    - **Docker Engine:** Entorno de contenedores orquestado con Docker Compose, con dos contenedores:
       - **healthify-api:** Imagen `mcr.microsoft.com/dotnet/aspnet:10.0` en el puerto 8080, que aloja el `Healthify Platform API` (ASP.NET Core 10) con su API REST `/api/v1` y Swagger.
-      - **healthify-mysql:** Imagen `mysql:8.4` con volumen persistente, que aloja la base de datos `healthify`.
-- **Sistemas externos:** Google Gemini API (funciones de IA, apagadas por defecto), Open Food Facts y USDA FoodData Central (catálogos de alimentos) y un servidor SMTP (correo de recuperación de contraseña y recordatorios de consulta).
+      - **healthify-mysql:** Imagen `mysql:8.4` con el volumen persistente `healthify-mysql-data`, que aloja la base de datos `healthify`.
+- **Sistemas externos:** Google Gemini API (en Google Cloud; funciones de IA, apagadas por defecto), Open Food Facts y USDA FoodData Central (catálogos de alimentos) y un servidor SMTP (correo de recuperación de contraseña y recordatorios de consulta).
 
 **Relaciones:**
 
-- `Healthify → Healthify Platform API` y `Healthify Practitioner → Healthify Platform API` (`JSON/HTTPS`): ambas aplicaciones consumen la API RESTful del backend.
+- `Healthify Android App → Healthify Platform API` y `Healthify Practitioner App → Healthify Platform API` (`JSON/HTTPS`): ambas aplicaciones consumen la API RESTful del backend.
+- `Healthify Android App → Android Local Database` (`Room / SQLite`): la aplicación nativa guarda la sesión, la cola Outbox y los datos offline en el dispositivo.
 - `GitHub Actions → Firebase App Distribution` (`HTTPS`): el flujo `Distribute` de cada aplicación sube el APK firmado en cada push a `main`.
 - `Firebase App Distribution → dispositivos Android` (`HTTPS`): los usuarios del grupo `qa` instalan el APK desde la invitación de Firebase.
 - `Landing Page → Firebase App Distribution` (`HTTPS`): los botones de descarga del landing page enlazan a esa invitación.
-- `Healthify Platform API → Healthify Database` (`SQL/TCP 3306`): la API se conecta a MySQL por la red interna de Docker, aunque corren en contenedores distintos.
-- `Healthify Platform API → sistemas externos`: genera texto con Gemini y busca alimentos en Open Food Facts y USDA (`JSON/HTTPS`), y envía por SMTP (puerto 587) los códigos de recuperación y los recordatorios de consulta.
+- `Healthify Platform API → Healthify Database` (`EF Core 10, SQL/TCP 3306`): la API se conecta a MySQL por la red interna de Docker, aunque corren en contenedores distintos.
+- `Healthify Platform API → sistemas externos`: genera texto y analiza fotos con Gemini y busca alimentos en Open Food Facts y USDA (`JSON/HTTPS`), y envía por SMTP (puerto 587) los códigos de recuperación y los recordatorios de consulta.
 
-<p class="caption"><strong>Figura 78</strong><br><em>Diagrama de despliegue de Healthify</em></p>
+<p class="caption"><strong>Figura 74</strong><br><em>Diagrama de despliegue de Healthify</em></p>
 
-![Deployment Diagram](../assets/img/artifacts/healthify-DeploymentDiagram-tb2.png)
+![Deployment Diagram](../assets/img/artifacts/healthify-DeploymentDiagram.png)
 
 ## 2.6. Tactical-Level Domain-Driven Design
 
