@@ -3677,7 +3677,7 @@ El único servicio externo de este contexto es el modelo de lenguaje Gemini, al 
 
 Component:
 
-<p class="caption"><strong>Figura 79</strong><br><em>Diagrama de componentes del bounded context Intake &amp; Body Response</em></p>
+<p class="caption"><strong>Figura 75</strong><br><em>Diagrama de componentes del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/intake-body-response.puml)
 
@@ -3689,25 +3689,25 @@ Component:
 
 Domain:
 
-<p class="caption"><strong>Figura 80</strong><br><em>Diagrama de clases de la capa Domain del bounded context Intake &amp; Body Response</em></p>
+<p class="caption"><strong>Figura 76</strong><br><em>Diagrama de clases de la capa Domain del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/domain.puml)
 
 Infrastructure:
 
-<p class="caption"><strong>Figura 81</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Intake &amp; Body Response</em></p>
+<p class="caption"><strong>Figura 77</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/infrastructure.puml)
 
 Application:
 
-<p class="caption"><strong>Figura 82</strong><br><em>Diagrama de clases de la capa Application del bounded context Intake &amp; Body Response</em></p>
+<p class="caption"><strong>Figura 78</strong><br><em>Diagrama de clases de la capa Application del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/application.puml)
 
 Interfaces:
 
-<p class="caption"><strong>Figura 83</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Intake &amp; Body Response</em></p>
+<p class="caption"><strong>Figura 79</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/intake-body-response/interfaces.puml)
 
@@ -3717,7 +3717,7 @@ Interfaces:
 
 Database:
 
-<p class="caption"><strong>Figura 84</strong><br><em>Diagrama de base de datos del bounded context Intake &amp; Body Response</em></p>
+<p class="caption"><strong>Figura 80</strong><br><em>Diagrama de base de datos del bounded context Intake &amp; Body Response</em></p>
 
 ![Intake & Body Response Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/intake-body-response.puml)
 
@@ -4106,7 +4106,7 @@ Los servicios externos son el modelo Gemini, al que se llega por el módulo de I
 
 Component:
 
-<p class="caption"><strong>Figura 85</strong><br><em>Diagrama de componentes del bounded context Monitoring &amp; Adherence</em></p>
+<p class="caption"><strong>Figura 81</strong><br><em>Diagrama de componentes del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/monitoring-adherence.puml)
 
@@ -4118,25 +4118,25 @@ Component:
 
 Domain:
 
-<p class="caption"><strong>Figura 86</strong><br><em>Diagrama de clases de la capa Domain del bounded context Monitoring &amp; Adherence</em></p>
+<p class="caption"><strong>Figura 82</strong><br><em>Diagrama de clases de la capa Domain del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/domain.puml)
 
 Infrastructure:
 
-<p class="caption"><strong>Figura 87</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Monitoring &amp; Adherence</em></p>
+<p class="caption"><strong>Figura 83</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/infrastructure.puml)
 
 Application:
 
-<p class="caption"><strong>Figura 88</strong><br><em>Diagrama de clases de la capa Application del bounded context Monitoring &amp; Adherence</em></p>
+<p class="caption"><strong>Figura 84</strong><br><em>Diagrama de clases de la capa Application del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/application.puml)
 
 Interfaces:
 
-<p class="caption"><strong>Figura 89</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Monitoring &amp; Adherence</em></p>
+<p class="caption"><strong>Figura 85</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/monitoring-adherence/interfaces.puml)
 
@@ -4146,7 +4146,7 @@ Interfaces:
 
 Database:
 
-<p class="caption"><strong>Figura 90</strong><br><em>Diagrama de base de datos del bounded context Monitoring &amp; Adherence</em></p>
+<p class="caption"><strong>Figura 86</strong><br><em>Diagrama de base de datos del bounded context Monitoring &amp; Adherence</em></p>
 
 ![Monitoring & Adherence Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/monitoring-adherence.puml)
 
@@ -4448,7 +4448,7 @@ Este contexto no consume ninguno. El generador criptográfico del token es la bi
 
 Component:
 
-<p class="caption"><strong>Figura 91</strong><br><em>Diagrama de componentes del bounded context Care Relationship</em></p>
+<p class="caption"><strong>Figura 87</strong><br><em>Diagrama de componentes del bounded context Care Relationship</em></p>
 
 ![Care Relationship Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/care-relationship.puml)
 
@@ -4460,25 +4460,25 @@ Component:
 
 Domain:
 
-<p class="caption"><strong>Figura 92</strong><br><em>Diagrama de clases de la capa Domain del bounded context Care Relationship</em></p>
+<p class="caption"><strong>Figura 88</strong><br><em>Diagrama de clases de la capa Domain del bounded context Care Relationship</em></p>
 
 ![Care Relationship Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/care-relationship/domain.puml)
 
 Infrastructure:
 
-<p class="caption"><strong>Figura 93</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Care Relationship</em></p>
+<p class="caption"><strong>Figura 89</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Care Relationship</em></p>
 
 ![Care Relationship Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/care-relationship/infrastructure.puml)
 
 Application:
 
-<p class="caption"><strong>Figura 94</strong><br><em>Diagrama de clases de la capa Application del bounded context Care Relationship</em></p>
+<p class="caption"><strong>Figura 90</strong><br><em>Diagrama de clases de la capa Application del bounded context Care Relationship</em></p>
 
 ![Care Relationship Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/care-relationship/application.puml)
 
 Interfaces:
 
-<p class="caption"><strong>Figura 95</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Care Relationship</em></p>
+<p class="caption"><strong>Figura 91</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Care Relationship</em></p>
 
 ![Care Relationship Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/care-relationship/interfaces.puml)
 
@@ -4488,7 +4488,7 @@ Interfaces:
 
 Database:
 
-<p class="caption"><strong>Figura 96</strong><br><em>Diagrama de base de datos del bounded context Care Relationship</em></p>
+<p class="caption"><strong>Figura 92</strong><br><em>Diagrama de base de datos del bounded context Care Relationship</em></p>
 
 ![Care Relationship Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/care-relationship.puml)
 
@@ -4857,7 +4857,7 @@ El único servicio externo es el modelo Gemini, al que se llega por el módulo d
 
 Component:
 
-<p class="caption"><strong>Figura 97</strong><br><em>Diagrama de componentes del bounded context Nutritional Care</em></p>
+<p class="caption"><strong>Figura 93</strong><br><em>Diagrama de componentes del bounded context Nutritional Care</em></p>
 
 ![Nutritional Care Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/nutritional-care.puml)
 
@@ -4869,25 +4869,25 @@ Component:
 
 Domain:
 
-<p class="caption"><strong>Figura 98</strong><br><em>Diagrama de clases de la capa Domain del bounded context Nutritional Care</em></p>
+<p class="caption"><strong>Figura 94</strong><br><em>Diagrama de clases de la capa Domain del bounded context Nutritional Care</em></p>
 
 ![Nutritional Care Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/nutritional-care/domain.puml)
 
 Infrastructure:
 
-<p class="caption"><strong>Figura 99</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Nutritional Care</em></p>
+<p class="caption"><strong>Figura 95</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Nutritional Care</em></p>
 
 ![Nutritional Care Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/nutritional-care/infrastructure.puml)
 
 Application:
 
-<p class="caption"><strong>Figura 100</strong><br><em>Diagrama de clases de la capa Application del bounded context Nutritional Care</em></p>
+<p class="caption"><strong>Figura 96</strong><br><em>Diagrama de clases de la capa Application del bounded context Nutritional Care</em></p>
 
 ![Nutritional Care Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/nutritional-care/application.puml)
 
 Interfaces:
 
-<p class="caption"><strong>Figura 101</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Nutritional Care</em></p>
+<p class="caption"><strong>Figura 97</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Nutritional Care</em></p>
 
 ![Nutritional Care Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/nutritional-care/interfaces.puml)
 
@@ -4897,7 +4897,7 @@ Interfaces:
 
 Database:
 
-<p class="caption"><strong>Figura 102</strong><br><em>Diagrama de base de datos del bounded context Nutritional Care</em></p>
+<p class="caption"><strong>Figura 98</strong><br><em>Diagrama de base de datos del bounded context Nutritional Care</em></p>
 
 ![Nutritional Care Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/nutritional-care.puml)
 
@@ -5216,7 +5216,7 @@ El único servicio externo es el servidor SMTP que envía los códigos de recupe
 
 Component:
 
-<p class="caption"><strong>Figura 103</strong><br><em>Diagrama de componentes del bounded context IAM</em></p>
+<p class="caption"><strong>Figura 99</strong><br><em>Diagrama de componentes del bounded context IAM</em></p>
 
 ![IAM Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/iam.puml)
 
@@ -5228,25 +5228,25 @@ Component:
 
 Domain:
 
-<p class="caption"><strong>Figura 104</strong><br><em>Diagrama de clases de la capa Domain del bounded context IAM</em></p>
+<p class="caption"><strong>Figura 100</strong><br><em>Diagrama de clases de la capa Domain del bounded context IAM</em></p>
 
 ![IAM Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/iam/domain.puml)
 
 Infrastructure:
 
-<p class="caption"><strong>Figura 105</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context IAM</em></p>
+<p class="caption"><strong>Figura 101</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context IAM</em></p>
 
 ![IAM Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/iam/infrastructure.puml)
 
 Application:
 
-<p class="caption"><strong>Figura 106</strong><br><em>Diagrama de clases de la capa Application del bounded context IAM</em></p>
+<p class="caption"><strong>Figura 102</strong><br><em>Diagrama de clases de la capa Application del bounded context IAM</em></p>
 
 ![IAM Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/iam/application.puml)
 
 Interfaces:
 
-<p class="caption"><strong>Figura 107</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context IAM</em></p>
+<p class="caption"><strong>Figura 103</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context IAM</em></p>
 
 ![IAM Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/iam/interfaces.puml)
 
@@ -5256,7 +5256,7 @@ Interfaces:
 
 Database:
 
-<p class="caption"><strong>Figura 108</strong><br><em>Diagrama de base de datos del bounded context IAM</em></p>
+<p class="caption"><strong>Figura 104</strong><br><em>Diagrama de base de datos del bounded context IAM</em></p>
 
 ![IAM Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/iam.puml)
 
@@ -5480,7 +5480,7 @@ Consume Open Food Facts (`https://world.openfoodfacts.org`) y USDA FoodData Cent
 
 Component:
 
-<p class="caption"><strong>Figura 109</strong><br><em>Diagrama de componentes del bounded context Food Catalog</em></p>
+<p class="caption"><strong>Figura 105</strong><br><em>Diagrama de componentes del bounded context Food Catalog</em></p>
 
 ![Food Catalog Component](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/c4-diagrams/food-catalog.puml)
 
@@ -5492,25 +5492,25 @@ Component:
 
 Domain:
 
-<p class="caption"><strong>Figura 110</strong><br><em>Diagrama de clases de la capa Domain del bounded context Food Catalog</em></p>
+<p class="caption"><strong>Figura 106</strong><br><em>Diagrama de clases de la capa Domain del bounded context Food Catalog</em></p>
 
 ![Food Catalog Domain](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/food-catalog/domain.puml)
 
 Infrastructure:
 
-<p class="caption"><strong>Figura 111</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Food Catalog</em></p>
+<p class="caption"><strong>Figura 107</strong><br><em>Diagrama de clases de la capa Infrastructure del bounded context Food Catalog</em></p>
 
 ![Food Catalog Infrastructure](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/food-catalog/infrastructure.puml)
 
 Application:
 
-<p class="caption"><strong>Figura 112</strong><br><em>Diagrama de clases de la capa Application del bounded context Food Catalog</em></p>
+<p class="caption"><strong>Figura 108</strong><br><em>Diagrama de clases de la capa Application del bounded context Food Catalog</em></p>
 
 ![Food Catalog Application](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/food-catalog/application.puml)
 
 Interfaces:
 
-<p class="caption"><strong>Figura 113</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Food Catalog</em></p>
+<p class="caption"><strong>Figura 109</strong><br><em>Diagrama de clases de la capa Interfaces del bounded context Food Catalog</em></p>
 
 ![Food Catalog Interfaces](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/class-diagrams/backend/food-catalog/interfaces.puml)
 
@@ -5520,7 +5520,7 @@ Interfaces:
 
 Database:
 
-<p class="caption"><strong>Figura 114</strong><br><em>Diagrama de base de datos del bounded context Food Catalog</em></p>
+<p class="caption"><strong>Figura 110</strong><br><em>Diagrama de base de datos del bounded context Food Catalog</em></p>
 
 ![Food Catalog Database](https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/upc-pre-202620-1acc0238-13981-nutrisync/healthify-report/develop/docs/database-diagrams/food-catalog.puml)
 
