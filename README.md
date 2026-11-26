@@ -77,6 +77,7 @@
 | 3.2.0 | 23/11/2026 – 28/11/2026 | Joel Mora / Olenka Del Aguila / Rose Vergaray / Angel Villarreal | Cap. 4: Sprint 3 con planning, líderes y colaboradores, backlog, evidencias de desarrollo, pruebas, ejecución, documentación de servicios, despliegue y colaboración; sección 4.1 actualizada (versiones vigentes, pruebas de interfaz de Android, variables de los recordatorios, ejemplos de ramas y alcances de commits) y renumeración de tablas y figuras |
 | 3.3.0 | 23/11/2026 – 28/11/2026 | Rose Vergaray | Cap. 2: escenarios nuevos en US01, US04, US16, US20, US39 y TS10; columna Sprint del Product Backlog con el sprint en que se aceptó cada historia |
 | 3.4.0 | 23/11/2026 – 28/11/2026 | Angela Espinoza / Olenka Del Aguila / Angel Villarreal | Conclusiones y recomendaciones finales; acciones y conclusiones TB2 del student outcome; índice con el Sprint 3 |
+| 3.5.0 | 26/11/2026 | Angel Villarreal | Cap. 2: diagramas C4 de la sección 2.5.3 rehechos en un único workspace de Structurizr DSL (`docs/c4-diagrams/structurizr/workspace.dsl`): contexto sin ML Kit, push ni proveedor de identidad y con Gemini y SMTP; contenedores con la aplicación Android, su base de datos local y la aplicación Flutter; componentes separados por aplicación (Android y Flutter) y backend con los módulos Shared y ReadModels; despliegue como entorno `Production`; renumeración de figuras |
 | 4.0.0 | 28/12/2026 | Angel Villarreal | TB2 Report |
 
 <div style="page-break-after: always"></div>
